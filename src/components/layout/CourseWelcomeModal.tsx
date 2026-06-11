@@ -365,11 +365,7 @@ export default function CourseWelcomeModal() {
                             onClick={() => handleSelect(course)}
                             whileHover={{ scale: 1.02, y: -2 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`relative text-left p-5 rounded-2xl border-2 transition-all group overflow-hidden ${
-                              picked?.code === course.code
-                                ? 'border-[#123B6D] bg-[#123B6D]/5'
-                                : 'border-[#E2E8F0] hover:border-[#123B6D]/30 bg-white hover:shadow-md'
-                            }`}
+                            className="relative text-left p-5 rounded-2xl border-2 transition-all group overflow-hidden border-[#E2E8F0] hover:border-[#123B6D]/30 bg-white hover:shadow-md"
                           >
                             <div className="relative z-10 flex items-start gap-4">
                               {/* Code badge */}

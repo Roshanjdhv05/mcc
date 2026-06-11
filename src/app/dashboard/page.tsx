@@ -59,7 +59,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (isLoaded && !course) {
+  if (!course) {
     return (
       <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center pb-24">
         <div className="w-20 h-20 bg-[#123B6D]/10 text-[#123B6D] rounded-full flex items-center justify-center mb-6">

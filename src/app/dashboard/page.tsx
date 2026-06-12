@@ -13,6 +13,7 @@ import NoticesModule from '@/components/dashboard/NoticesModule';
 import TimetableModule from '@/components/dashboard/TimetableModule';
 import SyllabusModule from '@/components/dashboard/SyllabusModule';
 import StudyMaterialModule from '@/components/dashboard/StudyMaterialModule';
+import CourseWelcomeModal from '@/components/layout/CourseWelcomeModal';
 
 const GRID_ITEMS = [
   { id: 'notices', title: 'Notices', icon: Bell, desc: 'College & Dept updates', color: 'bg-blue-50 text-[#123B6D]', newUpdates: true },
@@ -61,21 +62,17 @@ export default function DashboardPage() {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center pb-24">
-        <div className="w-20 h-20 bg-[#123B6D]/10 text-[#123B6D] rounded-full flex items-center justify-center mb-6">
-          <BookOpen size={40} />
-        </div>
-        <h2 className="text-2xl font-bold text-[#1E293B] mb-2">Personalize Your Dashboard</h2>
-        <p className="text-[#64748B] mb-8 max-w-md">You haven't selected a course yet. Please choose your programme to get personalized updates, timetable, and study materials.</p>
-        <button 
-           onClick={() => {
-             localStorage.removeItem('mcc_selected_course');
-             window.location.href = '/';
-           }}
-           className="bg-[#123B6D] text-white px-8 py-3 rounded-xl font-semibold shadow-lg shadow-[#123B6D]/20 hover:bg-[#0d2d54] transition-colors"
-        >
-          Select Course Now
-        </button>
+      <div className="min-h-screen bg-[#F8FAFC]">
+        <CourseWelcomeModal 
+          forceOpen={true}
+          onSelect={(c) => {
+            if (c) {
+              setCourse(c);
+            } else {
+              router.push('/');
+            }
+          }}
+        />
       </div>
     );
   }

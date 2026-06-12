@@ -131,24 +131,28 @@ const levelIcon: Record<Level, React.ReactNode> = {
 };
 
 // ─── Component ───────────────────────────────────────────────────────────────
-export default function CourseWelcomeModal() {
+export default function CourseWelcomeModal({ onSelect, forceOpen }: { onSelect?: (course: any) => void; forceOpen?: boolean } = {}) {
   const router   = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [open,   setOpen]   = useState(false);
+  const [open,   setOpen]   = useState(forceOpen || false);
   const [query,  setQuery]  = useState('');
   const [level,  setLevel]  = useState<Level>('All');
   const [picked, setPicked] = useState<Course | null>(null);
 
   // Show once per browser session (no repeat on refresh after first selection)
   useEffect(() => {
+    if (forceOpen) {
+      setOpen(true);
+      return;
+    }
     const alreadyPicked = localStorage.getItem('mcc_selected_course');
     if (!alreadyPicked) {
       // Slight delay so splash finishes first
       const t = setTimeout(() => setOpen(true), 2800);
       return () => clearTimeout(t);
     }
-  }, []);
+  }, [forceOpen]);
 
   // Auto-focus search when modal opens
   useEffect(() => {
@@ -173,9 +177,14 @@ export default function CourseWelcomeModal() {
 
   const handleGoToDashboard = () => {
     if (picked) {
-      localStorage.setItem('mcc_selected_course', JSON.stringify({ code: picked.code, href: '/dashboard' }));
+      const courseData = { code: picked.code, href: '/dashboard' };
+      localStorage.setItem('mcc_selected_course', JSON.stringify(courseData));
       setOpen(false);
-      router.push('/dashboard');
+      if (onSelect) {
+        onSelect(courseData);
+      } else {
+        router.push('/dashboard');
+      }
     }
   };
 
@@ -186,6 +195,7 @@ export default function CourseWelcomeModal() {
   const handleSkip = () => {
     localStorage.setItem('mcc_selected_course', 'skipped');
     setOpen(false);
+    if (onSelect) onSelect(null);
   };
 
   return (
@@ -220,7 +230,7 @@ export default function CourseWelcomeModal() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center justify-center p-10 text-center"
+                  className="flex flex-col items-center justify-center p-6 md:p-10 text-center overflow-y-auto max-h-[88vh]"
                 >
                   <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
                     <GraduationCap size={40} className="text-green-600" />

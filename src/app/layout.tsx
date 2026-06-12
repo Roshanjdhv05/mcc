@@ -6,7 +6,6 @@ import Footer from "@/components/layout/Footer";
 import AIAssistant from "@/components/layout/AIAssistant";
 import BottomNav from "@/components/layout/BottomNav";
 import SplashScreen from "@/components/layout/SplashScreen";
-import CourseWelcomeModal from "@/components/layout/CourseWelcomeModal";
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-heading",
@@ -37,7 +36,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC]">
         <SplashScreen />
-        <CourseWelcomeModal />
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />

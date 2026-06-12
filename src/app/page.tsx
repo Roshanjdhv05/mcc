@@ -1,5 +1,6 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Counter from '@/components/ui/Counter';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -7,10 +8,11 @@ import {
   Bell, Search, Download, ChevronRight, Quote,
   Users, BookOpen, Briefcase, Megaphone, ClipboardCheck,
   PenLine, LibraryBig, HeadphonesIcon, FileText, ShieldCheck, Image,
-  Bot, CalendarDays, ArrowRight
+  Bot, CalendarDays, ArrowRight, LayoutDashboard
 } from 'lucide-react';
 
 const quickLinks = [
+  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, bg: 'bg-indigo-50', iconColor: 'text-indigo-600', hiddenMobile: true },
   { label: 'Notices', href: '/notices', icon: Megaphone, bg: 'bg-blue-50', iconColor: 'text-[#123B6D]' },
   { label: 'Admissions', href: '/admissions', icon: ClipboardCheck, bg: 'bg-teal-50', iconColor: 'text-teal-600' },
   { label: 'Exams', href: '/examination', icon: PenLine, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
@@ -64,18 +66,55 @@ const testimonials = [
   { name: 'Sneha Joshi', course: 'FYJC 2021', quote: 'As a FYJC student, the supportive teachers and well-equipped labs made studying enjoyable. I cleared my board exams with distinction!', avatar: 'S' },
 ];
 
+const heroBanners = [
+  {
+    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80",
+    badge: "Admissions 2024–25 Open Now",
+    title: <>Welcome to <span className="text-[#D4A017]">Mulund College</span> of Commerce</>,
+    desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1964."
+  },
+  {
+    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80",
+    badge: "A Legacy of Excellence",
+    title: <>Empowering the <span className="text-[#D4A017]">Leaders</span> of Tomorrow</>,
+    desc: "Discover a vibrant campus life, world-class faculty, and outstanding placement opportunities that shape your future."
+  },
+  {
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80",
+    badge: "Join Our Community",
+    title: <>Your Journey to <span className="text-[#D4A017]">Success</span> Starts Here</>,
+    desc: "Join thousands of successful alumni who have made their mark across the globe. Experience the MCC difference."
+  }
+];
+
 export default function HomePage() {
+  const [currentBanner, setCurrentBanner] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % heroBanners.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="bg-[#F8FAFC] min-h-screen pb-20 md:pb-0">
       {/* ── HERO ── */}
-      <section className="relative h-[75vh] min-h-[520px] flex items-center overflow-hidden">
+      <section className="relative h-[75vh] min-h-[520px] flex items-center overflow-hidden bg-black">
         <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80"
-            alt="MCC Campus"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#123B6D]/85 via-[#123B6D]/60 to-transparent" />
+          <AnimatePresence>
+            <motion.img
+              key={currentBanner}
+              src={heroBanners[currentBanner].image}
+              alt="MCC Campus"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5 }}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#123B6D]/85 via-[#123B6D]/60 to-[#123B6D]/20 z-10" />
         </div>
         {/* Floating background shapes */}
         <motion.div
@@ -89,41 +128,46 @@ export default function HomePage() {
           transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 2 }}
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium mb-6 border border-white/30">
-              <span className="w-2 h-2 bg-[#D4A017] rounded-full animate-pulse" />
-              Admissions 2024–25 Open Now
-            </span>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-5 leading-tight font-[var(--font-heading)] max-w-3xl">
-              Welcome to <span className="text-[#D4A017]">Mulund College</span> of Commerce
-            </h1>
-            <p className="text-white/85 text-lg md:text-xl max-w-2xl mb-8 leading-relaxed">
-              An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1964.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/admissions"
-                  className="px-8 py-3.5 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg shadow-[#D4A017]/30 flex items-center gap-2"
-                >
-                  Apply Now <ArrowRight size={18} />
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/academics"
-                  className="px-8 py-3.5 bg-white/15 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/40 hover:bg-white/25 transition-all flex items-center gap-2"
-                >
-                  Explore Programmes
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-12">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentBanner}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              className="max-w-3xl flex flex-col mr-auto items-start text-left"
+            >
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium mb-6 border border-white/30">
+                <span className="w-2 h-2 bg-[#D4A017] rounded-full animate-pulse" />
+                {heroBanners[currentBanner].badge}
+              </span>
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-5 leading-tight font-[var(--font-heading)]">
+                {heroBanners[currentBanner].title}
+              </h1>
+              <p className="text-white/85 text-lg md:text-xl mb-8 leading-relaxed">
+                {heroBanners[currentBanner].desc}
+              </p>
+              <div className="flex flex-wrap gap-4 justify-start">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/admissions"
+                    className="px-8 py-3.5 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg shadow-[#D4A017]/30 flex items-center gap-2"
+                  >
+                    Apply Now <ArrowRight size={18} />
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/academics"
+                    className="px-8 py-3.5 bg-white/15 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/40 hover:bg-white/25 transition-all flex items-center gap-2"
+                  >
+                    Explore Programmes
+                  </Link>
+                </motion.div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
 
@@ -154,9 +198,9 @@ export default function HomePage() {
         {/* ── QUICK ACCESS ── */}
         <ScrollReveal>
           <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-6">Quick Access</h2>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3 md:gap-4">
-            {quickLinks.map(({ label, href, icon: Icon, bg, iconColor }, i) => (
-              <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
+          <div className="grid grid-cols-4 md:grid-cols-9 gap-3 md:gap-4">
+            {quickLinks.map(({ label, href, icon: Icon, bg, iconColor, hiddenMobile }, i) => (
+              <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} className={hiddenMobile ? 'hidden md:block' : ''}>
                 <Link
                   href={href}
                   className="group flex flex-col items-center gap-2 p-3 md:p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#123B6D]/20 hover:-translate-y-1 transition-all"

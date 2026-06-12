@@ -58,6 +58,7 @@ const navLinks = [
   {
     label: 'More', href: '#', sub: [
       { label: 'Research', href: '/research' },
+      { label: "Student's Work", href: '/students-work' },
       { label: 'Alumni', href: '/alumni' },
       { label: 'Gallery', href: '/gallery' },
       { label: 'Contact', href: '/contact' },
@@ -71,6 +72,8 @@ export default function Navbar() {
   const [openDrop, setOpenDrop] = useState<string | null>(null);
   const [mobileOpenDrop, setMobileOpenDrop] = useState<string | null>(null);
   const [nestedMobileDrop, setNestedMobileDrop] = useState<string | null>(null);
+  const [noticesOpen, setNoticesOpen] = useState(false);
+  const [hasUnread, setHasUnread] = useState(true);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -130,39 +133,23 @@ export default function Navbar() {
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
-                    <div className="bg-white/95 backdrop-blur-xl border border-[#E2E8F0] rounded-2xl shadow-xl overflow-hidden">
+                    <div className="bg-white/95 backdrop-blur-xl border border-[#E2E8F0] rounded-2xl shadow-xl py-2">
                       {link.sub.map((s) => (
                         s.sub ? (
-                          <div key={s.label} className="relative w-full">
-                            <button 
-                              className="w-full flex items-center justify-between px-4 py-3 text-sm text-[#1E293B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setMobileOpenDrop(mobileOpenDrop === s.label ? null : s.label);
-                              }}
-                            >
+                          <div key={s.label} className="relative w-full group/nested">
+                            <div className="w-full flex items-center justify-between px-4 py-3 text-sm text-[#1E293B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors cursor-default">
                               {s.label}
-                              <ChevronDown size={14} className={`transition-transform duration-200 ${mobileOpenDrop === s.label ? 'rotate-180' : ''}`} />
-                            </button>
-                            <AnimatePresence>
-                              {mobileOpenDrop === s.label && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: 'auto', opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  className="overflow-hidden bg-[#F8FAFC]"
-                                >
-                                  <div className="py-1">
-                                    {s.sub.map(ss => (
-                                      <Link key={ss.href} href={ss.href} className="block px-8 py-2 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors">
-                                        {ss.label}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
+                              <ChevronDown size={14} className="-rotate-90 text-[#94A3B8]" />
+                            </div>
+                            <div className="absolute top-0 left-full hidden group-hover/nested:block min-w-[200px] pl-1">
+                              <div className="bg-white/95 backdrop-blur-xl border border-[#E2E8F0] rounded-2xl shadow-xl overflow-hidden py-1">
+                                {s.sub.map(ss => (
+                                  <Link key={ss.href} href={ss.href} className="block px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors">
+                                    {ss.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         ) : (
                           <Link
@@ -186,10 +173,67 @@ export default function Navbar() {
             <Link href="/search" className="w-9 h-9 rounded-full flex items-center justify-center text-[#123B6D] hover:bg-[#123B6D]/10 transition-colors">
               <Search size={18} />
             </Link>
-            <button className="w-9 h-9 rounded-full flex items-center justify-center text-[#123B6D] hover:bg-[#123B6D]/10 transition-colors relative">
-              <Bell size={18} />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#D4A017] rounded-full" />
-            </button>
+            <div className="relative">
+              <button 
+                className={`w-9 h-9 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors relative ${hasUnread ? '' : 'text-[#123B6D]'}`}
+                onClick={() => {
+                  setNoticesOpen(!noticesOpen);
+                  if(hasUnread) setHasUnread(false);
+                }}
+              >
+                <motion.div
+                  animate={hasUnread ? { 
+                    rotate: [0, -20, 20, -20, 20, 0], 
+                    color: ['#ef4444', '#eab308', '#ef4444'] 
+                  } : { color: 'currentColor' }}
+                  transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                  style={{ transformOrigin: "top center" }}
+                >
+                  <Bell size={18} />
+                </motion.div>
+                {hasUnread && (
+                  <span className="absolute top-[6px] right-[6px] w-2 h-2 bg-red-500 rounded-full" />
+                )}
+              </button>
+              <AnimatePresence>
+                {noticesOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute top-full -right-12 sm:right-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-50 origin-top-right"
+                  >
+                    <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-slate-50">
+                      <h3 className="font-bold text-[#1E293B] text-sm">Notifications</h3>
+                      <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
+                        View All
+                      </Link>
+                    </div>
+                    <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
+                      {[
+                        { id: 1, title: 'Final Semester Timetable Released', time: '2 hours ago', unread: true },
+                        { id: 2, title: 'Holiday declared on Friday due to heavy rains', time: '1 day ago', unread: false },
+                        { id: 3, title: 'Admissions Open for 2024-25', time: '2 days ago', unread: false },
+                        { id: 4, title: 'New Scholarship Guidelines Uploaded', time: '4 days ago', unread: false },
+                      ].map((n) => (
+                        <Link 
+                          href="/notices" 
+                          key={n.id} 
+                          onClick={() => setNoticesOpen(false)}
+                          className={`block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${n.unread ? 'bg-blue-50/30' : ''}`}
+                        >
+                          <div className="flex justify-between items-start gap-2">
+                            <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
+                            {n.unread && <span className="w-2 h-2 bg-red-500 rounded-full mt-1.5 flex-shrink-0 animate-pulse" />}
+                          </div>
+                          <p className="text-xs text-[#64748B]">{n.time}</p>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <Link href="/admissions" className="hidden md:flex ml-2 px-4 py-2 bg-[#123B6D] text-white text-sm font-semibold rounded-xl hover:bg-[#0d2d54] transition-all hover:shadow-lg hover:shadow-[#123B6D]/20">
               Apply Now
             </Link>

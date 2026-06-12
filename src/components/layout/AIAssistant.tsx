@@ -1,9 +1,9 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Bot, Sparkles, ChevronLeft, Home, MessageSquare, GraduationCap, FileText, BookOpen, Award, CreditCard, ChevronRight } from 'lucide-react';
+import { X, Bot, Sparkles, ChevronLeft, Home, MessageSquare, GraduationCap, FileText, BookOpen, Award, CreditCard, ChevronRight, Megaphone } from 'lucide-react';
 
-type ViewState = 'main' | 'admissions' | 'scholarships' | 'examinations' | 'certificates' | 'courses' | 'forms' | 'chat' | 'ug_courses' | 'pg_courses' | 'course_details' | 'generic_details';
+type ViewState = 'main' | 'admissions' | 'scholarships' | 'examinations' | 'certificates' | 'courses' | 'forms' | 'broadcast' | 'ug_courses' | 'pg_courses' | 'course_details' | 'generic_details';
 
 interface HistoryState {
   view: ViewState;
@@ -18,10 +18,16 @@ interface Message {
 export default function AIAssistant() {
   const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<HistoryState[]>([{ view: 'main' }]);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [typing, setTyping] = useState(false);
+  const [broadcastFilter, setBroadcastFilter] = useState<'all' | 'events' | 'activities'>('all');
+  const [hasUnread, setHasUnread] = useState(true);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const broadcasts = [
+    { id: 1, type: 'events', text: 'Annual Cultural Fest AURA 2024 is starting next week! Registration is now open.', time: '10:00 AM' },
+    { id: 2, type: 'activities', text: 'NSS Blood Donation Drive organized today in the Gymkhana. All are welcome.', time: '09:00 AM' },
+    { id: 3, type: 'events', text: 'Guest lecture on Artificial Intelligence by Dr. Smith tomorrow at Seminar Hall.', time: 'Yesterday' },
+    { id: 4, type: 'activities', text: 'Yoga workshop for students and staff this weekend. Bring your own mats.', time: '2 days ago' },
+  ];
 
   const current = history[history.length - 1];
   const view = current.view;
@@ -29,7 +35,17 @@ export default function AIAssistant() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, typing, view]);
+  }, [view]);
+
+  useEffect(() => {
+    const handler = () => {
+      setOpen(true);
+      setHasUnread(false);
+      navigate('broadcast');
+    };
+    document.addEventListener('open-assistant', handler);
+    return () => document.removeEventListener('open-assistant', handler);
+  }, []);
 
   const navigate = (newView: ViewState, newData?: any) => {
     setHistory(prev => [...prev, { view: newView, data: newData }]);
@@ -43,21 +59,6 @@ export default function AIAssistant() {
 
   const goHome = () => {
     setHistory([{ view: 'main' }]);
-  };
-
-  const sendMessage = (text: string) => {
-    if (!text.trim()) return;
-    setMessages(prev => [...prev, { from: 'user', text }]);
-    setInput('');
-    setTyping(true);
-    
-    setTimeout(() => {
-      setTyping(false);
-      setMessages(prev => [...prev, { 
-        from: 'bot', 
-        text: 'I couldn\'t find an exact answer. Would you like to contact the college office?' 
-      }]);
-    }, 1200);
   };
 
   // ── DATA DEFINITIONS ──
@@ -93,9 +94,16 @@ export default function AIAssistant() {
           <Home size={18} />
         </button>
       )}
-      {view !== 'chat' && (
-        <button onClick={() => navigate('chat')} className="p-1.5 rounded-full hover:bg-white/20 transition-colors" title="Ask Anything">
-          <MessageSquare size={18} />
+      {view !== 'broadcast' && (
+        <button onClick={() => { navigate('broadcast'); setHasUnread(false); }} className="relative p-1.5 rounded-full hover:bg-white/20 transition-colors" title="College Broadcasts">
+          <motion.div
+            animate={hasUnread ? { rotate: [0, -20, 20, -20, 20, 0], color: ['#ffffff', '#eab308', '#ffffff'] } : {}}
+            transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+            style={{ transformOrigin: "top center" }}
+          >
+            <Megaphone size={18} />
+          </motion.div>
+          {hasUnread && <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-[#123B6D]" />}
         </button>
       )}
     </div>
@@ -123,14 +131,19 @@ export default function AIAssistant() {
   return (
     <>
       <motion.button
-        onClick={() => setOpen(true)}
+        onClick={() => { setOpen(true); }}
         className={`fixed bottom-20 right-5 md:bottom-8 md:right-8 z-50 w-14 h-14 rounded-full bg-[#123B6D] text-white shadow-xl flex items-center justify-center ${open ? 'hidden' : 'flex'}`}
-        animate={{ scale: [1, 1.05, 1] }}
-        transition={{ repeat: Infinity, duration: 3 }}
+        animate={
+          hasUnread 
+            ? { rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.05, 1] } 
+            : { scale: [1, 1.05, 1] }
+        }
+        transition={{ repeat: Infinity, duration: hasUnread ? 1.5 : 3, ease: 'easeInOut' }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
         <Bot size={26} />
+        {hasUnread && <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-red-500 border-2 border-[#123B6D] rounded-full" />}
       </motion.button>
 
       <AnimatePresence>
@@ -139,7 +152,7 @@ export default function AIAssistant() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-20 right-4 md:bottom-8 md:right-8 z-[70] w-[350px] sm:w-[400px] h-[600px] max-h-[85vh] bg-[#F8FAFC] rounded-3xl shadow-2xl border border-[#E2E8F0] flex flex-col overflow-hidden"
+            className="fixed bottom-20 right-4 md:bottom-8 md:right-8 z-[70] w-[calc(100vw-2rem)] sm:w-[400px] h-[600px] max-h-[85vh] bg-[#F8FAFC] rounded-3xl shadow-2xl border border-[#E2E8F0] flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-[#123B6D] text-white px-5 py-4 flex items-center justify-between shrink-0 shadow-sm z-10">
@@ -178,7 +191,7 @@ export default function AIAssistant() {
                       <div className="bg-white border border-[#E2E8F0] p-4 rounded-2xl rounded-tl-sm shadow-sm mb-6">
                         <p className="text-sm text-[#1E293B] leading-relaxed">
                           👋 <strong>Welcome to MCC Digital Assistant.</strong><br/><br/>
-                          I can help you with Admissions, Scholarships, Examinations, Certificates, Courses, and Forms.<br/><br/>
+                          Get the latest broadcasts, or view details for Admissions, Scholarships, Examinations, Courses, and Forms.<br/><br/>
                           Please choose an option below to continue.
                         </p>
                       </div>
@@ -189,7 +202,17 @@ export default function AIAssistant() {
                         <ActionButton icon={Award} label="Certificates" onClick={() => navigate('certificates')} />
                         <ActionButton icon={BookOpen} label="Courses" onClick={() => navigate('courses')} />
                         <ActionButton icon={FileText} label="Forms" onClick={() => navigate('forms')} />
-                        <ActionButton icon={MessageSquare} label="Ask Anything" highlight onClick={() => navigate('chat')} />
+                        <ActionButton 
+                          icon={Megaphone} 
+                          label={
+                            <div className="flex items-center gap-2">
+                              College Broadcasts 
+                              {hasUnread && <span className="px-2 py-0.5 text-[10px] bg-red-500 text-white rounded-full animate-pulse">New</span>}
+                            </div>
+                          } 
+                          highlight 
+                          onClick={() => { navigate('broadcast'); setHasUnread(false); }} 
+                        />
                       </div>
                     </>
                   )}
@@ -315,53 +338,53 @@ export default function AIAssistant() {
                     </div>
                   )}
 
-                  {/* ASK ANYTHING (CHAT) */}
-                  {view === 'chat' && (
-                    <div className="flex flex-col h-full space-y-4 pb-16">
+                  {/* BROADCAST PAGE */}
+                  {view === 'broadcast' && (
+                    <div className="flex flex-col h-full space-y-4">
                       <div className="bg-white border border-[#E2E8F0] p-4 rounded-2xl rounded-tl-sm shadow-sm">
                         <p className="text-sm text-[#1E293B]">
-                          You can ask me anything about Admissions, Scholarships, Courses, Exams, or the Campus!
+                          Stay updated with the latest messages, events, and activities broadcasted by MCC.
                         </p>
                       </div>
+
+                      <div className="flex gap-2 p-1 bg-[#E2E8F0]/50 rounded-lg shrink-0">
+                        {['all', 'events', 'activities'].map(f => (
+                          <button 
+                            key={f}
+                            onClick={() => setBroadcastFilter(f as any)}
+                            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all capitalize ${
+                              broadcastFilter === f ? 'bg-white text-[#123B6D] shadow-sm' : 'text-[#64748B] hover:text-[#1E293B]'
+                            }`}
+                          >
+                            {f}
+                          </button>
+                        ))}
+                      </div>
                       
-                      {messages.map((msg, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
-                        >
-                          <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                            msg.from === 'user'
-                              ? 'bg-[#123B6D] text-white rounded-tr-sm'
-                              : 'bg-white border border-[#E2E8F0] text-[#1E293B] rounded-tl-sm shadow-sm'
-                          }`}>
-                            {msg.text}
-                            {msg.from === 'bot' && msg.text.includes('contact the college office') && (
-                              <div className="mt-3 space-y-2">
-                                <button className="w-full py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs font-semibold text-[#123B6D] hover:bg-[#123B6D] hover:text-white transition-colors">Contact Office</button>
-                                <button className="w-full py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs font-semibold text-[#123B6D] hover:bg-[#123B6D] hover:text-white transition-colors">Email Us</button>
-                                <button onClick={goHome} className="w-full py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs font-semibold text-[#123B6D] hover:bg-[#123B6D] hover:text-white transition-colors">Main Menu</button>
+                      <div className="space-y-4">
+                        <AnimatePresence mode="popLayout">
+                          {broadcasts.filter(b => broadcastFilter === 'all' || b.type === broadcastFilter).map(b => (
+                            <motion.div
+                              layout
+                              key={b.id}
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.95 }}
+                              transition={{ duration: 0.2 }}
+                              className="flex justify-start"
+                            >
+                              <div className="max-w-[90%] px-4 py-3 bg-white border border-[#E2E8F0] text-[#1E293B] rounded-2xl rounded-tl-sm shadow-sm relative overflow-hidden group">
+                                <div className={`absolute top-0 left-0 w-1 h-full ${b.type === 'events' ? 'bg-[#D4A017]' : 'bg-[#4DA8DA]'}`} />
+                                <div className="flex justify-between items-start mb-1">
+                                  <span className={`text-[10px] font-bold uppercase tracking-wider ${b.type === 'events' ? 'text-[#D4A017]' : 'text-[#4DA8DA]'}`}>{b.type}</span>
+                                </div>
+                                <p className="text-sm leading-relaxed">{b.text}</p>
+                                <p className="text-[10px] text-[#94A3B8] mt-2 text-right">{b.time}</p>
                               </div>
-                            )}
-                          </div>
-                        </motion.div>
-                      ))}
-                      
-                      {typing && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                          <div className="bg-white border border-[#E2E8F0] px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm flex gap-1 items-center">
-                            {[0, 1, 2].map(i => (
-                              <motion.span
-                                key={i}
-                                className="w-2 h-2 bg-[#123B6D] rounded-full"
-                                animate={{ y: [0, -4, 0] }}
-                                transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.15 }}
-                              />
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      </div>
                       <div ref={endRef} />
                     </div>
                   )}
@@ -369,25 +392,6 @@ export default function AIAssistant() {
                 </motion.div>
               </AnimatePresence>
             </div>
-
-            {/* Chat Input (Only visible in Chat view) */}
-            {view === 'chat' && (
-              <div className="p-4 border-t border-[#E2E8F0] bg-white absolute bottom-0 left-0 right-0 z-10 flex items-center gap-2">
-                <input
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && sendMessage(input)}
-                  placeholder="Type your question..."
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-sm outline-none focus:border-[#D4A017] transition-colors"
-                />
-                <button
-                  onClick={() => sendMessage(input)}
-                  className="w-10 h-10 rounded-xl bg-[#D4A017] text-white flex items-center justify-center hover:bg-[#b8891a] transition-colors shrink-0"
-                >
-                  <Send size={16} />
-                </button>
-              </div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Counter from '@/components/ui/Counter';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import StudentsWorkSection from '@/components/ui/StudentsWorkSection';
+import StatsStrip from '@/components/ui/StatsStrip';
 import {
   Bell, Search, Download, ChevronRight, Quote,
   Users, BookOpen, Briefcase, Megaphone, ClipboardCheck,
@@ -172,26 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* ── STATISTICS STRIP ── */}
-      <section className="bg-[#123B6D] py-10">
-        <div className="max-w-7xl mx-auto px-4 md:px-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { label: 'Students Enrolled', target: 15000, suffix: '+', icon: Users },
-              { label: 'Courses Offered', target: 48, suffix: '', icon: BookOpen },
-              { label: 'Placements 2024', target: 920, suffix: '+', icon: Briefcase },
-              { label: 'Years of Excellence', target: 60, suffix: '+', icon: ShieldCheck },
-            ].map(({ label, target, suffix, icon: Icon }) => (
-              <ScrollReveal key={label} className="text-center">
-                <Icon size={28} className="text-[#D4A017] mx-auto mb-2" />
-                <div className="text-3xl md:text-4xl font-bold text-white font-[var(--font-heading)]">
-                  <Counter target={target} suffix={suffix} />
-                </div>
-                <div className="text-white/70 text-sm mt-1">{label}</div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StatsStrip />
 
       <div className="max-w-7xl mx-auto px-4 md:px-12 py-12 space-y-16">
 
@@ -426,6 +409,9 @@ export default function HomePage() {
             ))}
           </div>
         </ScrollReveal>
+
+        {/* ── STUDENTS WORK ── */}
+        <StudentsWorkSection />
 
         {/* ── TESTIMONIALS ── */}
         <ScrollReveal>

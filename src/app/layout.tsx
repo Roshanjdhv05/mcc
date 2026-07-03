@@ -6,7 +6,11 @@ import Footer from "@/components/layout/Footer";
 import AIAssistant from "@/components/layout/AIAssistant";
 import BottomNav from "@/components/layout/BottomNav";
 import SplashScreen from "@/components/layout/SplashScreen";
-import InstallPWA from "@/components/ui/InstallPWA";
+
+import InstallPrompt from "@/components/pwa/InstallPrompt";
+import IOSInstallGuide from "@/components/pwa/IOSInstallGuide";
+import InstallFloatingButton from "@/components/pwa/InstallFloatingButton";
+import UpdateToast from "@/components/pwa/UpdateToast";
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-heading",
@@ -26,10 +30,27 @@ export const metadata: Metadata = {
     "The official digital platform of Mulund College of Commerce (Autonomous) — offering seamless access to admissions, academics, notices, and student services.",
   keywords: "MCC, Mulund College of Commerce, Mumbai University, Admissions, BCom, MCom",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/apple-touch-icon.png' }
+    ]
+  },
+  appleWebApp: {
+    capable: true,
+    title: "MCC App",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: "#123B6D",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -39,29 +60,21 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${hankenGrotesk.variable} ${sourceSerif.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.deferredPWAEvent = null;
-              window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                window.deferredPWAEvent = e;
-              });
-            `,
-          }}
-        />
-      </head>
-      <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC]">
+      <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC]" suppressHydrationWarning>
         <SplashScreen />
         <Navbar />
-        <main className="flex-1 pt-16">{children}</main>
+        <main className="flex-1 pt-20">{children}</main>
         <Footer />
         <AIAssistant />
         <BottomNav />
-        <InstallPWA />
+        
+        {/* PWA Components */}
+        <InstallPrompt />
+        <IOSInstallGuide />
+        <InstallFloatingButton />
+        <UpdateToast />
       </body>
     </html>
   );

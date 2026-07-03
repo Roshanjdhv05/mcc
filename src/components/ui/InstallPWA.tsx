@@ -9,6 +9,12 @@ export default function InstallPWA() {
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
+    // If already running as installed PWA, never show the banner
+    if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+    // If user already installed or permanently dismissed, don't show
+    if (localStorage.getItem('pwa-installed') === 'true') return;
+
     // Register Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(err => {
@@ -35,6 +41,7 @@ export default function InstallPWA() {
       setIsInstallable(false);
       setDeferredPrompt(null);
       (window as any).deferredPWAEvent = null;
+      localStorage.setItem('pwa-installed', 'true');
     };
 
     window.addEventListener('appinstalled', handleAppInstalled);
@@ -54,6 +61,7 @@ export default function InstallPWA() {
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
       setIsInstallable(false);
+      localStorage.setItem('pwa-installed', 'true');
     }
     setDeferredPrompt(null);
   };

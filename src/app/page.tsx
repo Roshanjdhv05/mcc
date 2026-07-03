@@ -37,21 +37,21 @@ const events = [
   { month: 'OCT', day: '18', title: 'Alumni Networking Brunch', time: '11:00 AM • College Lawns', accent: 'bg-cyan-50 text-cyan-700' },
 ];
 
-const news = [
+const culturalEvents = [
   {
-    tag: 'SPORTS', title: 'MCC wins Zonal Badminton Championship',
-    desc: 'Our students showcased exceptional skill at the Mumbai University Zonal meet, securing first place.',
-    img: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=400&q=80',
+    tag: 'SPECTRUM', title: 'Theme Reveal \u2013 Reevan 2025',
+    desc: 'The grand unveiling of Spectrum 2025\'s theme in a breathtaking showcase of creativity and energy.',
+    img: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80',
   },
   {
-    tag: 'ACADEMICS', title: 'New Entrepreneurship Cell Launched',
-    desc: 'The E-Cell aims to nurture startup ideas by providing mentorship and funding opportunities.',
-    img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&q=80',
+    tag: 'CULTURAL', title: '\u0936\u0941\u092d\u093e\u0930\u0902\u092d (Subharambh) 2025',
+    desc: 'The auspicious inauguration ceremony marking the vibrant start of our Cultural Committee\'s journey.',
+    img: 'https://images.unsplash.com/photo-1514222134-b57cbb8ce073?w=400&q=80',
   },
   {
-    tag: 'PLACEMENTS', title: 'Google & Deloitte lead Placement Drive \'24',
-    desc: 'This year\'s placement season started with a record-breaking 300+ students placed in the first week.',
-    img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&q=80',
+    tag: 'SOCIAL', title: 'Spectrum x Leo Club \u2013 Social Cause',
+    desc: 'MCC joins hands with Leo Club to drive meaningful social change through awareness and outreach.',
+    img: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400&q=80',
   },
 ];
 
@@ -238,10 +238,10 @@ export default function HomePage() {
                   <div className="w-12 h-12 rounded-2xl bg-[#123B6D] text-white flex items-center justify-center">
                     <Bot size={24} />
                   </div>
-                  <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">MCC Intelligence</h2>
+                  <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Welcome to Mulund College of Commerce</h2>
                 </div>
                 <p className="text-[#64748B] max-w-lg mb-8 leading-relaxed">
-                  Get instant answers about attendance, exam schedules, library dues, and more. Your personal academic co-pilot is ready.
+                  Mulund College of Commerce (MCC), established in 1970, is a prominent institution located in the Mulund suburb of Mumbai, India. Managed by the Parle Tilak Vidyalay Association, the college offers a range of undergraduate and postgraduate programs across disciplines such as commerce, science, management, and media studies.
                 </p>
               </div>
               <div className="flex gap-4 flex-wrap">
@@ -264,9 +264,9 @@ export default function HomePage() {
           {/* Stats Cards */}
           <ScrollReveal className="space-y-4">
             {[
-              { label: 'Total Students', target: 15000, suffix: '+', bg: 'bg-[#123B6D]', icon: Users },
-              { label: 'Courses Offered', target: 48, suffix: '', bg: 'bg-[#D4A017]', icon: BookOpen },
-              { label: "Placements '24", target: 920, suffix: '+', bg: 'bg-[#00405b]', icon: Briefcase },
+              { label: 'Qualified Teachers', target: 51, suffix: '', bg: 'bg-[#123B6D]', icon: Users },
+              { label: 'Students', target: 6306, suffix: '', bg: 'bg-[#D4A017]', icon: BookOpen },
+              { label: 'Programs', target: 18, suffix: '', bg: 'bg-[#00405b]', icon: Briefcase },
             ].map(({ label, target, suffix, bg, icon: Icon }) => (
               <motion.div
                 key={label}
@@ -285,56 +285,106 @@ export default function HomePage() {
           </ScrollReveal>
         </div>
 
-        {/* ── UPCOMING EVENTS + PRINCIPAL ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Events */}
-          <ScrollReveal className="lg:col-span-4">
-            <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-8 h-full">
-              <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-6 flex items-center gap-2">
-                <CalendarDays size={22} className="text-[#D4A017]" /> Upcoming Events
-              </h2>
-              <div className="space-y-5">
-                {events.map((ev, i) => (
-                  <div key={i} className="flex gap-4 items-start">
-                    <div className={`flex-shrink-0 w-14 h-14 rounded-2xl ${ev.accent} bg-opacity-20 flex flex-col items-center justify-center`}>
-                      <span className="text-[10px] font-bold uppercase">{ev.month}</span>
-                      <span className="text-xl font-bold leading-tight">{ev.day}</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm text-[#1E293B]">{ev.title}</p>
-                      <p className="text-xs text-[#94A3B8] mt-0.5">{ev.time}</p>
-                    </div>
+        {/* ── FEATURES STRIP ── */}
+        <ScrollReveal>
+          <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2240 0%, #123B6D 60%, #0d3058 100%)' }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+              {[
+                {
+                  icon: (
+                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="24" cy="14" r="8" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M30 18l4 4-4 4" stroke="#D4A017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  ),
+                  title: 'Certified Teachers',
+                  desc: 'Our team of certified educators brings proven expertise, professional training, and a deep commitment to student success.',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="8" width="28" height="32" rx="4" stroke="white" strokeWidth="2.5"/>
+                      <path d="M16 18h16M16 24h12M16 30h8" stroke="#D4A017" strokeWidth="2.5" strokeLinecap="round"/>
+                      <circle cx="34" cy="34" r="7" fill="#123B6D" stroke="white" strokeWidth="2"/>
+                      <path d="M31 34l2 2 4-4" stroke="#D4A017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  ),
+                  title: 'Special Education',
+                  desc: 'Our Special Education program is designed to support students with diverse learning needs through personalized instruction and dedicated support services.',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8 12h32v28a4 4 0 01-4 4H12a4 4 0 01-4-4V12z" stroke="white" strokeWidth="2.5"/>
+                      <path d="M8 12V8a4 4 0 014-4h24a4 4 0 014 4v4H8z" fill="#D4A017" fillOpacity="0.4" stroke="#D4A017" strokeWidth="2"/>
+                      <path d="M16 24h16M16 30h10" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+                      <circle cx="24" cy="20" r="3" fill="#D4A017"/>
+                    </svg>
+                  ),
+                  title: 'Book & Library',
+                  desc: 'Our well-stocked library offers a rich collection of books, journals, and digital resources to inspire learning and research.',
+                },
+                {
+                  icon: (
+                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="24" cy="12" r="6" stroke="white" strokeWidth="2.5"/>
+                      <path d="M14 28l4-8h12l4 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <rect x="10" y="28" width="28" height="12" rx="3" stroke="white" strokeWidth="2.5"/>
+                      <path d="M18 34h12" stroke="#D4A017" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M24 28v12" stroke="#D4A017" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  ),
+                  title: 'Sport Clubs',
+                  desc: 'Our Sports Clubs offer students the opportunity to develop athletic skills, teamwork, and sportsmanship across a variety of disciplines.',
+                },
+              ].map(({ icon, title, desc }, i) => (
+                <motion.div
+                  key={title}
+                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
+                  className="flex flex-col items-center text-center p-8 gap-4 cursor-default transition-colors"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/10">
+                    {icon}
                   </div>
-                ))}
-              </div>
-              <button className="mt-8 w-full py-3 rounded-full border border-[#E2E8F0] text-sm font-semibold text-[#64748B] hover:bg-[#F8FAFC] transition-colors">
-                View Full Calendar
-              </button>
+                  <div>
+                    <h3 className="text-white font-bold text-base mb-2 md:mb-2 font-[var(--font-heading)]">{title}</h3>
+                    <p className="hidden md:block text-white/60 text-sm leading-relaxed">{desc}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </ScrollReveal>
+          </div>
+        </ScrollReveal>
 
-          {/* Principal's Message */}
-          <ScrollReveal className="lg:col-span-8">
-            <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col md:flex-row h-full">
-              <div className="md:w-2/5 relative h-64 md:h-auto flex-shrink-0">
+        {/* ── PRINCIPAL'S MESSAGE ── */}
+        <div className="w-full">
+          <ScrollReveal>
+            <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col md:flex-row">
+              <div className="md:w-1/3 relative h-80 md:h-auto flex-shrink-0">
                 <img
-                  src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=400&q=80"
-                  alt="Principal"
-                  className="w-full h-full object-cover"
+                  src="/Dr. Minal Mapuskar (Principal).jpeg"
+                  alt="Dr. Minal Mapuskar - Principal"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
-              <div className="p-8 md:p-10 flex flex-col justify-center">
-                <Quote size={40} className="text-[#D4A017] mb-4" />
-                <h3 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-4 italic">
-                  "Empowering minds, creating leaders."
+              <div className="p-8 md:p-12 flex flex-col justify-center md:w-2/3">
+                <Quote size={40} className="text-[#D4A017] mb-6" />
+                <h3 className="text-2xl md:text-3xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-6 italic leading-snug">
+                  “Welcome to Mulund College of Commerce – Empowering Minds & Shaping Futures”
                 </h3>
-                <p className="text-sm text-[#64748B] leading-relaxed mb-6">
-                  At Mulund College of Commerce, we strive to provide an environment that fosters intellectual curiosity and personal growth.
-                  Our autonomous status allows us to craft a curriculum that meets global standards while nurturing local talent.
-                </p>
+                <div className="text-base text-[#64748B] leading-relaxed mb-8 space-y-4">
+                  <p>
+                    We believe education is the most powerful tool for transformation. Our mission is to nurture not just brilliant students, but brilliant human beings, fostering critical thinking, creativity, and character. At Mulund College, where we blend academic rigor with compassion to prepare the student for the challenges of tomorrow.
+                  </p>
+                  <p>
+                    We provide a platform that empowers young minds to discover their dormant talents and achieve all-around excellence. Through dedicated mentoring, state-of-the-art facilities, and a supportive environment, we shape responsible citizens ready to lead.
+                  </p>
+                  <Link href="/principal" className="text-[#123B6D] font-semibold hover:underline mt-2 inline-block">Read more...</Link>
+                </div>
                 <div>
-                  <p className="font-bold text-[#123B6D]">Dr. Sonali Mahajan</p>
-                  <p className="text-xs text-[#94A3B8]">Principal, MCC (Autonomous)</p>
+                  <p className="font-bold text-[#123B6D] text-lg">Dr. Minal Mapuskar</p>
+                  <p className="text-sm text-[#94A3B8] font-medium">Principal, MCC</p>
                 </div>
               </div>
             </div>
@@ -379,32 +429,44 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* ── NEWS ── */}
+        {/* ── CULTURAL COMMITTEE ── */}
         <ScrollReveal>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Featured News</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Cultural Committee</h2>
+              <p className="text-sm text-[#64748B] mt-1">Celebrating creativity & talent at MCC</p>
+            </div>
+            <Link href="/cultural-committee" className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:underline">
+              View All <ArrowRight size={15} />
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {news.map((n, i) => (
+            {culturalEvents.map((n, i) => (
               <motion.div
                 key={i}
                 whileHover={{ y: -4 }}
                 className="group cursor-pointer"
               >
-                <div className="relative h-52 rounded-2xl overflow-hidden mb-4">
-                  <img
-                    src={n.img}
-                    alt={n.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-[#123B6D]">
-                      {n.tag}
-                    </span>
+                <Link href="/cultural-committee">
+                  <div className="relative h-52 rounded-2xl overflow-hidden mb-4">
+                    <img
+                      src={n.img}
+                      alt={n.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <div className="absolute bottom-4 left-4">
+                      <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-[#123B6D]">
+                        {n.tag}
+                      </span>
+                    </div>
+                    <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArrowRight size={14} className="text-white" />
+                    </div>
                   </div>
-                </div>
-                <h4 className="font-bold text-[#1E293B] font-[var(--font-heading)] group-hover:text-[#123B6D] transition-colors mb-2">{n.title}</h4>
-                <p className="text-sm text-[#64748B]">{n.desc}</p>
+                  <h4 className="font-bold text-[#1E293B] font-[var(--font-heading)] group-hover:text-[#123B6D] transition-colors mb-2">{n.title}</h4>
+                  <p className="text-sm text-[#64748B]">{n.desc}</p>
+                </Link>
               </motion.div>
             ))}
           </div>

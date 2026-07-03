@@ -3,10 +3,10 @@ import { Users, BookOpen, Briefcase, ShieldCheck } from 'lucide-react';
 import Counter from '@/components/ui/Counter';
 
 const stats = [
-  { label: 'Students Enrolled', target: 15000, suffix: '+', icon: Users },
-  { label: 'Courses Offered', target: 48, suffix: '', icon: BookOpen },
-  { label: 'Placements 2024', target: 920, suffix: '+', icon: Briefcase },
-  { label: 'Years of Excellence', target: 60, suffix: '+', icon: ShieldCheck },
+  { label: 'Qualified Teachers', target: 51, suffix: '', icon: Users },
+  { label: 'Students', target: 6306, suffix: '', icon: BookOpen },
+  { label: 'Programs', target: 18, suffix: '', icon: Briefcase },
+  { label: 'Years of Excellence', target: 55, suffix: '+', icon: ShieldCheck },
 ];
 
 export default function StatsStrip() {

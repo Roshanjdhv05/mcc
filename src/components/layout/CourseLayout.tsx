@@ -33,10 +33,10 @@ export function CourseLayout({ courseName, children }: CourseLayoutProps) {
           <h1 className="text-4xl md:text-5xl font-bold text-[#0f2142] font-[var(--font-heading)]">
             {courseName}
           </h1>
-          <button className="bg-[#e41e26] hover:bg-[#c31820] text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex items-center gap-2">
+          <a href="https://enrollonline.co.in/Registration/Apply/MCC" target="_blank" rel="noopener noreferrer" className="bg-[#e41e26] hover:bg-[#c31820] text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex items-center gap-2">
             Apply Now
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </a>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">

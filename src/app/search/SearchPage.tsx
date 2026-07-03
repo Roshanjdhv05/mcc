@@ -24,7 +24,7 @@ const siteIndex = [
   { title: 'NAAC – A+ Accreditation (CGPA 3.42)', href: '/naac', category: 'NAAC', icon: Award, tags: ['naac', 'accreditation', 'cgpa', 'grade', 'a+', 'ssr', 'criteria', 'cycle', '3.42', 'national assessment'] },
   { title: 'NIRF Ranking', href: '/nirf', category: 'NIRF', icon: BarChart2, tags: ['nirf', 'ranking', 'national', 'institutional', 'framework', 'score', 'ministry', 'rank'] },
   // About
-  { title: 'Vision & Mission', href: '/about/vision', category: 'About', icon: BookOpen, tags: ['vision', 'mission', 'about', 'mcc', 'values', 'goals'] },
+  { title: 'Vision & Mission', href: '/about/vision-mission', category: 'About', icon: BookOpen, tags: ['vision', 'mission', 'about', 'mcc', 'values', 'goals'] },
   { title: 'College Management', href: '/about/management', category: 'About', icon: Users, tags: ['management', 'governing body', 'trust', 'committee', 'administration'] },
   { title: "Principal's Message", href: '/about/principal', category: 'About', icon: Users, tags: ['principal', 'message', 'head', 'about'] },
   { title: 'Milestones & Achievements', href: '/about/milestones', category: 'About', icon: Award, tags: ['milestones', 'achievements', 'history', 'awards', 'about'] },

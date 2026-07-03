@@ -77,24 +77,19 @@ export default function SplashScreen() {
                 animate={{ scale: [1, 1.35], opacity: [0.7, 0] }}
                 transition={{ repeat: Infinity, duration: 1.8, ease: 'easeOut' }}
               />
-              {/* Logo circle */}
-              <div
-                className="w-28 h-28 rounded-full flex items-center justify-center shadow-2xl"
-                style={{ background: 'linear-gradient(135deg, #123B6D 0%, #1a5296 100%)' }}
-              >
-                {/* MCC monogram */}
-                <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Stylised open-book / graduation cap shape */}
-                  <path d="M10 52 L40 36 L70 52" stroke="#D4A017" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M22 44 L22 60 Q40 66 58 60 L58 44" stroke="#D4A017" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  {/* Tassel */}
-                  <circle cx="70" cy="52" r="3" fill="#D4A017"/>
-                  <line x1="70" y1="55" x2="70" y2="65" stroke="#D4A017" strokeWidth="2.5" strokeLinecap="round"/>
-                  <line x1="70" y1="65" x2="66" y2="70" stroke="#D4A017" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="70" y1="65" x2="74" y2="70" stroke="#D4A017" strokeWidth="2" strokeLinecap="round"/>
-                  {/* Letters */}
-                  <text x="25" y="30" fontFamily="Georgia, serif" fontWeight="bold" fontSize="18" fill="white" letterSpacing="1">MCC</text>
-                </svg>
+              {/* Second ring pulse with delay */}
+              <motion.div
+                className="absolute inset-0 rounded-full border border-[#4DA8DA]/30"
+                animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: 'easeOut', delay: 0.6 }}
+              />
+              {/* Logo container – no clipping */}
+              <div className="flex items-center justify-center drop-shadow-2xl">
+                <img
+                  src="/mcclogo.jpg"
+                  alt="MCC Logo"
+                  className="w-40 h-40 object-contain"
+                />
               </div>
             </motion.div>
 

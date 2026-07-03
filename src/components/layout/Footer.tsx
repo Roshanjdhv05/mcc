@@ -39,6 +39,7 @@ export default function Footer() {
                 { label: 'Notice Board', href: '/notices' },
                 { label: 'Student Services', href: '/services' },
                 { label: 'IQAC & NAAC', href: '/iqac' },
+                { label: "From the Principal's Desk", href: '/principal' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="hover:text-[#D4A017] hover:pl-1 transition-all">{l.label}</Link>
@@ -65,15 +66,20 @@ export default function Footer() {
             <div className="space-y-4 text-sm text-white/80">
               <div className="flex items-start gap-3">
                 <MapPin size={16} className="mt-0.5 flex-shrink-0 text-[#4DA8DA]" />
-                <span>Ram Mandir Road, Vidyanagari, Mulund (W), Mumbai - 400080</span>
+                <span>Mulund Vanijya Mahavidyalaya Marg Mulund West, Mumbai 400080</span>
               </div>
-              <div className="flex items-center gap-3">
-                <Phone size={16} className="flex-shrink-0 text-[#4DA8DA]" />
-                <a href="tel:+912225688888" className="hover:text-white transition-colors">+91 22 2568 8888</a>
+              <div className="flex items-start gap-3">
+                <Phone size={16} className="mt-0.5 flex-shrink-0 text-[#4DA8DA]" />
+                <div className="flex flex-col gap-1">
+                  <a href="tel:+918097345311" className="hover:text-white transition-colors">+91 8097345311</a>
+                  <a href="tel:+918097876255" className="hover:text-white transition-colors">+91 8097876255</a>
+                  <a href="tel:+919082101135" className="hover:text-white transition-colors">+91 9082101135</a>
+                  <a href="tel:+919082164576" className="hover:text-white transition-colors">+91 9082164576</a>
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 <Mail size={16} className="flex-shrink-0 text-[#4DA8DA]" />
-                <a href="mailto:info@mcc.edu.in" className="hover:text-white transition-colors">info@mcc.edu.in</a>
+                <a href="mailto:mccmulund@gmail.com" className="hover:text-white transition-colors">mccmulund@gmail.com</a>
               </div>
             </div>
           </div>

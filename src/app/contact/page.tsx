@@ -30,9 +30,9 @@ export default function ContactPage() {
           {/* Contact Info */}
           <div className="lg:col-span-1 space-y-4">
             {[
-              { icon: MapPin, label: 'Address', val: 'Ram Mandir Road, Vidyanagari, Mulund (W), Mumbai – 400080', color: 'bg-blue-50 text-[#123B6D]' },
-              { icon: Phone, label: 'Phone', val: '+91 22 2568 8888', color: 'bg-green-50 text-green-700' },
-              { icon: Mail, label: 'Email', val: 'info@mcc.edu.in', color: 'bg-amber-50 text-amber-700' },
+              { icon: MapPin, label: 'Address', val: 'Mulund Vanijya Mahavidyalaya Marg Mulund West, Mumbai 400080', color: 'bg-blue-50 text-[#123B6D]' },
+              { icon: Phone, label: 'Phone', val: '8097345311, 8097876255, 9082101135, 9082164576', color: 'bg-green-50 text-green-700' },
+              { icon: Mail, label: 'Email', val: 'mccmulund@gmail.com', color: 'bg-amber-50 text-amber-700' },
               { icon: Clock, label: 'Office Hours', val: 'Mon–Sat: 9:00 AM – 5:00 PM', color: 'bg-purple-50 text-purple-700' },
             ].map(({ icon: Icon, label, val, color }) => (
               <div key={label} className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 flex items-start gap-4">
@@ -90,7 +90,7 @@ export default function ContactPage() {
           <div className="text-center">
             <MapPin size={40} className="text-[#123B6D] mx-auto mb-2" />
             <p className="text-[#64748B] font-medium">Google Maps — Mulund College of Commerce</p>
-            <p className="text-sm text-[#94A3B8]">Ram Mandir Road, Mulund (W), Mumbai</p>
+            <p className="text-sm text-[#94A3B8]">Mulund Vanijya Mahavidyalaya Marg, Mulund West, Mumbai 400080</p>
           </div>
         </div>
 

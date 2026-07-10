@@ -317,7 +317,7 @@ export default function StaffProfilePage() {
                 <div className="mb-8">
                   <h2 className="text-lg font-bold text-[#014d4e] mb-4 flex items-center gap-2">
                     <span className="w-2 h-5 bg-green-500 rounded-full inline-block"></span>
-                    Aided Library Staff
+                    Aided
                   </h2>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <StaffCard name="Mr. Subhash Mahadev Nagrikar" designation="Library Attendant" qualification="S.S.C." category="Aided Library Staff" imagePlaceholder="SUBHASH M. NAGRIKAR" />
@@ -331,7 +331,7 @@ export default function StaffProfilePage() {
                 <div>
                   <h2 className="text-lg font-bold text-[#014d4e] mb-4 flex items-center gap-2">
                     <span className="w-2 h-5 bg-blue-500 rounded-full inline-block"></span>
-                    Unaided Library Staff
+                    Unaided
                   </h2>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <StaffCard name="Mr. Santosh Shinde" designation="Library Peon" qualification="S.S.C." category="Unaided Library Staff" imagePlaceholder="SANTOSH SHINDE" />

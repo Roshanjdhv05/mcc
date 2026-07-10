@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 
 export const metadata: Metadata = {
   title: 'B.A (MMC) | MCC Digital Experience Platform',
@@ -17,6 +18,8 @@ export default function CoursePage() {
         <p className="mb-4">This degree is ideal for individuals passionate about storytelling, media production, and communication, and who wish to make a mark in the ever-growing media and entertainment industry.</p>
       </>
       }
+      syllabusContent={<CourseFeeStructure courseKey="BAMMC" category="commerce" />}
+      courseKey="BAMMC"
       title="Bachelor of Arts (Multimedia and Mass Communication)"
       description="The Bachelor of Arts (Multimedia and Mass Communication) programme details will be updated shortly."
     />

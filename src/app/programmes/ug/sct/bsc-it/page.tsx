@@ -19,6 +19,8 @@ export default function CoursePage() {
       }
       title="Bachelor of Science (Information Technology)"
       description="The Bachelor of Science (Information Technology) programme details will be updated shortly."
+      courseKey="BSC_IT"
+      category="science"
     />
   );
 }

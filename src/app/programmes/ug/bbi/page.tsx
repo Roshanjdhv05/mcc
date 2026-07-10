@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 
 export const metadata: Metadata = {
   title: 'BBI | MCC Digital Experience Platform',
@@ -17,6 +18,8 @@ export default function CoursePage() {
         <p className="mb-4">This program is ideal for students who aspire to build a career in banking, finance, and insurance, and seek in-depth knowledge of financial risk management and economic policies.</p>
       </>
       }
+      syllabusContent={<CourseFeeStructure courseKey="BBI" category="commerce" />}
+      courseKey="BBI"
       title="Bachelor of Commerce (Banking & Insurance)"
       description="The Bachelor of Commerce (Banking & Insurance) programme details will be updated shortly."
     />

@@ -140,3 +140,13 @@
 .font-heading {
   font-family: var(--font-heading), 'Georgia', serif;
 }
+
+/* Library mobile nav ticker animation */
+@keyframes libraryNavTicker {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}

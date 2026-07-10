@@ -9,22 +9,25 @@ import {
   ChevronRight, Lightbulb, Activity, MonitorSmartphone, Target,
   MessagesSquare, Briefcase
 } from 'lucide-react';
+import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 
 interface CourseTemplateProps {
   title: string;
   description?: string;
   introductionContent?: React.ReactNode;
+  syllabusContent?: React.ReactNode;
+  quickActionsData?: { title: string; icon: any; info: string }[];
+  courseKey?: string;
 }
 
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-export default function CourseTemplate({ title, description, introductionContent }: CourseTemplateProps) {
+export default function CourseTemplate({ title, description, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey }: CourseTemplateProps) {
   const tabs = [
     'Overview',
     'Syllabus',
     'Faculty',
     'Management Club - Inspira',
-    'NewsLetter',
     'Activity',
     'Result & Prize Distribution',
     'Industrial Visits'
@@ -56,7 +59,7 @@ export default function CourseTemplate({ title, description, introductionContent
     { icon: Target, title: 'Career Guidance', bg: 'bg-indigo-50', text: 'text-indigo-600' },
   ];
 
-  const quickActionsData = [
+  const quickActionsData = customQuickActionsData || [
     { title: 'Eligibility', icon: Users, info: '10+2 from a recognized board with minimum 50% aggregate marks.' },
     { title: 'Fee Structure', icon: Award, info: '₹35,000 - ₹50,000 per year depending on the specific programme.' },
     { title: 'Timing', icon: Clock, info: 'Morning Session: 7:00 AM to 12:00 PM. Practical slots may vary.' },
@@ -136,11 +139,11 @@ export default function CourseTemplate({ title, description, introductionContent
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center items-center justify-center text-center md:text-left gap-1 md:gap-2 bg-transparent md:bg-[#F8FAFC] border-0 md:border border-[#E2E8F0] rounded-xl px-1 md:px-4 py-1 md:py-2.5">
                   <Settings className="text-[#F59E0B] shrink-0" size={24} strokeWidth={1.5} />
-                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">Industry<br className="hidden md:block"/><span className="font-medium text-gray-500"> Oriented</span></span>
+                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">07:15 a.m.<br className="hidden md:block"/><span className="font-medium text-gray-500"> – 10:51 a.m.</span><br className="hidden md:block"/><span className="font-normal text-[8px] md:text-xs text-gray-400">(Practicals till 12:30)</span></span>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center items-center justify-center text-center md:text-left gap-1 md:gap-2 bg-transparent md:bg-[#F8FAFC] border-0 md:border border-[#E2E8F0] rounded-xl px-1 md:px-4 py-1 md:py-2.5">
                   <Award className="text-[#8B5CF6] shrink-0" size={24} strokeWidth={1.5} />
-                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">Skill<br className="hidden md:block"/><span className="font-medium text-gray-500"> Dev..</span></span>
+                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">600 Seats<br className="hidden md:block"/><span className="font-medium text-gray-500"> Intake</span><br className="hidden md:block"/><span className="font-normal text-[8px] md:text-xs text-gray-400">(Govt. Aided)</span></span>
                 </div>
               </div>
 
@@ -252,7 +255,7 @@ export default function CourseTemplate({ title, description, introductionContent
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
               
               {/* Column 1: About */}
-              <div className="lg:col-span-4 bg-white rounded-3xl p-6 md:p-8 border border-[#E2E8F0] shadow-sm flex flex-col h-fit">
+              <div className="lg:col-span-8 bg-white rounded-3xl p-6 md:p-8 border border-[#E2E8F0] shadow-sm flex flex-col h-fit">
                 <h2 className="text-lg md:text-xl font-bold text-[#1E293B] mb-4">About the Programme</h2>
                 <div className="relative">
                   <div className={`prose prose-sm text-gray-600 transition-all duration-500 overflow-hidden text-xs md:text-sm ${!isReadMore ? 'max-h-[160px] md:max-h-[200px]' : 'max-h-[1500px]'}`}>
@@ -287,21 +290,10 @@ export default function CourseTemplate({ title, description, introductionContent
                 </div>
               </div>
 
-              {/* Column 2: Feature Grid */}
-              <div className="lg:col-span-5 flex flex-col gap-4">
-                <h3 className="md:hidden text-lg font-bold text-[#1E293B] pl-2">Programme Highlights</h3>
-                <div className="grid grid-cols-3 md:grid-cols-2 gap-3 md:gap-4">
-                  {features.map((f, idx) => (
-                    <div key={idx} className={`${f.bg} rounded-2xl md:rounded-3xl p-3 md:p-6 flex flex-col items-center justify-center text-center gap-2 md:gap-4 border border-white hover:border-${f.text.split('-')[1]}-200 transition-all duration-300 min-h-[100px] md:min-h-[160px]`}>
-                      <f.icon className={f.text} size={24} />
-                      <span className={`font-bold text-[9px] md:text-sm px-1 leading-tight ${f.text}`}>{f.title}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+
 
               {/* Column 3: Quick Actions */}
-              <div className="lg:col-span-3">
+              <div className="lg:col-span-4">
                 <div className="bg-white rounded-3xl p-6 md:p-6 border border-[#E2E8F0] shadow-sm h-full">
                   <h3 className="font-bold text-[#1E293B] mb-4 text-lg">Quick Actions</h3>
                   <div className="flex flex-col gap-3" style={{ perspective: '1000px' }}>
@@ -326,7 +318,7 @@ export default function CourseTemplate({ title, description, introductionContent
                               style={{ backfaceVisibility: 'hidden' }}
                             >
                               <div className="flex items-center gap-3">
-                                <item.icon className="text-[#3B82F6]" size={18} />
+                                {React.isValidElement(item.icon) ? item.icon : React.createElement(item.icon as any, { className: "text-[#3B82F6]", size: 18 })}
                                 <span className="text-xs md:text-sm font-bold text-[#1E293B]">{item.title}</span>
                               </div>
                               <ChevronRight className="text-gray-400 group-hover:rotate-90 transition-transform" size={14} />
@@ -352,6 +344,10 @@ export default function CourseTemplate({ title, description, introductionContent
                 </div>
               </div>
 
+            </div>
+          ) : activeTab === 'Syllabus' && syllabusContent ? (
+            <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">
+              {syllabusContent}
             </div>
           ) : (
             <div className="bg-white rounded-3xl p-12 border border-[#E2E8F0] shadow-sm flex flex-col items-center justify-center text-center min-h-[250px]">

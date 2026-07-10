@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ChevronRight, GraduationCap, Users, Calendar, Award, Briefcase, BookOpen, Newspaper } from 'lucide-react';
+import { ChevronRight, GraduationCap, Users, Calendar, Award, Briefcase, BookOpen, DollarSign } from 'lucide-react';
 
 interface SidebarItem {
   title: string;
@@ -18,9 +18,9 @@ export function CourseLayout({ courseName, children }: CourseLayoutProps) {
   const sidebarItems: SidebarItem[] = [
     { title: 'Home', href: '#', active: true, icon: <ChevronRight className="w-4 h-4" /> },
     { title: 'Syllabus', href: '#', icon: <BookOpen className="w-4 h-4" /> },
+    { title: 'Fee Structure', href: '#', icon: <DollarSign className="w-4 h-4" /> },
     { title: 'Faculty', href: '#', icon: <Users className="w-4 h-4" /> },
     { title: 'Management Club - Inspira', href: '#', icon: <Briefcase className="w-4 h-4" /> },
-    { title: 'NewsLetter', href: '#', icon: <Newspaper className="w-4 h-4" /> },
     { title: 'Activity', href: '#', icon: <Calendar className="w-4 h-4" /> },
     { title: 'Result & Prize Distribution', href: '#', icon: <Award className="w-4 h-4" /> },
     { title: 'Industrial Visits', href: '#', icon: <GraduationCap className="w-4 h-4" /> },

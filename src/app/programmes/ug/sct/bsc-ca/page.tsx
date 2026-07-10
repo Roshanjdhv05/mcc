@@ -19,6 +19,8 @@ export default function CoursePage() {
       }
       title="Bachelor of Science (Computer Applications)"
       description="The Bachelor of Science (Computer Applications) programme details will be updated shortly."
+      courseKey="BSC_CA"
+      category="science"
     />
   );
 }

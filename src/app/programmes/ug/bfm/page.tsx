@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 
 export const metadata: Metadata = {
   title: 'BFM | MCC Digital Experience Platform',
@@ -17,6 +18,8 @@ export default function CoursePage() {
         <p className="mb-4">This program is ideal for students interested in financial markets, investment strategies, and economic trends, preparing them for a rewarding career in the finance industry.</p>
       </>
       }
+      syllabusContent={<CourseFeeStructure courseKey="BFM" category="commerce" />}
+      courseKey="BFM"
       title="Bachelor of Commerce (Financial Markets)"
       description="The Bachelor of Commerce (Financial Markets) programme details will be updated shortly."
     />

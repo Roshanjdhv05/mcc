@@ -19,6 +19,8 @@ export default function CoursePage() {
       }
       title="Bachelor of Science (Computer Science)"
       description="The Bachelor of Science (Computer Science) programme details will be updated shortly."
+      courseKey="BSC_CS"
+      category="science"
     />
   );
 }

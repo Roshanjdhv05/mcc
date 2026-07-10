@@ -19,6 +19,8 @@ export default function CoursePage() {
       }
       title="Bachelor of Science (Data Science)"
       description="The Bachelor of Science (Data Science) programme details will be updated shortly."
+      courseKey="BSC_DS"
+      category="science"
     />
   );
 }

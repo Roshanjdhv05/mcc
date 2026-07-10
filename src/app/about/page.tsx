@@ -7,12 +7,29 @@ export const metadata: Metadata = {
 };
 
 const milestones = [
-  { year: '1964', title: 'College Founded', desc: 'MCC established under Mumbai University' },
-  { year: '1985', title: 'PG Programmes', desc: 'MCom programme introduced' },
-  { year: '2010', title: 'NAAC Accreditation', desc: 'First NAAC accreditation with Grade A' },
-  { year: '2018', title: 'Autonomous Status', desc: 'Granted autonomous status by UGC' },
-  { year: '2022', title: 'NAAC A+', desc: 'Re-accredited with NAAC A+ (3.42 CGPA)' },
-  { year: '2024', title: '60 Years of Excellence', desc: 'Diamond Jubilee celebrations' },
+  { year: '1970', title: 'College Founded', desc: 'Mulund College of Commerce was founded by Parle Tilak Vidyalaya Association.' },
+  { year: '1976', title: 'Junior College', desc: 'Junior College was established.' },
+  { year: '1980', title: 'PG Teaching Center', desc: 'Establishment of the Post Graduate teaching center for Masters in Commerce under the Department of Commerce, University of Mumbai.' },
+  { year: '1994', title: 'Computer Age', desc: 'MCC moved into the "Computer Age" by starting the Computrain Centre with a view to enhance the computer skills of its students.' },
+  { year: '1999', title: 'B.M.S. Introduced', desc: 'Bachelors of Management Studies (B.M.S.) was introduced.' },
+  { year: '2000', title: 'Vocational Courses', desc: "With the advent of Vocationalisation and emphasis on 'On-the-job training', MCC opted for B. Com (Vocational) in Computer Applications." },
+  { year: '2001', title: 'IT & CS Programmes', desc: 'B.Sc. Computer Science and B.Sc. Information Technology were introduced. Information Technology was introduced at Junior College.' },
+  { year: '2003', title: 'New B.Com. Specialisations', desc: 'Introduced: B.Com. (Vocational) with Tax practice and Procedures, B.Com. (Accounts and Finance), and B.Com (Banking and Insurance).' },
+  { year: '2004', title: 'NAAC A Grade & M.Sc. IT', desc: "Accredited with 'A' grade by NAAC. Introduced M.Sc. (Information Technology) affiliated to the University of Mumbai." },
+  { year: '2007', title: 'M.C.A. (I.D.E.)', desc: 'Initiated M.C.A. (I.D.E.), Personal Contact Programs affiliated to the University of Mumbai.' },
+  { year: '2008', title: 'MCCE & B.Com. FM', desc: 'Introduced B.Com. (Financial Markets). Mulund Centre for Commercial Education (MCCE) was started to groom students for better employability.' },
+  { year: '2011', title: 'Re-accredited by NAAC', desc: "Re-accredited by National Assessment and Accreditation Council with 'A' grade." },
+  { year: '2012', title: 'M.Com. (Management)', desc: 'Introduced M.Com. (Management), affiliated to the University of Mumbai.' },
+  { year: '2013', title: 'Dual Degree System', desc: 'Started Diploma and Post-graduate Diploma courses under Dual Degree System in collaboration with Garware Institute of Career Education and Development.' },
+  { year: '2014', title: 'Best College Award & Ph.D. Centre', desc: 'Received Best College Award (Urban Area) (2012-13) from University of Mumbai. Started Ph.D. Research Centre in Commerce with Specialization in Business Economics.' },
+  { year: '2016', title: 'M.Com. (B&F) & NAAC Re-accreditation', desc: "Introduced M.Com. (Banking & Finance). Re-accredited by NAAC with 'A' grade." },
+  { year: '2017', title: 'B.M.M. Introduced', desc: 'Started Bachelor of Mass Media.' },
+  { year: '2019', title: 'Golden Jubilee', desc: 'MCC celebrated its Golden Jubilee Year.' },
+  { year: '2020', title: 'PTVA Centenary', desc: 'PTVA celebrated its Centenary Year.' },
+  { year: '2021', title: 'Academic Autonomy', desc: 'The College was conferred Academic Autonomy by UGC and entered the 4th Cycle of NAAC accreditation with A Grade (3.26 score).' },
+  { year: '2022', title: 'New Science & Finance Programs', desc: 'B.Sc. (Data Science) and M.Sc. (Finance) programs were introduced. Several credits based short term courses were introduced to increase the employability of learners.' },
+  { year: '2023', title: 'NEP 2020 Implementation', desc: 'Bachelors of Computer Science (BCA) and Bachelors of Business Administration (BBA) programs were introduced. National Education Policy (NEP) 2020 implemented across all the programs.' },
+  { year: '2024', title: 'BFSI Program', desc: 'B.com Banking Financial Services and Insurance (BFSI) Program was introduced.' },
 ];
 
 export default function AboutPage() {

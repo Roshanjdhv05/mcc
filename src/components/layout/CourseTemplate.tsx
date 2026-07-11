@@ -18,6 +18,7 @@ interface CourseTemplateProps {
   syllabusContent?: React.ReactNode;
   quickActionsData?: { title: string; icon: any; info: string }[];
   courseKey?: string;
+  category?: string;
 }
 
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');

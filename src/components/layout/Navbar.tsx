@@ -13,6 +13,7 @@ const navLinks = [
       { label: 'PTVA Trust', href: '/about/ptva-trust' },
       { label: 'Board of Trustees', href: '/about/board-of-trustees' },
       { label: "Principal's Desk", href: '/principal' },
+      { label: "Vice Principal's Desk", href: '/vice-principal' },
       { label: 'Organogram', href: '/about/organogram' },
       { label: 'Code of Conduct', href: '/about/code-of-conduct' },
       { 
@@ -25,7 +26,7 @@ const navLinks = [
     ]
   },
   {
-    label: 'Accreditation & Rankings', href: '/accreditation', icon: <Medal size={18} />, 
+    label: 'Accreditation', href: '/accreditation', icon: <Medal size={18} />, 
     isMegaMenu: true,
     megaMenuAlign: 'left',
     megaMenuImage: '/objectives_side_img.png',
@@ -33,36 +34,32 @@ const navLinks = [
       {
         title: 'Certificates',
         sections: [
-          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }] },
-          { subTitle: 'NAAC', links: [{ label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }] }
+          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }, { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' }] }
         ]
       },
       {
-        title: 'Rankings',
+        title: 'NAAC',
         sections: [
-          { subTitle: 'NIRF', links: [{ label: 'Annual Submissions', href: '/accreditation/nirf/annual-submissions' }] },
-          { subTitle: 'AISHE', links: [{ label: 'Annual Submissions', href: '/accreditation/aishe/annual-submissions' }] }
+          { links: [{ label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }] }
         ]
       },
       {
-        title: 'Autonomous HEI',
+        title: 'NIRF',
         sections: [
-          { links: [{ label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' }, { label: 'Mandatory disclosure-Undertaking', href: '/accreditation/autonomous/mandatory-disclosure' }] },
-          { subTitle: 'Board of Studies', links: [{ label: 'Members', href: '/accreditation/autonomous/bos/members' }, { label: 'Minutes', href: '/accreditation/autonomous/bos/minutes' }] },
-          { subTitle: 'Academic Council', links: [{ label: 'Members', href: '/accreditation/autonomous/academic-council/members' }, { label: 'Minutes', href: '/accreditation/autonomous/academic-council/minutes' }] }
+          { links: [{ label: 'Annual Submissions', href: '/accreditation/nirf/annual-submissions' }] }
         ]
       },
       {
-        title: 'Committees',
+        title: 'AISHE',
         sections: [
-          { subTitle: 'Finance Committee', links: [{ label: 'Members', href: '/accreditation/autonomous/finance-committee/members' }, { label: 'Minutes', href: '/accreditation/autonomous/finance-committee/minutes' }] },
-          { subTitle: 'Governing Body', links: [{ label: 'Members', href: '/accreditation/autonomous/governing-body/members' }, { label: 'Minutes', href: '/accreditation/autonomous/governing-body/minutes' }] }
+          { links: [{ label: 'Annual Submissions', href: '/accreditation/aishe/annual-submissions' }] }
         ]
       }
     ],
     sub: [
       { label: '2 B – Certificate', href: '/accreditation/2b-certificate' },
       { label: '12 F – Certificate', href: '/accreditation/12f-certificate' },
+      { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
       { 
         label: 'NAAC', href: '#', sub: [
           { label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }
@@ -76,36 +73,6 @@ const navLinks = [
       {
         label: 'AISHE', href: '#', sub: [
           { label: 'Annual Submissions', href: '/accreditation/aishe/annual-submissions' }
-        ]
-      },
-      {
-        label: 'Autonomous HEI', href: '/accreditation/autonomous', sub: [
-          { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
-          { label: 'Mandatory disclosure-Undertaking', href: '/accreditation/autonomous/mandatory-disclosure' },
-          {
-            label: 'Board of Studies', href: '#', sub: [
-              { label: 'Members (Year Wise)', href: '/accreditation/autonomous/bos/members' },
-              { label: 'Minutes of the meeting', href: '/accreditation/autonomous/bos/minutes' }
-            ]
-          },
-          {
-            label: 'Academic Council', href: '#', sub: [
-              { label: 'Members (Year Wise)', href: '/accreditation/autonomous/academic-council/members' },
-              { label: 'Minutes of the meeting', href: '/accreditation/autonomous/academic-council/minutes' }
-            ]
-          },
-          {
-            label: 'Finance Committee', href: '#', sub: [
-              { label: 'Members (Year Wise)', href: '/accreditation/autonomous/finance-committee/members' },
-              { label: 'Minutes of the meeting', href: '/accreditation/autonomous/finance-committee/minutes' }
-            ]
-          },
-          {
-            label: 'Governing Body', href: '#', sub: [
-              { label: 'Members (Year Wise)', href: '/accreditation/autonomous/governing-body/members' },
-              { label: 'Minutes of the meeting', href: '/accreditation/autonomous/governing-body/minutes' }
-            ]
-          }
         ]
       }
     ]
@@ -291,7 +258,7 @@ const navLinks = [
   },
   { label: 'Examination', href: '/examination', icon: <BookOpen size={18} /> },
   {
-    label: 'Admission', href: '/admission', icon: <Users size={18} />,
+    label: 'Autonomy', href: '/accreditation/autonomous', icon: <Medal size={18} />,
     isMegaMenu: true,
     megaMenuImage: '/objectives_side_img.png',
     megaMenuColumns: [
@@ -300,49 +267,80 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Admission Prospectus', href: '/admission/prospectus' },
-              { label: 'Admission Policy', href: '/admission/policy' },
-              { label: 'Information & Notices of Junior College', href: '/admission/jr-college-info' },
-              { label: 'Degree Programmes', href: '/admission/degree-programmes' },
-              { label: 'Process of Admission', href: '/admission/process' },
-              { label: 'Notices and Cut-Offs', href: '/admission/notices-cutoffs' },
+              { label: 'Autonomous HEI', href: '/accreditation/autonomous' },
+              { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
+              { label: 'Mandatory disclosure-Undertaking', href: '/accreditation/autonomous/mandatory-disclosure' },
             ]
           }
         ]
       },
       {
-        title: 'Forms & Links',
+        title: 'Statutory Bodies',
         sections: [
           {
+            subTitle: 'Board of Studies',
             links: [
-              { label: 'Names of our programmes as they appear on the University (E-Samarth)Portal', href: '/admission/samarth-names' },
-              { label: 'Link for filling the University Form', href: '/admission/university-form' },
-              { label: 'Link for Filling the College Form', href: '/admission/college-form' },
-              { label: 'Miscellaneous forms and proformas', href: '/admission/misc-forms' },
-              { label: 'Data Correction Application', href: '/admission/data-correction' },
-              { label: 'Admission Cancellation Form', href: '/admission/cancellation-form' },
-              { label: 'Undertaking for Submission of Documents', href: '/admission/undertaking' },
-              { label: 'Contact: admisions@mccmulund.ac.in', href: 'mailto:admisions@mccmulund.ac.in' },
+              { label: 'Members', href: '/accreditation/autonomous/bos/members' },
+              { label: 'Minutes', href: '/accreditation/autonomous/bos/minutes' }
+            ]
+          },
+          {
+            subTitle: 'Academic Council',
+            links: [
+              { label: 'Members', href: '/accreditation/autonomous/academic-council/members' },
+              { label: 'Minutes', href: '/accreditation/autonomous/academic-council/minutes' }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Committees',
+        sections: [
+          {
+            subTitle: 'Finance Committee',
+            links: [
+              { label: 'Members', href: '/accreditation/autonomous/finance-committee/members' },
+              { label: 'Minutes', href: '/accreditation/autonomous/finance-committee/minutes' }
+            ]
+          },
+          {
+            subTitle: 'Governing Body',
+            links: [
+              { label: 'Members', href: '/accreditation/autonomous/governing-body/members' },
+              { label: 'Minutes', href: '/accreditation/autonomous/governing-body/minutes' }
             ]
           }
         ]
       }
     ],
     sub: [
-      { label: 'Admission Prospectus', href: '/admission/prospectus' },
-      { label: 'Admission Policy', href: '/admission/policy' },
-      { label: 'Information & Notices of Junior College', href: '/admission/jr-college-info' },
-      { label: 'Degree Programmes', href: '/admission/degree-programmes' },
-      { label: 'Process of Admission', href: '/admission/process' },
-      { label: 'Notices and Cut-Offs', href: '/admission/notices-cutoffs' },
-      { label: 'Names of our programmes as they appear on the University (E-Samarth)Portal', href: '/admission/samarth-names' },
-      { label: 'Link for filling the University Form', href: '/admission/university-form' },
-      { label: 'Link for Filling the College Form', href: '/admission/college-form' },
-      { label: 'Miscellaneous forms and proformas', href: '/admission/misc-forms' },
-      { label: 'Data Correction Application', href: '/admission/data-correction' },
-      { label: 'Admission Cancellation Form', href: '/admission/cancellation-form' },
-      { label: 'Undertaking for Submission of Documents', href: '/admission/undertaking' },
-      { label: 'Contact: admisions@mccmulund.ac.in', href: 'mailto:admisions@mccmulund.ac.in' },
+      { label: 'Autonomous HEI', href: '/accreditation/autonomous' },
+      { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
+      { label: 'Mandatory disclosure-Undertaking', href: '/accreditation/autonomous/mandatory-disclosure' },
+      { 
+        label: 'Board of Studies', href: '#', sub: [
+          { label: 'Members', href: '/accreditation/autonomous/bos/members' },
+          { label: 'Minutes', href: '/accreditation/autonomous/bos/minutes' }
+        ]
+      },
+      { 
+        label: 'Academic Council', href: '#', sub: [
+          { label: 'Members', href: '/accreditation/autonomous/academic-council/members' },
+          { label: 'Minutes', href: '/accreditation/autonomous/academic-council/minutes' }
+        ]
+      },
+      { 
+        label: 'Finance Committee', href: '#', sub: [
+          { label: 'Members', href: '/accreditation/autonomous/finance-committee/members' },
+          { label: 'Minutes', href: '/accreditation/autonomous/finance-committee/minutes' }
+        ]
+      },
+      { 
+        label: 'Governing Body', href: '#', sub: [
+          { label: 'Members', href: '/accreditation/autonomous/governing-body/members' },
+          { label: 'Minutes', href: '/accreditation/autonomous/governing-body/minutes' }
+        ]
+      }
     ]
   },
   { label: 'Library', href: '/library', icon: <LibraryIcon size={18} /> },
@@ -809,6 +807,7 @@ export default function Navbar() {
 
               {/* Search & Notification Buttons */}
               <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 shrink-0">
+
                 <Link
                   href="/search"
                   className="w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center text-[#123B6D] hover:bg-slate-50 hover:scale-105 transition-all"
@@ -883,8 +882,15 @@ export default function Navbar() {
             </div>
           </div>
 
+
         {/* ── Row 2 (desktop): Nav Links ── */}
         <div className="flex w-full max-w-[1600px] mx-auto items-center justify-center px-1 md:px-2 lg:px-8 relative z-30">
+          <Link
+            href="/admission"
+            className="hidden md:flex absolute right-4 lg:right-12 bottom-full translate-y-1 items-center justify-center h-8 md:h-9 lg:h-10 px-4 lg:px-8 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-[10px] md:text-xs lg:text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all"
+          >
+            Admission
+          </Link>
           <nav className="flex items-center justify-center flex-wrap gap-0 md:gap-0.5 xl:gap-1 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-[#E2E8F0] rounded-2xl px-0.5 md:px-1 xl:px-2 py-0.5 md:py-1 xl:py-1.5">
             {navLinks.map((link) => (
               <div key={link.label} className="relative group shrink-0" onMouseEnter={(e) => handleMenuEnter(e, link.label)}>

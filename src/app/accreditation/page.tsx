@@ -7,10 +7,10 @@ import { Medal, Award, FileText, CheckCircle, ShieldCheck, GraduationCap, BarCha
 const accreditationNav = [
   { label: '2 B – CERTIFICATE', href: '/accreditation/2b-certificate', active: true },
   { label: '12 F – CERTIFICATE', href: '/accreditation/12f-certificate', active: false },
+  { label: 'GRANT OF AUTONOMY (CERTIFICATE)', href: '/accreditation/autonomous/grant', active: false },
   { label: 'NAAC', href: '/accreditation/naac/certificates', active: false },
   { label: 'NIRF', href: '/accreditation/nirf/annual-submissions', active: false },
   { label: 'AISHE', href: '/accreditation/aishe/annual-submissions', active: false },
-  { label: 'AUTONOMOUS HEI', href: '/accreditation/autonomous/grant', active: false },
 ];
 
 export default function AccreditationPage() {
@@ -98,7 +98,7 @@ export default function AccreditationPage() {
           {[...Array(15)].map((_, i) => <div key={i} className="w-2 h-2 rounded-full bg-[#123B6D]/40" />)}
         </div>
         <div className="inline-flex items-center gap-2 bg-[#123B6D]/10 border border-[#123B6D]/20 text-[#123B6D] px-4 py-1.5 rounded-full text-xs font-bold mb-4 uppercase tracking-widest">
-          <Medal size={13} /> Accreditation & Rankings
+          <Medal size={13} /> Accreditation
         </div>
         <h1 className="text-3xl lg:text-4xl xl:text-5xl font-black text-[#123B6D] tracking-tight mb-4">
           Excellence Recognized
@@ -130,6 +130,15 @@ export default function AccreditationPage() {
         </Link>
 
         {/* Card 3 */}
+        <Link href="/accreditation/autonomous/grant" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
+            <GraduationCap className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
+          </div>
+          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">Grant of Autonomy (Certificate)</h2>
+          <p className="text-gray-500 text-sm">Details and certificate regarding our grant of autonomy.</p>
+        </Link>
+
+        {/* Card 4 */}
         <Link href="/accreditation/naac/certificates" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
           <div className="w-16 h-16 rounded-2xl bg-[#D4A017]/10 flex items-center justify-center mb-6 group-hover:bg-[#D4A017] transition-colors">
             <Award className="text-[#D4A017] group-hover:text-white transition-colors" size={32} />
@@ -138,7 +147,7 @@ export default function AccreditationPage() {
           <p className="text-gray-500 text-sm">National Assessment and Accreditation Council certificates and reports.</p>
         </Link>
 
-        {/* Card 4 */}
+        {/* Card 5 */}
         <Link href="/accreditation/nirf/annual-submissions" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
           <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
             <BarChart2 className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
@@ -147,7 +156,7 @@ export default function AccreditationPage() {
           <p className="text-gray-500 text-sm">National Institutional Ranking Framework annual submissions and data.</p>
         </Link>
 
-        {/* Card 5 */}
+        {/* Card 6 */}
         <Link href="/accreditation/aishe/annual-submissions" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
           <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
             <ShieldCheck className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
@@ -155,16 +164,8 @@ export default function AccreditationPage() {
           <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">AISHE</h2>
           <p className="text-gray-500 text-sm">All India Survey on Higher Education reports and data submissions.</p>
         </Link>
-
-        {/* Card 6 */}
-        <Link href="/accreditation/autonomous/grant" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#D4A017]/10 flex items-center justify-center mb-6 group-hover:bg-[#D4A017] transition-colors">
-            <GraduationCap className="text-[#D4A017] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">Autonomous HEI</h2>
-          <p className="text-gray-500 text-sm">Details on our grant of autonomy, board of studies, and academic council.</p>
-        </Link>
       </div>
     </div>
   );
 }
+

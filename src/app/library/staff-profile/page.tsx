@@ -56,19 +56,19 @@ export default function StaffProfilePage() {
   const [activeMobile, setActiveMobile] = useState<boolean>(true);
   const [showSticky, setShowSticky] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [navVisible, setNavVisible] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > 300) {
-        if (currentScrollY < lastScrollY) {
-          setShowSticky(true);
-        } else {
-          setShowSticky(false);
-        }
-      } else {
+      if (currentScrollY > lastScrollY && currentScrollY > 200) {
+        setNavVisible(false);
         setShowSticky(false);
+      } else if (currentScrollY < lastScrollY) {
+        setNavVisible(true);
+        if (currentScrollY > 300) setShowSticky(true);
       }
+      if (currentScrollY <= 300) setShowSticky(false);
       setLastScrollY(currentScrollY);
     };
 
@@ -137,7 +137,7 @@ export default function StaffProfilePage() {
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
       {/* Secondary Library Nav */}
-      <div className="bg-[#014d4e] w-full shadow-md z-40 relative">
+      <div className={`bg-[#014d4e] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[160px] lg:top-[190px] xl:top-[200px]' : 'top-0'}`}>
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar flex items-center h-12">
           {libraryNav.map((item, i) => (
             <Link

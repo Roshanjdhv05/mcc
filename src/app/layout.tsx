@@ -65,7 +65,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC]" suppressHydrationWarning>
         <SplashScreen />
         <Navbar />
-        <main className="flex-1 pt-16 md:pt-[120px] lg:pt-[150px] xl:pt-[160px]">{children}</main>
+        <main className="flex-1 pt-[64px] md:pt-[150px] lg:pt-[185px] xl:pt-[195px]">{children}</main>
         <Footer />
         <AIAssistant />
         <BottomNav />

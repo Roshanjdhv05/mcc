@@ -135,7 +135,7 @@ export default function IQACPage() {
     <div className="bg-[#F8FAFC] min-h-screen pb-12 font-sans">
 
       {/* ── Secondary IQAC Nav (Library-style) ── */}
-      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[210px] lg:top-[240px]' : 'top-0'}`}>
+      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
 
         {/* Continuous Native Scroll Nav (All Screens) */}
         <div 

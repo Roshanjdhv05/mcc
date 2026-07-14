@@ -36,7 +36,7 @@ export default function AlumniPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
       {/* ── HERO SECTION ── */}
-      <section className="relative bg-white pt-24 md:pt-32 pb-16 overflow-hidden">
+      <section className="relative bg-white pt-6 md:pt-8 pb-16 overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 flex flex-col lg:flex-row items-center gap-12">
           
           {/* Left Content */}

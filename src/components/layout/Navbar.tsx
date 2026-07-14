@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2 } from 'lucide-react';
+import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight } from 'lucide-react';
 
 const navLinks = [
   { label: 'Home', href: '/', icon: <Home size={18} /> },
@@ -151,79 +151,9 @@ const navLinks = [
     ]
   },
   {
-    label: 'Programmes', href: '#', icon: <GraduationCap size={18} />, 
+    label: 'Programmes', href: '/academics', icon: <GraduationCap size={18} />, 
     isMegaMenu: true,
-    megaMenuImage: '/college_campus_hero.png',
-    megaMenuColumns: [
-      {
-        title: 'Undergraduate\n(Commerce & Management)',
-        sections: [
-          {
-            subTitle: 'Aided',
-            links: [
-              { label: 'B.Com (General)', href: '/programmes/ug/bcom' },
-            ]
-          },
-          {
-            subTitle: 'Self-Financing',
-            links: [
-              { label: 'B.Com (Accounting & Finance)', href: '/programmes/ug/baf' },
-              { label: 'B.Com (Management Studies)', href: '/programmes/ug/bcom-ms' },
-              { label: 'B.Com (Business Administration)', href: '/programmes/ug/bcom-ba' },
-            ]
-          },
-          {
-            subTitle: 'Apprentice-Embedded',
-            links: [
-              { label: 'B.Com (Banking, Financial Services & Insurance)', href: '/programmes/ug/bfsi' },
-            ]
-          }
-        ]
-      },
-      {
-        title: 'Undergraduate\n(Science & Technology)',
-        sections: [
-          {
-            links: [
-              { label: 'B.Sc (Computer Science)', href: '/programmes/ug/sct/bsc-cs' },
-              { label: 'B.Sc (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
-              { label: 'B.Sc (Computer Application)', href: '/programmes/ug/sct/bsc-ca' },
-              { label: 'B.Sc (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
-            ]
-          }
-        ]
-      },
-      {
-        title: 'Postgraduate',
-        sections: [
-          {
-            subTitle: 'Aided',
-            links: [
-              { label: 'M.Com (Advanced Accountancy)', href: '/programmes/pg/mcom-aa' },
-            ]
-          },
-          {
-            subTitle: 'Self-Financing',
-            links: [
-              { label: 'M.Com (Banking & Insurance)', href: '/programmes/pg/mcom-bm' },
-              { label: 'M.Com (Business Management)', href: '/programmes/pg/mcom-bf' },
-              { label: 'M.Sc (Information Technology)', href: '/programmes/pg/msc-it' },
-              { label: 'M.Sc (Finance)', href: '/programmes/pg/msf' },
-            ]
-          }
-        ]
-      },
-      {
-        title: 'Ph.D Programmes',
-        sections: [
-          {
-            links: [
-              { label: 'Ph.D (Business Economics)', href: '/programmes/phd/be' },
-            ]
-          }
-        ]
-      }
-    ],
+    megaMenuType: 'programmes',
     sub: [
       {
         label: 'Under Graduate', href: '/programmes/undergraduate', sub: [
@@ -238,6 +168,7 @@ const navLinks = [
           { label: 'B.Sc (Computer Application)', href: '/programmes/ug/sct/bsc-ca' },
           { label: 'B.Sc (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
           { label: 'B.Com (BFSI)', href: '/programmes/ug/bfsi' },
+          { label: 'B.A. (Mass Media & Communication)', href: '/programmes/ug/bammc' },
         ]
       },
       {
@@ -256,9 +187,20 @@ const navLinks = [
       },
     ]
   },
-  { label: 'Examination', href: '/examination', icon: <BookOpen size={18} /> },
+  { 
+    label: 'Examination', href: '/examination', icon: <BookOpen size={18} />,
+    sub: [
+      { label: 'Notices', href: '/examination' },
+      { label: 'Board of Examination', href: '/examination' },
+      { label: 'Examination Ordinances', href: '/examination' },
+      { label: 'Grade Point & SGPA', href: '/examination' },
+      { label: 'Examination Manual', href: '/examination' },
+      { label: 'Unfair Means Enquiry', href: '/examination' }
+    ]
+  },
+
   {
-    label: 'Autonomy', href: '/accreditation/autonomous', icon: <Medal size={18} />,
+    label: 'Autonomy', href: '/accreditation/autonomous', icon: <Medal size={18} />, megaMenuAlign: 'right',
     isMegaMenu: true,
     megaMenuImage: '/objectives_side_img.png',
     megaMenuColumns: [
@@ -267,9 +209,7 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Autonomous HEI', href: '/accreditation/autonomous' },
               { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
-              { label: 'Mandatory disclosure-Undertaking', href: '/accreditation/autonomous/mandatory-disclosure' },
             ]
           }
         ]
@@ -314,9 +254,7 @@ const navLinks = [
       }
     ],
     sub: [
-      { label: 'Autonomous HEI', href: '/accreditation/autonomous' },
       { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
-      { label: 'Mandatory disclosure-Undertaking', href: '/accreditation/autonomous/mandatory-disclosure' },
       { 
         label: 'Board of Studies', href: '#', sub: [
           { label: 'Members', href: '/accreditation/autonomous/bos/members' },
@@ -343,7 +281,127 @@ const navLinks = [
       }
     ]
   },
-  { label: 'Library', href: '/library', icon: <LibraryIcon size={18} /> },
+  { 
+    label: 'Library', href: '/library', icon: <LibraryIcon size={18} />,
+    sub: [
+      { label: 'WEB OPAC', href: '#' },
+      { label: 'E-RESOURCES', href: '/library/e-resources' },
+      { label: 'DOWNLOAD', href: '#' },
+      { label: 'IMPORTANT LINKS', href: '/library/important-links' }
+    ]
+  },
+  {
+    label: 'Research', href: '/research', icon: <Star size={18} />,
+    isMegaMenu: true,
+    megaMenuAlign: 'right',
+    megaMenuImage: '/objectives_side_img.png',
+    megaMenuColumns: [
+      {
+        title: 'About & Committee',
+        sections: [
+          {
+            links: [
+              { label: 'Objective', href: '/research' },
+              { label: 'Committee – List of Members', href: '/research' },
+              { label: 'Annual Reports', href: '/research' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Research Centre',
+        sections: [
+          {
+            links: [
+              { label: 'Research Centre Recognition', href: '/research' },
+              { label: 'Research Guides', href: '/research' },
+              { label: 'Research Scholars', href: '/research' },
+              { label: 'Awarded Thesis', href: '/research' },
+              { label: 'Application (Process)', href: '/research' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Policies',
+        sections: [
+          {
+            links: [
+              { label: 'Research Policy', href: '/research' },
+              { label: 'Plagiarism Policy', href: '/research' },
+              { label: 'Application for Plagiarism check', href: '/research' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Competitions & Publications',
+        sections: [
+          {
+            subTitle: 'Competitions',
+            links: [
+              { label: 'Avishkar (University of Mumbai)', href: '/research' },
+              { label: 'Shodh (Inter-collegiate)', href: '/research' },
+              { label: "PTVA's Inter-institutional Conclave", href: '/research' },
+            ]
+          },
+          {
+            subTitle: 'Research Journal',
+            links: [
+              { label: 'About the Journal', href: '/research' },
+              { label: 'Board of Editors', href: '/research' },
+              { label: 'Volume and Issues', href: '/research' },
+            ]
+          },
+          {
+            links: [
+              { label: 'Resources', href: '/research' },
+            ]
+          }
+        ]
+      },
+    ],
+    sub: [
+      {
+        label: 'About & Committee', href: '#', sub: [
+          { label: 'Objective', href: '/research' },
+          { label: 'Committee – List of Members', href: '/research' },
+          { label: 'Annual Reports', href: '/research' },
+        ]
+      },
+      {
+        label: 'Research Centre', href: '#', sub: [
+          { label: 'Research Centre Recognition', href: '/research' },
+          { label: 'Research Guides', href: '/research' },
+          { label: 'Research Scholars', href: '/research' },
+          { label: 'Awarded Thesis', href: '/research' },
+          { label: 'Application (Process)', href: '/research' },
+        ]
+      },
+      {
+        label: 'Policies', href: '#', sub: [
+          { label: 'Research Policy', href: '/research' },
+          { label: 'Plagiarism Policy', href: '/research' },
+          { label: 'Application for Plagiarism check', href: '/research' },
+        ]
+      },
+      {
+        label: 'Competitions', href: '#', sub: [
+          { label: 'Avishkar (University of Mumbai)', href: '/research' },
+          { label: 'Shodh (Inter-collegiate)', href: '/research' },
+          { label: "PTVA's Inter-institutional Conclave", href: '/research' },
+        ]
+      },
+      {
+        label: 'Research Journal', href: '#', sub: [
+          { label: 'About the Journal', href: '/research' },
+          { label: 'Board of Editors', href: '/research' },
+          { label: 'Volume and Issues', href: '/research' },
+        ]
+      },
+      { label: 'Resources', href: '/research' },
+    ]
+  },
   {
     label: "Students' Corner", href: '/students-corner', icon: <Users size={18} />,
     isMegaMenu: true,
@@ -351,168 +409,94 @@ const navLinks = [
     megaMenuImage: '/college_campus_hero.png',
     megaMenuColumns: [
       {
-        title: 'Activities & Forums',
+        title: 'Forums',
         sections: [
           {
             links: [
-              { label: 'Social Media Handles', href: '/students-corner/social-media' },
+              { label: "Students' Council", href: '/students-corner/council' },
               { label: 'National Service Scheme', href: '/students-corner/nss' },
-              { label: "Students' Council – About us", href: '/students-corner/council' },
-              { label: "Annual Day – Annual Reports", href: '/students-corner/annual-day' },
-              { label: "Student's Publication", href: '/students-corner/publication' },
+              { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
+              { label: 'Sports and Gymkhana', href: '/students-corner/sports' },
+              { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/natyakarmi' },
+              { label: 'Marathi Vagmany Mandal', href: '/students-corner/marathi-mandal' },
+              { label: 'Aaroh', href: '/students-corner/aaroh' },
               { label: 'Nature Club', href: '/students-corner/nature-club' },
-              { label: 'College Festivals and Events', href: '/students-corner/festivals' },
+              { label: 'Women Development Cell', href: '/students-corner/wdc' },
+              { label: 'Entrepreneurship Development Cell', href: '/students-corner/edc' },
+              { label: 'Students\u2019 Research', href: '/research' },
             ]
           }
         ]
       },
       {
-        title: 'Cultural & Arts',
+        title: 'Events & Festivals',
         sections: [
           {
-            subTitle: 'Cultural Forum',
             links: [
-              { label: 'About us', href: '/students-corner/cultural-forum' },
-              { label: 'Youth Festival', href: '/students-corner/cultural-forum/youth-festival' },
-              { label: 'Spectrum', href: '/students-corner/cultural-forum/spectrum' },
+              { label: 'Spectrum', href: '/cultural-committee' },
+              { label: 'Inspira', href: '/programmes/ug/bms' },
+              { label: 'Technobeat', href: '#' },
+              { label: 'Math\u2019s Wonder', href: '/programmes/ug/bsc-cs' },
+              { label: 'Emporio', href: '/programmes/ug/bcom' },
+              { label: 'Quantomania', href: '#' },
+              { label: 'Rasikotsav', href: '#' },
+              { label: 'My Marathi, Mai Marathi', href: '#' },
+              { label: 'Annual Day', href: '#' },
             ]
-          },
-          {
-            subTitle: 'Natyakarmi (Drama Club)',
-            links: [
-              { label: 'About', href: '/students-corner/natyakarmi' },
-              { label: 'Annual Reports', href: '/students-corner/natyakarmi/annual-reports' },
-            ]
-          },
-          {
-            subTitle: 'Aaroh (Music Club)',
-            links: [
-              { label: 'About', href: '/students-corner/aaroh' },
-            ]
-          },
-          {
-            subTitle: 'Marathi Vangmay Mandal',
-            links: [
-              { label: 'Annual Reports', href: '/students-corner/marathi-mandal/annual-reports' },
-            ]
-          },
-          {
-            subTitle: 'Women Development Cell',
-            links: [
-              { label: 'Annual Reports', href: '/students-corner/wdc/annual-reports' },
-            ]
-          },
+          }
         ]
       },
       {
-        title: 'Sports & Research',
+        title: "Student's Publications",
         sections: [
           {
-            subTitle: 'Sports & Gymkhana',
             links: [
-              { label: 'About us', href: '/students-corner/sports' },
-              { label: 'Games and Sports', href: '/students-corner/sports/games' },
-              { label: 'Annual Sports Day', href: '/students-corner/sports/annual-day' },
-              { label: 'Annual Reports', href: '/students-corner/sports/annual-reports' },
+              { label: 'Pratibimb', href: '/programmes/ug/baf' },
+              { label: 'Finanza', href: '/programmes/ug/bfm' },
+              { label: 'Muse', href: '/programmes/ug/bammc' },
+              { label: 'Commercium', href: '/programmes/ug/bcom' },
             ]
-          },
-          {
-            subTitle: 'Entrepreneurship Development Cell',
-            links: [
-              { label: 'About us', href: '/students-corner/edc' },
-              { label: 'Annual Reports', href: '/students-corner/edc/annual-reports' },
-            ]
-          },
-          {
-            subTitle: 'Student Research',
-            links: [
-              { label: 'Shodh – Annual Reports', href: '/students-corner/research/shodh/annual-reports' },
-              { label: 'Avishkar – Annual Reports', href: '/students-corner/research/avishkar/annual-reports' },
-              { label: 'Minor Research Project – Policy', href: '/students-corner/research/minor-project/policy' },
-              { label: 'Minor Research Project – Application', href: '/students-corner/research/minor-project/application' },
-            ]
-          },
+          }
         ]
       }
     ],
     sub: [
-      { label: 'Social Media Handles', href: '/students-corner/social-media' },
-      { label: 'National Service Scheme', href: '/students-corner/nss' },
       {
-        label: 'Cultural Forum', href: '/students-corner/cultural-forum', sub: [
-          { label: 'About us', href: '/students-corner/cultural-forum' },
-          { label: 'Youth Festival', href: '/students-corner/cultural-forum/youth-festival' },
-          { label: 'Spectrum', href: '/students-corner/cultural-forum/spectrum' },
+        label: 'Forums', href: '#', sub: [
+          { label: "Students' Council", href: '/students-corner/council' },
+          { label: 'National Service Scheme', href: '/students-corner/nss' },
+          { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
+          { label: 'Sports and Gymkhana', href: '/students-corner/sports' },
+          { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/natyakarmi' },
+          { label: 'Marathi Vagmany Mandal', href: '/students-corner/marathi-mandal' },
+          { label: 'Aaroh', href: '/students-corner/aaroh' },
+          { label: 'Nature Club', href: '/students-corner/nature-club' },
+          { label: 'Women Development Cell', href: '/students-corner/wdc' },
+          { label: 'Entrepreneurship Development Cell', href: '/students-corner/edc' },
+          { label: 'Students\u2019 Research', href: '/research' },
         ]
       },
       {
-        label: "Students' Council", href: '/students-corner/council', sub: [
-          { label: 'About us', href: '/students-corner/council' },
+        label: 'Events & Festivals', href: '#', sub: [
+          { label: 'Spectrum', href: '/cultural-committee' },
+          { label: 'Inspira', href: '/programmes/ug/bms' },
+          { label: 'Technobeat', href: '#' },
+          { label: 'Math\u2019s Wonder', href: '/programmes/ug/bsc-cs' },
+          { label: 'Emporio', href: '/programmes/ug/bcom' },
+          { label: 'Quantomania', href: '#' },
+          { label: 'Rasikotsav', href: '#' },
+          { label: 'My Marathi, Mai Marathi', href: '#' },
+          { label: 'Annual Day', href: '#' },
         ]
       },
       {
-        label: 'Annual Day', href: '/students-corner/annual-day', sub: [
-          { label: 'Annual Reports', href: '/students-corner/annual-day' },
+        label: "Student's Publications", href: '#', sub: [
+          { label: 'Pratibimb', href: '/programmes/ug/baf' },
+          { label: 'Finanza', href: '/programmes/ug/bfm' },
+          { label: 'Muse', href: '/programmes/ug/bammc' },
+          { label: 'Commercium', href: '/programmes/ug/bcom' },
         ]
-      },
-      {
-        label: 'Sports & Gymkhana', href: '/students-corner/sports', sub: [
-          { label: 'About us', href: '/students-corner/sports' },
-          { label: 'Games and Sports', href: '/students-corner/sports/games' },
-          { label: 'Annual Sports Day', href: '/students-corner/sports/annual-day' },
-          { label: 'Annual Reports', href: '/students-corner/sports/annual-reports' },
-        ]
-      },
-      {
-        label: 'Entrepreneurship Development Cell', href: '/students-corner/edc', sub: [
-          { label: 'About us', href: '/students-corner/edc' },
-          { label: 'Annual Reports', href: '/students-corner/edc/annual-reports' },
-        ]
-      },
-      {
-        label: 'Student Research', href: '/students-corner/research', sub: [
-          {
-            label: 'Shodh', href: '/students-corner/research/shodh', sub: [
-              { label: 'Annual Reports', href: '/students-corner/research/shodh/annual-reports' },
-            ]
-          },
-          {
-            label: 'Avishkar', href: '/students-corner/research/avishkar', sub: [
-              { label: 'Annual Reports', href: '/students-corner/research/avishkar/annual-reports' },
-            ]
-          },
-          {
-            label: 'Minor Research Project', href: '/students-corner/research/minor-project', sub: [
-              { label: 'Policy', href: '/students-corner/research/minor-project/policy' },
-              { label: 'Application Process', href: '/students-corner/research/minor-project/application' },
-            ]
-          },
-        ]
-      },
-      {
-        label: 'Marathi Vangmay Mandal', href: '/students-corner/marathi-mandal', sub: [
-          { label: 'Annual Reports', href: '/students-corner/marathi-mandal/annual-reports' },
-        ]
-      },
-      {
-        label: 'Women Development Cell', href: '/students-corner/wdc', sub: [
-          { label: 'Annual Reports', href: '/students-corner/wdc/annual-reports' },
-        ]
-      },
-      {
-        label: 'Natyakarmi (Drama Club)', href: '/students-corner/natyakarmi', sub: [
-          { label: 'About', href: '/students-corner/natyakarmi' },
-          { label: 'Annual Reports', href: '/students-corner/natyakarmi/annual-reports' },
-        ]
-      },
-      {
-        label: 'Aaroh (Music Club)', href: '/students-corner/aaroh', sub: [
-          { label: 'About', href: '/students-corner/aaroh' },
-        ]
-      },
-      { label: 'College Festivals and Events', href: '/students-corner/festivals' },
-      { label: "Student's Publication", href: '/students-corner/publication' },
-      { label: 'Nature Club', href: '/students-corner/nature-club' },
+      }
     ]
   },
   {
@@ -522,103 +506,110 @@ const navLinks = [
     megaMenuImage: '/vision_card_img.png',
     megaMenuColumns: [
       {
-        title: 'Quick Access',
+        title: 'Infrastructure',
         sections: [
           {
             links: [
-              { label: 'Statutory Bodies', href: '/statutory-bodies' },
-              { label: 'Wall of Fame', href: '/wall-of-fame' },
-              { label: 'Infrastructure', href: '/infrastructure' },
+              { label: 'Library', href: '/library' },
+              { label: 'Auditorium', href: '#' },
+              { label: 'Class-Rooms', href: '#' },
+              { label: 'Computer Labs', href: '#' },
+              { label: 'Sports & Gymkhana', href: '#' },
+              { label: 'Canteen', href: '#' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Gallery',
+        sections: [
+          {
+            links: [
+              { label: 'View Gallery', href: '/gallery' }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Statutory Bodies',
+        sections: [
+          {
+            links: [
               { label: 'Grievance Cell', href: '/grievance-cell' },
-              { label: 'Anti-Ragging Cell', href: '/anti-ragging-cell' },
-              { label: 'Internal Complaint Cell', href: '/internal-complaint-cell' },
-              { label: 'Counselling Cell', href: '/counselling-cell' },
+              { label: 'Internal Complaint Committee', href: '/internal-complaint-cell' },
+              { label: 'Anti-Ragging Committee', href: '/anti-ragging-cell' },
+              { label: 'Counselling cell', href: '/counselling-cell' },
+              { label: 'Career Katta (Govt of Maharashtra)', href: '#' },
+              { label: 'Special Cell', href: '#' },
+              { label: 'Remedial Coaching Cell', href: '#' },
             ]
           }
         ]
       },
       {
-        title: 'College Festivals & Event',
+        title: 'Wall of Fame (Students)',
         sections: [
           {
+            subTitle: 'Professional Course Examinations',
             links: [
-              { label: 'Spectrum', href: '/festivals/spectrum' },
-              { label: 'Inspira', href: '/festivals/inspira' },
-              { label: 'Technobeat', href: '/festivals/technobeat' },
-              { label: 'Maths’ Wonder', href: '/festivals/maths-wonder' },
-              { label: 'Oikonomania', href: '/festivals/oikonomania' },
-              { label: 'Quantomania', href: '/festivals/quantomania' },
-              { label: 'Commerce', href: '/festivals/commerce' },
-              { label: 'Accountancy', href: '/festivals/accountancy' },
-              { label: 'My Marathi, Mai Marathi', href: '/festivals/marathi' },
-              { label: 'Rasikotsav', href: '/festivals/rasikotsav' },
-              { label: 'Annual Day', href: '/festivals/annual-day' },
-            ]
-          }
-        ]
-      },
-      {
-        title: "Students' Achievements",
-        sections: [
-          {
-            subTitle: 'Professional Courses',
-            links: [
-              { label: 'About', href: '/achievements/professional-courses/about' },
-              { label: 'All India Rank Holders', href: '/achievements/professional-courses/rank-holders' },
+              { label: 'CA', href: '#' },
+              { label: 'CS', href: '#' },
+              { label: 'CMA', href: '#' },
             ]
           },
           {
             links: [
-              { label: 'Cultural', href: '/achievements/cultural' },
-              { label: 'Youth Festival', href: '/achievements/youth-festival' },
-              { label: 'Theatre (Natyakarmi)', href: '/achievements/theatre' },
-              { label: 'Sports', href: '/achievements/sports' },
-              { label: 'Research', href: '/achievements/research' },
-              { label: 'Entrepreneurship', href: '/achievements/entrepreneurship' },
+              { label: 'Sports & Games', href: '#' },
+              { label: 'Cultural', href: '#' },
+              { label: 'Theatre', href: '#' },
+              { label: 'Research', href: '#' },
+              { label: 'Entrepreneurship', href: '#' },
             ]
           }
         ]
       }
     ],
     sub: [
-      { label: 'Statutory Bodies', href: '/statutory-bodies' },
-      { label: 'Wall of Fame', href: '/wall-of-fame' },
-      { label: 'Infrastructure', href: '/infrastructure' },
-      { label: 'Grievance Cell', href: '/grievance-cell' },
-      { label: 'Anti-Ragging Cell', href: '/anti-ragging-cell' },
-      { label: 'Internal Complaint Cell', href: '/internal-complaint-cell' },
-      { label: 'Counselling Cell', href: '/counselling-cell' },
       {
-        label: 'College Festivals & Event', href: '#', sub: [
-          { label: 'Spectrum', href: '/festivals/spectrum' },
-          { label: 'Inspira (Department of Management Studies)', href: '/festivals/inspira' },
-          { label: 'Technobeat (Department of Science and Computer Technology)', href: '/festivals/technobeat' },
-          { label: 'Maths’ Wonder (Computer Science)', href: '/festivals/maths-wonder' },
-          { label: 'Oikonomania (Economics Club)', href: '/festivals/oikonomania' },
-          { label: 'Quantomania (Department of Mathematics)', href: '/festivals/quantomania' },
-          { label: 'Commerce Festival', href: '/festivals/commerce' },
-          { label: 'Accountancy Festival', href: '/festivals/accountancy' },
-          { label: 'My Marathi, Mai Marathi', href: '/festivals/marathi' },
-          { label: 'Rasikotsav', href: '/festivals/rasikotsav' },
-          { label: 'Annual Day', href: '/festivals/annual-day' },
+        label: 'Infrastructure', href: '#', sub: [
+          { label: 'Library', href: '/library' },
+          { label: 'Auditorium', href: '#' },
+          { label: 'Class-Rooms', href: '#' },
+          { label: 'Computer Labs', href: '#' },
+          { label: 'Sports & Gymkhana', href: '#' },
+          { label: 'Canteen', href: '#' },
         ]
       },
       {
-        label: "Students' Achievements", href: '#', sub: [
+        label: 'Gallery', href: '/gallery', sub: []
+      },
+      {
+        label: 'Statutory Bodies', href: '#', sub: [
+          { label: 'Grievance Cell', href: '/grievance-cell' },
+          { label: 'Internal Complaint Committee', href: '/internal-complaint-cell' },
+          { label: 'Anti-Ragging Committee', href: '/anti-ragging-cell' },
+          { label: 'Counselling cell', href: '/counselling-cell' },
+          { label: 'Career Katta (Govt of Maharashtra)', href: '#' },
+          { label: 'Special Cell', href: '#' },
+          { label: 'Remedial Coaching Cell', href: '#' },
+        ]
+      },
+      {
+        label: 'Wall of Fame (Students)', href: '#', sub: [
           {
-            label: 'Professional Courses', href: '/achievements/professional-courses', sub: [
-              { label: 'About', href: '/achievements/professional-courses/about' },
-              { label: 'All India Rank Holders', href: '/achievements/professional-courses/rank-holders' },
+            label: 'Professional Course Examinations', href: '#', sub: [
+              { label: 'CA', href: '#' },
+              { label: 'CS', href: '#' },
+              { label: 'CMA', href: '#' },
             ]
           },
-          { label: 'Cultural', href: '/achievements/cultural' },
-          { label: 'Youth Festival', href: '/achievements/youth-festival' },
-          { label: 'Theatre (Natyakarmi)', href: '/achievements/theatre' },
-          { label: 'Sports', href: '/achievements/sports' },
-          { label: 'Research', href: '/achievements/research' },
-          { label: 'Entrepreneurship', href: '/achievements/entrepreneurship' },
+          { label: 'Sports & Games', href: '#' },
+          { label: 'Cultural', href: '#' },
+          { label: 'Theatre', href: '#' },
+          { label: 'Research', href: '#' },
+          { label: 'Entrepreneurship', href: '#' },
         ]
-      },
+      }
     ]
   },
 ];
@@ -672,7 +663,7 @@ export default function Navbar() {
         initial={{ y: -80 }}
         animate={{ y: visible ? 0 : -250 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
           scrolled
             ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-white/30'
             : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]'
@@ -706,7 +697,7 @@ export default function Navbar() {
                     Parle Tilak Vidyalaya Association's
                   </span>
                   <span className="block text-[#123B6D] font-bold text-[13px] md:text-[15px] lg:text-[26px] leading-tight font-[var(--font-heading)] whitespace-nowrap tracking-wide mb-0.5 group-hover:text-blue-900 transition-colors flex items-baseline gap-2">
-                    MULUND COLLEGE OF COMMERCE AUTONOMOUS
+                    MULUND COLLEGE OF COMMERCE <span className="text-[#D4A017]">(AUTONOMOUS)</span>
                   </span>
                   <span className="block text-[#64748B] font-medium text-[9px] md:text-[10px] lg:text-[14px] leading-tight whitespace-nowrap">
                     || आ नो भद्राः क्रतवो यन्तु विश्वतः ||
@@ -762,29 +753,29 @@ export default function Navbar() {
               
               {/* Quick Links */}
               <div className="hidden xl:flex flex-col items-end gap-0 w-max">
-                <span className="text-[9px] xl:text-[10px] font-semibold text-[#1E293B]">Quick Links</span>
+                <span className="text-[11px] xl:text-[12px] font-semibold text-[#1E293B]">Quick Links</span>
                 <div className="flex items-center gap-1.5 xl:gap-2 flex-wrap justify-end">
-                  <Link href="/notice" className="text-[9px] xl:text-[10px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/notice" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Notice
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/placement-portal" className="text-[9px] xl:text-[10px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/placement-portal" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Placement
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/alumni" className="text-[9px] xl:text-[10px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/alumni" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Alumni
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/research" className="text-[9px] xl:text-[10px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/research" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Research
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/contact" className="text-[9px] xl:text-[10px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/contact" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Contact
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/administrative-service" className="text-[9px] xl:text-[10px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/administrative-service" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Admin Services
                   </Link>
                 </div>
@@ -884,7 +875,7 @@ export default function Navbar() {
 
 
         {/* ── Row 2 (desktop): Nav Links ── */}
-        <div className="flex w-full max-w-[1600px] mx-auto items-center justify-center px-1 md:px-2 lg:px-8 relative z-30">
+        <div className="flex w-full max-w-[1600px] mx-auto items-center justify-center px-1 md:px-2 lg:px-8 relative z-[100]">
           <Link
             href="/admission"
             className="hidden md:flex absolute right-4 lg:right-12 bottom-full translate-y-1 items-center justify-center h-8 md:h-9 lg:h-10 px-4 lg:px-8 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-[10px] md:text-xs lg:text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all"
@@ -897,12 +888,16 @@ export default function Navbar() {
                 {link.sub ? (
                   <Link
                     href={link.href}
-                    className="flex items-center gap-0.5 xl:gap-1.5 px-1 md:px-1.5 lg:px-3 xl:px-4 py-1 md:py-1.5 lg:py-2.5 text-[9px] md:text-[10px] lg:text-[12px] xl:text-[13px] font-semibold text-[#1E293B] hover:text-[#123B6D] rounded-xl hover:bg-[#123B6D]/5 transition-all whitespace-nowrap"
+                    className={`flex items-center gap-0.5 xl:gap-1.5 px-1 md:px-1.5 lg:px-3 xl:px-4 py-1 md:py-1.5 lg:py-2.5 text-[9px] md:text-[10px] lg:text-[12px] xl:text-[13px] font-semibold rounded-xl transition-all whitespace-nowrap ${
+                      (link.href === '/' ? pathname === '/' : pathname.startsWith(link.href) && link.href !== '#')
+                        ? 'bg-[#123B6D] text-white shadow-md' 
+                        : 'text-[#1E293B] hover:text-[#123B6D] hover:bg-[#123B6D]/5'
+                    }`}
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
                     {link.label}
-                    <ChevronDown size={14} className="text-[#94A3B8] ml-0.5 group-hover:text-[#123B6D]" />
+                    <ChevronDown size={14} className={`${(link.href === '/' ? pathname === '/' : pathname.startsWith(link.href) && link.href !== '#') ? 'text-white/80 group-hover:text-white' : 'text-[#94A3B8] group-hover:text-[#123B6D]'} ml-0.5 transition-colors`} />
                   </Link>
                 ) : (
                   <Link
@@ -918,7 +913,7 @@ export default function Navbar() {
                 )}
                 {(link as any).isMegaMenu && (link as any).megaMenuColumns && (
                   <div
-                    className={`absolute top-full pt-2 hidden group-hover:block ${(link as any).megaMenuColumns.length > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
+                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] ${(link as any).megaMenuColumns.length > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
@@ -953,6 +948,109 @@ export default function Navbar() {
                         ))}
                       </div>
                     </div>
+                  </div>
+                )}
+                {(link as any).isMegaMenu && (link as any).megaMenuType === 'programmes' && (
+                  <div
+                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] w-[950px] left-1/2 -translate-x-1/2`}
+                    onMouseEnter={() => setOpenDrop(link.label)}
+                    onMouseLeave={() => setOpenDrop(null)}
+                  >
+                     <div className="bg-white border border-[#E2E8F0] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                        <div className="flex p-8 pb-10">
+                           {/* Left Side: UNDERGRADUATE */}
+                           <div className="w-[70%] border-r border-[#E2E8F0] pr-8">
+                              <div className="flex items-center gap-3 mb-6 border-b border-[#D4A017] pb-3 inline-flex">
+                                 <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
+                                    <GraduationCap className="text-[#123B6D]" size={20} />
+                                 </div>
+                                 <h3 className="font-bold text-[#123B6D] text-[15px] tracking-wide">UNDERGRADUATE</h3>
+                              </div>
+                              <div className="grid grid-cols-3 gap-6">
+                                 {/* Col 1 */}
+                                 <div>
+                                    <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Commerce & Management</h4>
+                                    <div className="mb-4">
+                                       <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Aided</h5>
+                                       <ul className="space-y-2">
+                                          <li><Link href="/programmes/ug/bcom" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (General)</Link></li>
+                                       </ul>
+                                    </div>
+                                    <div className="mb-4">
+                                       <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Self-Financing</h5>
+                                       <ul className="space-y-2">
+                                          <li><Link href="/programmes/ug/baf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Accounting & Finance)</Link></li>
+                                          <li><Link href="/programmes/ug/bbi" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Banking & Insurance)</Link></li>
+                                          <li><Link href="/programmes/ug/bfm" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Financial Markets)</Link></li>
+                                          <li><Link href="/programmes/ug/bcom-ms" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Management Studies)</Link></li>
+                                          <li><Link href="/programmes/ug/bcom-ba" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Business Administration)</Link></li>
+                                       </ul>
+                                    </div>
+                                    <div>
+                                       <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Apprentice Embedded</h5>
+                                       <ul className="space-y-2">
+                                          <li><Link href="/programmes/ug/bfsi" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>B.Com (Banking, Financial Services & Insurance)</Link></li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                                 {/* Col 2 */}
+                                 <div>
+                                    <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Science & Technology</h4>
+                                    <ul className="space-y-2">
+                                       <li><Link href="/programmes/ug/sct/bsc-cs" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Computer Science)</Link></li>
+                                       <li><Link href="/programmes/ug/sct/bsc-it" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Information Technology)</Link></li>
+                                       <li><Link href="/programmes/ug/sct/bsc-ca" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Computer Application)</Link></li>
+                                       <li><Link href="/programmes/ug/sct/bsc-ds" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Data Science)</Link></li>
+                                    </ul>
+                                 </div>
+                                 {/* Col 3 */}
+                                 <div>
+                                    <div className="mb-8">
+                                       <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Arts</h4>
+                                       <ul className="space-y-2">
+                                          <li><Link href="/programmes/ug/bammc" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2 leading-tight"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>B.A. (Mass Media & Communication)</Link></li>
+                                       </ul>
+                                    </div>
+                                    <div>
+                                       <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Ph.D Programmes</h4>
+                                       <ul className="space-y-2">
+                                          <li><Link href="/programmes/phd/be" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>Ph.D (Business Economics)</Link></li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           
+                           {/* Right Side: POSTGRADUATE */}
+                           <div className="w-[30%] pl-8">
+                              <div className="flex items-center gap-3 mb-6 border-b border-[#D4A017] pb-3 inline-flex">
+                                 <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
+                                    <GraduationCap className="text-[#123B6D]" size={20} />
+                                 </div>
+                                 <h3 className="font-bold text-[#123B6D] text-[15px] tracking-wide">POSTGRADUATE</h3>
+                              </div>
+                              <div className="mb-4">
+                                 <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Aided</h5>
+                                 <ul className="space-y-2">
+                                    <li><Link href="/programmes/pg/mcom-aa" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Advanced Accountancy)</Link></li>
+                                 </ul>
+                              </div>
+                              <div>
+                                 <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Self-Financing</h5>
+                                 <ul className="space-y-2">
+                                    <li><Link href="/programmes/pg/mcom-bm" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Banking & Insurance)</Link></li>
+                                    <li><Link href="/programmes/pg/mcom-bf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Business Management)</Link></li>
+                                    <li><Link href="/programmes/pg/msc-it" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Sc (Information Technology)</Link></li>
+                                    <li><Link href="/programmes/pg/msf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Sc (Finance)</Link></li>
+                                 </ul>
+                              </div>
+                           </div>
+                        </div>
+                        {/* Explore all bottom bar */}
+                        <Link href="/academics" className="bg-[#F8FAFC] px-8 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[14px] hover:bg-slate-100 transition-colors border-t border-[#E2E8F0] group/btn">
+                           Explore all Programmes <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                        </Link>
+                     </div>
                   </div>
                 )}
                 {!(link as any).isMegaMenu && link.sub && (

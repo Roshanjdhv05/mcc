@@ -5,9 +5,7 @@ import Link from 'next/link';
 import { Medal, Award, FileText, CheckCircle, ShieldCheck, GraduationCap, BarChart2 } from 'lucide-react';
 
 const accreditationNav = [
-  { label: '2 B – CERTIFICATE', href: '/accreditation/2b-certificate', active: true },
-  { label: '12 F – CERTIFICATE', href: '/accreditation/12f-certificate', active: false },
-  { label: 'GRANT OF AUTONOMY (CERTIFICATE)', href: '/accreditation/autonomous/grant', active: false },
+  { label: 'CERTIFICATES', href: '/accreditation', active: true },
   { label: 'NAAC', href: '/accreditation/naac/certificates', active: false },
   { label: 'NIRF', href: '/accreditation/nirf/annual-submissions', active: false },
   { label: 'AISHE', href: '/accreditation/aishe/annual-submissions', active: false },
@@ -29,54 +27,19 @@ export default function AccreditationPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // Native smooth auto-scroll for nav
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
 
-  useEffect(() => {
-    let animationId: number;
-    let lastTime = performance.now();
-    
-    const scroll = (time: number) => {
-      const delta = time - lastTime;
-      lastTime = time;
-      
-      if (scrollContainerRef.current && !isPaused) {
-        // Scroll speed: roughly 30 pixels per second
-        scrollContainerRef.current.scrollLeft += (30 * delta) / 1000;
-        
-        // Infinite loop: if we scrolled past half, reset to 0
-        // (We render 4 copies, so halfway is seamless)
-        if (scrollContainerRef.current.scrollLeft >= scrollContainerRef.current.scrollWidth / 2) {
-          scrollContainerRef.current.scrollLeft -= scrollContainerRef.current.scrollWidth / 2;
-        }
-      }
-      animationId = requestAnimationFrame(scroll);
-    };
-    
-    animationId = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animationId);
-  }, [isPaused]);
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen pb-12 font-sans">
       
       {/* ── Secondary Accreditation Nav ── */}
-      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[210px] lg:top-[240px]' : 'top-0'}`}>
-        {/* Continuous Native Scroll Nav (All Screens) */}
+      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
+        {/* Static Nav (All Screens) */}
         <div 
-          className="flex w-full overflow-hidden h-12 items-center"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
+          className="flex w-full h-12 items-center justify-center overflow-x-auto no-scrollbar"
         >
-          <div 
-            ref={scrollContainerRef} 
-            className="flex items-center h-full whitespace-nowrap overflow-x-auto no-scrollbar w-full"
-            style={{ scrollBehavior: 'auto' }}
-          >
-            {[...accreditationNav, ...accreditationNav, ...accreditationNav, ...accreditationNav].map((item, i) => (
+          <div className="flex items-center h-full whitespace-nowrap border-l border-white/10">
+            {accreditationNav.map((item, i) => (
               <Link key={i} href={item.href}
                 className={`flex-shrink-0 h-full flex items-center px-6 md:px-8 lg:px-12 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${
                   item.active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10 active:bg-white/10'

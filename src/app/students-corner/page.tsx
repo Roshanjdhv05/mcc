@@ -10,44 +10,41 @@ import {
 } from 'lucide-react';
 
 const categories: CategoryItem[] = [
-  { id: 'social', label: 'Social & General', icon: LinkIcon },
-  { id: 'leadership', label: 'Leadership & Governance', icon: UserCircle },
-  { id: 'clubs', label: 'Clubs & Forums', icon: Users },
-  { id: 'research', label: 'Research & Innovation', icon: Rocket },
-  { id: 'wellness', label: 'Wellness & Support', icon: Heart },
-  { id: 'grievance', label: 'Grievance & Safety', icon: ShieldAlert },
+  { id: 'forums', label: 'Forums', icon: Users },
+  { id: 'events', label: 'Events & Festivals', icon: Music },
+  { id: 'publications', label: 'Student\'s Publications', icon: BookOpen },
 ];
 
 const data: Record<string, DataItem[]> = {
-  social: [
-    { title: 'Social Media Handles', icon: LinkIcon, links: [] },
-  ],
-  leadership: [
-    { title: 'National Service Scheme', description: 'Service to society through NSS initiatives.', icon: Compass, links: [] },
-    { title: 'Students\u2019 Council', icon: Users, links: [{ label: 'Composition' }, { label: 'Annual Reports' }] },
-    { title: 'Sports & Gymkhana', icon: Activity, links: [{ label: 'Composition' }, { label: 'Annual Reports' }] },
-  ],
-  clubs: [
-    { title: 'Cultural Forum', icon: Users, links: [{ label: 'About' }, { label: 'Youth Festival' }] },
-    { title: 'Marathi Vangmay Mandal', icon: BookOpen, links: [{ label: 'Annual Reports' }] },
-    { title: 'Natyakarmi (Drama Club)', icon: UserPlus, links: [{ label: 'About' }, { label: 'Annual Reports' }] },
-    { title: 'Aaroh (Music Club)', icon: Music, links: [{ label: 'About' }] },
+  forums: [
+    { title: 'Students\u2019 Council', icon: Users, links: [] },
+    { title: 'National Service Scheme', icon: Heart, links: [] },
+    { title: 'Cultural Forum', icon: Music, links: [] },
+    { title: 'Sports and Gymkhana', icon: Activity, links: [] },
+    { title: 'Natyakarmi (Theatre Group)', icon: UserPlus, links: [] },
+    { title: 'Marathi Vagmany Mandal', icon: BookOpen, links: [] },
+    { title: 'Aaroh', icon: Music, links: [] },
     { title: 'Nature Club', icon: Leaf, links: [] },
+    { title: 'Women Development Cell', icon: Shield, links: [] },
+    { title: 'Entrepreneurship Development Cell', icon: Rocket, links: [] },
+    { title: 'Students\u2019 Research', icon: BookOpen, links: [{ label: 'Redirect to the Research Cell', href: '/research' }] },
   ],
-  research: [
-    { title: 'Entrepreneurship Development Cell', icon: Rocket, links: [{ label: 'Composition' }, { label: 'Annual Reports' }] },
-    { title: 'Student Research - Shodh', description: '(Inter-collegiate Research Competition of MCC)', icon: BookOpen, links: [{ label: 'Annual Reports' }] },
-    { title: 'Avishkar', description: '(Inter-collegiate Research Competition of University of Mumbai)', icon: BookOpen, links: [{ label: 'Annual Reports' }] },
-    { title: 'Minor Research Project', icon: Activity, links: [{ label: 'Policy' }, { label: 'Application Process' }] },
+  events: [
+    { title: 'Spectrum', icon: Music, links: [{ label: 'Redirect to Cultural Forum', href: '/cultural-committee' }] },
+    { title: 'Inspira', icon: Rocket, links: [{ label: 'Redirect to the BCOM MS Section', href: '/programmes/ug/bms' }] },
+    { title: 'Technobeat', icon: Activity, links: [] },
+    { title: 'Math\u2019s Wonder', icon: Compass, links: [{ label: 'Redirect to Computer Science', href: '/programmes/ug/bsc-cs' }] },
+    { title: 'Emporio', icon: Users, links: [{ label: 'Redirect to BCOM Section', href: '/programmes/ug/bcom' }] },
+    { title: 'Quantomania', icon: Activity, links: [{ label: 'Redirect to Quantomania', href: '#' }] },
+    { title: 'Rasikotsav', icon: UserPlus, links: [{ label: 'Redirect to Natyakarmi', href: '#' }] },
+    { title: 'My Marathi, Mai Marathi', icon: BookOpen, links: [{ label: 'Redirect to MVM', href: '#' }] },
+    { title: 'Annual Day', icon: Users, links: [{ label: 'Redirect to Students\u2019 Council', href: '#' }] },
   ],
-  wellness: [
-    { title: 'Women Development Cell', icon: Heart, links: [{ label: 'Annual Reports' }] },
-    { title: 'Counselling Cell', icon: MessageCircle, links: [] },
-  ],
-  grievance: [
-    { title: 'Grievance Cell', icon: AlertTriangle, links: [] },
-    { title: 'Anti-Ragging Cell', icon: Shield, links: [] },
-    { title: 'Internal Complaint Cell', icon: BookOpen, links: [] },
+  publications: [
+    { title: 'Pratibimb', icon: BookOpen, links: [{ label: 'Redirect to BAF Section', href: '/programmes/ug/baf' }] },
+    { title: 'Finanza', icon: BookOpen, links: [{ label: 'Redirect to BCOM FM section', href: '/programmes/ug/bfm' }] },
+    { title: 'Muse', icon: BookOpen, links: [{ label: 'Redirect to BAMMC Section', href: '/programmes/ug/bammc' }] },
+    { title: 'Commercium', icon: BookOpen, links: [{ label: 'Redirect to BCOM Section', href: '/programmes/ug/bcom' }] },
   ],
 };
 

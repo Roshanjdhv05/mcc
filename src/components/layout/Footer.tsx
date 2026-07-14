@@ -16,7 +16,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-white/70 text-sm leading-relaxed mb-5">
-              An autonomous institution affiliated with the University of Mumbai, committed to academic excellence since 1964.
+              An autonomous institution affiliated with the University of Mumbai, committed to academic excellence since 1970.
             </p>
             <div className="flex items-center gap-3">
               {[Globe, Share2, Rss, MessageSquare].map((Icon, i) => (

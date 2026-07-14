@@ -5,13 +5,12 @@ import Link from 'next/link';
 import { GraduationCap, ChevronRight, ChevronDown, ExternalLink, BookOpen, Users, DollarSign, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const accreditationNav = [
-  { label: '2 B – CERTIFICATE', href: '/accreditation/2b-certificate' },
-  { label: '12 F – CERTIFICATE', href: '/accreditation/12f-certificate' },
-  { label: 'NAAC', href: '/accreditation/naac/certificates' },
-  { label: 'NIRF', href: '/accreditation/nirf/annual-submissions' },
-  { label: 'AISHE', href: '/accreditation/aishe/annual-submissions' },
-  { label: 'AUTONOMOUS HEI', href: '/accreditation/autonomous', active: true },
+const autonomyNav = [
+  { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
+  { label: 'Board of Studies', href: '/accreditation/autonomous/bos/members' },
+  { label: 'Academic Council', href: '/accreditation/autonomous/academic-council/members' },
+  { label: 'Finance Committee', href: '/accreditation/autonomous/finance-committee/members' },
+  { label: 'Governing Body', href: '/accreditation/autonomous/governing-body/members' },
 ];
 
 const sidebarLinks = [
@@ -169,12 +168,12 @@ export default function AutonomousHEIPage() {
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
       {/* ── Secondary Accreditation Nav ── */}
-      <div className="bg-[#123B6D] w-full shadow-md z-40 relative">
+      <div className="bg-[#123B6D] w-full shadow-md z-40 sticky top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]">
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar flex items-center h-12">
-          {accreditationNav.map((item, i) => (
+          {autonomyNav.map((item, i) => (
             <Link key={i} href={item.href}
               className={`flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider ${
-                item.active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'
+                (item as any).active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'
               }`}
             >
               {item.label}

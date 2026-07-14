@@ -179,57 +179,6 @@ export default function CourseTemplate({ title, description, introductionContent
 
       <div className="max-w-7xl mx-auto px-4 md:px-12 mt-4 md:-mt-8 relative z-20 flex flex-col gap-6 md:gap-8 pb-24">
         
-        {/* 2. Info Strip */}
-        <div className="bg-white rounded-[24px] shadow-sm border border-[#E2E8F0] px-4 md:px-8 py-5">
-          {/* Mobile Grid Layout vs Desktop Flex */}
-          <div className="grid grid-cols-3 gap-y-6 md:flex md:flex-wrap justify-between items-center md:gap-6">
-            
-            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-center md:text-left">
-              <div className="bg-transparent md:bg-[#EBF3FF] p-1 md:p-2.5 rounded-xl text-[#3B82F6]">
-                <Building2 size={24} strokeWidth={1.5} />
-              </div>
-              <div className="text-[9px] md:text-xs text-gray-500 leading-snug"><span className="block font-bold text-[#1E293B] text-[10px] md:text-sm">Affiliated to</span> University of Mumbai</div>
-            </div>
-            
-            <div className="hidden md:block w-px h-12 bg-gray-100"></div>
-            
-            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-center md:text-left">
-              <div className="bg-transparent md:bg-[#EBF3FF] p-1 md:p-2.5 rounded-xl text-[#3B82F6]">
-                <Award size={24} strokeWidth={1.5} />
-              </div>
-              <div className="text-[9px] md:text-xs text-gray-500 leading-snug"><span className="block font-bold text-[#1E293B] text-[10px] md:text-sm">NAAC Accredited</span> A Grade</div>
-            </div>
-            
-            <div className="hidden md:block w-px h-12 bg-gray-100"></div>
-            
-            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-center md:text-left">
-              <div className="bg-transparent md:bg-[#EBF3FF] p-1 md:p-2.5 rounded-xl text-[#3B82F6]">
-                <Users size={24} strokeWidth={1.5} />
-              </div>
-              <div className="text-[10px] md:text-sm font-bold text-[#1E293B] leading-snug">Experienced<br className="hidden md:block"/><span className="text-gray-500 font-medium"> Faculty</span></div>
-            </div>
-            
-            <div className="hidden md:block w-px h-12 bg-gray-100"></div>
-            
-            {/* These drop to a new line on very small screens if we used flex, but in grid-cols-3 we need to center them below. We use col-span tricks or just let grid handle it. */}
-            <div className="col-span-1 md:col-auto col-start-1 md:col-start-auto flex flex-col md:flex-row items-center justify-self-center md:justify-self-auto gap-2 md:gap-4 text-center md:text-left mt-2 md:mt-0 ml-4 md:ml-0">
-              <div className="bg-transparent md:bg-[#EBF3FF] p-1 md:p-2.5 rounded-xl text-[#3B82F6]">
-                <MonitorSmartphone size={24} strokeWidth={1.5} />
-              </div>
-              <div className="text-[10px] md:text-sm font-bold text-[#1E293B] leading-snug">Modern Labs &<br className="hidden md:block"/><span className="text-gray-500 font-medium"> Infrastructure</span></div>
-            </div>
-            
-            <div className="hidden md:block w-px h-12 bg-gray-100"></div>
-            
-            <div className="col-span-2 md:col-auto flex flex-col md:flex-row items-center justify-self-start md:justify-self-auto gap-2 md:gap-4 text-center md:text-left mt-2 md:mt-0 ml-4 md:ml-0">
-              <div className="bg-transparent md:bg-[#EBF3FF] p-1 md:p-2.5 rounded-xl text-[#3B82F6]">
-                <Briefcase size={24} strokeWidth={1.5} />
-              </div>
-              <div className="text-[10px] md:text-sm font-bold text-[#1E293B] leading-snug">Placement<br className="hidden md:block"/><span className="text-gray-500 font-medium"> Assistance</span></div>
-            </div>
-            
-          </div>
-        </div>
 
         {/* 3. Tabs Navigation */}
         <div className="w-full overflow-x-auto scrollbar-hide py-1">

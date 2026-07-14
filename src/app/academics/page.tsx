@@ -8,20 +8,6 @@ export const metadata: Metadata = {
 };
 
 const allProgrammes = [
-  // --- JUNIOR COLLEGE ---
-  {
-    code: 'FYJC', name: 'First Year Junior College', category: 'Junior College', duration: '1 Year', seats: 480,
-    desc: 'Foundation year for Arts & Commerce stream students preparing for board examinations.',
-    highlights: ['Commerce Stream', 'Arts Stream', 'Expert Faculty', 'Coaching Support'],
-    color: 'from-blue-500 to-blue-700', href: '/programmes/jr-college',
-  },
-  {
-    code: 'SYJC', name: 'Second Year Junior College', category: 'Junior College', duration: '1 Year', seats: 480,
-    desc: 'Board examination preparation with comprehensive coaching and study materials.',
-    highlights: ['Board Prep', 'Mock Tests', 'Career Guidance', 'Competitive Exams'],
-    color: 'from-indigo-500 to-indigo-700', href: '/programmes/jr-college',
-  },
-
   // --- UNDERGRADUATE ---
   {
     code: 'B.Com (MS)', name: 'Bachelor of Commerce (Management Studies)', category: 'Undergraduate', duration: '3 Years', seats: 120,
@@ -34,6 +20,18 @@ const allProgrammes = [
     desc: 'Combines commerce fundamentals with business administration skills to prepare students for managerial careers.',
     highlights: ['Business Admin', 'Commerce', 'Entrepreneurship'],
     color: 'from-[#7c3aed] to-[#9d5cf4]', href: '/programmes/ug/bcom',
+  },
+  {
+    code: 'B.Com (BI)', name: 'Bachelor of Commerce (Banking & Insurance)', category: 'Undergraduate', duration: '3 Years', seats: 60,
+    desc: 'A specialized programme providing in-depth knowledge of the banking and insurance sectors.',
+    highlights: ['Banking', 'Insurance', 'Finance', 'Economics'],
+    color: 'from-[#2563eb] to-[#3b82f6]', href: '/programmes/ug/bbi',
+  },
+  {
+    code: 'B.Com (FM)', name: 'Bachelor of Commerce (Financial Markets)', category: 'Undergraduate', duration: '3 Years', seats: 60,
+    desc: 'Focuses on the comprehensive understanding of financial markets, trading, and investments.',
+    highlights: ['Financial Markets', 'Trading', 'Investments', 'Economics'],
+    color: 'from-[#059669] to-[#10b981]', href: '/programmes/ug/bfm',
   },
   {
     code: 'B.A (MMC)', name: 'Bachelor of Arts (Multimedia and Mass Communication)', category: 'Undergraduate', duration: '3 Years', seats: 60,
@@ -138,7 +136,7 @@ const allProgrammes = [
 ];
 
 export default function AcademicsPage() {
-  const categories = ['Junior College', 'Undergraduate', 'Postgraduate', 'Doctoral'];
+  const categories = ['Undergraduate', 'Postgraduate', 'Doctoral'];
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen">

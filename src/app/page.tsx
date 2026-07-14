@@ -69,14 +69,6 @@ const testimonials = [
   { name: 'Sneha Joshi', course: 'FYJC 2021', quote: 'As a FYJC student, the supportive teachers and well-equipped labs made studying enjoyable. I cleared my board exams with distinction!', avatar: 'S' },
 ];
 
-const programFeatures = [
-  { icon: Lightbulb, title: 'Creative Learning Environment', bg: 'bg-blue-50', text: 'text-blue-600', hoverBorder: 'hover:border-blue-200' },
-  { icon: Activity, title: 'Practical Exposure', bg: 'bg-emerald-50', text: 'text-emerald-600', hoverBorder: 'hover:border-emerald-200' },
-  { icon: Briefcase, title: 'Internship Opportunities', bg: 'bg-orange-50', text: 'text-orange-600', hoverBorder: 'hover:border-orange-200' },
-  { icon: MonitorSmartphone, title: 'Digital Media Skills', bg: 'bg-pink-50', text: 'text-pink-600', hoverBorder: 'hover:border-pink-200' },
-  { icon: MessagesSquare, title: 'Communication Excellence', bg: 'bg-purple-50', text: 'text-purple-600', hoverBorder: 'hover:border-purple-200' },
-  { icon: Target, title: 'Career Guidance', bg: 'bg-indigo-50', text: 'text-indigo-600', hoverBorder: 'hover:border-indigo-200' },
-];
 
 const heroBanners = [
   {
@@ -84,14 +76,14 @@ const heroBanners = [
     fit: 'object-cover' as const,
     badge: "Welcome to MCC",
     title: <>Welcome to <span className="text-[#D4A017]">Mulund College</span> of Commerce</>,
-    desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1964."
+    desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1970."
   },
   {
     image: "https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80",
     fit: 'object-cover' as const,
     badge: "Admissions 2024–25 Open Now",
     title: <>Admissions <span className="text-[#D4A017]">2024–25</span> Now Open</>,
-    desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1964."
+    desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1970."
   },
   {
     image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80",
@@ -411,31 +403,6 @@ export default function HomePage() {
           </ScrollReveal>
         </div>
 
-        {/* ── PROGRAMME HIGHLIGHTS ── */}
-        <ScrollReveal>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Why Choose MCC</h2>
-          </div>
-          <div className="relative overflow-hidden w-full before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-10 before:bg-gradient-to-r before:from-[#F8FAFC] before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-10 after:bg-gradient-to-l after:from-[#F8FAFC] after:to-transparent">
-            <motion.div 
-              className="flex gap-4 pr-4 w-max"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
-            >
-              {[...programFeatures, ...programFeatures].map((f, idx) => (
-                <div 
-                  key={idx} 
-                  className={`${f.bg} rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center text-center gap-3 border border-transparent ${f.hoverBorder} transition-all duration-300 w-[160px] md:w-[180px] h-[160px] md:h-[180px] shrink-0`}
-                >
-                  <f.icon className={f.text} size={32} strokeWidth={1.5} />
-                  <span className={`font-bold text-xs md:text-sm px-1 leading-tight ${f.text}`}>
-                    {f.title}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </ScrollReveal>
 
         {/* ── FEATURED PROGRAMMES ── */}
         <ScrollReveal>

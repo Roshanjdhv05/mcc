@@ -372,4 +372,4 @@ export default function CharacterCertificatePage() {
       </div>
     </div>
   );
-}
+}

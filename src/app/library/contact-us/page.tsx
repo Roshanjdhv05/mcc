@@ -1,61 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { Phone, Mail, MapPin, University } from 'lucide-react';
+import LibraryNav from '@/components/library/LibraryNav';
 
-const libraryNav = [
-  { label: 'HOME', href: '/library' },
-  { label: 'ABOUT US', href: '/library/about-us' },
-  { label: 'WEB OPAC', href: '#' },
-  { label: 'E-RESOURCES', href: '/library/e-resources' },
-  { label: 'STAFF PROFILE', href: '/library/staff-profile' },
-  { label: 'DOWNLOAD', href: '#' },
-  { label: 'RESEARCH - KIT', href: '/library/research-kit' },
-  { label: 'I. R.', href: 'https://drive.google.com/drive/folders/1bes4sOXN9ePGCVSgdTQ2ZtPg-pYQWyju?usp=drive_link' },
-  { label: 'IMPORTANT LINKS', href: '/library/important-links' },
-  { label: 'FEEDBACK', href: '#' },
-  { label: 'CONTACT US', active: true, href: '/library/contact-us' },
-];
 
 export default function LibraryContactPage() {
-  const [navVisible, setNavVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 200) {
-        setNavVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        setNavVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
 
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
-      {/* Secondary Library Nav */}
-      <div className={`bg-[#014d4e] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[160px] lg:top-[190px] xl:top-[200px]' : 'top-0'}`}>
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar flex items-center h-12">
-          {libraryNav.map((item, i) => {
-            const isExternal = item.href?.startsWith('http');
-            return isExternal ? (
-              <a key={i} href={item.href} target="_blank" rel="noopener noreferrer"
-                className="flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider text-white/90 hover:text-white hover:bg-white/10">
-                {item.label}
-              </a>
-            ) : (
-              <Link key={i} href={item.href || '#'}
-                className={`flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider ${item.active ? 'bg-[#008e59] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'}`}>
-                {item.label}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+      <LibraryNav />
 
       {/* Main Content */}
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 mt-10">

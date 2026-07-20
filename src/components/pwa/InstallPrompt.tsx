@@ -51,7 +51,7 @@ export default function InstallPrompt() {
 
             <div className="flex flex-col items-center text-center">
               <div className="w-20 h-20 rounded-2xl bg-white shadow-lg border border-slate-100 flex items-center justify-center mb-5 overflow-hidden">
-                <img src="/mcclogo.jpg" alt="MCC Logo" className="w-16 h-16 object-contain" />
+                <img src="/mcclogo.png" alt="MCC Logo" className="w-16 h-16 object-contain" />
               </div>
               
               <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-2">Install MCC App</h2>

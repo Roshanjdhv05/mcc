@@ -53,7 +53,7 @@ export default function IOSInstallGuide() {
 
             <div className="flex items-center gap-4 mb-6 mt-2">
               <div className="w-14 h-14 rounded-2xl bg-white shadow-md border border-slate-100 flex items-center justify-center shrink-0 overflow-hidden">
-                <img src="/mcclogo.jpg" alt="MCC Logo" className="w-10 h-10 object-contain" />
+                <img src="/mcclogo.png" alt="MCC Logo" className="w-10 h-10 object-contain" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-slate-900 leading-tight">Install MCC App</h2>

@@ -1,10 +1,16 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import { renderSyllabusTable } from '@/lib/syllabusData';
 
 export const metadata: Metadata = {
   title: 'B.Sc. (CA) | MCC Digital Experience Platform',
   description: 'Bachelor of Science (Computer Applications) at Mulund College of Commerce.',
 };
+
+const bscCaFaculty = [
+  { srNo: 26, name: 'Dr. Vishal Dnyandeo Borude',  additionalRole: 'Coordinator', designation: 'Assistant Professor' },
+  { srNo: 27, name: 'Mr. Siddhesh Santosh Gotekar', additionalRole: '—',           designation: 'Assistant Professor' },
+];
 
 export default function CoursePage() {
   return (
@@ -18,9 +24,11 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Computer Applications)"
-      description="The Bachelor of Science (Computer Applications) programme details will be updated shortly."
+      description="The Bachelor of Science (Computer Applications) programme focuses on computing and application development."
       courseKey="BSC_CA"
       category="science"
+      facultyData={bscCaFaculty}
+      syllabusContent={renderSyllabusTable('BCA')}
     />
   );
 }

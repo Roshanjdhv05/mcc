@@ -1,10 +1,19 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 export const metadata: Metadata = {
   title: 'B.Com (MS) | MCC Digital Experience Platform',
   description: 'Bachelor of Commerce (Management Studies) at Mulund College of Commerce.',
 };
+
+const bcomMsFaculty = [
+  { srNo: 12, name: 'Dr. Kanchana Nikhil Sattur',    additionalRole: '—', designation: 'Assistant Professor' },
+  { srNo: 13, name: 'Dr. Soumya George Monappilly',  additionalRole: '—', designation: 'Assistant Professor' },
+  { srNo: 14, name: 'Dr. Shilpi Deepak Jawake',      additionalRole: '—', designation: 'Assistant Professor' },
+  { srNo: 15, name: 'Dr. Abhilasha N',               additionalRole: '—', designation: 'Assistant Professor' },
+  { srNo: 34, name: 'Mr. Felix Anthonysamy',         additionalRole: '—', designation: 'Assistant Professor' },
+];
 
 export default function CoursePage() {
   return (
@@ -17,8 +26,10 @@ export default function CoursePage() {
         <p className="mb-4">This program is ideal for students who aspire to develop managerial skills, understand business dynamics, and take on leadership roles in the corporate world.</p>
       </>
       }
+      syllabusContent={<SyllabusRenderer programKey="BMS" />}
       title="Bachelor of Commerce (Management Studies)"
       description="The Bachelor of Commerce (Management Studies) programme details will be updated shortly."
+      facultyData={bcomMsFaculty}
     />
   );
 }

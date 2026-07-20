@@ -5,6 +5,27 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight } from 'lucide-react';
 
+const formatCourseLabel = (label: string) => {
+  if (typeof label !== 'string') return label;
+  
+  const isCourse = /^(Bachelor|Master|B\.Com|B\.Sc|M\.Com|M\.Sc|B\.A\.|PhD)/i.test(label);
+  
+  if (isCourse) {
+    const parenIndex = label.indexOf('(');
+    if (parenIndex !== -1) {
+      return (
+        <>
+          <span className="font-bold text-black">{label.substring(0, parenIndex).trim()}</span>
+          {' '}<span className="font-medium text-inherit">{label.substring(parenIndex)}</span>
+        </>
+      );
+    }
+    return <span className="font-bold text-black">{label}</span>;
+  }
+  
+  return label;
+};
+
 const navLinks = [
   { label: 'Home', href: '/', icon: <Home size={18} /> },
   {
@@ -14,6 +35,7 @@ const navLinks = [
       { label: 'Board of Trustees', href: '/about/board-of-trustees' },
       { label: "Principal's Desk", href: '/principal' },
       { label: "Vice Principal's Desk", href: '/vice-principal' },
+      { label: 'Our Milestones', href: '/about/milestones' },
       { label: 'Organogram', href: '/about/organogram' },
       { label: 'Code of Conduct', href: '/about/code-of-conduct' },
       { 
@@ -78,134 +100,12 @@ const navLinks = [
     ]
   },
   {
-    label: 'IQAC', href: '/iqac', icon: <Award size={18} />, 
-    isMegaMenu: true,
-    megaMenuImage: '/college_campus_hero.png',
-    megaMenuColumns: [
-      {
-        title: 'Information & Policies',
-        sections: [
-          {
-            links: [
-              { label: 'About the IQAC', href: '/iqac#about' },
-              { label: 'Quality Policy', href: '/iqac#quality-policy' },
-              { label: 'Institutional policies', href: '/iqac#institutional-policies' },
-              { label: 'IQAC composition -Committee Members (Year Wise)', href: '/iqac#members' },
-              { label: 'Minutes of the Meeting', href: '/iqac#minutes' },
-              { label: 'Best Practices', href: '/iqac#best-practices' },
-              { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
-              { label: 'Annual Reports', href: '/iqac#annual-reports' },
-            ]
-          }
-        ]
-      },
-      {
-        title: 'Reports & Initiatives',
-        sections: [
-          {
-            links: [
-              { label: 'AQAR', href: '/iqac#aqar' },
-              { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
-              { label: 'Perspective plan', href: '/iqac#perspective-plan' },
-              { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
-              { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
-              { label: 'Deeksharambh (Orientation of Learners)', href: '/iqac#deeksharambh' },
-              { label: 'Disability Sensitisation (Inclusive Campus)', href: '/iqac#disability' },
-              { label: 'Environmental Commitments', href: '/iqac#environment' },
-            ]
-          }
-        ]
-      }
-    ],
-    sub: [
-      { label: 'About the IQAC', href: '/iqac#about' },
-      { label: 'Quality Policy', href: '/iqac#quality-policy' },
-      { label: 'Institutional policies', href: '/iqac#institutional-policies' },
-      { label: 'IQAC composition -Committee Members (Year Wise)', href: '/iqac#members' },
-      { label: 'Minutes of the Meeting', href: '/iqac#minutes' },
-      { label: 'Best Practices', href: '/iqac#best-practices' },
-      { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
-      { label: 'Annual Reports', href: '/iqac#annual-reports' },
-      { label: 'AQAR', href: '/iqac#aqar' },
-      { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
-      { label: 'Perspective plan', href: '/iqac#perspective-plan' },
-      { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
-      { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
-      { label: 'Deeksharambh (Orientation of Learners)', href: '/iqac#deeksharambh' },
-      { label: 'Disability Sensitisation (Inclusive Campus)', href: '/iqac#disability' },
-      { label: 'Environmental Commitments', href: '/iqac#environment' },
-    ]
-  },
-  {
-    label: 'Jr. College', href: '/junior-college-corner', icon: <BookOpen size={18} />, sub: [
-      { label: "Vice Principal's Desk", href: '/jr-college/vice-principal' },
-      { label: 'Teaching Staff', href: '/jr-college/teaching-staff' },
-      { label: 'Result Analysis', href: '/jr-college/result-analysis' },
-      { label: 'SMAF/Scholarship/Freeship', href: '/jr-college/scholarships' },
-      { label: 'Notice', href: '/jr-college/notice' },
-      { label: 'Timetable', href: '/jr-college/timetable' },
-      { label: 'Sports', href: '/jr-college/sports' },
-      { label: 'Cultural', href: '/jr-college/cultural' },
-      { label: 'Committee', href: '/jr-college/committee' },
-      { label: 'Special Days', href: '/jr-college/special-days' },
-    ]
-  },
-  {
-    label: 'Programmes', href: '/academics', icon: <GraduationCap size={18} />, 
-    isMegaMenu: true,
-    megaMenuType: 'programmes',
-    sub: [
-      {
-        label: 'Under Graduate', href: '/programmes/undergraduate', sub: [
-          { label: 'Bachelor of Commerce', href: '/programmes/ug/bcom' },
-          { label: 'B.Com (Accounting & Finance)', href: '/programmes/ug/baf' },
-          { label: 'B.Com (Banking & Insurance)', href: '/programmes/ug/bbi' },
-          { label: 'B.Com (Financial Markets)', href: '/programmes/ug/bfm' },
-          { label: 'B.Com (Management Studies)', href: '/programmes/ug/bcom-ms' },
-          { label: 'B.Com (Business Administration)', href: '/programmes/ug/bcom-ba' },
-          { label: 'B.Sc (Computer Science)', href: '/programmes/ug/sct/bsc-cs' },
-          { label: 'B.Sc (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
-          { label: 'B.Sc (Computer Application)', href: '/programmes/ug/sct/bsc-ca' },
-          { label: 'B.Sc (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
-          { label: 'B.Com (BFSI)', href: '/programmes/ug/bfsi' },
-          { label: 'B.A. (Mass Media & Communication)', href: '/programmes/ug/bammc' },
-        ]
-      },
-      {
-        label: 'Post Graduate', href: '/programmes/post-graduate', sub: [
-          { label: 'M.Com (Advanced Accountancy)', href: '/programmes/pg/mcom-aa' },
-          { label: 'M.Com (Banking & Insurance)', href: '/programmes/pg/mcom-bm' },
-          { label: 'M.Com (Business Management)', href: '/programmes/pg/mcom-bf' },
-          { label: 'M.Sc (Information Technology)', href: '/programmes/pg/msc-it' },
-          { label: 'M.Sc (Finance)', href: '/programmes/pg/msf' },
-        ]
-      },
-      {
-        label: 'PHD Programmes', href: '/programmes/phd', sub: [
-          { label: 'PhD (BE)', href: '/programmes/phd/be' }
-        ]
-      },
-    ]
-  },
-  { 
-    label: 'Examination', href: '/examination', icon: <BookOpen size={18} />,
-    sub: [
-      { label: 'Notices', href: '/examination' },
-      { label: 'Board of Examination', href: '/examination' },
-      { label: 'Examination Ordinances', href: '/examination' },
-      { label: 'Grade Point & SGPA', href: '/examination' },
-      { label: 'Examination Manual', href: '/examination' },
-      { label: 'Unfair Means Enquiry', href: '/examination' }
-    ]
-  },
-
-  {
-    label: 'Autonomy', href: '/accreditation/autonomous', icon: <Medal size={18} />, megaMenuAlign: 'right',
+    label: 'Autonomy', href: '/accreditation/autonomous', icon: <Medal size={18} />,
     isMegaMenu: true,
     megaMenuImage: '/objectives_side_img.png',
     megaMenuColumns: [
       {
-        title: 'Information & Policies',
+        title: 'Information',
         sections: [
           {
             links: [
@@ -216,6 +116,7 @@ const navLinks = [
       },
       {
         title: 'Statutory Bodies',
+        colSpan: 2,
         sections: [
           {
             subTitle: 'Board of Studies',
@@ -230,12 +131,7 @@ const navLinks = [
               { label: 'Members', href: '/accreditation/autonomous/academic-council/members' },
               { label: 'Minutes', href: '/accreditation/autonomous/academic-council/minutes' }
             ]
-          }
-        ]
-      },
-      {
-        title: 'Committees',
-        sections: [
+          },
           {
             subTitle: 'Finance Committee',
             links: [
@@ -281,6 +177,212 @@ const navLinks = [
       }
     ]
   },
+  {
+    label: 'IQAC', href: '/iqac', icon: <Award size={18} />, 
+    isMegaMenu: true,
+    megaMenuImage: '/college_campus_hero.png',
+    megaMenuColumns: [
+      {
+        title: 'Information & Policies',
+        sections: [
+          {
+            links: [
+              { label: 'About the IQAC', href: '/iqac#about' },
+              { label: 'Quality Policy', href: '/iqac#quality-policy' },
+              { label: 'Institutional policies', href: '/iqac#institutional-policies' },
+              { label: 'IQAC composition -Committee Members', href: '/iqac#members' },
+              { label: 'Minutes of the Meeting', href: '/iqac#minutes' },
+              { label: 'Best Practices', href: '/iqac#best-practices' },
+              { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
+              { label: 'Annual Reports', href: '/iqac#annual-reports' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Reports & Initiatives',
+        sections: [
+          {
+            links: [
+              { label: 'AQAR', href: '/iqac#aqar' },
+              { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
+              { label: 'Perspective plan', href: '/iqac#perspective-plan' },
+              { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
+              { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
+              { label: 'Deeksharambh', href: '/iqac#deeksharambh' },
+              { label: 'Disability Sensitisation', href: '/iqac#disability' },
+              { label: 'Environmental Commitments', href: '/iqac#environment' },
+            ]
+          }
+        ]
+      }
+    ],
+    sub: [
+      { label: 'About the IQAC', href: '/iqac#about' },
+      { label: 'Quality Policy', href: '/iqac#quality-policy' },
+      { label: 'Institutional policies', href: '/iqac#institutional-policies' },
+      { label: 'IQAC composition -Committee Members', href: '/iqac#members' },
+      { label: 'Minutes of the Meeting', href: '/iqac#minutes' },
+      { label: 'Best Practices', href: '/iqac#best-practices' },
+      { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
+      { label: 'Annual Reports', href: '/iqac#annual-reports' },
+      { label: 'AQAR', href: '/iqac#aqar' },
+      { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
+      { label: 'Perspective plan', href: '/iqac#perspective-plan' },
+      { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
+      { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
+      { label: 'Deeksharambh', href: '/iqac#deeksharambh' },
+      { label: 'Disability Sensitisation', href: '/iqac#disability' },
+      { label: 'Environmental Commitments', href: '/iqac#environment' },
+    ]
+  },
+  {
+    label: 'Jr. College', href: '/junior-college-corner', icon: <BookOpen size={18} />, sub: [
+      { label: "Vice Principal's Desk", href: '/jr-college/vice-principal' },
+      { label: 'Teaching Staff', href: '/jr-college/teaching-staff' },
+      { label: 'Result Analysis', href: '/jr-college/result-analysis' },
+      { label: 'SMAF/Scholarship/Freeship', href: '/jr-college/scholarships' },
+      { label: 'Notice', href: '/jr-college/notice' },
+      { label: 'Timetable', href: '/jr-college/timetable' },
+      { label: 'Sports', href: '/jr-college/sports' },
+      { label: 'Cultural', href: '/jr-college/cultural' },
+      { label: 'Committee', href: '/jr-college/committee' },
+      { label: 'Special Days', href: '/jr-college/special-days' },
+    ]
+  },
+  {
+    label: 'Programmes', href: '/academics', icon: <GraduationCap size={18} />, 
+    isMegaMenu: true,
+    megaMenuColumns: [
+      {
+        title: 'AIDED',
+        sections: [
+          {
+            subTitle: 'Undergraduate',
+            links: [
+              { label: 'Bachelor of Commerce', href: '/programmes/ug/bcom', isBoldBlack: true }
+            ]
+          },
+          {
+            subTitle: 'Postgraduate',
+            links: [
+              { label: 'Master of Commerce (Advanced Accountancy)', href: '/programmes/pg/mcom-aa', isBoldBlack: true }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Self-Financing (Commerce & Management)',
+        colSpan: 2,
+        sections: [
+          {
+            subTitle: 'Undergraduate (Commerce)',
+            links: [
+              { label: 'Bachelor of Commerce (Accounting & Finance)', href: '/programmes/ug/baf', isBoldBlack: true },
+              { label: 'Bachelor of Commerce (Banking & Insurance)', href: '/programmes/ug/bbi', isBoldBlack: true },
+              { label: 'Bachelor of Commerce (Financial Markets)', href: '/programmes/ug/bfm', isBoldBlack: true }
+            ]
+          },
+          {
+            subTitle: 'Undergraduate (Business & Management)',
+            links: [
+              { label: 'Bachelor of Commerce (Management Studies)', href: '/programmes/ug/bcom-ms', isBoldBlack: true },
+              { label: 'Bachelor of Commerce (Business Administration)', href: '/programmes/ug/bcom-ba', isBoldBlack: true }
+            ]
+          },
+          {
+            subTitle: 'Apprentice Embedded (Skill Based)',
+            links: [
+              { label: 'Bachelor of Commerce (Banking, Financial Services and Insurance)', href: '/programmes/ug/bfsi', isBoldBlack: true }
+            ]
+          },
+          {
+            subTitle: 'Postgraduate (Commerce)',
+            links: [
+              { label: 'Master of Commerce (Business Management)', href: '/programmes/pg/mcom-bm', isBoldBlack: true },
+              { label: 'Master of Commerce (Banking & Finance)', href: '/programmes/pg/mcom-bf', isBoldBlack: true }
+            ]
+          },
+          {
+            subTitle: 'Ph.D.',
+            links: [
+              { label: 'Commerce (Specialisation in Business Economics)', href: '/programmes/phd/be' }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Self-Financing (Science & Arts)',
+        sections: [
+          {
+            subTitle: 'Undergraduate (Science)',
+            links: [
+              { label: 'Bachelor of Science (Computer Science)', href: '/programmes/ug/sct/bsc-cs' },
+              { label: 'Bachelor of Science (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
+              { label: 'Bachelor of Science (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
+              { label: 'Bachelor of Science (Computer Application)', href: '/programmes/ug/sct/bsc-ca' }
+            ]
+          },
+          {
+            subTitle: 'Undergraduate (Arts)',
+            links: [
+              { label: 'Bachelor of Arts (Mass Media & Communication)', href: '/programmes/ug/bammc' }
+            ]
+          },
+          {
+            subTitle: 'Postgraduate',
+            links: [
+              { label: 'Master of Science (Information Technology)', href: '/programmes/pg/msc-it' },
+              { label: 'Master of Science (Finance)', href: '/programmes/pg/msf' }
+            ]
+          }
+        ]
+      }
+    ],
+    sub: [
+      {
+        label: 'Under Graduate', href: '/programmes/undergraduate', sub: [
+          { label: 'Bachelor of Commerce', href: '/programmes/ug/bcom', isBoldBlack: true },
+          { label: 'B.Com (Accounting & Finance)', href: '/programmes/ug/baf', isBoldBlack: true },
+          { label: 'B.Com (Banking & Insurance)', href: '/programmes/ug/bbi', isBoldBlack: true },
+          { label: 'B.Com (Financial Markets)', href: '/programmes/ug/bfm', isBoldBlack: true },
+          { label: 'B.Com (Management Studies)', href: '/programmes/ug/bcom-ms', isBoldBlack: true },
+          { label: 'B.Com (Business Administration)', href: '/programmes/ug/bcom-ba', isBoldBlack: true },
+          { label: 'B.Sc (Computer Science)', href: '/programmes/ug/sct/bsc-cs' },
+          { label: 'B.Sc (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
+          { label: 'B.Sc (Computer Application)', href: '/programmes/ug/sct/bsc-ca' },
+          { label: 'B.Sc (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
+          { label: 'B.Com (BFSI)', href: '/programmes/ug/bfsi', isBoldBlack: true },
+          { label: 'B.A. (Mass Media & Communication)', href: '/programmes/ug/bammc' },
+        ]
+      },
+      {
+        label: 'Post Graduate', href: '/programmes/post-graduate', sub: [
+          { label: 'M.Com (Advanced Accountancy)', href: '/programmes/pg/mcom-aa', isBoldBlack: true },
+          { label: 'M.Com (Banking & Finance)', href: '/programmes/pg/mcom-bm', isBoldBlack: true },
+          { label: 'M.Com (Business Management)', href: '/programmes/pg/mcom-bf', isBoldBlack: true },
+          { label: 'M.Sc (Information Technology)', href: '/programmes/pg/msc-it' },
+          { label: 'M.Sc (Finance)', href: '/programmes/pg/msf' },
+        ]
+      },
+      {
+        label: 'PHD Programmes', href: '/programmes/phd', sub: [
+          { label: 'PhD (BE)', href: '/programmes/phd/be' }
+        ]
+      },
+    ]
+  },
+  { 
+    label: 'Examination', href: '/examination', icon: <BookOpen size={18} />,
+    sub: [
+      { label: 'Notices', href: '/examination' },
+      { label: 'Board of Examination', href: '/examination' },
+      { label: 'Examination Ordinances', href: '/examination' },
+      { label: 'Grade Point & SGPA', href: '/examination' },
+      { label: 'Examination Manual', href: '/examination' },
+      { label: 'Unfair Means Enquiry', href: '/examination' }
+    ]
+  },
   { 
     label: 'Library', href: '/library', icon: <LibraryIcon size={18} />,
     sub: [
@@ -288,6 +390,18 @@ const navLinks = [
       { label: 'E-RESOURCES', href: '/library/e-resources' },
       { label: 'DOWNLOAD', href: '#' },
       { label: 'IMPORTANT LINKS', href: '/library/important-links' }
+    ],
+    mobileSub: [
+      { label: 'HOME', href: '/library' },
+      { label: 'ABOUT US', href: '/library/about-us' },
+      { label: 'WEB OPAC', href: '#' },
+      { label: 'E-RESOURCES', href: '/library/e-resources' },
+      { label: 'STAFF PROFILE', href: '/library/staff-profile' },
+      { label: 'DOWNLOAD', href: '#' },
+      { label: 'RESEARCH - KIT', href: '/library/research-kit' },
+      { label: 'I. R.', href: 'https://drive.google.com/drive/folders/1bes4sOXN9ePGCVSgdTQ2ZtPg-pYQWyju?usp=drive_link' },
+      { label: 'IMPORTANT LINKS', href: '/library/important-links' },
+      { label: 'CONTACT US', href: '/library/contact-us' }
     ]
   },
   {
@@ -403,13 +517,13 @@ const navLinks = [
     ]
   },
   {
-    label: "Students' Corner", href: '/students-corner', icon: <Users size={18} />,
+    label: "Students Corner", href: '/students-corner', icon: <Users size={18} />,
     isMegaMenu: true,
     megaMenuAlign: 'right',
     megaMenuImage: '/college_campus_hero.png',
     megaMenuColumns: [
       {
-        title: 'Forums',
+        title: 'Forums and Clubs',
         sections: [
           {
             links: [
@@ -433,7 +547,7 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Spectrum', href: '/cultural-committee' },
+              { label: 'Spectrum', href: '/students-corner/cultural-forum' },
               { label: 'Inspira', href: '/programmes/ug/bms' },
               { label: 'Technobeat', href: '#' },
               { label: 'Math\u2019s Wonder', href: '/programmes/ug/bsc-cs' },
@@ -462,7 +576,7 @@ const navLinks = [
     ],
     sub: [
       {
-        label: 'Forums', href: '#', sub: [
+        label: 'Forums and Clubs', href: '#', sub: [
           { label: "Students' Council", href: '/students-corner/council' },
           { label: 'National Service Scheme', href: '/students-corner/nss' },
           { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
@@ -478,7 +592,7 @@ const navLinks = [
       },
       {
         label: 'Events & Festivals', href: '#', sub: [
-          { label: 'Spectrum', href: '/cultural-committee' },
+          { label: 'Spectrum', href: '/students-corner/cultural-forum' },
           { label: 'Inspira', href: '/programmes/ug/bms' },
           { label: 'Technobeat', href: '#' },
           { label: 'Math\u2019s Wonder', href: '/programmes/ug/bsc-cs' },
@@ -551,6 +665,7 @@ const navLinks = [
         sections: [
           {
             subTitle: 'Professional Course Examinations',
+            subTitleHighlight: true,
             links: [
               { label: 'CA', href: '#' },
               { label: 'CS', href: '#' },
@@ -657,6 +772,23 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [lastScrollY]);
 
+  const isLinkActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    if (href === '#') return false;
+    
+    if (pathname === href || pathname.startsWith(href + '/')) {
+      const isOverridden = navLinks.some(l => 
+        l.href !== '/' && 
+        l.href !== '#' && 
+        l.href !== href && 
+        l.href.length > href.length && 
+        (pathname === l.href || pathname.startsWith(l.href + '/'))
+      );
+      return !isOverridden;
+    }
+    return false;
+  };
+
   return (
     <>
       <motion.header
@@ -686,7 +818,7 @@ export default function Navbar() {
             {/* Logo + College Name */}
             <div className="flex items-center gap-2 md:gap-3 lg:gap-5 shrink min-w-0 bg-transparent pr-2 md:pr-4 lg:pr-6">
               <Link href="/" className="shrink-0 transition-transform hover:scale-[1.02] flex flex-col items-center justify-center gap-0.5">
-                <img src="/mcclogo.jpg" alt="MCC Logo" className="w-14 h-14 md:w-16 md:h-16 lg:w-[120px] lg:h-[120px] object-contain drop-shadow-sm" />
+                <img src="/mcclogo.png" alt="MCC Logo" className="w-14 h-14 md:w-16 md:h-16 lg:w-[120px] lg:h-[120px] object-contain drop-shadow-sm" />
                 <span className="text-[#123B6D] font-bold text-[9px] md:text-[10px] lg:text-[14px] leading-tight whitespace-nowrap">
                   Since 1970
                 </span>
@@ -763,20 +895,16 @@ export default function Navbar() {
                     Placement
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
+                  <Link href="/administrative-service" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                    Admin Services
+                  </Link>
+                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
                   <Link href="/alumni" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Alumni
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/research" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Research
-                  </Link>
-                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/contact" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Contact
-                  </Link>
-                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/administrative-service" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Admin Services
+                  <Link href="/rti" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                    RTI
                   </Link>
                 </div>
               </div>
@@ -889,7 +1017,7 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     className={`flex items-center gap-0.5 xl:gap-1.5 px-1 md:px-1.5 lg:px-3 xl:px-4 py-1 md:py-1.5 lg:py-2.5 text-[9px] md:text-[10px] lg:text-[12px] xl:text-[13px] font-semibold rounded-xl transition-all whitespace-nowrap ${
-                      (link.href === '/' ? pathname === '/' : pathname.startsWith(link.href) && link.href !== '#')
+                      isLinkActive(link.href)
                         ? 'bg-[#123B6D] text-white shadow-md' 
                         : 'text-[#1E293B] hover:text-[#123B6D] hover:bg-[#123B6D]/5'
                     }`}
@@ -897,13 +1025,13 @@ export default function Navbar() {
                     onMouseLeave={() => setOpenDrop(null)}
                   >
                     {link.label}
-                    <ChevronDown size={14} className={`${(link.href === '/' ? pathname === '/' : pathname.startsWith(link.href) && link.href !== '#') ? 'text-white/80 group-hover:text-white' : 'text-[#94A3B8] group-hover:text-[#123B6D]'} ml-0.5 transition-colors`} />
+                    <ChevronDown size={14} className={`${isLinkActive(link.href) ? 'text-white/80 group-hover:text-white' : 'text-[#94A3B8] group-hover:text-[#123B6D]'} ml-0.5 transition-colors`} />
                   </Link>
                 ) : (
                   <Link
                     href={link.href}
                     className={`flex items-center gap-0.5 xl:gap-2 px-1 md:px-1.5 lg:px-4 xl:px-5 py-1 md:py-1.5 lg:py-2.5 text-[9px] md:text-[10px] lg:text-[12px] xl:text-[13px] font-semibold rounded-xl transition-all whitespace-nowrap ${
-                      (link.href === '/' ? pathname === '/' : pathname.startsWith(link.href))
+                      isLinkActive(link.href)
                         ? 'bg-[#123B6D] text-white shadow-md' 
                         : 'text-[#1E293B] hover:text-[#123B6D] hover:bg-[#123B6D]/5'
                     }`}
@@ -913,34 +1041,43 @@ export default function Navbar() {
                 )}
                 {(link as any).isMegaMenu && (link as any).megaMenuColumns && (
                   <div
-                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] ${(link as any).megaMenuColumns.length > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
+                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
-                    <div className="bg-[#F8F9FA] border border-[#E2E8F0] rounded-3xl shadow-2xl flex overflow-hidden min-h-[400px]">
-                      <div className={`${(link as any).megaMenuColumns.length > 3 ? 'w-[25%]' : 'w-[30%]'} bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 relative`}>
-                        <img src={(link as any).megaMenuImage || "/college_campus_hero.png"} alt={link.label} className="w-full h-full object-cover absolute inset-0 rounded-l-3xl" />
-                      </div>
-                      <div className={`${(link as any).megaMenuColumns.length > 3 ? 'w-[75%]' : 'w-[70%]'} p-8 grid gap-6 relative z-10 ${(link as any).megaMenuColumns.length === 4 ? 'grid-cols-4' : (link as any).megaMenuColumns.length === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                    <div className="bg-[#F8F9FA] border border-[#E2E8F0] rounded-3xl shadow-2xl overflow-hidden min-h-[400px]">
+                      <div className={`w-full p-8 grid gap-6 relative z-10 ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 4 ? 'grid-cols-4' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
                         {(link as any).megaMenuColumns.map((col: any, idx: number) => (
-                          <div key={idx}>
-                            <h4 className="font-bold text-[#123B6D] mb-4 text-[14px] leading-tight whitespace-pre-line border-b border-[#E2E8F0] pb-3">{col.title}</h4>
-                            <div className="space-y-4">
+                          <div key={idx} className={col.colSpan === 2 ? "col-span-2" : ""}>
+                            <h4 className={`font-bold text-[#123B6D] mb-4 text-[16px] leading-snug border-b border-[#E2E8F0] pb-3 text-center`}>
+                              {col.title.includes('(') ? (
+                                <>
+                                  <span className="block">{col.title.substring(0, col.title.indexOf('(')).trim()}</span>
+                                  <span className="block text-[14px] text-[#3B6FAD]">{col.title.substring(col.title.indexOf('('))}</span>
+                                </>
+                              ) : col.title}
+                            </h4>
+                            <div className={col.colSpan === 2 ? "columns-2 gap-6" : "space-y-4"}>
                               {col.sections.map((sec: any, sidx: number) => (
-                                <div key={sidx}>
-                                  {sec.subTitle && (
-                                    <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">{sec.subTitle}</h5>
-                                  )}
-                                  <ul className="space-y-2.5">
-                                    {sec.links.map((clink: any) => (
-                                      <li key={clink.label}>
-                                        <Link href={clink.href} className="text-[12px] font-medium text-[#1E293B] hover:text-[#123B6D] transition-colors flex items-start gap-2 leading-tight">
-                                          <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0 mt-1"></span>
-                                          <span>{clink.label}</span>
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
+                                <div key={sidx} className={col.colSpan === 2 ? "break-inside-avoid mb-6" : ""}>
+                                  {sec.subTitle && (sec.subTitleHighlight ? (
+                                    <h5 className="font-bold text-[#123B6D] text-[13px] mb-2 flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0"></span>
+                                      {sec.subTitle}
+                                    </h5>
+                                  ) : (
+                                    <h5 className="font-bold text-[#123B6D] text-[13px] mb-2">{sec.subTitle}</h5>
+                                  ))}
+                                    <ul className="space-y-2.5">
+                                      {sec.links.map((clink: any) => (
+                                        <li key={clink.label}>
+                                          <Link href={clink.href} className={`text-[13px] transition-colors flex items-start gap-2 leading-tight font-medium text-[#1E293B] hover:text-[#123B6D]`}>
+                                            <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0 mt-1"></span>
+                                            <span>{formatCourseLabel(clink.label)}</span>
+                                          </Link>
+                                        </li>
+                                      ))}
+                                    </ul>
                                 </div>
                               ))}
                             </div>
@@ -1038,7 +1175,7 @@ export default function Navbar() {
                               <div>
                                  <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Self-Financing</h5>
                                  <ul className="space-y-2">
-                                    <li><Link href="/programmes/pg/mcom-bm" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Banking & Insurance)</Link></li>
+                                    <li><Link href="/programmes/pg/mcom-bm" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Banking & Finance)</Link></li>
                                     <li><Link href="/programmes/pg/mcom-bf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Business Management)</Link></li>
                                     <li><Link href="/programmes/pg/msc-it" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Sc (Information Technology)</Link></li>
                                     <li><Link href="/programmes/pg/msf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Sc (Finance)</Link></li>
@@ -1119,7 +1256,7 @@ export default function Navbar() {
       {/* ── Mobile Top Bar (logo + hamburger) ── */}
       <div className="md:hidden flex w-full items-center justify-between px-4 h-16">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <img src="/mcclogo.jpg" alt="MCC Logo" className="w-10 h-10 object-contain" />
+            <img src="/mcclogo.png" alt="MCC Logo" className="w-10 h-10 object-contain" />
             <div className="flex flex-col items-start justify-center text-left">
               <span className="text-[#123B6D] font-semibold text-[8px] sm:text-[9px] leading-tight font-[var(--font-heading)] whitespace-nowrap">Parle Tilak Vidyalaya Association's</span>
               <span className="text-[#123B6D] font-bold text-[10px] sm:text-[11px] leading-tight font-[var(--font-heading)] uppercase">
@@ -1210,7 +1347,7 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[55] bg-black/40 md:hidden"
+              className="fixed inset-0 z-[110] bg-black/40 md:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -1218,11 +1355,11 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="fixed top-0 left-0 bottom-0 w-[280px] z-[60] bg-white shadow-2xl overflow-y-auto flex flex-col"
+              className="fixed top-0 left-0 bottom-0 w-[280px] z-[120] bg-white shadow-2xl overflow-y-auto flex flex-col"
             >
               <div className="p-4 flex items-center justify-between border-b border-[#E2E8F0]">
                 <div className="flex items-center gap-2">
-                  <img src="/mcclogo.jpg" alt="MCC Logo" className="w-12 h-12 object-contain" />
+                  <img src="/mcclogo.png" alt="MCC Logo" className="w-12 h-12 object-contain" />
                   <span className="text-[#123B6D] font-bold text-sm">Menu</span>
                 </div>
                 <button
@@ -1233,9 +1370,17 @@ export default function Navbar() {
                 </button>
               </div>
               <div className="flex-1 px-4 py-4 space-y-1">
+                {/* Mobile Quick Links */}
+                <div className="flex flex-wrap items-center gap-3 pb-4 mb-2 border-b border-[#E2E8F0]">
+                  <Link href="/notice" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Notice</Link>
+                  <Link href="/placement-portal" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Placement</Link>
+                  <Link href="/administrative-service" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Admin Services</Link>
+                  <Link href="/alumni" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Alumni</Link>
+                  <Link href="/rti" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>RTI</Link>
+                </div>
               {navLinks.map((link) => (
                 <div key={link.label}>
-                  {link.sub ? (
+                  {(link.mobileSub || link.sub) ? (
                     <button
                       className="flex items-center w-full px-4 py-3 text-[#1E293B] font-medium rounded-xl hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors text-left"
                       onClick={() => setMobileOpenDrop(mobileOpenDrop === link.label ? null : link.label)}
@@ -1256,7 +1401,7 @@ export default function Navbar() {
                     </Link>
                   )}
                   <AnimatePresence>
-                    {link.sub && mobileOpenDrop === link.label && (
+                    {(link.mobileSub || link.sub) && mobileOpenDrop === link.label && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
@@ -1264,7 +1409,7 @@ export default function Navbar() {
                         className="overflow-hidden"
                       >
                         <div className="ml-4 space-y-1 py-1 border-l-2 border-[#EBF3FF] pl-2">
-                          {(link as any).sub.map((s: any) => (
+                          {((link as any).mobileSub || (link as any).sub).map((s: any) => (
                             s.sub ? (
                               <div key={s.label}>
                                 <button
@@ -1302,16 +1447,16 @@ export default function Navbar() {
                                                     className="overflow-hidden"
                                                   >
                                                     <div className="ml-4 space-y-1 py-1 border-l-2 border-[#E2E8F0] pl-2">
-                                                      {(ss.sub as any[]).map((sss: any, sssIdx: number) => (
-                                                        <Link
-                                                          key={sss.label + sssIdx}
-                                                          href={sss.href}
-                                                          className="block px-4 py-2 text-sm text-[#64748B] rounded-xl hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors"
-                                                          onClick={() => { setMobileOpen(false); setMobileOpenDrop(null); setNestedMobileDrop(null); setNestedMobileDrop3(null); }}
-                                                        >
-                                                          {sss.label}
-                                                        </Link>
-                                                      ))}
+                                                        {(ss.sub as any[]).map((sss: any, sssIdx: number) => (
+                                                          <Link
+                                                            key={sss.label + sssIdx}
+                                                            href={sss.href}
+                                                            className={`block px-4 py-2 text-sm rounded-xl transition-colors text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D]`}
+                                                            onClick={() => { setMobileOpen(false); setMobileOpenDrop(null); setNestedMobileDrop(null); setNestedMobileDrop3(null); }}
+                                                          >
+                                                            {formatCourseLabel(sss.label)}
+                                                          </Link>
+                                                        ))}
                                                     </div>
                                                   </motion.div>
                                                 )}
@@ -1321,10 +1466,10 @@ export default function Navbar() {
                                             <Link
                                               key={ss.label + idx}
                                               href={ss.href}
-                                              className="block px-4 py-2 text-sm text-[#64748B] rounded-xl hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors"
+                                              className={`block px-4 py-2 text-sm rounded-xl transition-colors text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D]`}
                                               onClick={() => { setMobileOpen(false); setMobileOpenDrop(null); setNestedMobileDrop(null); setNestedMobileDrop3(null); }}
                                             >
-                                              {ss.label}
+                                              {formatCourseLabel(ss.label)}
                                             </Link>
                                           )
                                         ))}

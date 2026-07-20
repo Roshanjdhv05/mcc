@@ -1,6 +1,6 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Counter from '@/components/ui/Counter';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -11,7 +11,8 @@ import {
   Users, BookOpen, Briefcase, Megaphone, ClipboardCheck,
   PenLine, LibraryBig, HeadphonesIcon, FileText, ShieldCheck, Image,
   Bot, CalendarDays, ArrowRight, LayoutDashboard,
-  Lightbulb, Activity, MonitorSmartphone, Target, MessagesSquare
+  Lightbulb, Activity, MonitorSmartphone, Target, MessagesSquare,
+  Train, ArrowRightLeft, Copy, Stamp, LogOut, Award, Shield, CheckCircle2, Globe
 } from 'lucide-react';
 
 const quickLinks = [
@@ -40,27 +41,70 @@ const events = [
 
 const culturalEvents = [
   {
-    tag: 'SPECTRUM', title: 'Theme Reveal \u2013 Reevan 2025',
-    desc: 'The grand unveiling of Spectrum 2025\'s theme in a breathtaking showcase of creativity and energy.',
-    img: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80',
+    tag: 'AUG 2025', title: 'Friendship Day',
+    desc: 'A celebration of friendship, unity, and memories shared across the campus with games and t-shirt signing.',
+    img: '/2025 - 2026/Friendship Day (1).jpg',
   },
   {
-    tag: 'CULTURAL', title: '\u0936\u0941\u092d\u093e\u0930\u0902\u092d (Subharambh) 2025',
-    desc: 'The auspicious inauguration ceremony marking the vibrant start of our Cultural Committee\'s journey.',
-    img: 'https://images.unsplash.com/photo-1514222134-b57cbb8ce073?w=400&q=80',
+    tag: 'SEP 2025', title: "Teacher's Day",
+    desc: 'A heartfelt tribute to the guidance, inspiration, and unwavering support of our beloved faculty.',
+    img: '/2025 - 2026/Teachers Day (1).jpg',
   },
   {
-    tag: 'SOCIAL', title: 'Spectrum x Leo Club \u2013 Social Cause',
-    desc: 'MCC joins hands with Leo Club to drive meaningful social change through awareness and outreach.',
-    img: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=400&q=80',
+    tag: 'OCT 2025', title: 'Spectrum x Leo Club – Social Cause',
+    desc: 'MCC joins hands with Leo Club to create meaningful social impact for specially abled children.',
+    img: '/2025 - 2026/Social Cause Event (1).jpg',
+  },
+  {
+    tag: 'OCT 2025', title: 'हे Subharambh',
+    desc: 'A vibrant Garba evening on the college turf with the special appearance of Abhijeet Khandkekar.',
+    img: '/2025 - 2026/हे Subharambh (1).jpg',
+  },
+  {
+    tag: 'NOV 2025', title: 'Pre-Theme Reveal Events',
+    desc: 'Campus Fit Clash, Fusion on Hands, and Mic Drop Mania — building anticipation for the grand reveal.',
+    img: '/2025 - 2026/Pre-Theme Reveal Events (1).jpg',
+  },
+  {
+    tag: 'DEC 2025', title: 'Theme Reveal – Reevan 2025',
+    desc: 'The grand unveiling of “Reevan – The End is the Beginning” with Ayesha Khan and a spectacular flashmob.',
+    img: '/2025 - 2026/Theme Reveal – Reevan 2025 (1).jpg',
+  },
+  {
+    tag: 'JAN 2026', title: 'Induction Ceremony 2025',
+    desc: 'Electrifying flashmob, badge distribution, and inspiring speeches marking new leadership journeys.',
+    img: '/2025 - 2026/Induction Ceremony 2025 (1).jpg',
+  },
+  {
+    tag: 'MAR 2026', title: 'Spectrum Day 1',
+    desc: 'Natarang, Neon Cricket, Mr & Ms Spectrum, Otaku Carnival and more in a power-packed opening day.',
+    img: '/2025 - 2026/Spectrum Day 1 (1).jfif',
+  },
+  {
+    tag: 'MAR 2026', title: 'Spectrum Day 2',
+    desc: 'Kurukshetra, Bollyverse, Sursargam and high-intensity esports clashes keeping the campus buzzing.',
+    img: '/2025 - 2026/Spectrum Day 2 (1).jfif',
+  },
+  {
+    tag: 'MAR 2026', title: 'Spectrum Day 3',
+    desc: 'Poetic Arena, Sunao Dil Se, Rangmanch and intense competitions advancing to final rounds.',
+    img: '/2025 - 2026/Spectrum Day 3 (1).jpeg',
+  },
+  {
+    tag: 'MAR 2026', title: 'Spectrum Day 4 – Grand Finale',
+    desc: 'Taste Roulette, Escape Room and an electrifying DJ Night closing the curtains on Spectrum 2026.',
+    img: '/2025 - 2026/Spectrum Day 4 (1).jpeg',
   },
 ];
 
 const programmes = [
-  { code: 'FYJC', name: 'Junior College', desc: 'Arts & Commerce streams for Class 11–12', seats: 480, duration: '2 Years' },
-  { code: 'BCom', name: 'Bachelor of Commerce', desc: 'Comprehensive commerce education with specializations', seats: 360, duration: '3 Years' },
-  { code: 'MCom', name: 'Master of Commerce', desc: 'Advanced commerce with research methodology', seats: 60, duration: '2 Years' },
-  { code: 'MSc', name: 'M.Sc. Information Technology', desc: 'Technology-focused master\'s programme', seats: 60, duration: '2 Years' },
+  { code: 'BCom', name: 'Bachelor of Commerce', desc: 'Comprehensive commerce education with specializations', seats: 360, duration: '3 Years', type: 'UG' },
+  { code: 'BMS', name: 'Bachelor of Management Studies', desc: 'Leadership & management principles', seats: 120, duration: '3 Years', type: 'UG' },
+  { code: 'BSc IT', name: 'B.Sc. Information Technology', desc: 'IT and software development focus', seats: 120, duration: '3 Years', type: 'UG' },
+  { code: 'BAF', name: 'B.Com. (Accounting & Finance)', desc: 'Advanced accounting & finance', seats: 120, duration: '3 Years', type: 'UG' },
+  { code: 'MCom', name: 'Master of Commerce', desc: 'Advanced commerce & business research', seats: 60, duration: '2 Years', type: 'PG' },
+  { code: 'MSc IT', name: 'M.Sc. Information Technology', desc: 'Advanced tech and software eng', seats: 60, duration: '2 Years', type: 'PG' },
+  { code: 'PhD', name: 'Ph.D. in Commerce', desc: 'Doctoral research in commerce & management', seats: 10, duration: '3-5 Years', type: 'PHD' },
 ];
 
 const testimonials = [
@@ -68,7 +112,6 @@ const testimonials = [
   { name: 'Rahul Mehta', course: 'MCom 2022', quote: 'The autonomous curriculum at MCC is a game-changer. The research projects and industry exposure helped me land my dream job at KPMG.', avatar: 'R' },
   { name: 'Sneha Joshi', course: 'FYJC 2021', quote: 'As a FYJC student, the supportive teachers and well-equipped labs made studying enjoyable. I cleared my board exams with distinction!', avatar: 'S' },
 ];
-
 
 const heroBanners = [
   {
@@ -101,14 +144,43 @@ const heroBanners = [
   }
 ];
 
+const adminServices = [
+  { icon: Train, label: 'Railway Concession', desc: 'Local train season pass concession for students.' },
+  { icon: FileText, label: 'Bonafide Certificate', desc: 'Proof of enrollment for bank accounts, visa, etc.' },
+  { icon: ArrowRightLeft, label: 'Transfer Certificate', desc: 'For progression to other Higher Educational Institutions.' },
+  { icon: LogOut, label: 'Leaving Certificate', desc: 'Issued on departure. Required for admission elsewhere.' },
+  { icon: Globe, label: 'Migration Certificate', desc: 'For students migrating to another Board or institution.' },
+  { icon: FileText, label: 'Transcript', desc: 'Official transcript for Foreign Universities or Employment.' },
+  { icon: Shield, label: 'Character Certificate', desc: 'Certificate attesting good character and conduct.' },
+  { icon: CheckCircle2, label: 'Marksheet Verification', desc: 'Official verification of mark sheets issued by the college.' },
+  { icon: Stamp, label: 'Caste Validity', desc: 'Verification of caste certificate validity.' },
+  { icon: Award, label: 'Scholarships', desc: 'Apply for government and institutional scholarship schemes.' },
+  { icon: Copy, label: 'Duplicate Marksheet', desc: 'Request a duplicate mark sheet in case of loss or damage.' }
+];
+
 export default function HomePage() {
   const [currentBanner, setCurrentBanner] = useState(0);
+  const alumniScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % heroBanners.length);
     }, 5000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (alumniScrollRef.current && window.innerWidth < 768) {
+        const { scrollLeft: aLeft, scrollWidth: aWidth, clientWidth: aClient } = alumniScrollRef.current;
+        if (aLeft + aClient >= aWidth - 10) {
+          alumniScrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          alumniScrollRef.current.scrollBy({ left: aClient, behavior: 'smooth' });
+        }
+      }
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -239,135 +311,39 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* ── AI ASSISTANT + STATS ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* AI Card */}
-          <ScrollReveal className="md:col-span-2">
-            <div className="relative bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-8 overflow-hidden h-full min-h-[280px] flex flex-col justify-between">
-              <div className="absolute -right-10 -top-10 w-64 h-64 bg-[#D4A017]/10 rounded-full blur-3xl" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#123B6D] text-white flex items-center justify-center">
-                    <Bot size={24} />
-                  </div>
-                  <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Welcome to Mulund College of Commerce</h2>
-                </div>
-                <p className="text-[#64748B] max-w-lg mb-8 leading-relaxed">
-                  Mulund College of Commerce (MCC), established in 1970, is a prominent institution located in the Mulund suburb of Mumbai, India. Managed by the Parle Tilak Vidyalay Association, the college offers a range of undergraduate and postgraduate programs across disciplines such as commerce, science, management, and media studies.
-                </p>
-              </div>
-              <div className="flex gap-4 flex-wrap">
-                <motion.button
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="px-7 py-3 bg-[#123B6D] text-white rounded-full font-semibold text-sm hover:bg-[#0d2d54] transition-all shadow-lg shadow-[#123B6D]/20"
-                >
-                  Chat Now
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="px-7 py-3 border border-[#123B6D] text-[#123B6D] rounded-full font-semibold text-sm hover:bg-[#123B6D]/5 transition-all"
-                >
-                  Learn More
-                </motion.button>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Stats Cards */}
-          <ScrollReveal className="space-y-4">
-            {[
-              { label: 'Qualified Teachers', target: 51, suffix: '', bg: 'bg-[#123B6D]', icon: Users },
-              { label: 'Students', target: 6306, suffix: '', bg: 'bg-[#D4A017]', icon: BookOpen },
-              { label: 'Programs', target: 18, suffix: '', bg: 'bg-[#00405b]', icon: Briefcase },
-            ].map(({ label, target, suffix, bg, icon: Icon }) => (
-              <motion.div
-                key={label}
-                whileHover={{ scale: 1.02 }}
-                className={`${bg} text-white p-5 rounded-2xl flex items-center justify-between`}
-              >
-                <div>
-                  <p className="text-xs font-medium text-white/70 mb-1">{label}</p>
-                  <p className="text-2xl font-bold font-[var(--font-heading)]">
-                    <Counter target={target} suffix={suffix} />
-                  </p>
-                </div>
-                <Icon size={32} className="opacity-30" />
-              </motion.div>
-            ))}
-          </ScrollReveal>
-        </div>
-
-        {/* ── FEATURES STRIP ── */}
+        {/* ── AI ASSISTANT ── */}
         <ScrollReveal>
-          <div className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2240 0%, #123B6D 60%, #0d3058 100%)' }}>
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-              {[
-                {
-                  icon: (
-                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="24" cy="14" r="8" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M30 18l4 4-4 4" stroke="#D4A017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  ),
-                  title: 'Certified Teachers',
-                  desc: 'Our team of certified educators brings proven expertise, professional training, and a deep commitment to student success.',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="10" y="8" width="28" height="32" rx="4" stroke="white" strokeWidth="2.5"/>
-                      <path d="M16 18h16M16 24h12M16 30h8" stroke="#D4A017" strokeWidth="2.5" strokeLinecap="round"/>
-                      <circle cx="34" cy="34" r="7" fill="#123B6D" stroke="white" strokeWidth="2"/>
-                      <path d="M31 34l2 2 4-4" stroke="#D4A017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  ),
-                  title: 'Special Education',
-                  desc: 'Our Special Education program is designed to support students with diverse learning needs through personalized instruction and dedicated support services.',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 12h32v28a4 4 0 01-4 4H12a4 4 0 01-4-4V12z" stroke="white" strokeWidth="2.5"/>
-                      <path d="M8 12V8a4 4 0 014-4h24a4 4 0 014 4v4H8z" fill="#D4A017" fillOpacity="0.4" stroke="#D4A017" strokeWidth="2"/>
-                      <path d="M16 24h16M16 30h10" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-                      <circle cx="24" cy="20" r="3" fill="#D4A017"/>
-                    </svg>
-                  ),
-                  title: 'Book & Library',
-                  desc: 'Our well-stocked library offers a rich collection of books, journals, and digital resources to inspire learning and research.',
-                },
-                {
-                  icon: (
-                    <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="24" cy="12" r="6" stroke="white" strokeWidth="2.5"/>
-                      <path d="M14 28l4-8h12l4 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      <rect x="10" y="28" width="28" height="12" rx="3" stroke="white" strokeWidth="2.5"/>
-                      <path d="M18 34h12" stroke="#D4A017" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M24 28v12" stroke="#D4A017" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                  ),
-                  title: 'Sport Clubs',
-                  desc: 'Our Sports Clubs offer students the opportunity to develop athletic skills, teamwork, and sportsmanship across a variety of disciplines.',
-                },
-              ].map(({ icon, title, desc }, i) => (
-                <motion.div
-                  key={title}
-                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
-                  className="flex flex-col items-center text-center p-8 gap-4 cursor-default transition-colors"
-                >
-                  <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/10">
-                    {icon}
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-base mb-2 md:mb-2 font-[var(--font-heading)]">{title}</h3>
-                    <p className="hidden md:block text-white/60 text-sm leading-relaxed">{desc}</p>
-                  </div>
-                </motion.div>
-              ))}
+          <div className="relative bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-8 overflow-hidden min-h-[280px] flex flex-col justify-between">
+            <div className="absolute -right-10 -top-10 w-64 h-64 bg-[#D4A017]/10 rounded-full blur-3xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#123B6D] text-white flex items-center justify-center">
+                  <Bot size={24} />
+                </div>
+                <h2 className="text-3xl font-bold text-[#123B6D] font-[var(--font-heading)]">Welcome to Mulund College of Commerce</h2>
+              </div>
+              <p className="text-[#64748B] max-w-3xl mb-8 leading-relaxed">
+                Mulund College of Commerce (MCC), established in 1970, is a prominent institution located in the Mulund suburb of Mumbai, India. Managed by the Parle Tilak Vidyalay Association, the college offers a range of undergraduate and postgraduate programs across disciplines such as commerce, science, management, and media studies.
+              </p>
+            </div>
+            <div className="flex gap-4 flex-wrap">
+              <motion.button
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                className="px-7 py-3 bg-[#123B6D] text-white rounded-full font-semibold text-sm hover:bg-[#0d2d54] transition-all shadow-lg shadow-[#123B6D]/20"
+              >
+                Chat Now
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                className="px-7 py-3 border border-[#123B6D] text-[#123B6D] rounded-full font-semibold text-sm hover:bg-[#123B6D]/5 transition-all"
+              >
+                Learn More
+              </motion.button>
             </div>
           </div>
         </ScrollReveal>
+
+
 
         {/* ── PRINCIPAL'S MESSAGE ── */}
         <div className="w-full">
@@ -412,33 +388,78 @@ export default function HomePage() {
               View All <ArrowRight size={14} />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {programmes.map((p, i) => (
-              <motion.div
-                key={p.code}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(18,59,109,0.12)' }}
-                className="bg-white rounded-2xl border border-[#E2E8F0] p-6 cursor-pointer group"
-              >
-                <div className="w-12 h-12 rounded-xl bg-[#123B6D]/10 text-[#123B6D] font-bold text-lg font-[var(--font-heading)] flex items-center justify-center mb-4 group-hover:bg-[#123B6D] group-hover:text-white transition-all">
-                  {p.code.slice(0, 2)}
+          <div className="overflow-hidden w-full group relative">
+            {/* Gradient masks for smooth fading at edges */}
+            <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"></div>
+            
+            <style>{`
+              @keyframes marquee {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
+              }
+            `}</style>
+            
+            <div className="flex gap-5 animate-[marquee_25s_linear_infinite] group-hover:[animation-play-state:paused] w-max pb-4 pt-2">
+              {[...programmes, ...programmes].map((p, i) => (
+                <div
+                  key={`${p.code}-${i}`}
+                  className="w-[280px] sm:w-[320px] flex-shrink-0 bg-white rounded-2xl border border-[#E2E8F0] p-6 cursor-pointer group/card hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(18,59,109,0.12)] transition-all duration-300"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-[#123B6D]/10 text-[#123B6D] font-bold text-lg font-[var(--font-heading)] flex items-center justify-center group-hover/card:bg-[#123B6D] group-hover/card:text-white transition-all">
+                      {p.type}
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-[#1E293B] mb-1 font-[var(--font-heading)] truncate">{p.name}</h3>
+                  <p className="text-sm font-medium text-[#123B6D] mb-2">{p.code}</p>
+                  <p className="text-xs text-[#64748B] mb-4 h-8 line-clamp-2">{p.desc}</p>
+                  <div className="flex gap-3 text-xs text-[#94A3B8]">
+                    <span>{p.duration}</span>
+                    <span>•</span>
+                    <span>{p.seats} seats</span>
+                  </div>
+                  <Link href="/academics" className="mt-4 flex items-center gap-1 text-xs font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
+                    Learn More <ArrowRight size={12} />
+                  </Link>
                 </div>
-                <h3 className="font-bold text-[#1E293B] mb-1 font-[var(--font-heading)]">{p.code}</h3>
-                <p className="text-sm font-medium text-[#123B6D] mb-2">{p.name}</p>
-                <p className="text-xs text-[#64748B] mb-4">{p.desc}</p>
-                <div className="flex gap-3 text-xs text-[#94A3B8]">
-                  <span>{p.duration}</span>
-                  <span>•</span>
-                  <span>{p.seats} seats</span>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between mt-4 mb-2">
+              <span className="text-xs font-bold text-[#D4A017] uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#D4A017] inline-block" />
+                Administrative Services
+              </span>
+              <Link href="/administrative-service" className="text-xs font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
+                View All <ArrowRight size={12} />
+              </Link>
+            </div>
+
+            <style>{`
+              @keyframes marquee-reverse {
+                0% { transform: translateX(-50%); }
+                100% { transform: translateX(0%); }
+              }
+            `}</style>
+
+            <div className="flex gap-5 animate-[marquee-reverse_30s_linear_infinite] group-hover:[animation-play-state:paused] w-max pb-4 pt-2">
+              {[...adminServices, ...adminServices].map((s, i) => (
+                <div
+                  key={`${s.label}-${i}`}
+                  className="w-[280px] sm:w-[320px] flex-shrink-0 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] p-6 cursor-pointer group/card hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(18,59,109,0.12)] hover:bg-white hover:border-[#123B6D]/20 transition-all duration-300"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E2E8F0] text-[#D4A017] flex items-center justify-center mb-4 group-hover/card:bg-[#D4A017] group-hover/card:text-white group-hover/card:border-transparent transition-all">
+                    <s.icon size={22} />
+                  </div>
+                  <h3 className="font-bold text-[#1E293B] mb-2 font-[var(--font-heading)]">{s.label}</h3>
+                  <p className="text-xs text-[#64748B] line-clamp-3">{s.desc}</p>
+                  <Link href="/administrative-service" className="mt-4 flex items-center gap-1 text-xs font-semibold text-[#D4A017] group-hover/card:gap-2 transition-all">
+                    Access Service <ArrowRight size={12} />
+                  </Link>
                 </div>
-                <Link href="/academics" className="mt-4 flex items-center gap-1 text-xs font-semibold text-[#123B6D] group-hover:gap-2 transition-all">
-                  Learn More <ArrowRight size={12} />
-                </Link>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
         </ScrollReveal>
 
@@ -447,41 +468,57 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Cultural Committee</h2>
-              <p className="text-sm text-[#64748B] mt-1">Celebrating creativity & talent at MCC</p>
+              <p className="text-sm text-[#64748B] mt-1">Celebrating creativity & talent at MCC — 2025–26 Academic Year</p>
             </div>
-            <Link href="/cultural-committee" className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:underline">
+            <Link href="/students-corner/cultural-forum" className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:underline">
               View All <ArrowRight size={15} />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {culturalEvents.map((n, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ y: -4 }}
-                className="group cursor-pointer"
-              >
-                <Link href="/cultural-committee">
-                  <div className="relative h-52 rounded-2xl overflow-hidden mb-4">
+          <div className="overflow-hidden w-full group relative">
+            {/* Gradient fade masks */}
+            <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
+
+            <style>{`
+              @keyframes home-cultural-marquee {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
+              }
+            `}</style>
+
+            <div className="flex gap-5 animate-[home-cultural-marquee_40s_linear_infinite] group-hover:[animation-play-state:paused] w-max pb-4 pt-2">
+              {[...culturalEvents, ...culturalEvents].map((n, i) => (
+                <Link
+                  key={i}
+                  href="/students-corner/cultural-forum"
+                  className="w-[280px] sm:w-[300px] flex-shrink-0 group/card flex flex-col rounded-2xl overflow-hidden border border-[#E2E8F0] bg-white shadow-sm hover:shadow-[0_20px_40px_rgba(18,59,109,0.12)] hover:-translate-y-2 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="relative h-48 overflow-hidden">
                     <img
                       src={n.img}
                       alt={n.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                    <div className="absolute bottom-4 left-4">
-                      <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-[#123B6D]">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-3 left-3">
+                      <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold text-[#123B6D] uppercase tracking-wide">
                         {n.tag}
                       </span>
                     </div>
-                    <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-3 right-3 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity">
                       <ArrowRight size={14} className="text-white" />
                     </div>
                   </div>
-                  <h4 className="font-bold text-[#1E293B] font-[var(--font-heading)] group-hover:text-[#123B6D] transition-colors mb-2">{n.title}</h4>
-                  <p className="text-sm text-[#64748B]">{n.desc}</p>
+                  <div className="p-4 flex flex-col flex-1">
+                    <h4 className="font-bold text-[#1E293B] font-[var(--font-heading)] group-hover/card:text-[#123B6D] transition-colors mb-1.5 text-sm leading-snug">{n.title}</h4>
+                    <p className="text-xs text-[#64748B] leading-relaxed line-clamp-2">{n.desc}</p>
+                    <span className="mt-3 flex items-center gap-1 text-xs font-semibold text-[#123B6D] group-hover/card:gap-1.5 transition-all">
+                      View Details <ArrowRight size={12} />
+                    </span>
+                  </div>
                 </Link>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
         </ScrollReveal>
 
@@ -491,13 +528,16 @@ export default function HomePage() {
         {/* ── TESTIMONIALS ── */}
         <ScrollReveal>
           <div className="bg-[#123B6D] rounded-3xl p-10">
-            <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] text-center mb-10">What Our Students Say</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] text-center mb-10">What Our Alumni Say</h2>
+            <div 
+              ref={alumniScrollRef}
+              className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto snap-x snap-mandatory md:snap-none no-scrollbar pb-4"
+            >
               {testimonials.map((t, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+                  className="flex-shrink-0 w-full md:w-auto snap-center bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
                 >
                   <Quote size={28} className="text-[#D4A017] mb-4" />
                   <p className="text-white/90 text-sm leading-relaxed mb-5">"{t.quote}"</p>

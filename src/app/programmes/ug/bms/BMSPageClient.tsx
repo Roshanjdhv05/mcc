@@ -2,12 +2,18 @@
 
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
+const bmsFaculty = [
+  { srNo: 1, name: 'Dr. Viji Kannan',      additionalRole: 'Head of Dept',      designation: 'Associate Professor', email: 'viji.kannan@mccmulund.ac.in',      education: 'BCS, MBA, NET, PhD',                              teachingExp: '24 yrs' },
+  { srNo: 2, name: 'Dr. Kanchana Sattur',  additionalRole: '—',                designation: 'Assistant Professor',  email: 'kanchana.sattur@mccmulund.ac.in',  education: 'MCom, M.B.A, NET(Comm & Mgmt), PhD.',             teachingExp: '15 yrs' },
+  { srNo: 3, name: 'Dr. Soumya George',    additionalRole: '—',                designation: 'Assistant Professor',  email: 'soumya.george@mccmulund.ac.in',    education: 'MA (Economics), MBA, MCOM, MJMC, PhD (Economics)', teachingExp: '14 yrs' },
+  { srNo: 4, name: 'Dr. Shilpi Jawake',    additionalRole: '—',                designation: 'Assistant Professor',  email: 'shilpi.jawake@mccmulund.ac.in',    education: 'MBA, MCOM, NET, SET, Pursuing PhD',               teachingExp: '12 yrs' },
+  { srNo: 5, name: 'Dr. Abilasha N',       additionalRole: '—',                designation: 'Assistant Professor',  email: 'abhilasha.n@mccmulund.ac.in',      education: 'M. Com, MPhil, NET, PhD',                         teachingExp: '12 yrs' },
+  { srNo: 6, name: 'Mr.Felix Anthonysamy', additionalRole: '—',                designation: 'Assistant Professor',  email: 'felix@mccmulund.ac.in',            education: 'M.Com., B.Ed., MBA., MA NET., SET.',              teachingExp: '10 yrs' },
+];
 
-export default function BMSPageClient({ syllabusContent }: Props) {
+export default function BMSPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC / Diploma in Engg. Admission based on merit weightage.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
@@ -48,9 +54,10 @@ export default function BMSPageClient({ syllabusContent }: Props) {
       }
       title="B.Com (Management Studies)"
       description="The BMS programme offers deep insights into management practices, preparing dynamic leaders and entrepreneurs for the future."
-      syllabusContent={syllabusContent}
+      syllabusContent={<SyllabusRenderer programKey="BMS" />}
       quickActionsData={quickActions}
       courseKey="BMS"
+      facultyData={bmsFaculty}
     />
   );
 }

@@ -5,22 +5,11 @@ import type { Metadata } from 'next';
 import { BookOpen, FileText, ChevronRight, Bell, Users, Clock, ShieldCheck, HelpCircle, MonitorPlay, Navigation2, File, Link2, BookMarked, Layers, University } from 'lucide-react';
 import Link from 'next/link';
 import BookshelfCarousel from '@/components/library/BookshelfCarousel';
+import LibraryNav from '@/components/library/LibraryNav';
 
 // Removed export const metadata as it is a client component now
 
-const libraryNav = [
-  { label: 'HOME', active: true, href: '/library' },
-  { label: 'ABOUT US', href: '/library/about-us' },
-  { label: 'WEB OPAC', href: '#' },
-  { label: 'E-RESOURCES', href: '/library/e-resources' },
-  { label: 'STAFF PROFILE', href: '/library/staff-profile' },
-  { label: 'DOWNLOAD', href: '#' },
-  { label: 'RESEARCH - KIT', href: '/library/research-kit' },
-  { label: 'I. R.', href: 'https://drive.google.com/drive/folders/1bes4sOXN9ePGCVSgdTQ2ZtPg-pYQWyju?usp=drive_link' },
-  { label: 'IMPORTANT LINKS', href: '/library/important-links' },
-  { label: 'FEEDBACK' },
-  { label: 'CONTACT US', href: '/library/contact-us' },
-];
+
 
 const eResources = [
   { title: 'N-LIST', desc: 'National Library and Information Services Infrastructure for Scholarly Content', icon: <University className="w-8 h-8 text-blue-800" /> },
@@ -60,142 +49,9 @@ const features = [
 ];
 
 export default function LibraryPage() {
-  const [navVisible, setNavVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  // Mobile ticker state
-  const [isAutoScrolling, setIsAutoScrolling] = useState(true);
-  const tickerRef = useRef<HTMLDivElement>(null);
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const touchStartX = useRef(0);
-  const touchStartTime = useRef(0);
-  const isDragging = useRef(false);
-  // Tracks current translateX offset when paused mid-animation
-  const pausedOffset = useRef(0);
-
-  const resumeAutoScroll = useCallback(() => {
-    setIsAutoScrolling(true);
-  }, []);
-
-  // Page scroll hide/show
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 200) {
-        setNavVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        setNavVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
-
-
-  const pauseAutoScroll = useCallback(() => {
-    // Capture current translated position from computed style
-    if (tickerRef.current) {
-      const style = window.getComputedStyle(tickerRef.current);
-      const matrix = new DOMMatrixReadOnly(style.transform);
-      pausedOffset.current = matrix.m41; // translateX value
-    }
-    setIsAutoScrolling(false);
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-  }, []);
-
-  const scheduleResume = useCallback(() => {
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => {
-      resumeAutoScroll();
-    }, 5000);
-  }, [resumeAutoScroll]);
-
-  useEffect(() => {
-    return () => {
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    };
-  }, []);
-
-  // Touch handlers — pause on touch, manual drag, resume after 5s
-  const handleTouchStart = (e: React.TouchEvent) => {
-    pauseAutoScroll();
-    isDragging.current = true;
-    touchStartX.current = e.touches[0].clientX;
-    touchStartTime.current = Date.now();
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging.current || !tickerRef.current) return;
-    const delta = e.touches[0].clientX - touchStartX.current;
-    tickerRef.current.style.transform = `translateX(${pausedOffset.current + delta}px)`;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    isDragging.current = false;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    pausedOffset.current = pausedOffset.current + delta;
-    scheduleResume();
-  };
-
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
-      {/* Secondary Library Nav */}
-      <div className={`bg-[#014d4e] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[160px] lg:top-[190px] xl:top-[200px]' : 'top-0'}`}>
-        {/* Desktop nav - normal overflow-x-auto */}
-        <div className="hidden md:flex justify-center max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar items-center h-12">
-          {libraryNav.map((item, i) => (
-            <Link
-              key={i}
-              href={item.href || '#'}
-              className={`flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider ${
-                item.active
-                  ? 'bg-[#008e59] text-white'
-                  : 'text-white/90 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Mobile nav - CSS ticker animation */}
-        <div
-          className="flex md:hidden w-full overflow-hidden h-12 items-center"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div
-            ref={tickerRef}
-            className="flex items-center h-full whitespace-nowrap"
-            style={{
-              animation: isAutoScrolling
-                ? 'libraryNavTicker 18s linear infinite'
-                : 'none',
-              willChange: 'transform',
-            }}
-          >
-            {/* Items repeated 3x for seamless infinite loop */}
-            {[...libraryNav, ...libraryNav, ...libraryNav].map((item, i) => (
-              <Link
-                key={i}
-                href={item.href || '#'}
-                className={`flex-shrink-0 h-full flex items-center px-5 text-[11px] font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${
-                  item.active
-                    ? 'bg-[#008e59] text-white'
-                    : 'text-white/90 active:text-white active:bg-white/10'
-                }`}
-                onClick={(e) => {
-                  if (isDragging.current) e.preventDefault();
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
+      <LibraryNav />
 
       {/* Hero Section */}
       <div className="relative py-12 flex flex-col items-center text-center overflow-hidden">

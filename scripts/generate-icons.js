@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const inputImage = path.join(__dirname, '../public/mcclogo.jpg');
+const inputImage = path.join(__dirname, '../public/mcclogo.png');
 const outputDir = path.join(__dirname, '../public/icons');
 
 // Create icons directory if it doesn't exist

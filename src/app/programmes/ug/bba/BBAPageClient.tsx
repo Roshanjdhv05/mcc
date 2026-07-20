@@ -2,12 +2,9 @@
 
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
-
-export default function BBAPageClient({ syllabusContent }: Props) {
+export default function BBAPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC / Diploma in Engg. Admission based on merit.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
@@ -44,7 +41,7 @@ export default function BBAPageClient({ syllabusContent }: Props) {
       }
       title="B.Com (Business Administration)"
       description="The BBA programme provides a fundamental education in business and management principles, preparing students for leadership roles in the corporate sector."
-      syllabusContent={syllabusContent}
+      syllabusContent={<SyllabusRenderer programKey="BBA" />}
       quickActionsData={quickActions}
     />
   );

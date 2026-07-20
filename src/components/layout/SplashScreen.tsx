@@ -120,7 +120,7 @@ export default function SplashScreen() {
             transition={{ duration: 0.6, ease: [0.34, 1.2, 0.64, 1] }}
           >
             <img
-              src="/mcclogo.jpg"
+              src="/mcclogo.png"
               alt="MCC Logo"
               className="object-contain"
               style={{ width: '150px', height: '150px' }}

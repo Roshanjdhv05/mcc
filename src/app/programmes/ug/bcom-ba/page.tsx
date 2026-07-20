@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 export const metadata: Metadata = {
   title: 'B.Com (BA) | MCC Digital Experience Platform',
   description: 'Bachelor of Commerce (Business Administration) at Mulund College of Commerce.',
 };
+
+const bcomBaFaculty = [
+  { srNo: 1, name: 'Dr. Viji Kannan',           additionalRole: 'Head of Dept',  designation: 'Associate Professor', email: 'viji.kannan@mccmulund.ac.in',     education: 'BCS, MBA, NET, PhD',                                               teachingExp: '24 yrs' },
+  { srNo: 2, name: 'Ms. Prajakta Vaibhav Khamkar', additionalRole: '—',          designation: 'Assistant Professor', email: 'prajakta@gmail.com',             education: 'MBA',                                                              teachingExp: '8 yrs' },
+  { srNo: 3, name: 'Ms. Rutuja Birje',           additionalRole: '—',           designation: 'Assistant Professor', email: 'rutuja.birje@mccmulund.ac.in',    education: 'MCom (Accountancy), NET, CS (Executive), Diploma in Tax Management', teachingExp: '9 yrs' },
+];
 
 export default function CoursePage() {
   return (
@@ -17,8 +24,10 @@ export default function CoursePage() {
         <p className="mb-4">Overall, this course is ideal for students looking to build a career in business, administration, and management while gaining a comprehensive understanding of the corporate world.</p>
       </>
       }
+      syllabusContent={<SyllabusRenderer programKey="BBA" />}
       title="Bachelor of Commerce (Business Administration)"
       description="The Bachelor of Commerce (Business Administration) programme details will be updated shortly."
+      facultyData={bcomBaFaculty}
     />
   );
 }

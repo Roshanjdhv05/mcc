@@ -1,22 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { University, ChevronRight, ExternalLink, Search, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LibraryNav from '@/components/library/LibraryNav';
 
-const libraryNav = [
-  { label: 'HOME', href: '/library' },
-  { label: 'ABOUT US', href: '/library/about-us' },
-  { label: 'WEB OPAC', href: '#' },
-  { label: 'E-RESOURCES', href: '/library/e-resources' },
-  { label: 'STAFF PROFILE', href: '/library/staff-profile' },
-  { label: 'DOWNLOAD', href: '#' },
-  { label: 'RESEARCH - KIT', href: '/library/research-kit' },
-  { label: 'I. R.', href: 'https://drive.google.com/drive/folders/1bes4sOXN9ePGCVSgdTQ2ZtPg-pYQWyju?usp=drive_link' },
-  { label: 'IMPORTANT LINKS', active: true, href: '/library/important-links' },
-  { label: 'FEEDBACK', href: '#' },
-  { label: 'CONTACT US', href: '/library/contact-us' },
-];
 
 const sidebarLinks = [
   { id: 'useful', label: 'Useful Links' },
@@ -219,16 +206,13 @@ export default function ImportantLinksPage() {
   const [activeMobile, setActiveMobile] = useState<boolean>(true);
   const [showSticky, setShowSticky] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [navVisible, setNavVisible] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY && currentScrollY > 200) {
-        setNavVisible(false);
         setShowSticky(false);
       } else if (currentScrollY < lastScrollY) {
-        setNavVisible(true);
         if (currentScrollY > 300) setShowSticky(true);
       }
       if (currentScrollY <= 300) setShowSticky(false);
@@ -299,25 +283,7 @@ export default function ImportantLinksPage() {
 
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
-      {/* Secondary Library Nav */}
-      <div className={`bg-[#014d4e] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[160px] lg:top-[190px] xl:top-[200px]' : 'top-0'}`}>
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar flex items-center h-12">
-          {libraryNav.map((item, i) => {
-            const isExternal = item.href?.startsWith('http');
-            return isExternal && !item.active ? (
-              <a key={i} href={item.href} target="_blank" rel="noopener noreferrer"
-                className="flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider text-white/90 hover:text-white hover:bg-white/10">
-                {item.label}
-              </a>
-            ) : (
-              <Link key={i} href={item.href || '#'}
-                className={`flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider ${item.active ? 'bg-[#008e59] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'}`}>
-                {item.label}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+      <LibraryNav />
 
       {/* Main Content */}
       <div className="max-w-[1600px] mx-auto px-4 lg:px-8 mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -332,7 +298,7 @@ export default function ImportantLinksPage() {
                 animate={{ y: 0 }}
                 exit={{ y: '-100%' }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="fixed top-20 left-0 w-full z-40 px-4"
+                className="fixed top-28 left-0 w-full z-30 px-4"
               >
                 {renderMobileDropdown(true)}
               </motion.div>

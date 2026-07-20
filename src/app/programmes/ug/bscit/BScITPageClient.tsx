@@ -7,6 +7,15 @@ interface Props {
   syllabusContent: React.ReactNode;
 }
 
+const bscitFaculty = [
+  { srNo: 1, name: 'Dr.Jyotika Chheda',        additionalRole: 'IT Co-ordinator',  designation: 'Assistant Professor', email: 'jyotika.chheda@mccmulund.ac.in',  education: 'MCA., NET., Ph.D.',                                                              teachingExp: '' },
+  { srNo: 2, name: 'Dr.Vishal Borude',          additionalRole: '—',               designation: 'Assistant Professor', email: 'vishal.borude@mccmulund.ac.in',   education: 'M.Sc.(IT)., Ph.D.',                                                             teachingExp: '12 yrs' },
+  { srNo: 3, name: 'Dr.Priti Pathak',           additionalRole: 'DS Co-Ordinator', designation: 'Assistant Professor', email: 'priti.pathak@mccmulund.ac.in',    education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.',     teachingExp: '' },
+  { srNo: 4, name: 'Ms. Suvarna Ramesh Sawant', additionalRole: '—',               designation: 'Assistant Professor', email: 'suvarna.sawant@mccmulund.ac.in',   education: 'Master in Computer Application',                                               teachingExp: '' },
+  { srNo: 5, name: 'Dr. Sandhya Pandey',        additionalRole: '—',               designation: 'Assistant Professor', email: 'sandhya.pandey@mccmulund.ac.in',  education: 'M.C.A., Ph.D. (Computer Science), M.A.(Sociology)',                          teachingExp: '17 yrs' },
+  { srNo: 6, name: 'Mr.Siddhesh Gotekar',       additionalRole: '—',               designation: 'Assistant Professor', email: 'gotekarsiddhesh@gmail.com',        education: 'M.Sc.(IT)',                                                                     teachingExp: '3 yrs' },
+];
+
 export default function BScITPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (any stream) with Mathematics OR 3-yr Diploma from MSBTE.' },
@@ -53,6 +62,7 @@ export default function BScITPageClient({ syllabusContent }: Props) {
       description="A three-year full-time programme preparing students to meet the ICT needs of government, business, healthcare, and other organisations."
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
+      facultyData={bscitFaculty}
     />
   );
 }

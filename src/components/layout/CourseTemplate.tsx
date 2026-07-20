@@ -7,7 +7,7 @@ import {
   Send, Download, CheckCircle2,
   Building2, Users, GraduationCap, FileText,
   ChevronRight, Lightbulb, Activity, MonitorSmartphone, Target,
-  MessagesSquare, Briefcase
+  MessagesSquare, Briefcase, UserCircle, BookOpen
 } from 'lucide-react';
 import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 
@@ -19,11 +19,121 @@ interface CourseTemplateProps {
   quickActionsData?: { title: string; icon: any; info: string }[];
   courseKey?: string;
   category?: string;
+  facultyData?: { srNo: number; name: string; additionalRole: string; designation: string; email?: string; education?: string; teachingExp?: string }[];
+}
+
+function FacultyFlipCard({ member }: { member: any }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    <div
+      className="w-full aspect-[54/86] perspective-1000 cursor-pointer max-w-[320px] mx-auto"
+      onClick={() => setIsFlipped(!isFlipped)}
+      style={{ perspective: '1000px' }}
+    >
+      <div
+        className={`relative w-full h-full transition-transform duration-700 ${
+          isFlipped ? 'rotate-y-180' : ''
+        }`}
+        style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+      >
+        {/* FRONT */}
+        <div 
+          className="absolute w-full h-full bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.15)] flex flex-col items-center overflow-hidden transition-shadow duration-300"
+          style={{ backfaceVisibility: 'hidden' }}
+        >
+          {/* Top Blue Header */}
+          <div className="w-full h-[18%] bg-[#123B6D] relative flex justify-center shrink-0">
+             <div className="absolute -bottom-5 w-[150%] h-[30px] bg-[#123B6D] rounded-[50%] border-b-[3px] border-[#D4A017]"></div>
+             <div className="absolute top-2 w-12 h-2 bg-white rounded-full shadow-inner opacity-90"></div>
+             <div className="absolute -bottom-5 z-10 w-12 h-12 bg-white rounded-full p-1 shadow-sm flex items-center justify-center border border-[#E2E8F0]">
+                 <img src="/mcclogo.png" alt="MCC Logo" className="w-full h-full object-contain rounded-full" />
+             </div>
+          </div>
+          
+          {/* Profile Image */}
+          <div className="relative mt-8 mb-4 z-10 w-[120px] h-[150px] rounded-lg shadow-md bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 border-2 border-white">
+             {/* Actual Image with fallback */}
+             <img src={`/teaching staff/${member.name}.jpg`} alt={member.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+             <UserCircle size={64} className="text-slate-400 hidden absolute" />
+          </div>
+          
+          {/* Text Details */}
+          <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pb-6">
+            <h3 className="text-[18px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)]">
+              {member.name}
+            </h3>
+            <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
+              {member.designation}
+            </p>
+            {member.additionalRole && member.additionalRole !== '—' && (
+              <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight">
+                {member.additionalRole}
+              </div>
+            )}
+            <div className="absolute bottom-10 w-full flex justify-center z-20 animate-bounce">
+              <span className="bg-[#123B6D]/10 text-[#123B6D] text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-sm border border-[#123B6D]/20 shadow-sm">
+                Click to flip
+              </span>
+            </div>
+          </div>
+          
+          {/* Bottom Footer */}
+          <div className="w-full h-[6%] relative overflow-hidden shrink-0 mt-auto">
+             <div className="absolute top-1 w-[150%] left-1/2 -translate-x-1/2 h-[30px] bg-[#123B6D] rounded-[50%] border-t-[3px] border-[#D4A017]"></div>
+          </div>
+        </div>
+
+        {/* BACK */}
+        <div 
+          className="absolute w-full h-full bg-[#123B6D] text-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.1)] p-4 flex flex-col items-center overflow-hidden"
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+        >
+           <div className="absolute top-2 w-12 h-2 bg-white/20 rounded-full shadow-inner"></div>
+           
+          <div className="flex flex-col items-center text-center mt-6 mb-3 pb-3 border-b border-white/20 w-full">
+            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mb-2 shrink-0">
+              <BookOpen size={18} className="text-[#D4A017]" />
+            </div>
+            <h3 className="font-bold text-sm leading-tight text-white/95 mb-0.5">{member.name}</h3>
+            <p className="text-[9px] text-[#D4A017] tracking-wider uppercase font-bold">{member.designation}</p>
+          </div>
+          
+          <div className="space-y-2 flex-1 w-full px-1 overflow-y-auto">
+             {member.additionalRole && member.additionalRole !== '—' && (
+               <div className="flex items-start gap-2">
+                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Role</span>
+                 <span className="text-[11px] text-white/85 leading-snug">{member.additionalRole}</span>
+               </div>
+             )}
+             {member.education && (
+               <div className="flex items-start gap-2">
+                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Edu.</span>
+                 <span className="text-[11px] text-white/85 leading-snug">{member.education}</span>
+               </div>
+             )}
+             {member.email && (
+               <div className="flex items-start gap-2">
+                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Email</span>
+                 <span className="text-[10px] text-white/75 leading-snug break-all">{member.email}</span>
+               </div>
+             )}
+             {member.teachingExp && (
+               <div className="flex items-start gap-2">
+                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Exp.</span>
+                 <span className="text-[11px] text-white/85 leading-snug">{member.teachingExp}</span>
+               </div>
+             )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-export default function CourseTemplate({ title, description, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey }: CourseTemplateProps) {
+export default function CourseTemplate({ title, description, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey, facultyData }: CourseTemplateProps) {
   const tabs = [
     'Overview',
     'Syllabus',
@@ -129,7 +239,7 @@ export default function CourseTemplate({ title, description, introductionContent
               </p>
 
               {/* Badges Row - 4 columns on mobile, auto on desktop */}
-              <div className="grid grid-cols-4 md:flex md:flex-wrap gap-2 md:gap-3 pt-4 md:pt-2">
+              <div className="grid grid-cols-4 md:flex md:flex-nowrap gap-2 md:gap-3 pt-4 md:pt-2 overflow-x-auto scrollbar-hide">
                 <div className="flex flex-col md:flex-row md:items-center items-center justify-center text-center md:text-left gap-1 md:gap-2 bg-transparent md:bg-[#F8FAFC] border-0 md:border border-[#E2E8F0] rounded-xl px-1 md:px-4 py-1 md:py-2.5">
                   <Clock className="text-[#3B82F6] shrink-0" size={24} strokeWidth={1.5} />
                   <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">3 Years<br className="hidden md:block"/><span className="font-medium text-gray-500"> Duration</span></span>
@@ -299,6 +409,23 @@ export default function CourseTemplate({ title, description, introductionContent
             <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">
               {syllabusContent}
             </div>
+          ) : activeTab === 'Faculty' && facultyData && facultyData.length > 0 ? (
+            <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 rounded-xl bg-[#EBF3FF] flex items-center justify-center">
+                  <Users className="text-[#123B6D]" size={20} />
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#123B6D]">Faculty Members</h2>
+                  <p className="text-sm text-[#64748B]">{title}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {facultyData.map((member) => (
+                  <FacultyFlipCard key={member.srNo} member={member} />
+                ))}
+              </div>
+            </div>
           ) : (
             <div className="bg-white rounded-3xl p-12 border border-[#E2E8F0] shadow-sm flex flex-col items-center justify-center text-center min-h-[250px]">
               <FileText className="text-gray-200 mb-4" size={48} />
@@ -308,33 +435,6 @@ export default function CourseTemplate({ title, description, introductionContent
               </p>
             </div>
           )}
-        </div>
-
-        {/* 5. Bottom Banner */}
-        <div className="bg-[#FFF8E7] rounded-3xl p-6 md:p-12 flex flex-row items-center justify-between gap-4 relative overflow-hidden shadow-sm border border-[#FDE68A]">
-           <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-[#FCD34D]/30 rounded-full blur-2xl"></div>
-           
-           {/* Left characters (Simulated with an emoji or icon for mobile if no image) */}
-           <div className="hidden xs:flex z-10 shrink-0 mr-2 md:mr-6">
-             <div className="bg-white rounded-full p-2 md:p-4 shadow-sm border border-yellow-100">
-               <GraduationCap className="text-[#D4A017]" size={28} />
-             </div>
-           </div>
-           
-           <div className="relative z-10 flex-1 max-w-4xl">
-             <h2 className="text-sm xs:text-base md:text-3xl font-bold text-[#1E293B] leading-tight">
-               Start your journey in <br className="hidden md:block"/><span className="text-[#D4A017] hidden md:inline">Higher Education</span>
-             </h2>
-             <p className="hidden md:block text-gray-600 font-medium mt-2">
-               Join a community of innovators, creators and future professionals at MCC.
-             </p>
-           </div>
-           
-           <div className="relative z-10 shrink-0">
-              <a href="https://enrollonline.co.in/Registration/Apply/MCC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 md:gap-2 bg-[#123B6D] hover:bg-[#0f3059] text-white px-3 py-2 md:px-8 md:py-4 rounded-lg md:rounded-full text-xs md:text-base font-bold shadow-md transition-all group">
-                Apply Now <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </a>
-           </div>
         </div>
 
       </div>

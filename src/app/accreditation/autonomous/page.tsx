@@ -85,11 +85,19 @@ export default function AutonomousHEIPage() {
   const [activeTab, setActiveTab] = useState('grant');
   const [activeMobile, setActiveMobile] = useState<boolean>(false);
   const [showSticky, setShowSticky] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setNavVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        setNavVisible(true);
+      }
+
       if (currentScrollY > 300) {
         setShowSticky(currentScrollY < lastScrollY);
       } else {
@@ -168,7 +176,7 @@ export default function AutonomousHEIPage() {
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
       {/* ── Secondary Accreditation Nav ── */}
-      <div className="bg-[#123B6D] w-full shadow-md z-40 sticky top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]">
+      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar flex items-center h-12">
           {autonomyNav.map((item, i) => (
             <Link key={i} href={item.href}
@@ -191,7 +199,7 @@ export default function AutonomousHEIPage() {
             {showSticky && (
               <motion.div initial={{ y: '-100%' }} animate={{ y: 0 }} exit={{ y: '-100%' }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="fixed top-20 left-0 w-full z-40 px-4"
+                className={`fixed left-0 w-full z-40 px-4 ${navVisible ? 'top-20' : 'top-4'}`}
               >
                 {renderMobileDropdown(true)}
               </motion.div>
@@ -201,7 +209,7 @@ export default function AutonomousHEIPage() {
         </div>
 
         {/* Desktop Sidebar */}
-        <div className="hidden lg:flex lg:col-span-1 flex-col gap-2 sticky top-24 self-start">
+        <div className={`hidden lg:flex lg:col-span-1 flex-col gap-2 sticky self-start transition-all duration-300 ${navVisible ? 'top-[260px]' : 'top-20'}`}>
           <div className="bg-[#123B6D] text-white font-bold px-4 py-3 rounded-t-xl shadow-md flex items-center gap-2">
             <GraduationCap size={18} />
             AUTONOMOUS HEI

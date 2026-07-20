@@ -3,11 +3,20 @@
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-export default function BAFPageClient({ syllabusContent }: Props) {
+const bafFaculty = [
+  { srNo: 1, name: 'Ms.Shilpa Thakur',        additionalRole: 'Co-ordinator',      designation: 'Assistant Professor', email: 'shilpa.thakur@mccmulund.ac.in',     education: 'MCom, MPhil',                       teachingExp: '28 yrs' },
+  { srNo: 2, name: 'Dr. Rajashri Deshpande',  additionalRole: '—',                 designation: 'Assistant Professor', email: 'rajashri.deshpande@mccmulund.ac.in', education: 'M.Com., MA., NET, Ph.D.',           teachingExp: '18 yrs' },
+  { srNo: 3, name: 'Ms.Alpa Katira',          additionalRole: '—',                 designation: 'Assistant Professor', email: 'alpa.katira@mccmulund.ac.in',        education: 'M.Com., B.Ed., SET',               teachingExp: '20 yrs' },
+  { srNo: 4, name: 'Ms.Archana Kadam',        additionalRole: '—',                 designation: 'Assistant Professor', email: 'archana.kadam@mccmulund.ac.in',      education: 'M.Com., MA., NET, PGDFM',          teachingExp: '17 yrs' },
+  { srNo: 5, name: 'Ms.Seema Attarde',        additionalRole: '—',                 designation: 'Assistant Professor', email: 'seema.attarde@mccmulund.ac.in',      education: 'M.Sc.',                            teachingExp: '26 yrs' },
+  { srNo: 6, name: 'Mr.Nitin Pawar',          additionalRole: 'Coordinator',       designation: 'Assistant Professor', email: 'nitin.pawar@mccmulund.ac.in',        education: 'M.Com., M.Phil., MBA., SET',       teachingExp: '16 yrs' },
+  { srNo: 7, name: 'Ms.Sneha Prajapati',      additionalRole: '—',                 designation: 'Assistant Professor', email: 'sneha.prajapati@mccmulund.ac.in',    education: 'M.Com., B.Ed., SET, NET',          teachingExp: '8 yrs' },
+  { srNo: 8, name: 'Ms.Swapna Acharya',       additionalRole: '—',                 designation: 'Assistant Professor', email: 'swapna.acharya@mccmulund.ac.in',     education: 'M.Com., LLB, SET',                 teachingExp: '8 yrs' },
+];
+
+export default function BAFPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (Std. XII) passed from Maharashtra Board or equivalent.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
@@ -38,9 +47,10 @@ export default function BAFPageClient({ syllabusContent }: Props) {
       }
       title="B.COM (Accounting & Finance)"
       description="An in-depth program bringing out analytical financial acumen and making a learner Industry ready for the accounting & finance sectors."
-      syllabusContent={syllabusContent}
+      syllabusContent={<SyllabusRenderer programKey="BAF" />}
       quickActionsData={quickActions}
       courseKey="BAF"
+      facultyData={bafFaculty}
     />
   );
 }

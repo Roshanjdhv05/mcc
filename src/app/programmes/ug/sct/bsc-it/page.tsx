@@ -1,10 +1,18 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import { renderSyllabusTable } from '@/lib/syllabusData';
 
 export const metadata: Metadata = {
   title: 'B.Sc (IT) | MCC Digital Experience Platform',
   description: 'Bachelor of Science (Information Technology) at Mulund College of Commerce.',
 };
+
+const bscItFaculty = [
+  { srNo: 24, name: 'Dr. Jyotika Dhiren Chheda',  additionalRole: 'Coordinator', designation: 'Assistant Professor' },
+  { srNo: 31, name: 'Dr. Sandhya Pandey',          additionalRole: '—',           designation: 'Assistant Professor' },
+  { srNo: 32, name: 'Ms. Suvarna Ramesh Sawant',   additionalRole: '—',           designation: 'Assistant Professor' },
+  { srNo: 37, name: 'Ms. Nikhita Khedekar',        additionalRole: '—',           designation: 'Assistant Professor' },
+];
 
 export default function CoursePage() {
   return (
@@ -18,9 +26,11 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Information Technology)"
-      description="The Bachelor of Science (Information Technology) programme details will be updated shortly."
+      description="The Bachelor of Science (Information Technology) programme focuses on the study of computing, software development, networking, and data management."
       courseKey="BSC_IT"
       category="science"
+      facultyData={bscItFaculty}
+      syllabusContent={renderSyllabusTable('BSC_IT')}
     />
   );
 }

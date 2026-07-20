@@ -2,55 +2,59 @@
 
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
+const bcomFaculty = [
+  { srNo: 1,  name: 'Mr.Nikhil Karkhanis',    additionalRole: 'Advanced Accountancy Co-ordinator', designation: 'Assistant Professor', email: 'nikhil.karkhanis@mccmulund.ac.in',   education: 'M.Com., CS., NET., SET., LLB',                   teachingExp: '' },
+  { srNo: 2,  name: 'Ms.Riya Dhamaprukar',    additionalRole: '—',                               designation: 'Assistant Professor', email: 'riya.dhamapurkar@mccmulund.ac.in',   education: 'M.Com., B.Ed., NET., SET',                       teachingExp: '' },
+  { srNo: 3,  name: 'Ms.Snehal Chavan',       additionalRole: '—',                               designation: 'Assistant Professor', email: 'snehal.chavan@mccmulund.ac.in',      education: 'M.Com., CA., CMA., NET.',                        teachingExp: '' },
+  { srNo: 4,  name: 'Ms.Shweta Ghare',        additionalRole: '—',                               designation: 'Assistant Professor', email: 'shweta.ghare@mccmulund.ac.in',       education: 'M. Com., SET',                                   teachingExp: '' },
+  { srNo: 5,  name: 'Mr.Prathamesh Bobhate',  additionalRole: '—',                               designation: 'Assistant Professor', email: 'prathamesh.bobhate@mccmulund.ac.in', education: 'M. Com, NET',                                    teachingExp: '' },
+  { srNo: 6,  name: 'Suchitra Poojari',       additionalRole: '—',                               designation: 'Assistant Professor', email: 'suchitra.poojari@mccmulund.ac.in',   education: 'M.Com, NET, MH-SET, KSET',                       teachingExp: '' },
+  { srNo: 7,  name: 'Dr.Shivaji Pawar',       additionalRole: 'Vice-Principal & Head',           designation: 'Associate Professor', email: 'shivaji.pawar@mccmulund.ac.in',      education: 'M.A., B.Ed., M.Phil., Ph.D., NET',               teachingExp: '' },
+  { srNo: 8,  name: 'Dr.Arjun Lakhe',         additionalRole: '—',                               designation: 'Assistant Professor', email: 'arjun.lakhe@mccmulund.ac.in',        education: 'M.A., M.Phil., Ph.D.',                           teachingExp: '12 yrs' },
+  { srNo: 9,  name: 'Ms.Gopika Pal',          additionalRole: '—',                               designation: 'Assistant Professor', email: 'gopika.pal@mccmulund.ac.in',         education: 'M.A., PG Diploma in Finance Management & Banking Operations, SET', teachingExp: '' },
+  { srNo: 10, name: 'Dr.Anuradha Ganesh',     additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'anuradha.ganesh@mccmulund.ac.in',    education: 'M.Com, CA., NET, Ph.D',                          teachingExp: '' },
+  { srNo: 11, name: 'Dr.Sulbha Dey',          additionalRole: '—',                               designation: 'Assistant Professor', email: 'sulbha.dey@mccmulund.ac.in',         education: 'M.Com, B.Ed., NET, Ph.D',                        teachingExp: '' },
+  { srNo: 12, name: 'Dr.Vaishali Patil',      additionalRole: '—',                               designation: 'Assistant Professor', email: 'vaisahali.patil@mccmulund.ac.in',    education: 'M.Com., MBA, NET, SET, M.Phil., Ph.D.',          teachingExp: '19 yrs' },
+  { srNo: 13, name: 'Ms.Divya Iyer',          additionalRole: '—',                               designation: 'Assistant Professor', email: 'divya@mccmulund.ac.in',              education: 'M. Com, SET',                                    teachingExp: '' },
+  { srNo: 14, name: 'Ms. Dhanvi Mehta',       additionalRole: '—',                               designation: 'Assistant Professor', email: 'dhanviedu@gmail.com',                education: 'MCom (Business Management), UGC NET',            teachingExp: '2 yrs' },
+  { srNo: 15, name: 'Dr.Shayeree Ghosh',      additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'shayeree.ghosh@mccmulund.ac.in',     education: 'M.A., M.Phil., NET., Ph.D.',                     teachingExp: '' },
+  { srNo: 16, name: 'Mr.Jayanta Ghorpade',    additionalRole: '—',                               designation: 'Assistant Professor', email: 'jayanta.ghorpade@mccmulund.ac.in',   education: 'M.A., B.Ed., M.Phil., NET.',                     teachingExp: '' },
+  { srNo: 17, name: 'Mr.Amit Yadav',          additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'amit.yadav@mccmulund.ac.in',         education: 'M.Sc., NET., LLB., P.G.D.E.L. (NLSIU)',         teachingExp: '17 yrs' },
+  { srNo: 18, name: 'Dr. Minal Mapuskar',     additionalRole: 'Principal & Head',                designation: 'Principal',           email: 'principal@mccmulund.ac.in',          education: 'M.A, NET, SLET, PhD.',                           teachingExp: '20 yrs' },
+  { srNo: 19, name: 'Ms .Jui Kadvwekar',      additionalRole: '—',                               designation: 'Assistant Professor', email: 'juikadvekar@gmail.com',              education: 'MA., NET',                                       teachingExp: '' },
+  { srNo: 20, name: 'Dr.Pramila D\'souza',    additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'pramiladsouza@mulund.ac.in',         education: 'LLB., LLM., Ph.D., NET',                         teachingExp: '' },
+  { srNo: 21, name: 'Ms. Seema Attarde',      additionalRole: 'HOD (Maths, Stats & Comp. App.)', designation: 'Assistant Professor', email: 'seema.attarde@mccmulund.ac.in',      education: 'M.Sc. (Statistics)',                             teachingExp: '26 yrs' },
+  { srNo: 22, name: 'Ms.Komal Bhatt',         additionalRole: '—',                               designation: 'Assistant Professor', email: 'komal.bhat@mccmulund.ac.in',         education: 'M.Sc. (Mathematics)',                            teachingExp: '' },
+  { srNo: 23, name: 'Ms. Neha Rajendraprasad Pal', additionalRole: '—',                          designation: 'Assistant Professor', email: 'neha.pal@mccmulund.ac.in',           education: 'M.Sc. (Mathematics), B.Ed',                      teachingExp: '' },
+  { srNo: 24, name: 'Ms. Chetna Shailesh Panchal', additionalRole: '—',                          designation: 'Assistant Professor', email: 'chetna.panchal@mccmulund.ac.in',     education: 'M.Sc. (Mathematics), B.Ed.',                     teachingExp: '' },
+  { srNo: 25, name: 'Mrs. Gauri A. Atre',     additionalRole: '—',                               designation: 'Assistant Professor', email: 'gauri.atre@mccmulund.ac.in',         education: 'Msc(Mathematics), B.Ed., Mphil',                 teachingExp: '20 yrs' },
+];
 
-export default function BComPageClient({ syllabusContent }: Props) {
+export default function BComPageClient() {
   const quickActions = [
-    { title: 'Eligibility', icon: Users, info: 'HSC (Std. XII) passed from Maharashtra Board or equivalent.' },
-    { title: 'Programme Design', icon: FileText, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
-    { title: 'Timing', icon: Clock, info: '07:15 a.m. - 10:51 a.m. (Tutorials/Practicals till 12:30)' },
-    { title: 'Intake Capacity', icon: Users, info: '600 Seats (Fully aided by the Government).' }
+    { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: '10+2 from any recognised Board in any stream.' },
+    { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years (NEP 4 Years), 6/8 Semesters.' },
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Morning Batches.' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Contact College Administration.' }
   ];
 
   return (
-    <CourseTemplate 
+    <CourseTemplate
       introductionContent={
         <>
-          <p className="mb-4">The Bachelor of Commerce (B.Com) program is a 3-year (6 semesters) degree as per NEP 2020. Fully aided by the Government, it offers subsidized quality education delivered by highly qualified faculty.</p>
-          <p className="mb-4">A graduate in B.Com is adequately exposed and trained in various disciplines including Finance, Accounting, Banking, Insurance, Management, Marketing, and Law. Our curriculum also incorporates Mathematics and Environmental Studies to aid students in competitive examinations.</p>
-          
-          <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Programme Highlights</h4>
-          <ul className="space-y-3 mb-6">
-            <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
-              <CheckCircle2 className="text-[#3B82F6] shrink-0 mt-0.5 fill-[#EBF3FF]" size={16} />
-              <span className="leading-snug"><strong>The 'CA Factory':</strong> Conducive environment to pursue professional courses like CA, CS, CMA and ACCA.</span>
-            </li>
-            <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
-              <CheckCircle2 className="text-[#3B82F6] shrink-0 mt-0.5 fill-[#EBF3FF]" size={16} />
-              <span className="leading-snug"><strong>Competitive Exams:</strong> Specialized mentoring for UPSC, MPSC, IBPS, SSC, and RRB.</span>
-            </li>
-            <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
-              <CheckCircle2 className="text-[#3B82F6] shrink-0 mt-0.5 fill-[#EBF3FF]" size={16} />
-              <span className="leading-snug"><strong>Alumni & Industry Linkage:</strong> Rich network of illustrious alumni willing to mentor new batches.</span>
-            </li>
-            <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
-              <CheckCircle2 className="text-[#3B82F6] shrink-0 mt-0.5 fill-[#EBF3FF]" size={16} />
-              <span className="leading-snug"><strong>Skill & Value Based:</strong> Additional courses that hone competencies for immediate job-readiness.</span>
-            </li>
-          </ul>
-
-          <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
-          <p className="mb-2 text-sm text-gray-700">Passed Higher Secondary School Certificate (Std. XII) examination conducted by different Divisional Boards of Maharashtra State Board.</p>
-          <p className="mb-2 text-sm text-gray-700">OR Passed HSC (Std. XII) with vocational subjects/minimum competency based vocational course.</p>
-          <p className="mb-4 text-sm text-gray-700">OR Passed examination of another University or Body recognized as equivalent to HSC (Std. XII).</p>
-        </>
+        <p className="mb-4">The Bachelor of Commerce (B.Com) program is a versatile and widely recognized undergraduate degree that provides students with a solid foundation in business, accounting, economics, and finance. It is designed to equip students with the necessary skills and knowledge to succeed in various corporate and financial roles.</p>
+        <p className="mb-4">The curriculum covers core subjects such as financial accounting, corporate law, business economics, business communication, taxation, and auditing. It blends theoretical knowledge with practical applications, allowing students to develop critical thinking, problem-solving, and analytical skills.</p>
+        <p className="mb-4">Graduates of the B.Com program have diverse career opportunities across industries. They can pursue roles in accounting, banking, financial management, human resources, marketing, and taxation. Additionally, a B.Com degree serves as an excellent stepping stone for professional courses like Chartered Accountancy (CA), Company Secretary (CS), Cost and Management Accountancy (CMA), and Master of Business Administration (MBA).</p>
+        <p className="mb-4">This program is ideal for students seeking a comprehensive understanding of business operations and aiming to build a successful career in the dynamic world of commerce and industry.</p>
+      </>
       }
+      syllabusContent={<SyllabusRenderer programKey="BCOM" />}
+      courseKey="BCOM"
       title="Bachelor of Commerce (B.Com)"
-      description="The oldest and most prestigious program of the college, preparing students for diverse careers in commerce, finance, and competitive examinations."
-      syllabusContent={syllabusContent}
+      description="A versatile undergraduate program providing a solid foundation in business, accounting, economics, and finance."
+      facultyData={bcomFaculty}
       quickActionsData={quickActions}
     />
   );

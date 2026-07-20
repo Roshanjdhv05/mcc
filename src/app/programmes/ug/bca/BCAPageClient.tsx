@@ -7,6 +7,15 @@ interface Props {
   syllabusContent: React.ReactNode;
 }
 
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
+
+const bcaFaculty = [
+  { srNo: 1, name: 'Dr.Vishal Borude',    additionalRole: 'BCA Co-ordinator', designation: 'Assistant Professor', email: 'vishal.borude@mccmulund.ac.in', education: 'M.Sc.(IT)., Ph.D.', teachingExp: '12 yrs' },
+  { srNo: 2, name: 'Dr. Priti Pathak',    additionalRole: 'DS Co-Ordinator',  designation: 'Assistant Professor', email: 'priti.pathak@mccmulund.ac.in',  education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.', teachingExp: '' },
+  { srNo: 3, name: 'Mr. Siddhesh Gotekar', additionalRole: '—',              designation: 'Assistant Professor', email: 'gotekarsiddhesh@gmail.com',       education: 'M.Sc.(IT)', teachingExp: '' },
+  { srNo: 4, name: 'Dr. Sandhya Pandey',  additionalRole: '—',               designation: 'Assistant Professor', email: 'sandhya.pandey@mccmulund.ac.in', education: 'M.C.A., Ph.D. (Computer Science), M.A.(Sociology)', teachingExp: '17 yrs' },
+];
+
 export default function BCAPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (any stream) with Maths/Stats OR Diploma in IT/CS/allied branches.' },
@@ -50,6 +59,7 @@ export default function BCAPageClient({ syllabusContent }: Props) {
       description="A programme focused on computing fundamentals, software development, and modern technologies, preparing students to build applications for organisations."
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
+      facultyData={bcaFaculty}
     />
   );
 }

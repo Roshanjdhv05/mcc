@@ -17,7 +17,7 @@ const categories: CategoryItem[] = [
 
 const data: Record<string, DataItem[]> = {
   forums: [
-    { title: 'Students\u2019 Council', icon: Users, links: [] },
+    { title: 'Students Council', icon: Users, links: [] },
     { title: 'National Service Scheme', icon: Heart, links: [] },
     { title: 'Cultural Forum', icon: Music, links: [] },
     { title: 'Sports and Gymkhana', icon: Activity, links: [] },
@@ -30,7 +30,7 @@ const data: Record<string, DataItem[]> = {
     { title: 'Students\u2019 Research', icon: BookOpen, links: [{ label: 'Redirect to the Research Cell', href: '/research' }] },
   ],
   events: [
-    { title: 'Spectrum', icon: Music, links: [{ label: 'Redirect to Cultural Forum', href: '/cultural-committee' }] },
+    { title: 'Spectrum', icon: Music, links: [{ label: 'Redirect to Cultural Forum', href: '/students-corner/cultural-forum' }] },
     { title: 'Inspira', icon: Rocket, links: [{ label: 'Redirect to the BCOM MS Section', href: '/programmes/ug/bms' }] },
     { title: 'Technobeat', icon: Activity, links: [] },
     { title: 'Math\u2019s Wonder', icon: Compass, links: [{ label: 'Redirect to Computer Science', href: '/programmes/ug/bsc-cs' }] },
@@ -55,7 +55,7 @@ export default function StudentsCornerPage() {
       subtitle="Explore, engage, and excel. Discover a wide range of student initiatives, clubs, committees, and opportunities that help you learn, lead, and grow beyond the classroom."
       heroImage="/college_campus_hero.png"
       HeroIcon={UserCircle}
-      heroLabel="Students' Corner"
+      heroLabel="Students Corner"
       categories={categories}
       data={data}
     />

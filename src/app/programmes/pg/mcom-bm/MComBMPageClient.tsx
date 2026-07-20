@@ -42,6 +42,9 @@ export default function MComBMPageClient({ syllabusContent }: Props) {
       description="A postgraduate specialisation in strategic management, entrepreneurship, HRM, and marketing for commerce graduates."
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
+      facultyData={[
+        { srNo: 1, name: 'Dr. Shivaji Pawar', designation: 'Vice-Principal & Co-ordinator', additionalRole: '—', education: 'M.A., B.Ed., M.Phil., Ph.D., NET', email: 'shivaji.pawar@mccmulund.ac.in', teachingExp: '0 yrs' }
+      ]}
     />
   );
 }

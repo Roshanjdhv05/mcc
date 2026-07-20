@@ -2,45 +2,35 @@
 
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
+const mcomAAFaculty = [
+  { srNo: 1, name: 'Dr. Riya Dhamapurkar', additionalRole: 'Coordinator', designation: 'Assistant Professor' },
+];
 
-export default function MComAAPageClient({ syllabusContent }: Props) {
+export default function MComAAPageClient() {
   const quickActions = [
-    { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'B.Com from any recognised University in Maharashtra.' },
-    { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters | Aided (80 seats).' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Evening: 5:30 p.m. – 8:30 p.m.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '80 Seats (Aided).' }
+    { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Graduation in relevant field from a recognised university.' },
+    { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters.' },
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Contact College Administration.' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Contact College Administration.' }
   ];
 
   return (
     <CourseTemplate
       introductionContent={
         <>
-          <p className="mb-4">
-            Mulund College of Commerce (MCC) is a well-known brand in commerce education at Mumbai University. In order to quench the thirst of students for post-graduation in commerce, the college started <strong>M.Com (Advanced Accountancy)</strong> in 1980 — an aided course since its very beginning.
-          </p>
-          <p className="mb-4">
-            The post-graduate centre provides all essential facilities. The library is fully computerised and well-equipped with text books, reference books, journals and books on various competitive examinations. The teaching staff is well-experienced and qualified, helping the college achieve excellent results, consistently topping the university merit list.
-          </p>
-          <p className="mb-4">
-            Faculties also mentor students about career planning, placement guidance, and competitive examinations. A professional counsellor is appointed to support students regarding academic and personal problems. All M.Com courses are <strong>evening courses</strong>, providing opportunities for working students to pursue further education.
-          </p>
-
-          <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
-          <ul className="space-y-3 mb-6">
-            <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
-              <CheckCircle2 className="text-[#3B82F6] shrink-0 mt-0.5 fill-[#EBF3FF]" size={16} />
-              <span className="leading-snug">Must have passed the <strong>Bachelor of Commerce</strong> examination conducted by any University in Maharashtra.</span>
-            </li>
-          </ul>
-        </>
+        <p className="mb-4">The Master of Commerce (M.Com) in Advanced Accountancy is a specialized postgraduate program designed to provide students with an advanced and rigorous understanding of accounting principles, financial management, and corporate taxation. This program focuses on developing a high level of expertise in analyzing complex financial data and making strategic financial decisions.</p>
+        <p className="mb-4">The curriculum includes advanced subjects such as advanced financial accounting, strategic cost accounting, direct and indirect taxes, business valuation, and corporate financial reporting. It aims to equip students with critical analytical skills and a deep understanding of the regulatory frameworks that govern the accounting profession.</p>
+        <p className="mb-4">Graduates of the M.Com (Advanced Accountancy) program have promising career prospects in areas like auditing, taxation, financial consulting, corporate finance, and investment banking. It also serves as an excellent foundation for pursuing further professional qualifications such as Chartered Accountancy (CA), Cost and Management Accountancy (CMA), and Certified Public Accountant (CPA).</p>
+        <p className="mb-4">This program is ideal for students who have a strong aptitude for numbers and a keen interest in pursuing a successful career in the accounting and finance sectors.</p>
+      </>
       }
-      title="M.Com (Advanced Accountancy)"
-      description="A postgraduate programme specialising in advanced financial reporting, taxation, auditing, and financial management for commerce graduates."
-      syllabusContent={syllabusContent}
+      syllabusContent={<SyllabusRenderer programKey="MCOM_AA" />}
+      courseKey="MCOM_AA"
+      title="Master of Commerce (Advanced Accountancy)"
+      description="An advanced postgraduate program providing deep expertise in accounting principles, financial management, and corporate taxation."
+      facultyData={mcomAAFaculty}
       quickActionsData={quickActions}
     />
   );

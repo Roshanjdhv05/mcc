@@ -2,12 +2,9 @@
 
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
-
-export default function MSFPageClient({ syllabusContent }: Props) {
+export default function MSFPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Graduate with 50% min & Math at HSC or UG first year.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters (104 Credits).' },
@@ -48,8 +45,11 @@ export default function MSFPageClient({ syllabusContent }: Props) {
       }
       title="Master of Science (Finance)"
       description="A specialized postgraduate program covering econometrics, financial modelling, corporate finance, and derivatives for aspiring financial professionals."
-      syllabusContent={syllabusContent}
+      syllabusContent={<SyllabusRenderer programKey="MSF" />}
       quickActionsData={quickActions}
+      facultyData={[
+        { srNo: 1, name: 'Dr. Rajashri Deshpande', designation: 'Assistant Professor', additionalRole: '—', education: 'M.Com., MA., NET, Ph.D.', email: 'rajashri.deshpande@mccmulund.ac.in', teachingExp: '18 yrs' }
+      ]}
     />
   );
 }

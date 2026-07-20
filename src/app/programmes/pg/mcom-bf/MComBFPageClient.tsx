@@ -2,12 +2,9 @@
 
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
-
-export default function MComBFPageClient({ syllabusContent }: Props) {
+export default function MComBFPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'B.Com from any recognised University in Maharashtra.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters | SFC (60 seats).' },
@@ -40,8 +37,11 @@ export default function MComBFPageClient({ syllabusContent }: Props) {
       }
       title="M.Com (Banking & Finance)"
       description="A postgraduate specialisation in banking practices, financial markets, risk management, and international finance for commerce graduates."
-      syllabusContent={syllabusContent}
+      syllabusContent={<SyllabusRenderer programKey="MCOM_BF" />}
       quickActionsData={quickActions}
+      facultyData={[
+        { srNo: 1, name: 'Dr. Anuradha Ganesh', designation: 'M.Com Banking & Finance Co-ordinator', additionalRole: '—', education: 'M.Com, CA., NET, Ph.D', email: 'anuradha.ganesh@mccmulund.ac.in', teachingExp: '0 yrs' }
+      ]}
     />
   );
 }

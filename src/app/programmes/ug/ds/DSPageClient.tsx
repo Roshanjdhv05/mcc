@@ -7,6 +7,14 @@ interface Props {
   syllabusContent: React.ReactNode;
 }
 
+const dsFaculty = [
+  { srNo: 1, name: 'Dr.Priti Pathak',   additionalRole: 'DS Co-ordinator', designation: 'Assistant Professor', email: 'priti.pathak@mccmulund.ac.in',  education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.', teachingExp: '' },
+  { srNo: 2, name: 'Dr.Vishal Borude',  additionalRole: '—',              designation: 'Assistant Professor', email: 'vishal.borude@mccmulund.ac.in',  education: 'M.Sc.(IT)., Ph.D.',                                                    teachingExp: '' },
+  { srNo: 3, name: 'Dr.Reena Nagda',    additionalRole: 'SCT Co-ordinator', designation: 'Assistant Professor', email: 'reena.shah@mccmulund.ac.in',    education: 'M.Sc. Mathematics, NET, Ph.D.',                                        teachingExp: '' },
+  { srNo: 4, name: 'Dr. Sandhya Pandey', additionalRole: '—',             designation: 'Assistant Professor', email: 'sandhya.pandey@mccmulund.ac.in', education: 'M.C.A., Ph.D. (Computer Science), M.A.(Sociology)',                    teachingExp: '' },
+  { srNo: 5, name: 'Mr.Siddhesh Gotekar', additionalRole: '—',            designation: 'Assistant Professor', email: 'gotekarsiddhesh@gmail.com',       education: 'M.Sc.(IT)',                                                            teachingExp: '' },
+];
+
 export default function DSPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (any stream) with Maths/Stats OR Diploma in IT/CS/allied branches.' },
@@ -47,6 +55,7 @@ export default function DSPageClient({ syllabusContent }: Props) {
       description="A programme that combines data science, machine learning, statistics, and mathematics to produce industry-ready data professionals."
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
+      facultyData={dsFaculty}
     />
   );
 }

@@ -168,7 +168,7 @@ export default function StaffProfilePage() {
                 animate={{ y: 0 }}
                 exit={{ y: '-100%' }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="fixed top-20 left-0 w-full z-40 px-4"
+                className="fixed top-28 left-0 w-full z-30 px-4"
               >
                 {renderMobileDropdown(true)}
               </motion.div>

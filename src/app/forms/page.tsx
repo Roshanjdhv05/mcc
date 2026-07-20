@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Download, Search, Filter } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Smart Forms Center | MCC Digital Experience Platform',
@@ -9,14 +10,22 @@ export const metadata: Metadata = {
 const categories = ['All', 'Admission', 'Examination', 'Scholarship', 'Certificate', 'Concession'];
 
 const forms = [
-  { cat: 'Admission', title: 'FYJC Admission Form 2024–25', desc: 'Application form for First Year Junior College admissions', updated: 'Jun 1, 2024', size: '245 KB' },
-  { cat: 'Examination', title: 'ATKT Examination Form', desc: 'Allowed to Keep Terms examination application form', updated: 'May 15, 2024', size: '180 KB' },
-  { cat: 'Scholarship', title: 'EBC Scholarship Application', desc: 'Economically Backward Class scholarship form', updated: 'Jun 5, 2024', size: '320 KB' },
-  { cat: 'Certificate', title: 'Bonafide Certificate Request', desc: 'Application for enrollment verification certificate', updated: 'Jan 10, 2024', size: '120 KB' },
-  { cat: 'Concession', title: 'Railway Concession Form', desc: 'Application for student railway concession pass', updated: 'Apr 1, 2024', size: '95 KB' },
-  { cat: 'Certificate', title: 'Character Certificate Request', desc: 'Application for good conduct certificate', updated: 'Jan 10, 2024', size: '110 KB' },
-  { cat: 'Examination', title: 'Revaluation Application Form', desc: 'Form to request re-evaluation of exam paper', updated: 'May 20, 2024', size: '145 KB' },
-  { cat: 'Scholarship', title: 'Merit Scholarship Form', desc: 'Institutional merit scholarship application', updated: 'Jun 10, 2024', size: '280 KB' },
+  { cat: 'Admission', title: 'FYJC Admission Form 2024–25', desc: 'Application form for First Year Junior College admissions', updated: 'Jun 1, 2024', size: '245 KB', href: '#' },
+  { cat: 'Examination', title: 'ATKT Examination Form', desc: 'Allowed to Keep Terms examination application form', updated: 'May 15, 2024', size: '180 KB', href: '#' },
+  { cat: 'Scholarship', title: 'EBC Scholarship Application', desc: 'Economically Backward Class scholarship form', updated: 'Jun 5, 2024', size: '320 KB', href: '#' },
+  { cat: 'Certificate', title: 'Bonafide Certificate Request', desc: 'Application for enrollment verification certificate', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/bonafide-certificate' },
+  { cat: 'Certificate', title: 'Caste Validity Certificate Request', desc: 'Application for caste validity certificate issued by the college', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/caste-validity' },
+  { cat: 'Concession', title: 'Railway Concession Form', desc: 'Application for student railway concession pass', updated: 'Apr 1, 2024', size: '95 KB', href: '#' },
+  { cat: 'Certificate', title: 'Character Certificate Request', desc: 'Application for good conduct certificate', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/character-certificate' },
+  { cat: 'Certificate', title: 'Transfer Certificate Request', desc: 'Application for transfer certificate for new institution enrollment', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/transfer-certificate' },
+  { cat: 'Certificate', title: 'Migration Certificate Request', desc: 'Application for migration certificate for new institution enrollment', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/migration-certificate' },
+  { cat: 'Certificate', title: 'Transcript Certificate Request', desc: 'Application for official academic transcripts', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/transcript-certificate' },
+  { cat: 'Examination', title: 'Duplicate Marksheet Request', desc: 'Application for duplicate marksheet / gradecard', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/duplicate-marksheet' },
+  { cat: 'Examination', title: 'Marksheet Verification Request', desc: 'Application for official marksheet / gradecard verification', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/marksheet-verification' },
+  { cat: 'Certificate', title: 'Conversion Certificate Request', desc: 'Application for conversion certificate for grade-cards', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/conversion-certificate' },
+  { cat: 'Certificate', title: 'Form 112 Attestation Request', desc: 'Application for attestation on form 112 (ICAI)', updated: 'Jan 10, 2024', size: 'Online Form', href: '/forms/form-112-attestation' },
+  { cat: 'Examination', title: 'Revaluation Application Form', desc: 'Form to request re-evaluation of exam paper', updated: 'May 20, 2024', size: '145 KB', href: '#' },
+  { cat: 'Scholarship', title: 'Merit Scholarship Form', desc: 'Institutional merit scholarship application', updated: 'Jun 10, 2024', size: '280 KB', href: '#' },
 ];
 
 const catColors: Record<string, string> = {
@@ -70,9 +79,15 @@ export default function FormsPage() {
                 <h3 className="font-semibold text-[#1E293B] text-sm font-[var(--font-heading)]">{f.title}</h3>
                 <p className="text-xs text-[#94A3B8] mt-0.5">{f.updated} · {f.size}</p>
               </div>
-              <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#123B6D]/10 text-[#123B6D] text-xs font-semibold hover:bg-[#123B6D] hover:text-white transition-all flex-shrink-0">
-                <Download size={14} /> PDF
-              </button>
+              {f.href && f.href !== '#' ? (
+                <Link href={f.href} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#123B6D]/10 text-[#123B6D] text-xs font-semibold hover:bg-[#123B6D] hover:text-white transition-all flex-shrink-0">
+                  <Download size={14} /> Open
+                </Link>
+              ) : (
+                <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#123B6D]/10 text-[#123B6D] text-xs font-semibold hover:bg-[#123B6D] hover:text-white transition-all flex-shrink-0">
+                  <Download size={14} /> PDF
+                </button>
+              )}
             </div>
           ))}
         </div>

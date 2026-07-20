@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Mail, BookOpen, Clock, Info, GraduationCap, Building2, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -272,7 +272,7 @@ function FlipCard({ teacher }: { teacher: any }) {
              <div className="absolute -bottom-5 w-[150%] h-[30px] bg-[#123B6D] rounded-[50%] border-b-[3px] border-[#D4A017]"></div>
              <div className="absolute top-2 w-12 h-2 bg-white rounded-full shadow-inner opacity-90"></div>
              <div className="absolute -bottom-5 z-10 w-12 h-12 bg-white rounded-full p-1 shadow-sm flex items-center justify-center border border-[#E2E8F0]">
-                 <img src="/mcclogo.jpg" alt="MCC Logo" className="w-full h-full object-contain rounded-full" />
+                 <img src="/mcclogo.png" alt="MCC Logo" className="w-full h-full object-contain rounded-full" />
              </div>
           </div>
           
@@ -292,6 +292,11 @@ function FlipCard({ teacher }: { teacher: any }) {
             </p>
             <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight">
               {teacher.education}
+            </div>
+            <div className="absolute bottom-10 w-full flex justify-center z-20 animate-bounce">
+              <span className="bg-[#123B6D]/10 text-[#123B6D] text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-sm border border-[#123B6D]/20 shadow-sm">
+                Click to flip
+              </span>
             </div>
           </div>
           
@@ -339,20 +344,51 @@ function FlipCard({ teacher }: { teacher: any }) {
 export default function JrCollegeTeachingStaffPage() {
   const [activeSubject, setActiveSubject] = useState(subjects[0]);
 
+  const navScrollRef = useRef<HTMLDivElement>(null);
+  const subjScrollRef = useRef<HTMLDivElement>(null);
+  const interactTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isInteracting, setIsInteracting] = useState(false);
+
+  const handleInteraction = () => {
+    setIsInteracting(true);
+    if (interactTimeoutRef.current) clearTimeout(interactTimeoutRef.current);
+    interactTimeoutRef.current = setTimeout(() => {
+      setIsInteracting(false);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if (isInteracting) return;
+
+    let animationFrameId: number;
+
+    const scrollStep = () => {
+      if (window.innerWidth < 1024 && navScrollRef.current) {
+        const el = navScrollRef.current;
+        if (el.style.scrollBehavior !== 'auto') el.style.scrollBehavior = 'auto';
+        el.scrollLeft += 1;
+        if (el.scrollLeft >= (el.scrollWidth + 8) / 2) {
+          el.scrollLeft = 0;
+        }
+      }
+      if (window.innerWidth < 768 && subjScrollRef.current) {
+        const el = subjScrollRef.current;
+        if (el.style.scrollBehavior !== 'auto') el.style.scrollBehavior = 'auto';
+        el.scrollLeft += 1;
+        if (el.scrollLeft >= (el.scrollWidth + 8) / 2) {
+          el.scrollLeft = 0;
+        }
+      }
+      animationFrameId = requestAnimationFrame(scrollStep);
+    };
+
+    animationFrameId = requestAnimationFrame(scrollStep);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isInteracting]);
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      <style>{`
-        @keyframes mobile-marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-mobile-marquee {
-          animation: mobile-marquee 25s linear infinite;
-        }
-        .animate-mobile-marquee:active {
-          animation-play-state: paused;
-        }
-      `}</style>
       
       {/* HEADER */}
       <div className="bg-[#123B6D] pt-12 pb-24">
@@ -386,8 +422,15 @@ export default function JrCollegeTeachingStaffPage() {
                 Quick Links
               </h2>
               
-              {/* Mobile Marquee */}
-              <div className="lg:hidden flex w-max animate-mobile-marquee gap-2 items-center">
+              {/* Mobile Auto-Slider */}
+              <div 
+                ref={navScrollRef}
+                onTouchStart={handleInteraction}
+                onMouseDown={handleInteraction}
+                onWheel={handleInteraction}
+                className="lg:hidden flex overflow-x-auto no-scrollbar gap-2 items-center"
+                style={{ scrollBehavior: 'auto' }}
+              >
                 {[...jrCollegeNav, ...jrCollegeNav].map((link, idx) => (
                   <Link
                     key={`${link.label}-${idx}`}
@@ -431,8 +474,15 @@ export default function JrCollegeTeachingStaffPage() {
                 Departments
               </h2>
               
-              {/* Mobile Marquee */}
-              <div className="md:hidden flex w-max animate-mobile-marquee gap-2 p-2 items-center bg-white/60">
+              {/* Mobile Auto-Slider */}
+              <div 
+                ref={subjScrollRef}
+                onTouchStart={handleInteraction}
+                onMouseDown={handleInteraction}
+                onWheel={handleInteraction}
+                className="md:hidden flex overflow-x-auto no-scrollbar gap-2 p-2 items-center bg-white/60"
+                style={{ scrollBehavior: 'auto' }}
+              >
                 {[...subjects, ...subjects].map((sub, idx) => (
                   <button
                     key={`${sub}-${idx}`}

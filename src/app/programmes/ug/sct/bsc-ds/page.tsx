@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
+import { renderSyllabusTable } from '@/lib/syllabusData';
 
 export const metadata: Metadata = {
   title: 'B.Sc. (DS) | MCC Digital Experience Platform',
   description: 'Bachelor of Science (Data Science) at Mulund College of Commerce.',
 };
+
+const bscDsFaculty = [
+  { srNo: 25, name: 'Dr. Priti Harekrishna Pathak', additionalRole: 'Coordinator', designation: 'Assistant Professor' },
+  { srNo: 35, name: 'Mr. Avinash Dongare',          additionalRole: '—',           designation: 'Assistant Professor' },
+  { srNo: 36, name: 'Dr. Deepa Nyayadish',          additionalRole: '—',           designation: 'Assistant Professor' },
+];
 
 export default function CoursePage() {
   return (
@@ -18,9 +25,11 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Data Science)"
-      description="The Bachelor of Science (Data Science) programme details will be updated shortly."
+      description="The Bachelor of Science (Data Science) programme focuses on data analysis and computational techniques."
       courseKey="BSC_DS"
       category="science"
+      facultyData={bscDsFaculty}
+      syllabusContent={renderSyllabusTable('BSC_DS')}
     />
   );
 }

@@ -7,6 +7,7 @@ import {
   Train, FileText, ArrowRightLeft, Globe, Shield,
   CheckCircle2, Copy, Award, Stamp, Building2, LogOut, ChevronDown, ChevronUp
 } from 'lucide-react';
+import RailwayConcessionModal from '@/components/ui/RailwayConcessionModal';
 
 const grantsInAidStaff = [
   { sr: 1, name: 'Ms. Sneha. R. Dewaney', designation: 'Junior Stenographer' },
@@ -21,13 +22,14 @@ const grantsInAidStaff = [
   { sr: 10, name: 'Ms. Nirmala Bhalerao', designation: 'Library Clerk' },
   { sr: 11, name: 'Mr. Sandeep Dhawle', designation: 'Junior Clerk' },
   { sr: 12, name: 'Ms. Rohini Asawale', designation: 'Junior Clerk' },
-  { sr: 13, name: 'Mr. Ghanshyam.G. Patil', designation: 'Library Attendant' },
-  { sr: 14, name: 'Mr. Satish. A. Narkhede', designation: 'Library Attendant' },
-  { sr: 15, name: 'Mr. Vijaysingh T. Patil', designation: 'Library Attendant' },
+  { sr: 13, name: 'Mr. Vijaysingh T. Patil', designation: 'Junior Clerk' },
+  { sr: 14, name: 'Mr. Ghanshyam.G. Patil', designation: 'Library Attendant' },
+  { sr: 15, name: 'Mr. Satish. A. Narkhede', designation: 'Library Attendant' },
   { sr: 16, name: 'Mr. Rakesh Shitole', designation: 'Library Attendant' },
   { sr: 17, name: 'Mr. Dipak B. Chaugule', designation: 'Library Attendant' },
   { sr: 18, name: 'Mr. Sachin S. Kamble', designation: 'Library Attendant' },
-  { sr: 19, name: 'Ms. Suvarna K.Bhangare', designation: 'Library Attendant' }
+  { sr: 19, name: 'Ms. Suvarna K.Bhangare', designation: 'Library Attendant' },
+  { sr: 20, name: 'Mr. Dilip. P. Anjara', designation: 'Library Attendant' }
 ];
 
 const selfFinanceStaff = [
@@ -49,27 +51,26 @@ const selfFinanceStaff = [
 ];
 
 const supportStaff = [
-  { sr: 1, name: 'Mr. Dilip. P. Anjara', section: 'Grants-in-aid' },
-  { sr: 2, name: 'Mr. Jyotirao R. Kadam', section: 'Grants-in-aid' },
-  { sr: 3, name: 'Mr. Dhanji. P. Chawada', section: 'Grants-in-aid' },
-  { sr: 4, name: 'Mr. Komal. M. Rathod', section: 'Grants-in-aid' },
-  { sr: 5, name: 'Mr. Dinesh Rathod', section: 'Grants-in-aid' },
-  { sr: 6, name: 'Mr. Sunil C. Chougule', section: 'Grants-in-aid' },
-  { sr: 7, name: 'Mr. Sunny Kamble', section: 'Grants-in-aid' },
-  { sr: 8, name: 'Mr. Mohnish P Navrat', section: 'Grants-in-aid' },
-  { sr: 9, name: 'Mr. Abhijit Pawar', section: 'Grants-in-aid' },
-  { sr: 10, name: 'Ms. Priyanka P.Thore', section: 'Grants-in-aid' },
-  { sr: 11, name: 'Mr. Rajesh Dattu Jadhav', section: 'Self-Finance' },
-  { sr: 12, name: 'Mrs. Jyoti Prashant Sajurkar', section: 'Self-Finance' },
-  { sr: 13, name: 'Mr. Maruti Pandurang Sawant', section: 'Self-Finance' },
-  { sr: 14, name: 'Mr. Santosh Ramchandra Shinde', section: 'Self-Finance' },
-  { sr: 15, name: 'Mr. Nilesh Govind Moyanak', section: 'Self-Finance' },
-  { sr: 16, name: 'Mr. Vipul Siddhartha Salve', section: 'Self-Finance' },
-  { sr: 17, name: 'Mr. Sanjay Pandurang Dandkar', section: 'Self-Finance' },
-  { sr: 18, name: 'Mr. Dhanaji Mohan Kadam', section: 'Self-Finance' },
-  { sr: 19, name: 'Mr. Mahesh Mohansingh Rajput', section: 'Self-Finance' },
-  { sr: 20, name: 'Mr. Hiralal Mohan Gohil', section: 'Self-Finance' },
-  { sr: 21, name: 'Mr. Dinesh Shriram Bharade', section: 'Self-Finance' }
+  { sr: 1, name: 'Mr. Jyotirao R. Kadam', section: 'Grants-in-aid' },
+  { sr: 2, name: 'Mr. Dhanji. P. Chawada', section: 'Grants-in-aid' },
+  { sr: 3, name: 'Mr. Komal. M. Rathod', section: 'Grants-in-aid' },
+  { sr: 4, name: 'Mr. Dinesh Rathod', section: 'Grants-in-aid' },
+  { sr: 5, name: 'Mr. Sunil C. Chougule', section: 'Grants-in-aid' },
+  { sr: 6, name: 'Mr. Sunny Kamble', section: 'Grants-in-aid' },
+  { sr: 7, name: 'Mr. Mohnish P Navrat', section: 'Grants-in-aid' },
+  { sr: 8, name: 'Mr. Abhijit Pawar', section: 'Grants-in-aid' },
+  { sr: 9, name: 'Ms. Priyanka P.Thore', section: 'Grants-in-aid' },
+  { sr: 10, name: 'Mr. Rajesh Dattu Jadhav', section: 'Self-Finance' },
+  { sr: 11, name: 'Mrs. Jyoti Prashant Sajurkar', section: 'Self-Finance' },
+  { sr: 12, name: 'Mr. Maruti Pandurang Sawant', section: 'Self-Finance' },
+  { sr: 13, name: 'Mr. Santosh Ramchandra Shinde', section: 'Self-Finance' },
+  { sr: 14, name: 'Mr. Nilesh Govind Moyanak', section: 'Self-Finance' },
+  { sr: 15, name: 'Mr. Vipul Siddhartha Salve', section: 'Self-Finance' },
+  { sr: 16, name: 'Mr. Sanjay Pandurang Dandkar', section: 'Self-Finance' },
+  { sr: 17, name: 'Mr. Dhanaji Mohan Kadam', section: 'Self-Finance' },
+  { sr: 18, name: 'Mr. Mahesh Mohansingh Rajput', section: 'Self-Finance' },
+  { sr: 19, name: 'Mr. Hiralal Mohan Gohil', section: 'Self-Finance' },
+  { sr: 20, name: 'Mr. Dinesh Shriram Bharade', section: 'Self-Finance' }
 ];
 
 const degreeServices = [
@@ -119,7 +120,7 @@ const degreeServices = [
     icon: Stamp,
     label: 'Caste Validity Verification',
     desc: 'Verification of caste certificate validity as required by government norms.',
-    href: '/forms/caste-validity',
+    href: '/administrative-service/caste-validity',
   },
   {
     icon: Award,
@@ -131,7 +132,7 @@ const degreeServices = [
     icon: Copy,
     label: 'Duplicate Marksheet',
     desc: 'Request a duplicate mark sheet in case of loss or damage of the original.',
-    href: '/forms/duplicate-marksheet',
+    href: '/administrative-service/duplicate-marksheet',
   },
 ];
 
@@ -140,42 +141,26 @@ const juniorCollegeServices = [
     icon: Train,
     label: 'Railway Concession',
     desc: 'Local train season pass concession for Junior college students travelling to and from college.',
+    href: '/forms',
   },
   {
     icon: LogOut,
     label: 'Leaving Certificate',
     desc: 'Issued on departure from Junior College. Required for admission to other institutions.',
+    href: '/administrative-service/jr-transfer-certificate',
   },
   {
     icon: FileText,
     label: 'Bonafide Certificate',
     desc: 'Proof of enrollment at the Junior College for various official purposes.',
-  },
-  {
-    icon: Globe,
-    label: 'Migration Certificate',
-    desc: 'For students migrating to another Board or institution.',
-  },
-  {
-    icon: Stamp,
-    label: 'Caste Validity Verification',
-    desc: 'Verification of caste certificate validity as required by government norms.',
-  },
-  {
-    icon: Award,
-    label: 'Scholarship & Free-ship',
-    desc: 'Apply for government and institutional scholarship and free-ship schemes.',
-  },
-  {
-    icon: Copy,
-    label: 'Duplicate Marksheet',
-    desc: 'Request a duplicate mark sheet in case of loss or damage of the original.',
+    href: '/administrative-service/jr-bonafide-certificate',
   },
 ];
 
 export default function AdministrativeServicesPage() {
   const [activeTab, setActiveTab] = useState<'degree' | 'junior'>('degree');
   const [expandedStaff, setExpandedStaff] = useState<string | null>(null);
+  const [showRailwayModal, setShowRailwayModal] = useState(false);
 
   const toggleStaff = (section: string) => {
     setExpandedStaff(expandedStaff === section ? null : section);
@@ -370,22 +355,28 @@ export default function AdministrativeServicesPage() {
                 <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)]">Degree College</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {degreeServices.map((svc, i) => (
-                  <Link
-                    key={i}
-                    href={svc.href}
-                    className="bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-lg hover:-translate-y-1 transition-all group flex flex-col"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-[#123B6D]/5 flex items-center justify-center mb-4 group-hover:bg-[#123B6D]/10 transition-colors">
-                      <svc.icon size={22} className="text-[#123B6D]" />
-                    </div>
-                    <h3 className="font-bold text-[#1E293B] text-sm mb-2 leading-snug">{svc.label}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{svc.desc}</p>
-                    <div className="w-full py-2 rounded-lg bg-[#123B6D] text-white text-xs font-semibold group-hover:bg-[#0d2d54] transition-all flex items-center justify-center gap-1.5 mt-auto">
-                      Apply <ChevronRight size={13} />
-                    </div>
-                  </Link>
-                ))}
+                {degreeServices.map((svc, i) => {
+                  const isRailway = svc.label === 'Railway Concession';
+                  const CardWrapper = isRailway ? 'button' : Link;
+                  const wrapperProps: any = isRailway ? { onClick: () => setShowRailwayModal(true) } : { href: svc.href };
+                  
+                  return (
+                    <CardWrapper
+                      key={i}
+                      {...wrapperProps}
+                      className="bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-lg hover:-translate-y-1 transition-all group flex flex-col text-left"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-[#123B6D]/5 flex items-center justify-center mb-4 group-hover:bg-[#123B6D]/10 transition-colors">
+                        <svc.icon size={22} className="text-[#123B6D]" />
+                      </div>
+                      <h3 className="font-bold text-[#1E293B] text-sm mb-2 leading-snug">{svc.label}</h3>
+                      <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{svc.desc}</p>
+                      <div className="w-full py-2 rounded-lg bg-[#123B6D] text-white text-xs font-semibold group-hover:bg-[#0d2d54] transition-all flex items-center justify-center gap-1.5 mt-auto">
+                        Apply <ChevronRight size={13} />
+                      </div>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -400,27 +391,35 @@ export default function AdministrativeServicesPage() {
                 <h2 className="text-xl font-bold text-[#D4A017] font-[var(--font-heading)]">Junior College</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {juniorCollegeServices.map((svc, i) => (
-                  <div
-                    key={i}
-                    className="bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-lg hover:-translate-y-1 transition-all group flex flex-col"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-[#D4A017]/5 flex items-center justify-center mb-4 group-hover:bg-[#D4A017]/10 transition-colors">
-                      <svc.icon size={22} className="text-[#D4A017]" />
-                    </div>
-                    <h3 className="font-bold text-[#1E293B] text-sm mb-2 leading-snug">{svc.label}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{svc.desc}</p>
-                    <div className="w-full py-2 rounded-lg bg-[#D4A017] text-white text-xs font-semibold hover:bg-[#b8891a] transition-all flex items-center justify-center gap-1.5 mt-auto">
-                      Apply <ChevronRight size={13} />
-                    </div>
-                  </div>
-                ))}
+                {juniorCollegeServices.map((svc, i) => {
+                  const isRailway = svc.label === 'Railway Concession';
+                  const CardWrapper = isRailway ? 'button' : Link;
+                  const wrapperProps: any = isRailway ? { onClick: () => setShowRailwayModal(true) } : { href: (svc as any).href || '#' };
+                  
+                  return (
+                    <CardWrapper
+                      key={i}
+                      {...wrapperProps}
+                      className="bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-lg hover:-translate-y-1 transition-all group flex flex-col text-left"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-[#D4A017]/5 flex items-center justify-center mb-4 group-hover:bg-[#D4A017]/10 transition-colors">
+                        <svc.icon size={22} className="text-[#D4A017]" />
+                      </div>
+                      <h3 className="font-bold text-[#1E293B] text-sm mb-2 leading-snug">{svc.label}</h3>
+                      <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{svc.desc}</p>
+                      <div className="w-full py-2 rounded-lg bg-[#D4A017] text-white text-xs font-semibold group-hover:bg-[#b8891a] transition-all flex items-center justify-center gap-1.5 mt-auto">
+                        Apply <ChevronRight size={13} />
+                      </div>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </div>
           )}
         </div>
-
       </div>
+      
+      <RailwayConcessionModal isOpen={showRailwayModal} onClose={() => setShowRailwayModal(false)} />
     </div>
   );
 }

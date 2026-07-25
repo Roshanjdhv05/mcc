@@ -18,6 +18,8 @@ const bcomMsFaculty = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
+      festivals="Inspira (Col)"
+      publication="Inspira"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Commerce (B.Com) in Management Studies is an undergraduate program designed to provide students with in-depth knowledge of business management, financial principles, and organizational strategies. The program combines theoretical and practical aspects of commerce, focusing on business operations, management techniques, and decision-making processes.</p>

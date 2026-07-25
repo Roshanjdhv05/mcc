@@ -21,6 +21,8 @@ export default function BFMPageClient() {
 
   return (
     <CourseTemplate
+      festivals="Manthan (Col)"
+      publication="Finanza"
       introductionContent={
         <>
         <p className="mb-4">The Bachelor of Commerce (B.Com) in Financial Markets (BFM) is a specialized undergraduate program designed to provide students with a comprehensive understanding of financial markets, investment strategies, and economic environments. This program aims to equip students with the theoretical and practical knowledge required to excel in the fast-paced world of finance and trading.</p>

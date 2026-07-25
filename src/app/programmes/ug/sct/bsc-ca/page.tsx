@@ -15,6 +15,8 @@ const bscCaFaculty = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
+      festivals="Hack-A-Thon (Col)"
+      publication="Tech Anugraha (Col)"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Science (B.Sc.) in Computer Applications is an undergraduate program that blends computer science principles with practical application development. This course is designed to provide students with a strong foundation in programming, software development, database management, networking, and system analysis.</p>

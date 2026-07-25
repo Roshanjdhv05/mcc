@@ -211,7 +211,6 @@ export default function MigrationCertificatePage() {
                 >
                   {/* Header */}
                   <div className="text-center">
-                    <h1 className="font-bold text-[13px] mb-0.5">PTVA'S MULUND COLLEGE OF COMMERCE (AUTONOMOUS)</h1>
                     <h2 className="font-semibold text-[12px] mb-0.5 uppercase">{formData.collegeType || 'DEGREE COLLEGE / JR COLLEGE'}</h2>
                     <h3 className="font-bold underline text-[12px] mt-1">APPLICATION FOR MIGRATION CERTIFICATE</h3>
                   </div>
@@ -276,9 +275,9 @@ export default function MigrationCertificatePage() {
                     <p>Yours truly,</p>
                     <div className="mt-6">
                       <p>Sign:</p>
-                      <p className="font-bold uppercase">{formData.name || '(NAME OF THE STUDENT/ALUMNI)'}</p>
-                      <p>({formData.phone || 'Phone No. of the Student/Alumni'})</p>
-                      <p>({formData.email || 'Email ID of the Student/Alumni'})</p>
+                      <p className="font-bold uppercase">{formData.name || 'NAME OF THE STUDENT/ALUM'}</p>
+                      <p>{formData.phone || 'Phone No. of the Student/Alum'}</p>
+                      <p>{formData.email || 'Email ID of the Student/Alum'}</p>
                     </div>
                   </div>
 
@@ -298,7 +297,10 @@ export default function MigrationCertificatePage() {
                       <div className="mt-1">Pay the fee and submit the form at Counter No. 7.<br/>Collect the document from Counter No. 8.</div>
                     </div>
 
-                    <p className="font-bold mb-5">Signature of approving authority:</p>
+                    <div className="flex justify-between font-bold mb-5">
+                      <p>Signature of approving authority:</p>
+                      <p>Signature of the office personnel:</p>
+                    </div>
                     <div className="flex items-end gap-2">
                       <span className="font-bold">Received the document: Name:</span>
                       <span className="inline-block border-b border-black" style={{width: '140px'}}></span>
@@ -320,21 +322,21 @@ export default function MigrationCertificatePage() {
         <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-xl p-6 md:p-8 mb-8">
           <h2 className="text-xl font-bold text-[#123B6D] mb-3">About Migration Certificate</h2>
           <p className="text-[#64748B] text-sm mb-4 leading-relaxed">
-            A migration certificate is issued only to the students who have completed UG or PG degree from the college. It is only issued after a student/alumnus secures provisional admission in any another Institute/University, outside the University of Mumbai and such institute demands a migration certificate in writing from the Mulund College of Commerce/University of Mumbai.
+            A migration certificate is issued only to the students who have completed UG or PG degree from the college. It is only issued after an alum who secures admission or provisional admission in any another Institute/University, outside the University of Mumbai.
             <br/><br/>
-            After the College prepares transfer certificate, the Migration Certificate gets issued by the University of Mumbai. Check the website for details <a href="https://mu.migrationcertificate.in/" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">https://mu.migrationcertificate.in/</a>. Migration Certificate is not issued for candidates enrolling in foreign Universities.
+            The alum must apply for a transfer certificate as per the procedure and after having obtained the transfer certificate, they should apply for the migration certificate at the University of Mumbai Portal: <a href="https://mu.migrationcertificate.in/" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">https://mu.migrationcertificate.in/</a>.
             <br/><br/>
-            <span className="font-bold text-[#123B6D]">Charges:</span> INR 100/-
+            For Transfer Certificate - <a href="/forms/transfer-certificate" className="text-purple-600 hover:underline">Click here</a>
+            <br/>
+            <span className="font-bold text-[#123B6D]">Charges for Transfer Certificate:</span> INR 100/-
+            <br/><br/>
+            <span className="font-semibold text-red-600">Note: Migration Certificate is not issued to candidates enrolling in foreign Universities.</span>
           </p>
-          <h3 className="font-bold text-[#123B6D] mb-3">Application Process:</h3>
+          
+          <h3 className="font-bold text-[#123B6D] mb-3">Documents needed:</h3>
           <ol className="list-decimal list-inside text-sm text-[#64748B] space-y-2">
-            <li>Fill in the details on the application form below and download the PDF.</li>
-            <li>Take two printouts. (One for receiving the acknowledgement after submitting the application).</li>
-            <li>Sign the Application Form.</li>
-            <li>Visit the college on a working day. (Between 9 AM to 1 PM OR 2 PM to 3 PM)</li>
-            <li>Take the signature of the Principal/Vice-Principal or the Office In-Charge.</li>
-            <li>Pay the charges/fee in cash at the fee counter.</li>
-            <li>Submit the application at the respective office counter. After a few days, collect your document from the college.</li>
+            <li>Proof of admission (fee payment receipt/ letter from the institute).</li>
+            <li>Photocopy of the marksheets of all the semesters of the last degree completed in this college.</li>
           </ol>
         </div>
 

@@ -25,6 +25,8 @@ export default function BBIPageClient() {
 
   return (
     <CourseTemplate
+      festivals="Manthan (Col) + Shodh (Col)"
+      publication="Pratibimb (Col.)"
       introductionContent={
         <>
         <p className="mb-4">The Bachelor of Commerce (B.Com) in Banking & Insurance (BBI) is a specialized undergraduate program designed to provide students with comprehensive knowledge of the banking, finance, and insurance sectors. This course focuses on key financial concepts, risk management, investment strategies, and regulatory frameworks that govern the banking and insurance industries.</p>

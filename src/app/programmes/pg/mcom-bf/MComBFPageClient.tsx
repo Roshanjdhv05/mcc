@@ -1,23 +1,39 @@
 "use client";
 
-import CourseTemplate from '@/components/layout/CourseTemplate';
+import PGCourseTemplate from '@/components/layout/PGCourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
+
+const coordinators = [
+  {
+    name: 'Dr. Anuradha Ganesh',
+    designation: 'M.Com Banking & Finance Co-ordinator',
+    education: 'M.Com, CA., NET, Ph.D',
+    email: 'anuradha.ganesh@mccmulund.ac.in',
+  },
+];
 
 export default function MComBFPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'B.Com from any recognised University in Maharashtra.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters | SFC (60 seats).' },
     { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Evening: 5:30 p.m. – 8:30 p.m.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats (SFC).' }
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats (SFC).' },
   ];
 
   return (
-    <CourseTemplate
+    <PGCourseTemplate
+      title="M.Com (Banking & Finance)"
+      description="A postgraduate specialisation in banking practices, financial markets, risk management, and international finance for commerce graduates."
+      seats="60"
+      timing="5:30 PM – 8:30 PM"
+      coordinators={coordinators}
+      quickActionsData={quickActions}
+      syllabusContent={<SyllabusRenderer programKey="MCOM_BF" />}
       introductionContent={
         <>
           <p className="mb-4">
-            Mulund College of Commerce (MCC) started <strong>M.Com (Banking & Finance)</strong> as a specialisation in the academic year 2016–17 to enable students to select the course of their choice. It is a Self-Finance Course (SFC) offered as an evening programme.
+            Mulund College of Commerce (MCC) started <strong>M.Com (Banking &amp; Finance)</strong> as a specialisation in the academic year 2016–17 to enable students to select the course of their choice. It is a Self-Finance Course (SFC) offered as an evening programme.
           </p>
           <p className="mb-4">
             The post-graduate centre provides all essential facilities. The library is fully computerised and well-equipped with text books, reference books, journals and books on various competitive examinations. The teaching staff is well-experienced and qualified, helping the college achieve excellent results, consistently topping the university merit list.
@@ -25,7 +41,6 @@ export default function MComBFPageClient() {
           <p className="mb-4">
             Faculties also mentor students about career planning, placement guidance, and competitive examinations. A professional counsellor is appointed to support students regarding academic and personal problems. Being an evening course, it provides opportunities for working students to pursue further education.
           </p>
-
           <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
           <ul className="space-y-3 mb-6">
             <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
@@ -35,13 +50,6 @@ export default function MComBFPageClient() {
           </ul>
         </>
       }
-      title="M.Com (Banking & Finance)"
-      description="A postgraduate specialisation in banking practices, financial markets, risk management, and international finance for commerce graduates."
-      syllabusContent={<SyllabusRenderer programKey="MCOM_BF" />}
-      quickActionsData={quickActions}
-      facultyData={[
-        { srNo: 1, name: 'Dr. Anuradha Ganesh', designation: 'M.Com Banking & Finance Co-ordinator', additionalRole: '—', education: 'M.Com, CA., NET, Ph.D', email: 'anuradha.ganesh@mccmulund.ac.in', teachingExp: '0 yrs' }
-      ]}
     />
   );
 }

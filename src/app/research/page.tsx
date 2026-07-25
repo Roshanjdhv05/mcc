@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import CornerPageLayout from '@/components/layout/CornerPageLayout';
 import type { CategoryItem, DataItem } from '@/components/layout/CornerPageLayout';
 import {
@@ -25,7 +26,7 @@ const data: Record<string, DataItem[]> = {
   ],
   centre: [
     { title: 'Research Centre', icon: Library, links: [
-      { label: 'Research Centre Recognition' },
+      { label: 'Research Centre Recognition', href: '/research/centre' },
       { label: 'Research Guides' },
       { label: 'Research Scholars' },
       { label: 'Awarded Thesis' },
@@ -86,37 +87,6 @@ export default function ResearchPage() {
               Fostering a culture of innovation and inquiry. Explore our research centers, policies, ongoing projects, and major publications.
             </p>
             
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-4 bg-white border border-[#E2E8F0] shadow-sm rounded-2xl p-4 pr-8">
-                <div className="w-12 h-12 rounded-full bg-[#123B6D] flex items-center justify-center flex-shrink-0">
-                  <FileSearch size={22} className="text-white" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#1E293B]">12+</h4>
-                  <p className="text-xs text-gray-500 font-medium">Research<br/>Projects</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4 bg-white border border-[#E2E8F0] shadow-sm rounded-2xl p-4 pr-8">
-                <div className="w-12 h-12 rounded-full bg-[#D4A017] flex items-center justify-center flex-shrink-0">
-                  <FileText size={22} className="text-white" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#1E293B]">25+</h4>
-                  <p className="text-xs text-gray-500 font-medium">Publications</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4 bg-white border border-[#E2E8F0] shadow-sm rounded-2xl p-4 pr-8">
-                <div className="w-12 h-12 rounded-full bg-[#123B6D] flex items-center justify-center flex-shrink-0">
-                  <Library size={22} className="text-white" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#1E293B]">06</h4>
-                  <p className="text-xs text-gray-500 font-medium">Research<br/>Centres</p>
-                </div>
-              </div>
-            </div>
           </div>
           
           {/* Curved Image on the Right */}
@@ -187,7 +157,10 @@ export default function ResearchPage() {
               <div className="flex-1">
                 <h4 className="text-[17px] font-bold text-[#1E293B] mb-3">Research Centre</h4>
                 <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm text-gray-600 font-medium">
-                  <div className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4A017]"></div>Research Centre Recognition</div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1 h-1 rounded-full bg-[#D4A017]"></div>
+                    <Link href="/research/centre" className="hover:text-[#123B6D] transition-colors">Research Centre Recognition</Link>
+                  </div>
                   <div className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4A017]"></div>Research Guides</div>
                   <div className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4A017]"></div>Research Scholars</div>
                   <div className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4A017]"></div>Awarded Thesis</div>

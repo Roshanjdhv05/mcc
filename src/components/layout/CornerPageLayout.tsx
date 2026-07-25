@@ -60,7 +60,7 @@ function CardGrid({ items }: { items: DataItem[] }) {
                       key={lidx}
                       className="text-xs font-semibold text-gray-600 hover:text-[#123B6D] cursor-pointer flex items-center gap-1.5 before:content-['•'] before:text-[#D4A017] before:mr-0.5"
                     >
-                      {link.label}
+                      {link.href ? <Link href={link.href}>{link.label}</Link> : link.label}
                     </li>
                   ))}
                 </ul>

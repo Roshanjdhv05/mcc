@@ -1,22 +1,38 @@
 "use client";
 
-import CourseTemplate from '@/components/layout/CourseTemplate';
+import PGCourseTemplate from '@/components/layout/PGCourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 
 interface Props {
   syllabusContent: React.ReactNode;
 }
 
+const coordinators = [
+  {
+    name: 'Dr. Shivaji Pawar',
+    designation: 'Vice-Principal & Co-ordinator, M.Com (BM)',
+    education: 'M.A., B.Ed., M.Phil., Ph.D., NET',
+    email: 'shivaji.pawar@mccmulund.ac.in',
+  },
+];
+
 export default function MComBMPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'B.Com from any recognised University in Maharashtra.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters | SFC (60 seats).' },
     { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Evening: 5:30 p.m. – 8:30 p.m.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats (SFC).' }
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats (SFC).' },
   ];
 
   return (
-    <CourseTemplate
+    <PGCourseTemplate
+      title="M.Com (Business Management)"
+      description="A postgraduate specialisation in strategic management, entrepreneurship, HRM, and marketing for commerce graduates."
+      seats="60"
+      timing="5:30 PM – 8:30 PM"
+      coordinators={coordinators}
+      quickActionsData={quickActions}
+      syllabusContent={syllabusContent}
       introductionContent={
         <>
           <p className="mb-4">
@@ -28,7 +44,6 @@ export default function MComBMPageClient({ syllabusContent }: Props) {
           <p className="mb-4">
             Faculties also mentor students about career planning, placement guidance, and competitive examinations. A professional counsellor is appointed to support students regarding academic and personal problems. Being an evening course, it provides opportunities for working students to pursue further education.
           </p>
-
           <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
           <ul className="space-y-3 mb-6">
             <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
@@ -38,13 +53,6 @@ export default function MComBMPageClient({ syllabusContent }: Props) {
           </ul>
         </>
       }
-      title="M.Com (Business Management)"
-      description="A postgraduate specialisation in strategic management, entrepreneurship, HRM, and marketing for commerce graduates."
-      syllabusContent={syllabusContent}
-      quickActionsData={quickActions}
-      facultyData={[
-        { srNo: 1, name: 'Dr. Shivaji Pawar', designation: 'Vice-Principal & Co-ordinator', additionalRole: '—', education: 'M.A., B.Ed., M.Phil., Ph.D., NET', email: 'shivaji.pawar@mccmulund.ac.in', teachingExp: '0 yrs' }
-      ]}
     />
   );
 }

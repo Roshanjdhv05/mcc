@@ -23,6 +23,8 @@ export default function BMSPageClient() {
 
   return (
     <CourseTemplate 
+      festivals="Inspira (Col)"
+      publication="Inspira"
       introductionContent={
         <>
           <p className="mb-4">

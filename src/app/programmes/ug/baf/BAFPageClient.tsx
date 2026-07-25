@@ -26,6 +26,8 @@ export default function BAFPageClient() {
 
   return (
     <CourseTemplate 
+      festivals="Manthan (Col)"
+      publication="Pratibimb (Col.)"
       introductionContent={
         <>
           <p className="mb-4">The Bachelor of Commerce (Accounting & Finance) degree program is a three-year undergraduate course divided into six semesters. This course offers in-depth knowledge in accounting & financial subjects by adopting both traditional as well as innovative pedagogy of classroom teaching, seminars, projects practical training, industrial visits, conferences, expert talks, etc.</p>

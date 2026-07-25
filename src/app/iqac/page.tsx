@@ -7,13 +7,14 @@ import { Download, FileText, Calendar, Users, Target, BarChart2, Shield, Star, L
 const iqacNav = [
   { label: 'HOME', active: true, href: '/iqac' },
   { label: 'ABOUT THE IQAC', href: '/iqac#about' },
-  { label: 'QUALITY POLICY', href: '/iqac#quality-policy' },
+  { label: 'QUALITY POLICY', href: '/iqac/quality-policy' },
   { label: 'MEMBERS (YEAR WISE)', href: '/iqac#members' },
-  { label: 'MINUTES OF THE MEETING', href: '/iqac#minutes' },
+  { label: 'MINUTES OF THE MEETING', href: '/iqac/minutes' },
   { label: 'BEST PRACTICES', href: '/iqac#best-practices' },
   { label: 'INSTITUTIONAL DISTINCTIVENESS', href: '/iqac#distinctiveness' },
   { label: 'ANNUAL REPORTS', href: '/iqac#annual-reports' },
   { label: 'AQAR', href: '/iqac#aqar' },
+  { label: 'SSR SUPPORTING DOCUMENTS', href: '/iqac/ssr-supporting-documents' },
   { label: 'ACADEMIC CALENDAR', href: '/iqac#academic-calendar' },
   { label: 'TILAK SMRUTI VYAKHYAN', href: '/iqac#tilak-lecture' },
   { label: 'BAPAT MEMORIAL LECTURE', href: '/iqac#bapat-lecture' },
@@ -46,9 +47,9 @@ const iqacMembers = [
 ];
 
 const quickLinks = [
-  { icon: <Shield className="w-5 h-5" />, label: 'Quality Policy', href: '/iqac#quality-policy' },
+  { icon: <Shield className="w-5 h-5" />, label: 'Quality Policy', href: '/iqac/quality-policy' },
   { icon: <Users className="w-5 h-5" />, label: 'Members (Year Wise)', href: '/iqac#members' },
-  { icon: <FileText className="w-5 h-5" />, label: 'Minutes of the Meeting', href: '/iqac#minutes' },
+  { icon: <FileText className="w-5 h-5" />, label: 'Minutes of the Meeting', href: '/iqac/minutes' },
   { icon: <Star className="w-5 h-5" />, label: 'Best Practices', href: '/iqac#best-practices' },
   { icon: <BarChart2 className="w-5 h-5" />, label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
   { icon: <BookOpen className="w-5 h-5" />, label: 'Annual Reports', href: '/iqac#annual-reports' },
@@ -182,147 +183,112 @@ export default function IQACPage() {
         </p>
       </div>
 
-      {/* ── Main Grid ── */}
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-6 pb-10">
+      {/* ── About IQAC Details ── */}
+      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 py-2 mb-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10">
+          <p className="text-gray-700 leading-relaxed mb-10 text-justify text-[15px]">
+            Internal Quality Assurance Cell (IQAC) is a significant administrative body that is responsible for quality matters. It is the prime responsibility of IQAC to initiate, plan and supervise various necessary activities to increase the quality of the education imparted in a higher education institution. IQAC facilitates the creation of a learner-centric environment conducive for quality education, and it arranges for feedback responses from students, parents and other stakeholders on quality-related institutional processes.
+          </p>
 
-        {/* Left: Quick Links */}
-        <div className="lg:col-span-3 flex flex-col gap-4">
-          <div className="bg-[#123B6D] rounded-t-xl rounded-b-sm p-4 flex items-center gap-3 text-white shadow-md">
-            <Target size={18} className="opacity-90" />
-            <h2 className="font-bold text-sm tracking-wide">QUICK NAVIGATION</h2>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 flex flex-col gap-1">
-            {quickLinks.map((ql, i) => (
-              <Link key={i} href={ql.href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#123B6D]/5 text-[#123B6D] text-xs font-semibold uppercase tracking-wide transition-colors group">
-                <span className="text-[#D4A017] group-hover:text-[#123B6D] transition-colors shrink-0">{ql.icon}</span>
-                {ql.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Middle: Meetings + AQAR */}
-        <div className="lg:col-span-5 flex flex-col gap-4">
-
-          {/* Meetings */}
-          <div id="minutes" className="bg-[#123B6D] rounded-t-xl rounded-b-sm p-4 flex items-center gap-3 text-white shadow-md">
-            <Calendar size={18} className="opacity-90" />
-            <h2 className="font-bold text-sm tracking-wide">MINUTES OF THE MEETING</h2>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-50">
-            {meetings.map((m, i) => (
-              <div key={i} className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#123B6D]/10 flex items-center justify-center shrink-0">
-                    <Calendar size={14} className="text-[#123B6D]" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold text-[#D4A017]">{m.date}</p>
-                    <p className="text-xs text-gray-700 mt-0.5">{m.agenda}</p>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-8 mb-10">
+            {/* Vision */}
+            <div className="bg-blue-50/50 rounded-xl p-6 border border-blue-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#123B6D] flex items-center justify-center text-white shrink-0">
+                  <Target size={20} />
                 </div>
-                {m.minutes && (
-                  <button className="shrink-0 flex items-center gap-1 px-2.5 py-1 bg-[#123B6D] text-white rounded-lg text-[10px] font-bold hover:bg-[#0d2d54] transition-colors">
-                    <Download size={10} /> PDF
-                  </button>
-                )}
+                <h3 className="text-xl font-bold text-[#123B6D]">Vision</h3>
               </div>
-            ))}
-          </div>
-
-          {/* AQAR */}
-          <div id="aqar" className="bg-[#123B6D] rounded-t-xl rounded-b-sm p-4 flex items-center gap-3 text-white shadow-md mt-2">
-            <FileText size={18} className="opacity-90" />
-            <h2 className="font-bold text-sm tracking-wide">ANNUAL QUALITY ASSURANCE REPORTS (AQAR)</h2>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-50">
-            {reports.map((r, i) => (
-              <div key={i} className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
-                    <FileText size={14} className="text-red-500" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-[#123B6D]">{r.title}</p>
-                    <p className="text-[11px] text-gray-500">{r.desc} · {r.size}</p>
-                  </div>
-                </div>
-                <button className="shrink-0 flex items-center gap-1 px-2.5 py-1 bg-[#123B6D] text-white rounded-lg text-[10px] font-bold hover:bg-[#0d2d54] transition-colors">
-                  <Download size={10} /> Download
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: Members + Lecture Series */}
-        <div className="lg:col-span-4 flex flex-col gap-4">
-
-          {/* Members */}
-          <div id="members" className="bg-[#123B6D] rounded-t-xl rounded-b-sm p-4 flex items-center gap-3 text-white shadow-md">
-            <Users size={18} className="opacity-90" />
-            <h2 className="font-bold text-sm tracking-wide">IQAC MEMBERS</h2>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-50">
-            {iqacMembers.map((m, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-                <div className="w-9 h-9 rounded-full bg-[#123B6D] text-white font-bold text-sm flex items-center justify-center shrink-0">
-                  {m.name.charAt(0)}
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-[#123B6D]">{m.name}</p>
-                  <p className="text-[11px] text-gray-500">{m.role}</p>
-                  <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[#123B6D]/10 text-[#123B6D]">{m.category}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Lecture Series */}
-          <div id="tilak-lecture" className="bg-[#123B6D] rounded-t-xl rounded-b-sm p-4 flex items-center gap-3 text-white shadow-md mt-2">
-            <Mic size={18} className="opacity-90" />
-            <h2 className="font-bold text-sm tracking-wide">LECTURE SERIES</h2>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col gap-3">
-            <div className="rounded-lg bg-[#123B6D]/5 border border-[#123B6D]/10 p-3">
-              <p className="text-xs font-black text-[#123B6D] mb-1">Lokmanya Tilak Memorial Lecture Series</p>
-              <p className="text-[11px] text-gray-500 mb-2">Tilak Smruti Vyakhyan — Annual memorial lecture honouring Lokmanya Tilak</p>
-              <div className="flex gap-2">
-                <Link href="/iqac#tilak-lecture" className="text-[10px] font-bold text-[#123B6D] hover:underline">About →</Link>
-                <Link href="/iqac#tilak-lecture" className="text-[10px] font-bold text-[#123B6D] hover:underline">Lectures Organised →</Link>
-              </div>
+              <p className="text-gray-700 italic border-l-4 border-[#D4A017] pl-4 text-sm leading-relaxed">
+                "To build and ensure a quality culture aimed at all round excellence at the institutional level."
+              </p>
             </div>
-            <div id="bapat-lecture" className="rounded-lg bg-[#123B6D]/5 border border-[#123B6D]/10 p-3">
-              <p className="text-xs font-black text-[#123B6D] mb-1">Principal B. G. Bapat Memorial Lecture Series</p>
-              <p className="text-[11px] text-gray-500 mb-2">Annual lecture series in memory of Principal B. G. Bapat</p>
-              <div className="flex gap-2">
-                <Link href="/iqac#bapat-lecture" className="text-[10px] font-bold text-[#123B6D] hover:underline">About →</Link>
-                <Link href="/iqac#bapat-lecture" className="text-[10px] font-bold text-[#123B6D] hover:underline">Lectures Organised →</Link>
+
+            {/* Mission */}
+            <div className="bg-blue-50/50 rounded-xl p-6 border border-blue-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#123B6D] flex items-center justify-center text-white shrink-0">
+                  <Target size={20} />
+                </div>
+                <h3 className="text-xl font-bold text-[#123B6D]">Mission</h3>
+              </div>
+              <div className="space-y-3 text-gray-700 italic border-l-4 border-[#D4A017] pl-4 text-sm leading-relaxed">
+                <p>"To channelize and systematize the efforts and measures of an institution towards academic excellence."</p>
+                <p>"To be the driving force for ushering in quality to remove deficiencies and enhance quality."</p>
               </div>
             </div>
           </div>
 
-          {/* Other Sections */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 grid grid-cols-1 gap-2">
-            {[
-              { id: 'deeksharambh', icon: <GraduationCap className="w-4 h-4" />, label: 'Deeksharambh (Orientation of Learners)', color: 'text-purple-600 bg-purple-50' },
-              { id: 'disability', icon: <Accessibility className="w-4 h-4" />, label: 'Disability Sensitisation', color: 'text-orange-600 bg-orange-50' },
-              { id: 'environment', icon: <Leaf className="w-4 h-4" />, label: 'Environmental Commitments', color: 'text-green-600 bg-green-50' },
-              { id: 'best-practices', icon: <Star className="w-4 h-4" />, label: 'Best Practices', color: 'text-yellow-600 bg-yellow-50' },
-              { id: 'distinctiveness', icon: <BarChart2 className="w-4 h-4" />, label: 'Institutional Distinctiveness', color: 'text-blue-600 bg-blue-50' },
-              { id: 'academic-calendar', icon: <Calendar className="w-4 h-4" />, label: 'Academic Calendar', color: 'text-teal-600 bg-teal-50' },
-            ].map((s, i) => (
-              <Link key={i} href={`/iqac#${s.id}`}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#123B6D]/5 transition-colors group">
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${s.color}`}>{s.icon}</div>
-                <span className="text-xs font-semibold text-[#123B6D] group-hover:text-[#0d2d54]">{s.label}</span>
-              </Link>
-            ))}
-          </div>
+          <div className="grid md:grid-cols-2 gap-10">
+            {/* Goal & Purpose */}
+            <div className="space-y-10">
+              <div>
+                <h3 className="text-lg font-bold text-[#123B6D] mb-5 flex items-center gap-2">
+                  <div className="w-6 h-6 rounded flex items-center justify-center bg-[#D4A017]/20 text-[#D4A017]">
+                    <Target size={14} />
+                  </div> 
+                  Goal
+                </h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                    <span className="text-gray-700 text-sm leading-relaxed">To develop a quality system for conscious, consistent and catalytic programmed action to improve the academic and administrative performance of the Institution.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                    <span className="text-gray-700 text-sm leading-relaxed">To promote measures for institutional functioning towards quality enhancement through internationalization of quality culture and institutionalization of best practices.</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-bold text-[#123B6D] mb-5 flex items-center gap-2">
+                  <div className="w-6 h-6 rounded flex items-center justify-center bg-[#D4A017]/20 text-[#D4A017]">
+                    <Target size={14} />
+                  </div> 
+                  Purpose
+                </h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                    <span className="text-gray-700 text-sm leading-relaxed">Improvement in all operations of the Institution.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                    <span className="text-gray-700 text-sm leading-relaxed">Networking with the stakeholders of the Institution.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
+            {/* Objectives */}
+            <div>
+              <h3 className="text-lg font-bold text-[#123B6D] mb-5 flex items-center gap-2">
+                <div className="w-6 h-6 rounded flex items-center justify-center bg-[#D4A017]/20 text-[#D4A017]">
+                  <Target size={14} />
+                </div> 
+                Objectives
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  "Develop mechanism for improvements in academic and administrative performance.",
+                  "Promote quality culture in all facets of Institution's functioning.",
+                  "To facilitate the integration of the various activities of the institution and institutionalize the best practices.",
+                  "To provide a sound basis for decision making imbibing all the dimensions of service quality to improve institutional functioning.",
+                  "To act as a change agent in the Institution.",
+                  "To coordinate and improve internal communication to facilitate greater policy implementation and quality assurance towards its stakeholders."
+                ].map((obj, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i+1}</span>
+                    <span className="text-gray-700 text-sm leading-relaxed">{obj}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   );
 }

@@ -16,6 +16,8 @@ const bscDsFaculty = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
+      festivals="Hack-A-Thon (Col)"
+      publication="Tech Anugraha (Col)"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Science (B.Sc.) in Data Science is an undergraduate program that focuses on the study of data analysis, machine learning, statistics, and computational techniques to extract meaningful insights from large datasets. This interdisciplinary course combines elements of mathematics, computer science, and business intelligence, preparing students for the growing field of data-driven decision-making.</p>

@@ -25,14 +25,24 @@ interface Course {
 const courses: Course[] = [
   // Junior College
   {
-    code: 'FYJC',
-    name: 'Jr. College (Arts & Commerce)',
-    fullName: 'Junior College — Arts & Commerce',
+    code: '11th',
+    name: '11th Std. (Arts & Commerce)',
+    fullName: '11th Standard — Arts & Commerce',
     level: 'Junior College',
-    duration: '2 Years', seats: 480,
-    tags: ['Arts', 'Commerce', 'Class 11–12'],
+    duration: '1 Year', seats: 480,
+    tags: ['Arts', 'Commerce', 'Class 11'],
     href: '/programmes/jr-college',
     accent: 'bg-cyan-50', iconAccent: 'text-cyan-700',
+  },
+  {
+    code: '12th',
+    name: '12th Std. (Arts & Commerce)',
+    fullName: '12th Standard — Arts & Commerce',
+    level: 'Junior College',
+    duration: '1 Year', seats: 480,
+    tags: ['Arts', 'Commerce', 'Class 12'],
+    href: '/programmes/jr-college',
+    accent: 'bg-blue-50', iconAccent: 'text-[#123B6D]',
   },
 
   // Under Graduate
@@ -183,7 +193,7 @@ export default function CourseWelcomeModal({ onSelect, forceOpen }: { onSelect?:
       if (onSelect) {
         onSelect(courseData);
       } else {
-        router.push('/dashboard');
+        router.push(`/dashboard?course=${picked.code}`);
       }
     }
   };

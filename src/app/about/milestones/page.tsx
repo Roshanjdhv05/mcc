@@ -26,7 +26,7 @@ const milestones = [
   { year: '2022', title: 'New Science & Finance Programs', desc: 'B.Sc. (Data Science) and M.Sc. (Finance) programs were introduced. Several credits based short term courses were introduced to increase the employability of learners.' },
   { year: '2023', title: 'NEP 2020 Implementation', desc: 'Bachelors of Computer Science (BCA) and Bachelors of Business Administration (BBA) programs were introduced. National Education Policy (NEP) 2020 implemented across all the programs.' },
   { year: '2024', title: 'BFSI Program', desc: 'B.com Banking Financial Services and Insurance (BFSI) Program was introduced.' },
-];
+].reverse();
 
 export default function MilestonesPage() {
   return (

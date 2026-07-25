@@ -17,6 +17,8 @@ export default function BottomNav() {
   const pathname = usePathname();
   const [hasUnread, setHasUnread] = useState(true);
 
+  if (pathname?.startsWith('/superadmin')) return null;
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/80 backdrop-blur-xl border-t border-white/30 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] rounded-t-2xl">
       <div className="flex items-center justify-around px-2 pt-2 pb-3">

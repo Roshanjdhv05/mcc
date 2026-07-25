@@ -15,10 +15,8 @@ const timetables = [
 ];
 
 const services = [
-  { icon: RotateCcw, title: 'ATKT Form', desc: 'Apply for Allowed to Keep Terms examination. Fill form before the deadline.', action: 'Apply Now', color: 'text-amber-600 bg-amber-50' },
   { icon: FileText, title: 'Revaluation', desc: 'Request revaluation of your answer book within 30 days of result declaration.', action: 'Apply Now', color: 'text-blue-600 bg-blue-50' },
   { icon: Copy, title: 'Photocopy Request', desc: 'Request a photocopy of your evaluated answer book for review.', action: 'Apply Now', color: 'text-purple-600 bg-purple-50' },
-  { icon: AlertCircle, title: 'Result Verification', desc: 'Verify your mark sheet and result from the official university records.', action: 'Verify Now', color: 'text-teal-600 bg-teal-50' },
 ];
 
 export default function ExaminationPage() {
@@ -200,17 +198,6 @@ export default function ExaminationPage() {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="bg-[#123B6D] rounded-3xl p-8 text-white text-center">
-          <h2 className="text-2xl font-bold font-[var(--font-heading)] mb-2">Check Your Results</h2>
-          <p className="text-white/70 mb-6">Enter your exam seat number to view results directly from University of Mumbai</p>
-          <div className="flex max-w-md mx-auto gap-3">
-            <input placeholder="Enter Seat Number" className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 outline-none focus:border-[#D4A017] transition-colors" />
-            <button className="px-6 py-3 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all">
-              Search
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

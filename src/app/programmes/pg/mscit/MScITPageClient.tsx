@@ -1,22 +1,38 @@
 "use client";
 
-import CourseTemplate from '@/components/layout/CourseTemplate';
+import PGCourseTemplate from '@/components/layout/PGCourseTemplate';
 import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 
 interface Props {
   syllabusContent: React.ReactNode;
 }
 
+const coordinators = [
+  {
+    name: 'Programme Co-ordinator',
+    designation: 'M.Sc. (Information Technology) Co-ordinator',
+    education: 'Contact College Administration',
+    email: '',
+  },
+];
+
 export default function MScITPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'B.Sc. IT / CS / BCA / B.E. IT / CS / Electronics & allied branches.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters | 60 Seats.' },
     { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '8:00 a.m. – 12:30 p.m. (incl. Sundays & Holidays).' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats.' }
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats.' },
   ];
 
   return (
-    <CourseTemplate
+    <PGCourseTemplate
+      title="M.Sc. (Information Technology)"
+      description="A two-year postgraduate programme developing advanced technical competence in AI, ML, Cloud Computing, Data Science, and emerging IT technologies."
+      seats="60"
+      timing="8:00 AM – 12:30 PM"
+      coordinators={coordinators}
+      quickActionsData={quickActions}
+      syllabusContent={syllabusContent}
       introductionContent={
         <>
           <p className="mb-4">
@@ -28,7 +44,6 @@ export default function MScITPageClient({ syllabusContent }: Props) {
           <p className="mb-4">
             The program aims to provide technology-oriented students with the knowledge and ability to develop creative solutions, as well as a better understanding of the effects of future computer system and technology developments on people and society.
           </p>
-
           <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
           <ul className="space-y-3 mb-6">
             <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
@@ -44,16 +59,11 @@ export default function MScITPageClient({ syllabusContent }: Props) {
               <span className="leading-snug">BCA from a recognised university.</span>
             </li>
           </ul>
-
           <div className="bg-[#FFF8E7] border border-[#D4A017]/30 rounded-xl p-4 text-sm text-gray-700">
             <strong className="text-[#D4A017]">Note:</strong> Practical timings may vary from time to time. Classes are held including Sundays and Holidays.
           </div>
         </>
       }
-      title="M.Sc. (Information Technology)"
-      description="A two-year postgraduate programme developing advanced technical competence in AI, ML, Cloud Computing, Data Science, and emerging IT technologies."
-      syllabusContent={syllabusContent}
-      quickActionsData={quickActions}
     />
   );
 }

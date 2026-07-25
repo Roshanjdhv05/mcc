@@ -8,7 +8,7 @@ import LibraryNav from '@/components/library/LibraryNav';
 const sidebarLinks = [
   { id: 'useful', label: 'Useful Links' },
   { id: 'marathi', label: 'Marathi Important Links' },
-  { id: 'international', label: 'National / International Links' },
+  { id: 'international', label: 'International Links' },
   { id: 'national', label: 'National Important Links' },
 ];
 
@@ -371,13 +371,7 @@ export default function ImportantLinksPage() {
         </div>
       </div>
 
-      {/* Library Footer */}
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 mt-12">
-        <div className="bg-[#014d4e] w-full rounded-xl py-4 px-6 flex items-center gap-4 text-white/90 text-sm shadow-md">
-          <University size={20} className="shrink-0" />
-          {/* Copyright removed */}
-        </div>
-      </div>
+
     </div>
   );
 }

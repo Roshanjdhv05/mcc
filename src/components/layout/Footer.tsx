@@ -1,7 +1,12 @@
+'use client';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Globe, Share2, Rss, MessageSquare } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith('/superadmin')) return null;
+
   return (
     <footer className="bg-[#123B6D] text-white">
       <div className="max-w-7xl mx-auto px-4 md:px-12 pt-16 pb-8">

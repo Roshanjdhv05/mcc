@@ -19,6 +19,8 @@ const bscCsFaculty = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
+      festivals="Hack-A-Thon (Col)"
+      publication="Tech Anugraha (Col)"
       introductionContent={
         <>
         <p className="mb-4">The Bachelor of Science (B.Sc.) in Computer Science is a three-year undergraduate program that focuses on the theoretical and practical aspects of computing, programming, and information technology. This course provides students with a strong foundation in computer programming, algorithms, data structures, software development, databases, networking, and artificial intelligence.</p>

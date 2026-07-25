@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight } from 'lucide-react';
+import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight, FileText, Image as ImageIcon, Paperclip } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const formatCourseLabel = (label: string) => {
   if (typeof label !== 'string') return label;
@@ -56,7 +57,7 @@ const navLinks = [
       {
         title: 'Certificates',
         sections: [
-          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }, { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' }] }
+          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }, { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' }] }
         ]
       },
       {
@@ -81,7 +82,7 @@ const navLinks = [
     sub: [
       { label: '2 B – Certificate', href: '/accreditation/2b-certificate' },
       { label: '12 F – Certificate', href: '/accreditation/12f-certificate' },
-      { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
+      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
       { 
         label: 'NAAC', href: '#', sub: [
           { label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }
@@ -100,7 +101,7 @@ const navLinks = [
     ]
   },
   {
-    label: 'Autonomy', href: '/accreditation/autonomous', icon: <Medal size={18} />,
+    label: 'Autonomy', href: '/autonomous', icon: <Medal size={18} />,
     isMegaMenu: true,
     megaMenuImage: '/objectives_side_img.png',
     megaMenuColumns: [
@@ -109,7 +110,7 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
+              { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
             ]
           }
         ]
@@ -121,58 +122,58 @@ const navLinks = [
           {
             subTitle: 'Board of Studies',
             links: [
-              { label: 'Members', href: '/accreditation/autonomous/bos/members' },
-              { label: 'Minutes', href: '/accreditation/autonomous/bos/minutes' }
+              { label: 'Members', href: '/autonomous/bos/members' },
+              { label: 'Minutes', href: '/autonomous/bos/minutes' }
             ]
           },
           {
             subTitle: 'Academic Council',
             links: [
-              { label: 'Members', href: '/accreditation/autonomous/academic-council/members' },
-              { label: 'Minutes', href: '/accreditation/autonomous/academic-council/minutes' }
+              { label: 'Members', href: '/autonomous/academic-council/members' },
+              { label: 'Minutes', href: '/autonomous/academic-council/minutes' }
             ]
           },
           {
             subTitle: 'Finance Committee',
             links: [
-              { label: 'Members', href: '/accreditation/autonomous/finance-committee/members' },
-              { label: 'Minutes', href: '/accreditation/autonomous/finance-committee/minutes' }
+              { label: 'Members', href: '/autonomous/finance-committee/members' },
+              { label: 'Minutes', href: '/autonomous/finance-committee/minutes' }
             ]
           },
           {
             subTitle: 'Governing Body',
             links: [
-              { label: 'Members', href: '/accreditation/autonomous/governing-body/members' },
-              { label: 'Minutes', href: '/accreditation/autonomous/governing-body/minutes' }
+              { label: 'Members', href: '/autonomous/governing-body/members' },
+              { label: 'Minutes', href: '/autonomous/governing-body/minutes' }
             ]
           }
         ]
       }
     ],
     sub: [
-      { label: 'Grant of Autonomy (Certificate)', href: '/accreditation/autonomous/grant' },
+      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
       { 
         label: 'Board of Studies', href: '#', sub: [
-          { label: 'Members', href: '/accreditation/autonomous/bos/members' },
-          { label: 'Minutes', href: '/accreditation/autonomous/bos/minutes' }
+          { label: 'Members', href: '/autonomous/bos/members' },
+          { label: 'Minutes', href: '/autonomous/bos/minutes' }
         ]
       },
       { 
         label: 'Academic Council', href: '#', sub: [
-          { label: 'Members', href: '/accreditation/autonomous/academic-council/members' },
-          { label: 'Minutes', href: '/accreditation/autonomous/academic-council/minutes' }
+          { label: 'Members', href: '/autonomous/academic-council/members' },
+          { label: 'Minutes', href: '/autonomous/academic-council/minutes' }
         ]
       },
       { 
         label: 'Finance Committee', href: '#', sub: [
-          { label: 'Members', href: '/accreditation/autonomous/finance-committee/members' },
-          { label: 'Minutes', href: '/accreditation/autonomous/finance-committee/minutes' }
+          { label: 'Members', href: '/autonomous/finance-committee/members' },
+          { label: 'Minutes', href: '/autonomous/finance-committee/minutes' }
         ]
       },
       { 
         label: 'Governing Body', href: '#', sub: [
-          { label: 'Members', href: '/accreditation/autonomous/governing-body/members' },
-          { label: 'Minutes', href: '/accreditation/autonomous/governing-body/minutes' }
+          { label: 'Members', href: '/autonomous/governing-body/members' },
+          { label: 'Minutes', href: '/autonomous/governing-body/minutes' }
         ]
       }
     ]
@@ -188,10 +189,9 @@ const navLinks = [
           {
             links: [
               { label: 'About the IQAC', href: '/iqac#about' },
-              { label: 'Quality Policy', href: '/iqac#quality-policy' },
-              { label: 'Institutional policies', href: '/iqac#institutional-policies' },
+              { label: 'Quality Policy', href: '/iqac/quality-policy' },
               { label: 'IQAC composition -Committee Members', href: '/iqac#members' },
-              { label: 'Minutes of the Meeting', href: '/iqac#minutes' },
+              { label: 'Minutes of the Meeting', href: '/iqac/minutes' },
               { label: 'Best Practices', href: '/iqac#best-practices' },
               { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
               { label: 'Annual Reports', href: '/iqac#annual-reports' },
@@ -205,6 +205,7 @@ const navLinks = [
           {
             links: [
               { label: 'AQAR', href: '/iqac#aqar' },
+              { label: 'SSR Supporting Documents', href: '/iqac/ssr-supporting-documents' },
               { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
               { label: 'Perspective plan', href: '/iqac#perspective-plan' },
               { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
@@ -219,14 +220,14 @@ const navLinks = [
     ],
     sub: [
       { label: 'About the IQAC', href: '/iqac#about' },
-      { label: 'Quality Policy', href: '/iqac#quality-policy' },
-      { label: 'Institutional policies', href: '/iqac#institutional-policies' },
+      { label: 'Quality Policy', href: '/iqac/quality-policy' },
       { label: 'IQAC composition -Committee Members', href: '/iqac#members' },
-      { label: 'Minutes of the Meeting', href: '/iqac#minutes' },
+      { label: 'Minutes of the Meeting', href: '/iqac/minutes' },
       { label: 'Best Practices', href: '/iqac#best-practices' },
       { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
       { label: 'Annual Reports', href: '/iqac#annual-reports' },
       { label: 'AQAR', href: '/iqac#aqar' },
+      { label: 'SSR Supporting Documents', href: '/iqac/ssr-supporting-documents' },
       { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
       { label: 'Perspective plan', href: '/iqac#perspective-plan' },
       { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
@@ -253,121 +254,74 @@ const navLinks = [
   {
     label: 'Programmes', href: '/academics', icon: <GraduationCap size={18} />, 
     isMegaMenu: true,
+    megaMenuType: 'programmes',
     megaMenuColumns: [
       {
-        title: 'AIDED',
-        sections: [
-          {
-            subTitle: 'Undergraduate',
-            links: [
-              { label: 'Bachelor of Commerce', href: '/programmes/ug/bcom', isBoldBlack: true }
-            ]
-          },
-          {
-            subTitle: 'Postgraduate',
-            links: [
-              { label: 'Master of Commerce (Advanced Accountancy)', href: '/programmes/pg/mcom-aa', isBoldBlack: true }
-            ]
-          }
-        ]
-      },
-      {
-        title: 'Self-Financing (Commerce & Management)',
+        title: 'Undergraduate',
         colSpan: 2,
-        sections: [
-          {
-            subTitle: 'Undergraduate (Commerce)',
-            links: [
-              { label: 'Bachelor of Commerce (Accounting & Finance)', href: '/programmes/ug/baf', isBoldBlack: true },
-              { label: 'Bachelor of Commerce (Banking & Insurance)', href: '/programmes/ug/bbi', isBoldBlack: true },
-              { label: 'Bachelor of Commerce (Financial Markets)', href: '/programmes/ug/bfm', isBoldBlack: true }
-            ]
-          },
-          {
-            subTitle: 'Undergraduate (Business & Management)',
-            links: [
-              { label: 'Bachelor of Commerce (Management Studies)', href: '/programmes/ug/bcom-ms', isBoldBlack: true },
-              { label: 'Bachelor of Commerce (Business Administration)', href: '/programmes/ug/bcom-ba', isBoldBlack: true }
-            ]
-          },
-          {
-            subTitle: 'Apprentice Embedded (Skill Based)',
-            links: [
-              { label: 'Bachelor of Commerce (Banking, Financial Services and Insurance)', href: '/programmes/ug/bfsi', isBoldBlack: true }
-            ]
-          },
-          {
-            subTitle: 'Postgraduate (Commerce)',
-            links: [
-              { label: 'Master of Commerce (Business Management)', href: '/programmes/pg/mcom-bm', isBoldBlack: true },
-              { label: 'Master of Commerce (Banking & Finance)', href: '/programmes/pg/mcom-bf', isBoldBlack: true }
-            ]
-          },
-          {
-            subTitle: 'Ph.D.',
-            links: [
-              { label: 'Commerce (Specialisation in Business Economics)', href: '/programmes/phd/be' }
-            ]
-          }
+        items: [
+          { label: 'B.COM', href: '/programmes/ug/bcom', isBoldBlack: true },
+          { label: 'B.COM (Accounting & Finance)', href: '/programmes/ug/baf' },
+          { label: 'B.COM (Banking & Insurance)', href: '/programmes/ug/bbi' },
+          { label: 'B.COM (Financial Markets)', href: '/programmes/ug/bfm' },
+          { label: 'B.COM (Management Studies)', href: '/programmes/ug/bcom-ms' },
+          { label: 'B.COM (Business Administration)', href: '/programmes/ug/bcom-ba' },
+          { label: 'BNMMC (Mass Media & Communication)', href: '/programmes/ug/bammc' },
+          { label: 'B.SC. (Computer Science)', href: '/programmes/ug/sct/bsc-cs', isBoldBlack: true },
+          { label: 'B.SC. (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
+          { label: 'B.SC. (Computer Applications)', href: '/programmes/ug/sct/bsc-ca' },
+          { label: 'B.SC. (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
+          { label: 'B.COM BFSI (Apprenticeship)', href: '/programmes/ug/bfsi', isBoldBlack: true },
         ]
       },
       {
-        title: 'Self-Financing (Science & Arts)',
-        sections: [
-          {
-            subTitle: 'Undergraduate (Science)',
-            links: [
-              { label: 'Bachelor of Science (Computer Science)', href: '/programmes/ug/sct/bsc-cs' },
-              { label: 'Bachelor of Science (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
-              { label: 'Bachelor of Science (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
-              { label: 'Bachelor of Science (Computer Application)', href: '/programmes/ug/sct/bsc-ca' }
-            ]
-          },
-          {
-            subTitle: 'Undergraduate (Arts)',
-            links: [
-              { label: 'Bachelor of Arts (Mass Media & Communication)', href: '/programmes/ug/bammc' }
-            ]
-          },
-          {
-            subTitle: 'Postgraduate',
-            links: [
-              { label: 'Master of Science (Information Technology)', href: '/programmes/pg/msc-it' },
-              { label: 'Master of Science (Finance)', href: '/programmes/pg/msf' }
-            ]
-          }
+        title: 'Post Graduate',
+        colSpan: 1,
+        items: [
+          { label: 'M.COM. (Advanced Accountancy)', href: '/programmes/pg/mcom-aa', isBoldBlack: true },
+          { label: 'M.COM. (Business Management)', href: '/programmes/pg/mcom-bm', isBoldBlack: true },
+          { label: 'M.COM. (Banking & Finance)', href: '/programmes/pg/mcom-bf', isBoldBlack: true },
+          { label: 'M.SC. (Information Technology)', href: '/programmes/pg/msc-it' },
+          { label: 'M.SC. (Finance)', href: '/programmes/pg/msf' },
         ]
-      }
+      },
+      {
+        title: 'Ph.D. Programmes',
+        colSpan: 1,
+        items: [
+          { label: 'Commerce (Specialisation in Business Economics)', href: '/programmes/phd/be' }
+        ]
+      },
     ],
     sub: [
       {
-        label: 'Under Graduate', href: '/programmes/undergraduate', sub: [
-          { label: 'Bachelor of Commerce', href: '/programmes/ug/bcom', isBoldBlack: true },
-          { label: 'B.Com (Accounting & Finance)', href: '/programmes/ug/baf', isBoldBlack: true },
-          { label: 'B.Com (Banking & Insurance)', href: '/programmes/ug/bbi', isBoldBlack: true },
-          { label: 'B.Com (Financial Markets)', href: '/programmes/ug/bfm', isBoldBlack: true },
-          { label: 'B.Com (Management Studies)', href: '/programmes/ug/bcom-ms', isBoldBlack: true },
-          { label: 'B.Com (Business Administration)', href: '/programmes/ug/bcom-ba', isBoldBlack: true },
-          { label: 'B.Sc (Computer Science)', href: '/programmes/ug/sct/bsc-cs' },
-          { label: 'B.Sc (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
-          { label: 'B.Sc (Computer Application)', href: '/programmes/ug/sct/bsc-ca' },
-          { label: 'B.Sc (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
-          { label: 'B.Com (BFSI)', href: '/programmes/ug/bfsi', isBoldBlack: true },
-          { label: 'B.A. (Mass Media & Communication)', href: '/programmes/ug/bammc' },
+        label: 'Undergraduate', href: '/programmes/undergraduate', sub: [
+          { label: 'B.COM', href: '/programmes/ug/bcom', isBoldBlack: true },
+          { label: 'B.COM (Accounting & Finance)', href: '/programmes/ug/baf' },
+          { label: 'B.COM (Banking & Insurance)', href: '/programmes/ug/bbi' },
+          { label: 'B.COM (Financial Markets)', href: '/programmes/ug/bfm' },
+          { label: 'B.COM (Management Studies)', href: '/programmes/ug/bcom-ms' },
+          { label: 'B.COM (Business Administration)', href: '/programmes/ug/bcom-ba' },
+          { label: 'BNMMC (Mass Media & Communication)', href: '/programmes/ug/bammc' },
+          { label: 'B.SC. (Computer Science)', href: '/programmes/ug/sct/bsc-cs', isBoldBlack: true },
+          { label: 'B.SC. (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
+          { label: 'B.SC. (Computer Applications)', href: '/programmes/ug/sct/bsc-ca' },
+          { label: 'B.SC. (Data Science)', href: '/programmes/ug/sct/bsc-ds' },
+          { label: 'B.COM BFSI', href: '/programmes/ug/bfsi', isBoldBlack: true },
         ]
       },
       {
         label: 'Post Graduate', href: '/programmes/post-graduate', sub: [
-          { label: 'M.Com (Advanced Accountancy)', href: '/programmes/pg/mcom-aa', isBoldBlack: true },
-          { label: 'M.Com (Banking & Finance)', href: '/programmes/pg/mcom-bm', isBoldBlack: true },
-          { label: 'M.Com (Business Management)', href: '/programmes/pg/mcom-bf', isBoldBlack: true },
-          { label: 'M.Sc (Information Technology)', href: '/programmes/pg/msc-it' },
-          { label: 'M.Sc (Finance)', href: '/programmes/pg/msf' },
+          { label: 'M.COM. (Advanced Accountancy)', href: '/programmes/pg/mcom-aa', isBoldBlack: true },
+          { label: 'M.COM. (Business Management)', href: '/programmes/pg/mcom-bm', isBoldBlack: true },
+          { label: 'M.COM. (Banking & Finance)', href: '/programmes/pg/mcom-bf', isBoldBlack: true },
+          { label: 'M.SC. (Information Technology)', href: '/programmes/pg/msc-it' },
+          { label: 'M.SC. (Finance)', href: '/programmes/pg/msf' },
         ]
       },
       {
-        label: 'PHD Programmes', href: '/programmes/phd', sub: [
-          { label: 'PhD (BE)', href: '/programmes/phd/be' }
+        label: 'Ph.D. Programmes', href: '/programmes/phd', sub: [
+          { label: 'Commerce (Specialisation in Business Economics)', href: '/programmes/phd/be' }
         ]
       },
     ]
@@ -532,12 +486,13 @@ const navLinks = [
               { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
               { label: 'Sports and Gymkhana', href: '/students-corner/sports' },
               { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/natyakarmi' },
-              { label: 'Marathi Vagmany Mandal', href: '/students-corner/marathi-mandal' },
-              { label: 'Aaroh', href: '/students-corner/aaroh' },
+              { label: 'Marathi Vangmay Mandal', href: '/students-corner/marathi-mandal' },
+              { label: 'Aaroh (Music Club)', href: '/students-corner/aaroh' },
+              { label: 'Music Club', href: '/students-corner/music-club' },
               { label: 'Nature Club', href: '/students-corner/nature-club' },
               { label: 'Women Development Cell', href: '/students-corner/wdc' },
               { label: 'Entrepreneurship Development Cell', href: '/students-corner/edc' },
-              { label: 'Students\u2019 Research', href: '/research' },
+              { label: 'Students\' Research', href: '/research' },
             ]
           }
         ]
@@ -549,13 +504,10 @@ const navLinks = [
             links: [
               { label: 'Spectrum', href: '/students-corner/cultural-forum' },
               { label: 'Inspira', href: '/programmes/ug/bms' },
-              { label: 'Technobeat', href: '#' },
-              { label: 'Math\u2019s Wonder', href: '/programmes/ug/bsc-cs' },
+              { label: 'Hack-A-Thon', href: '#' },
               { label: 'Emporio', href: '/programmes/ug/bcom' },
               { label: 'Quantomania', href: '#' },
-              { label: 'Rasikotsav', href: '#' },
-              { label: 'My Marathi, Mai Marathi', href: '#' },
-              { label: 'Annual Day', href: '#' },
+              { label: 'Manthan', href: '#' },
             ]
           }
         ]
@@ -567,8 +519,7 @@ const navLinks = [
             links: [
               { label: 'Pratibimb', href: '/programmes/ug/baf' },
               { label: 'Finanza', href: '/programmes/ug/bfm' },
-              { label: 'Muse', href: '/programmes/ug/bammc' },
-              { label: 'Commercium', href: '/programmes/ug/bcom' },
+              { label: 'Techanugraha', href: '#' },
             ]
           }
         ]
@@ -582,33 +533,30 @@ const navLinks = [
           { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
           { label: 'Sports and Gymkhana', href: '/students-corner/sports' },
           { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/natyakarmi' },
-          { label: 'Marathi Vagmany Mandal', href: '/students-corner/marathi-mandal' },
-          { label: 'Aaroh', href: '/students-corner/aaroh' },
+          { label: 'Marathi Vangmay Mandal', href: '/students-corner/marathi-mandal' },
+          { label: 'Aaroh (Music Club)', href: '/students-corner/aaroh' },
+          { label: 'Music Club', href: '/students-corner/music-club' },
           { label: 'Nature Club', href: '/students-corner/nature-club' },
           { label: 'Women Development Cell', href: '/students-corner/wdc' },
           { label: 'Entrepreneurship Development Cell', href: '/students-corner/edc' },
-          { label: 'Students\u2019 Research', href: '/research' },
+          { label: 'Students\' Research', href: '/research' },
         ]
       },
       {
         label: 'Events & Festivals', href: '#', sub: [
           { label: 'Spectrum', href: '/students-corner/cultural-forum' },
           { label: 'Inspira', href: '/programmes/ug/bms' },
-          { label: 'Technobeat', href: '#' },
-          { label: 'Math\u2019s Wonder', href: '/programmes/ug/bsc-cs' },
+          { label: 'Hack-A-Thon', href: '#' },
           { label: 'Emporio', href: '/programmes/ug/bcom' },
           { label: 'Quantomania', href: '#' },
-          { label: 'Rasikotsav', href: '#' },
-          { label: 'My Marathi, Mai Marathi', href: '#' },
-          { label: 'Annual Day', href: '#' },
+          { label: 'Manthan', href: '#' },
         ]
       },
       {
         label: "Student's Publications", href: '#', sub: [
           { label: 'Pratibimb', href: '/programmes/ug/baf' },
           { label: 'Finanza', href: '/programmes/ug/bfm' },
-          { label: 'Muse', href: '/programmes/ug/bammc' },
-          { label: 'Commercium', href: '/programmes/ug/bcom' },
+          { label: 'Techanugraha', href: '#' },
         ]
       }
     ]
@@ -740,7 +688,56 @@ export default function Navbar() {
   const [nestedMobileDrop, setNestedMobileDrop] = useState<string | null>(null);
   const [nestedMobileDrop3, setNestedMobileDrop3] = useState<string | null>(null);
   const [noticesOpen, setNoticesOpen] = useState(false);
-  const [hasUnread, setHasUnread] = useState(true);
+  const [hasUnread, setHasUnread] = useState(false);
+  const [liveNotices, setLiveNotices] = useState<{ id: string; title: string; schedule_time: string; courses?: string[]; categories?: string[]; attachments?: { name: string; url: string; type: string }[] }[]>([]);
+  const [fetchingNotices, setFetchingNotices] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
+  const [topNoticeId, setTopNoticeId] = useState<string | null>(null);
+
+  const fetchLiveNotices = async () => {
+    setFetchingNotices(true);
+    const now = new Date().toISOString();
+    const { data } = await supabase
+      .from('notices')
+      .select('id, title, schedule_time, courses, categories, is_general, attachments')
+      .eq('is_general', true)
+      .lte('schedule_time', now)
+      .or(`expiry_time.is.null,expiry_time.gt.${now}`)
+      .order('schedule_time', { ascending: false })
+      .limit(10);
+    
+    if (data && data.length > 0) {
+      setLiveNotices(data);
+      const latestId = data[0].id;
+      
+      const lastReadId = localStorage.getItem('lastReadNoticeId');
+      
+      setTopNoticeId((prev) => {
+        // If it's a new notice that just arrived while page is open
+        if (prev !== null && prev !== latestId) {
+          setHasUnread(true);
+          setIsShaking(true);
+          setNoticesOpen(true);
+          setTimeout(() => setIsShaking(false), 5000);
+        } else if (lastReadId !== latestId) {
+          // If the last read notice is different from the current latest notice
+          setHasUnread(true);
+        }
+        return latestId;
+      });
+    } else {
+      setHasUnread(false);
+    }
+    setFetchingNotices(false);
+  };
+
+  const handleOpenNotices = () => {
+    setNoticesOpen(true);
+    setHasUnread(false);
+    if (topNoticeId) {
+      localStorage.setItem('lastReadNoticeId', topNoticeId);
+    }
+  };
 
   const [menuDirection, setMenuDirection] = useState<Record<string, 'left' | 'right'>>({});
 
@@ -752,6 +749,30 @@ export default function Navbar() {
       setMenuDirection(prev => ({ ...prev, [id]: 'right' }));
     }
   };
+
+  useEffect(() => {
+    // 1. Fetch initial notices immediately on page load
+    fetchLiveNotices();
+
+    // 2. Subscribe to real-time changes
+    const channel = supabase
+      .channel('public:notices:navbar')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notices' },
+        (payload) => {
+          console.log('Realtime event received! New notice:', payload);
+          fetchLiveNotices(); // This handles the pop-open logic now
+        }
+      )
+      .subscribe((status) => {
+        console.log('Supabase Realtime Status:', status);
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []); // Only runs once on mount
 
   useEffect(() => {
     const onScroll = () => {
@@ -789,6 +810,8 @@ export default function Navbar() {
     return false;
   };
 
+  if (pathname?.startsWith('/superadmin')) return null;
+
   return (
     <>
       <motion.header
@@ -813,7 +836,7 @@ export default function Navbar() {
 
           {/* Row 1 Content Area */}
           <div className="w-full relative h-auto min-h-[80px] md:min-h-[90px] lg:min-h-[110px] pt-1 pb-0 bg-transparent">
-            <div className="w-full max-w-[1600px] mx-auto h-full flex items-center justify-between px-3 md:px-4 lg:px-12 relative z-20">
+            <div className="w-full max-w-[1600px] mx-auto h-full flex items-center justify-between px-3 md:px-4 lg:px-12 relative z-[150]">
             
             {/* Logo + College Name */}
             <div className="flex items-center gap-2 md:gap-3 lg:gap-5 shrink min-w-0 bg-transparent pr-2 md:pr-4 lg:pr-6">
@@ -887,7 +910,7 @@ export default function Navbar() {
               <div className="hidden xl:flex flex-col items-end gap-0 w-max">
                 <span className="text-[11px] xl:text-[12px] font-semibold text-[#1E293B]">Quick Links</span>
                 <div className="flex items-center gap-1.5 xl:gap-2 flex-wrap justify-end">
-                  <Link href="/notice" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
+                  <Link href="/notices" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
                     Notice
                   </Link>
                   <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
@@ -937,60 +960,112 @@ export default function Navbar() {
                   <button
                     className={`w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center hover:bg-slate-50 hover:scale-105 transition-all relative ${hasUnread ? '' : 'text-[#123B6D]'}`}
                     onClick={() => {
-                      setNoticesOpen(!noticesOpen);
-                      if (hasUnread) setHasUnread(false);
+                      const opening = !noticesOpen;
+                      setNoticesOpen(opening);
+                      if (opening) fetchLiveNotices();
                     }}
                   >
                     <motion.div
-                      animate={hasUnread ? {
-                        rotate: [0, -20, 20, -20, 20, 0],
-                        color: ['#ef4444', '#eab308', '#ef4444'],
-                      } : { color: 'currentColor' }}
-                      transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+                      animate={(hasUnread || isShaking) ? {
+                        rotate: [0, -30, 30, -20, 20, -10, 10, 0],
+                        scale: [1, 1.2, 1.2, 1],
+                        color: ['#ef4444', '#ef4444', '#123B6D'],
+                      } : { color: 'currentColor', rotate: 0, scale: 1 }}
+                      transition={{ 
+                        repeat: (hasUnread || isShaking) ? Infinity : 0, 
+                        repeatDelay: 1.5,
+                        duration: 1, 
+                        ease: 'easeInOut' 
+                      }}
                       style={{ transformOrigin: 'top center' }}
                     >
                       <Bell size={16} strokeWidth={1.5} className="md:w-4 md:h-4 lg:w-5 lg:h-5" />
                     </motion.div>
-                    {hasUnread && (
-                      <span className="absolute top-[10px] right-[10px] w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white" />
+                    {(hasUnread || isShaking) && (
+                      <span className="absolute top-[10px] right-[10px] w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white animate-pulse shadow-sm" />
                     )}
                   </button>
 
-                  {/* Notifications dropdown */}
+                   {/* Notifications dropdown */}
                   <AnimatePresence>
                     {noticesOpen && (
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-50 origin-top-right"
+                        className="absolute top-full right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-[200] origin-top-right"
                       >
                         <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-slate-50">
                           <h3 className="font-bold text-[#1E293B] text-sm">Notifications</h3>
-                          <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
-                            View All
-                          </Link>
+                          <div className="flex items-center gap-3">
+                            <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
+                              View All
+                            </Link>
+                            <button onClick={() => setNoticesOpen(false)} className="text-gray-400 hover:text-[#123B6D] transition-colors p-1 -mr-1">
+                              <X size={16} />
+                            </button>
+                          </div>
                         </div>
                         <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
-                          {[
-                            { id: 1, title: 'Final Semester Timetable Released', time: '2 hours ago', unread: true },
-                            { id: 2, title: 'Holiday declared on Friday due to heavy rains', time: '1 day ago', unread: false },
-                            { id: 3, title: 'Admissions Open for 2024-25', time: '2 days ago', unread: false },
-                            { id: 4, title: 'New Scholarship Guidelines Uploaded', time: '4 days ago', unread: false },
-                          ].map((n) => (
-                            <Link
-                              href="/notices"
-                              key={n.id}
-                              onClick={() => setNoticesOpen(false)}
-                              className={`block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${n.unread ? 'bg-blue-50/30' : ''}`}
-                            >
-                              <div className="flex justify-between items-start gap-2">
-                                <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
-                                {n.unread && <span className="w-2 h-2 bg-red-500 rounded-full mt-1.5 flex-shrink-0 animate-pulse" />}
-                              </div>
-                              <p className="text-xs text-[#64748B]">{n.time}</p>
-                            </Link>
-                          ))}
+                          {fetchingNotices ? (
+                            <div className="p-6 text-center text-sm text-gray-400">Loading...</div>
+                          ) : liveNotices.length === 0 ? (
+                            <div className="p-6 text-center text-sm text-gray-400">No active notices</div>
+                          ) : (
+                            liveNotices.map((n) => {
+                              const timeAgo = (() => {
+                                const diff = Date.now() - new Date(n.schedule_time).getTime();
+                                const h = Math.floor(diff / 3600000);
+                                const d = Math.floor(diff / 86400000);
+                                return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h} hour${h > 1 ? 's' : ''} ago` : 'Just now';
+                              })();
+                              return (
+                                <Link
+                                  href="/notices"
+                                  key={n.id}
+                                  onClick={() => setNoticesOpen(false)}
+                                  className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
+                                >
+                                  <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
+                                  
+                                  {/* Course, Category & Timing Row */}
+                                  <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                                    <p className="text-xs text-[#64748B]">{timeAgo}</p>
+                                    
+                                    {n.categories && n.categories.length > 0 && (
+                                      <span className="text-[10px] font-medium bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
+                                        {n.categories[0]}{n.categories.length > 1 ? ` +${n.categories.length - 1}` : ''}
+                                      </span>
+                                    )}
+                                    {n.courses && n.courses.length > 0 && (
+                                      <span className="text-[10px] font-medium bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100">
+                                        {n.courses[0].toUpperCase().replace('-', '')}{n.courses.length > 1 ? ` +${n.courses.length - 1}` : ''}
+                                      </span>
+                                    )}
+                                    {/* Attachment icons */}
+                                    {n.attachments && n.attachments.length > 0 && (() => {
+                                      const hasPdf = n.attachments.some(a => a.type === 'pdf' || a.type === 'doc' || a.type === 'docx');
+                                      const hasImage = n.attachments.some(a => ['png', 'jpg', 'jpeg', 'webp'].includes(a.type));
+                                      return (
+                                        <span className="flex items-center gap-1">
+                                          {hasPdf && (
+                                            <span className="flex items-center gap-0.5 text-[10px] font-medium bg-red-50 text-red-600 px-1.5 py-0.5 rounded border border-red-100">
+                                              <FileText size={10} /> PDF
+                                            </span>
+                                          )}
+                                          {hasImage && (
+                                            <span className="flex items-center gap-0.5 text-[10px] font-medium bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-100">
+                                              <ImageIcon size={10} /> Image
+                                            </span>
+                                          )}
+                                        </span>
+                                      );
+                                    })()}
+                                  </div>
+                                </Link>
+                              );
+                            })
+                          )}
                         </div>
                       </motion.div>
                     )}
@@ -1003,7 +1078,7 @@ export default function Navbar() {
 
 
         {/* ── Row 2 (desktop): Nav Links ── */}
-        <div className="flex w-full max-w-[1600px] mx-auto items-center justify-center px-1 md:px-2 lg:px-8 relative z-[100]">
+        <div className="flex w-full max-w-[1600px] mx-auto items-center justify-center px-1 md:px-2 lg:px-8 relative z-[50]">
           <Link
             href="/admission"
             className="hidden md:flex absolute right-4 lg:right-12 bottom-full translate-y-1 items-center justify-center h-8 md:h-9 lg:h-10 px-4 lg:px-8 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-[10px] md:text-xs lg:text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all"
@@ -1039,17 +1114,17 @@ export default function Navbar() {
                     {link.label}
                   </Link>
                 )}
-                {(link as any).isMegaMenu && (link as any).megaMenuColumns && (
+                {(link as any).isMegaMenu && (link as any).megaMenuColumns && !(link as any).megaMenuType && (
                   <div
-                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
+                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 4 ? 'w-[1200px]' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
                     <div className="bg-[#F8F9FA] border border-[#E2E8F0] rounded-3xl shadow-2xl overflow-hidden min-h-[400px]">
-                      <div className={`w-full p-8 grid gap-6 relative z-10 ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 4 ? 'grid-cols-4' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                      <div className={`w-full p-8 grid gap-6 relative z-10 ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 5 ? 'grid-cols-5' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 4 ? 'grid-cols-4' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
                         {(link as any).megaMenuColumns.map((col: any, idx: number) => (
                           <div key={idx} className={col.colSpan === 2 ? "col-span-2" : ""}>
-                            <h4 className={`font-bold text-[#123B6D] mb-4 text-[16px] leading-snug border-b border-[#E2E8F0] pb-3 text-center`}>
+                            <h4 className={`font-bold text-[#123B6D] mb-4 text-[18px] leading-snug border-b border-[#E2E8F0] pb-3 text-center`}>
                               {col.title.includes('(') ? (
                                 <>
                                   <span className="block">{col.title.substring(0, col.title.indexOf('(')).trim()}</span>
@@ -1061,17 +1136,17 @@ export default function Navbar() {
                               {col.sections.map((sec: any, sidx: number) => (
                                 <div key={sidx} className={col.colSpan === 2 ? "break-inside-avoid mb-6" : ""}>
                                   {sec.subTitle && (sec.subTitleHighlight ? (
-                                    <h5 className="font-bold text-[#123B6D] text-[13px] mb-2 flex items-center gap-2">
+                                    <h5 className="font-bold text-[#123B6D] text-[15px] mb-2 flex items-center gap-2">
                                       <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0"></span>
                                       {sec.subTitle}
                                     </h5>
                                   ) : (
-                                    <h5 className="font-bold text-[#123B6D] text-[13px] mb-2">{sec.subTitle}</h5>
+                                    <h5 className="font-bold text-[#123B6D] text-[15px] mb-2">{sec.subTitle}</h5>
                                   ))}
                                     <ul className="space-y-2.5">
                                       {sec.links.map((clink: any) => (
                                         <li key={clink.label}>
-                                          <Link href={clink.href} className={`text-[13px] transition-colors flex items-start gap-2 leading-tight font-medium text-[#1E293B] hover:text-[#123B6D]`}>
+                                          <Link href={clink.href} className={`text-[15px] transition-colors flex items-start gap-2 leading-tight font-medium text-[#1E293B] hover:text-[#123B6D]`}>
                                             <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0 mt-1"></span>
                                             <span>{formatCourseLabel(clink.label)}</span>
                                           </Link>
@@ -1087,104 +1162,92 @@ export default function Navbar() {
                     </div>
                   </div>
                 )}
-                {(link as any).isMegaMenu && (link as any).megaMenuType === 'programmes' && (
+                                  {(link as any).isMegaMenu && (link as any).megaMenuType === 'programmes' && (
                   <div
-                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] w-[950px] left-1/2 -translate-x-1/2`}
+                    className={`absolute top-full pt-2 hidden group-hover:block z-[100] w-[1100px] max-w-[95vw] left-1/2 -translate-x-1/2`}
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
-                     <div className="bg-white border border-[#E2E8F0] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
-                        <div className="flex p-8 pb-10">
+                     <div className="bg-[#F8F9FA] border border-[#E2E8F0] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                        <div className="flex p-6 pb-8">
                            {/* Left Side: UNDERGRADUATE */}
-                           <div className="w-[70%] border-r border-[#E2E8F0] pr-8">
-                              <div className="flex items-center gap-3 mb-6 border-b border-[#D4A017] pb-3 inline-flex">
-                                 <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                                    <GraduationCap className="text-[#123B6D]" size={20} />
-                                 </div>
-                                 <h3 className="font-bold text-[#123B6D] text-[15px] tracking-wide">UNDERGRADUATE</h3>
-                              </div>
-                              <div className="grid grid-cols-3 gap-6">
+                           <div className="w-[55%] border-r border-[#E2E8F0] pr-6">
+                              <h3 className="font-bold text-[#123B6D] text-[20px] text-center mb-6">Undergraduate</h3>
+                              
+                              <div className="grid grid-cols-2 gap-6">
                                  {/* Col 1 */}
                                  <div>
-                                    <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Commerce & Management</h4>
-                                    <div className="mb-4">
-                                       <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Aided</h5>
-                                       <ul className="space-y-2">
-                                          <li><Link href="/programmes/ug/bcom" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (General)</Link></li>
-                                       </ul>
-                                    </div>
-                                    <div className="mb-4">
-                                       <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Self-Financing</h5>
-                                       <ul className="space-y-2">
-                                          <li><Link href="/programmes/ug/baf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Accounting & Finance)</Link></li>
-                                          <li><Link href="/programmes/ug/bbi" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Banking & Insurance)</Link></li>
-                                          <li><Link href="/programmes/ug/bfm" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Financial Markets)</Link></li>
-                                          <li><Link href="/programmes/ug/bcom-ms" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Management Studies)</Link></li>
-                                          <li><Link href="/programmes/ug/bcom-ba" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Com (Business Administration)</Link></li>
-                                       </ul>
-                                    </div>
-                                    <div>
-                                       <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Apprentice Embedded</h5>
-                                       <ul className="space-y-2">
-                                          <li><Link href="/programmes/ug/bfsi" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>B.Com (Banking, Financial Services & Insurance)</Link></li>
-                                       </ul>
-                                    </div>
-                                 </div>
-                                 {/* Col 2 */}
-                                 <div>
-                                    <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Science & Technology</h4>
-                                    <ul className="space-y-2">
-                                       <li><Link href="/programmes/ug/sct/bsc-cs" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Computer Science)</Link></li>
-                                       <li><Link href="/programmes/ug/sct/bsc-it" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Information Technology)</Link></li>
-                                       <li><Link href="/programmes/ug/sct/bsc-ca" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Computer Application)</Link></li>
-                                       <li><Link href="/programmes/ug/sct/bsc-ds" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full"></span>B.Sc (Data Science)</Link></li>
+                                    <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Commerce</h4>
+                                    <ul className="space-y-2.5 mb-6">
+                                       <li><Link href="/programmes/ug/bcom" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><strong>B.COM</strong></Link></li>
+                                       <li><Link href="/programmes/ug/baf" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Accounting &amp; Finance)</span></Link></li>
+                                       <li><Link href="/programmes/ug/bbi" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Banking &amp; Insurance)</span></Link></li>
+                                       <li><Link href="/programmes/ug/bfm" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Financial Markets)</span></Link></li>
+                                    </ul>
+                                    
+                                    <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Business &amp; Management</h4>
+                                    <ul className="space-y-2.5">
+                                       <li><Link href="/programmes/ug/bcom-ms" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Management Studies)</span></Link></li>
+                                       <li><Link href="/programmes/ug/bcom-ba" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Business Administration)</span></Link></li>
                                     </ul>
                                  </div>
-                                 {/* Col 3 */}
+                                 
+                                 {/* Col 2 */}
                                  <div>
-                                    <div className="mb-8">
-                                       <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Arts</h4>
-                                       <ul className="space-y-2">
-                                          <li><Link href="/programmes/ug/bammc" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2 leading-tight"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>B.A. (Mass Media & Communication)</Link></li>
-                                       </ul>
-                                    </div>
-                                    <div>
-                                       <h4 className="font-bold text-[#123B6D] mb-4 text-[14px]">Ph.D Programmes</h4>
-                                       <ul className="space-y-2">
-                                          <li><Link href="/programmes/phd/be" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>Ph.D (Business Economics)</Link></li>
-                                       </ul>
-                                    </div>
+                                    <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Science</h4>
+                                    <ul className="space-y-2.5 mb-6">
+                                       <li><Link href="/programmes/ug/sct/bsc-cs" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Computer Science)</span></Link></li>
+                                       <li><Link href="/programmes/ug/sct/bsc-it" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Information Technology)</span></Link></li>
+                                       <li><Link href="/programmes/ug/sct/bsc-ds" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Data Science)</span></Link></li>
+                                       <li><Link href="/programmes/ug/sct/bsc-ca" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Computer Applications)</span></Link></li>
+                                    </ul>
+                                    
+                                    <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Arts</h4>
+                                    <ul className="space-y-2.5 mb-6">
+                                       <li><Link href="/programmes/ug/bammc" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>BNMMC</strong> (Mass Media &amp; Communication)</span></Link></li>
+                                    </ul>
+                                    
+                                    <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Apprenticeship</h4>
+                                    <ul className="space-y-2.5">
+                                       <li><Link href="/programmes/ug/bfsi" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM BFSI</strong> (Banking, Financial Services and Insurance)</span></Link></li>
+                                    </ul>
                                  </div>
                               </div>
                            </div>
                            
-                           {/* Right Side: POSTGRADUATE */}
-                           <div className="w-[30%] pl-8">
-                              <div className="flex items-center gap-3 mb-6 border-b border-[#D4A017] pb-3 inline-flex">
-                                 <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                                    <GraduationCap className="text-[#123B6D]" size={20} />
-                                 </div>
-                                 <h3 className="font-bold text-[#123B6D] text-[15px] tracking-wide">POSTGRADUATE</h3>
-                              </div>
-                              <div className="mb-4">
-                                 <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Aided</h5>
-                                 <ul className="space-y-2">
-                                    <li><Link href="/programmes/pg/mcom-aa" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Advanced Accountancy)</Link></li>
+                           {/* Middle Side: POSTGRADUATE */}
+                           <div className="w-[25%] border-r border-[#E2E8F0] px-6">
+                              <h3 className="font-bold text-[#123B6D] text-[20px] text-center mb-6">Postgraduate</h3>
+                              
+                              <div>
+                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Commerce</h4>
+                                 <ul className="space-y-4 mb-6">
+                                    <li><Link href="/programmes/pg/mcom-aa" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.COM.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Advanced Accountancy)</span></span></Link></li>
+                                    <li><Link href="/programmes/pg/mcom-bm" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.COM.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Business Management)</span></span></Link></li>
+                                    <li><Link href="/programmes/pg/mcom-bf" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>M.COM.</strong> (Banking &amp; Finance)</span></Link></li>
                                  </ul>
                               </div>
                               <div>
-                                 <h5 className="font-bold text-[#123B6D] text-[12px] mb-2">Self-Financing</h5>
-                                 <ul className="space-y-2">
-                                    <li><Link href="/programmes/pg/mcom-bm" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Banking & Finance)</Link></li>
-                                    <li><Link href="/programmes/pg/mcom-bf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Com (Business Management)</Link></li>
-                                    <li><Link href="/programmes/pg/msc-it" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Sc (Information Technology)</Link></li>
-                                    <li><Link href="/programmes/pg/msf" className="text-[12px] font-medium text-[#64748B] hover:text-[#123B6D] flex items-center gap-2"><span className="w-1 h-1 bg-[#D4A017] rounded-full shrink-0"></span>M.Sc (Finance)</Link></li>
+                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Science</h4>
+                                 <ul className="space-y-4">
+                                    <li><Link href="/programmes/pg/msc-it" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.SC.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Information Technology)</span></span></Link></li>
+                                    <li><Link href="/programmes/pg/msf" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>M.SC.</strong> (Finance)</span></Link></li>
+                                 </ul>
+                              </div>
+                           </div>
+                           
+                           {/* Right Side: PH.D. */}
+                           <div className="w-[20%] pl-6">
+                              <h3 className="font-bold text-[#123B6D] text-[20px] text-center mb-6">Ph.D.</h3>
+                              <div>
+                                 <ul className="space-y-2.5">
+                                    <li><Link href="/programmes/phd/be" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span>Commerce (Specialisation in Business Economics)</span></Link></li>
                                  </ul>
                               </div>
                            </div>
                         </div>
                         {/* Explore all bottom bar */}
-                        <Link href="/academics" className="bg-[#F8FAFC] px-8 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[14px] hover:bg-slate-100 transition-colors border-t border-[#E2E8F0] group/btn">
+                        <Link href="/academics" className="bg-[#E2E8F0]/30 px-6 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[16px] hover:bg-[#E2E8F0]/50 transition-colors border-t border-[#E2E8F0] group/btn">
                            Explore all Programmes <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
                      </div>
@@ -1192,7 +1255,7 @@ export default function Navbar() {
                 )}
                 {!(link as any).isMegaMenu && link.sub && (
                   <div
-                    className={`absolute top-full pt-2 hidden group-hover:block min-w-[200px] ${menuDirection[link.label] === 'left' ? 'right-0' : 'left-0'}`}
+                    className={`absolute top-full pt-2 hidden group-hover:block min-w-[200px] z-[100] ${menuDirection[link.label] === 'left' ? 'right-0' : 'left-0'}`}
                     onMouseEnter={() => setOpenDrop(link.label)}
                     onMouseLeave={() => setOpenDrop(null)}
                   >
@@ -1204,7 +1267,7 @@ export default function Navbar() {
                               {s.label}
                               <ChevronDown size={14} className={`text-[#94A3B8] transition-transform ${menuDirection[s.label] === 'left' ? 'rotate-90' : '-rotate-90'}`} />
                             </Link>
-                            <div className={`absolute top-0 hidden group-hover/nested:block min-w-[200px] ${menuDirection[s.label] === 'left' ? 'right-full pr-1' : 'left-full pl-1'}`}>
+                            <div className={`absolute top-0 hidden group-hover/nested:block min-w-[200px] z-[100] ${menuDirection[s.label] === 'left' ? 'right-full pr-1' : 'left-full pl-1'}`}>
                               <div className="bg-white/95 backdrop-blur-xl border border-[#E2E8F0] rounded-2xl shadow-xl py-1">
                                 {(s as any).sub.map((ss: any, idx: number) => (
                                   (ss.sub) ? (
@@ -1300,30 +1363,43 @@ export default function Navbar() {
                   >
                     <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-slate-50">
                       <h3 className="font-bold text-[#1E293B] text-sm">Notifications</h3>
-                      <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
-                        View All
-                      </Link>
+                      <div className="flex items-center gap-3">
+                        <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
+                          View All
+                        </Link>
+                        <button onClick={() => setNoticesOpen(false)} className="text-gray-400 hover:text-[#123B6D] transition-colors p-1 -mr-1">
+                          <X size={16} />
+                        </button>
+                      </div>
                     </div>
                     <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
-                      {[
-                        { id: 1, title: 'Final Semester Timetable Released', time: '2 hours ago', unread: true },
-                        { id: 2, title: 'Holiday declared on Friday due to heavy rains', time: '1 day ago', unread: false },
-                        { id: 3, title: 'Admissions Open for 2024-25', time: '2 days ago', unread: false },
-                        { id: 4, title: 'New Scholarship Guidelines Uploaded', time: '4 days ago', unread: false },
-                      ].map((n) => (
-                        <Link
-                          href="/notices"
-                          key={n.id}
-                          onClick={() => setNoticesOpen(false)}
-                          className={`block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${n.unread ? 'bg-blue-50/30' : ''}`}
-                        >
-                          <div className="flex justify-between items-start gap-2">
-                            <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
-                            {n.unread && <span className="w-2 h-2 bg-red-500 rounded-full mt-1.5 flex-shrink-0 animate-pulse" />}
-                          </div>
-                          <p className="text-xs text-[#64748B]">{n.time}</p>
-                        </Link>
-                      ))}
+                      {fetchingNotices ? (
+                        <div className="p-6 text-center text-sm text-gray-400">Loading...</div>
+                      ) : liveNotices.length === 0 ? (
+                        <div className="p-6 text-center text-sm text-gray-400">No active notices</div>
+                      ) : (
+                        liveNotices.map((n) => {
+                          const timeAgo = (() => {
+                            const diff = Date.now() - new Date(n.schedule_time).getTime();
+                            const h = Math.floor(diff / 3600000);
+                            const d = Math.floor(diff / 86400000);
+                            return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h} hour${h > 1 ? 's' : ''} ago` : 'Just now';
+                          })();
+                          return (
+                            <Link
+                              href="/notices"
+                              key={n.id}
+                              onClick={() => setNoticesOpen(false)}
+                              className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
+                            >
+                              <div className="flex justify-between items-start gap-2">
+                                <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
+                              </div>
+                              <p className="text-xs text-[#64748B]">{timeAgo}</p>
+                            </Link>
+                          );
+                        })
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -1372,7 +1448,7 @@ export default function Navbar() {
               <div className="flex-1 px-4 py-4 space-y-1">
                 {/* Mobile Quick Links */}
                 <div className="flex flex-wrap items-center gap-3 pb-4 mb-2 border-b border-[#E2E8F0]">
-                  <Link href="/notice" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Notice</Link>
+                  <Link href="/notices" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Notice</Link>
                   <Link href="/placement-portal" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Placement</Link>
                   <Link href="/administrative-service" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Admin Services</Link>
                   <Link href="/alumni" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Alumni</Link>
@@ -1381,16 +1457,27 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <div key={link.label}>
                   {(link.mobileSub || link.sub) ? (
-                    <button
-                      className="flex items-center w-full px-4 py-3 text-[#1E293B] font-medium rounded-xl hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors text-left"
-                      onClick={() => setMobileOpenDrop(mobileOpenDrop === link.label ? null : link.label)}
-                    >
-                      <span className="flex-1 text-left">{link.label}</span>
-                      <ChevronDown
-                        size={16}
-                        className={`transition-transform duration-200 shrink-0 ${mobileOpenDrop === link.label ? 'rotate-180 text-[#123B6D]' : ''}`}
-                      />
-                    </button>
+                    <div className="flex items-center w-full rounded-xl hover:bg-[#123B6D]/5 transition-colors">
+                      <Link 
+                        href={link.href || '#'}
+                        className="flex-1 px-4 py-3 text-[#1E293B] font-medium hover:text-[#123B6D] transition-colors text-left"
+                        onClick={() => {
+                          if (link.href && link.href !== '#') setMobileOpen(false);
+                          else setMobileOpenDrop(mobileOpenDrop === link.label ? null : link.label);
+                        }}
+                      >
+                        {link.label}
+                      </Link>
+                      <button
+                        className="px-4 py-3 text-[#1E293B] hover:text-[#123B6D]"
+                        onClick={() => setMobileOpenDrop(mobileOpenDrop === link.label ? null : link.label)}
+                      >
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform duration-200 shrink-0 ${mobileOpenDrop === link.label ? 'rotate-180 text-[#123B6D]' : ''}`}
+                        />
+                      </button>
+                    </div>
                   ) : (
                     <Link
                       href={link.href}

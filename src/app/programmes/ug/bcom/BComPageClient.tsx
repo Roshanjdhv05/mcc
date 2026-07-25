@@ -5,6 +5,7 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bcomFaculty = [
+  { srNo: 18, name: 'Dr. Minal Mapuskar',     additionalRole: 'Principal & Head',                designation: 'Principal',           email: 'principal@mccmulund.ac.in',          education: 'M.A, NET, SLET, PhD.',                           teachingExp: '20 yrs', image: '/Dr.%20Minal%20Mapuskar%20(Principal).jpeg', department: 'IKS' },
   { srNo: 1,  name: 'Mr.Nikhil Karkhanis',    additionalRole: 'Advanced Accountancy Co-ordinator', designation: 'Assistant Professor', email: 'nikhil.karkhanis@mccmulund.ac.in',   education: 'M.Com., CS., NET., SET., LLB',                   teachingExp: '' },
   { srNo: 2,  name: 'Ms.Riya Dhamaprukar',    additionalRole: '—',                               designation: 'Assistant Professor', email: 'riya.dhamapurkar@mccmulund.ac.in',   education: 'M.Com., B.Ed., NET., SET',                       teachingExp: '' },
   { srNo: 3,  name: 'Ms.Snehal Chavan',       additionalRole: '—',                               designation: 'Assistant Professor', email: 'snehal.chavan@mccmulund.ac.in',      education: 'M.Com., CA., CMA., NET.',                        teachingExp: '' },
@@ -22,7 +23,6 @@ const bcomFaculty = [
   { srNo: 15, name: 'Dr.Shayeree Ghosh',      additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'shayeree.ghosh@mccmulund.ac.in',     education: 'M.A., M.Phil., NET., Ph.D.',                     teachingExp: '' },
   { srNo: 16, name: 'Mr.Jayanta Ghorpade',    additionalRole: '—',                               designation: 'Assistant Professor', email: 'jayanta.ghorpade@mccmulund.ac.in',   education: 'M.A., B.Ed., M.Phil., NET.',                     teachingExp: '' },
   { srNo: 17, name: 'Mr.Amit Yadav',          additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'amit.yadav@mccmulund.ac.in',         education: 'M.Sc., NET., LLB., P.G.D.E.L. (NLSIU)',         teachingExp: '17 yrs' },
-  { srNo: 18, name: 'Dr. Minal Mapuskar',     additionalRole: 'Principal & Head',                designation: 'Principal',           email: 'principal@mccmulund.ac.in',          education: 'M.A, NET, SLET, PhD.',                           teachingExp: '20 yrs' },
   { srNo: 19, name: 'Ms .Jui Kadvwekar',      additionalRole: '—',                               designation: 'Assistant Professor', email: 'juikadvekar@gmail.com',              education: 'MA., NET',                                       teachingExp: '' },
   { srNo: 20, name: 'Dr.Pramila D\'souza',    additionalRole: 'Head & Assistant Professor',      designation: 'Assistant Professor', email: 'pramiladsouza@mulund.ac.in',         education: 'LLB., LLM., Ph.D., NET',                         teachingExp: '' },
   { srNo: 21, name: 'Ms. Seema Attarde',      additionalRole: 'HOD (Maths, Stats & Comp. App.)', designation: 'Assistant Professor', email: 'seema.attarde@mccmulund.ac.in',      education: 'M.Sc. (Statistics)',                             teachingExp: '26 yrs' },

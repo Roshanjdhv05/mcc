@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Counter from '@/components/ui/Counter';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import { supabase } from '@/lib/supabase';
+import type { Notice } from '@/lib/noticeTypes';
 import StudentsWorkSection from '@/components/ui/StudentsWorkSection';
 import StatsStrip from '@/components/ui/StatsStrip';
 import {
@@ -27,11 +29,25 @@ const quickLinks = [
   { label: 'Gallery', href: '/gallery', icon: Image, bg: 'bg-blue-50', iconColor: 'text-[#4DA8DA]' },
 ];
 
-const notices = [
-  { tag: 'Urgent', tagColor: 'bg-red-100 text-red-700', time: '2 hours ago', title: 'Final Semester Timetable – Dec 2024', desc: 'The final semester examination timetable for all UG courses has been released.', action: 'Download PDF', icon: Download },
-  { tag: 'Admissions', tagColor: 'bg-blue-100 text-blue-700', time: '1 day ago', title: 'FYJC Second Merit List Instructions', desc: 'Students listed in the second merit list are required to submit original documents by Friday.', action: 'Read More', icon: ChevronRight },
-  { tag: 'Event', tagColor: 'bg-amber-100 text-amber-700', time: '3 days ago', title: 'Annual Cultural Fest – AURA 2024', desc: 'Join us for the grandest celebration of talent and art. Registration for competitions now open.', action: 'Register Now', icon: ChevronRight },
-];
+const CATEGORY_COLORS: Record<string, string> = {
+  Admissions:     'bg-blue-100 text-blue-700',
+  Examinations:   'bg-purple-100 text-purple-700',
+  Academics:      'bg-indigo-100 text-indigo-700',
+  Scholarships:   'bg-green-100 text-green-700',
+  Events:         'bg-amber-100 text-amber-700',
+  Sports:         'bg-orange-100 text-orange-700',
+  Cultural:       'bg-pink-100 text-pink-700',
+  Placement:      'bg-teal-100 text-teal-700',
+  Library:        'bg-cyan-100 text-cyan-700',
+  Administration: 'bg-gray-100 text-gray-700',
+};
+
+const timeAgo = (iso: string) => {
+  const diff = Date.now() - new Date(iso).getTime();
+  const h = Math.floor(diff / 3600000);
+  const d = Math.floor(diff / 86400000);
+  return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h}h ago` : 'Just now';
+};
 
 const events = [
   { month: 'OCT', day: '12', title: 'Inter-collegiate Tech Meet', time: '10:00 AM • Main Auditorium', accent: 'bg-blue-50 text-[#123B6D]' },
@@ -160,7 +176,26 @@ const adminServices = [
 
 export default function HomePage() {
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [notices, setNotices] = useState<Notice[]>([]);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function fetchNotices() {
+      const now = new Date().toISOString();
+      const { data } = await supabase
+        .from('notices')
+        .select('*')
+        .lte('schedule_time', now)
+        .gte('expiry_time', now)
+        .order('schedule_time', { ascending: false })
+        .limit(10);
+      
+      if (data) {
+        setNotices(data as Notice[]);
+      }
+    }
+    fetchNotices();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -290,24 +325,36 @@ export default function HomePage() {
               View All <ArrowRight size={14} />
             </Link>
           </div>
-          <div className="flex gap-5 overflow-x-auto pb-2 no-scrollbar">
-            {notices.map((n, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ y: -4, boxShadow: '0 10px 30px rgba(18,59,109,0.1)' }}
-                className="flex-shrink-0 w-80 p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm"
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${n.tagColor}`}>{n.tag}</span>
-                  <span className="text-[#94A3B8] text-xs">{n.time}</span>
-                </div>
-                <h3 className="font-semibold text-[#1E293B] mb-2 font-[var(--font-heading)]">{n.title}</h3>
-                <p className="text-sm text-[#64748B] line-clamp-2 mb-4">{n.desc}</p>
-                <button className="text-[#123B6D] text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">
-                  {n.action} <n.icon size={16} />
-                </button>
-              </motion.div>
-            ))}
+          <div className="overflow-hidden w-full group relative">
+            <div className={`flex gap-5 pb-4 pt-2 ${notices.length > 4 ? 'animate-[marquee_25s_linear_infinite] group-hover:[animation-play-state:paused] w-max' : 'overflow-x-auto no-scrollbar w-full'}`}>
+              {(notices.length > 4 ? [...notices, ...notices] : notices).map((n, i) => {
+                const primaryCat = n.categories?.[0] || 'Administration';
+                const colorClass = CATEGORY_COLORS[primaryCat] || 'bg-gray-100 text-gray-700';
+
+                return (
+                  <motion.div
+                    key={`${n.id || i}-${i}`}
+                    whileHover={{ y: -4, boxShadow: '0 10px 30px rgba(18,59,109,0.1)' }}
+                    className="flex-shrink-0 w-80 p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      {n.is_general && (
+                        <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#123B6D] text-white">
+                          General
+                        </span>
+                      )}
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${colorClass}`}>{primaryCat}</span>
+                      <span className="text-[#94A3B8] text-xs">{timeAgo(n.schedule_time)}</span>
+                    </div>
+                    <h3 className="font-semibold text-[#1E293B] mb-2 font-[var(--font-heading)] truncate">{n.title}</h3>
+                    <p className="text-sm text-[#64748B] line-clamp-2 mb-4">{n.description}</p>
+                    <Link href={`/notices`} className="text-[#123B6D] text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">
+                      View Details <ChevronRight size={16} />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </ScrollReveal>
 
@@ -389,9 +436,6 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="overflow-hidden w-full group relative">
-            {/* Gradient masks for smooth fading at edges */}
-            <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"></div>
             
             <style>{`
               @keyframes marquee {
@@ -426,13 +470,10 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className="flex items-center justify-between mt-4 mb-2">
-              <span className="text-xs font-bold text-[#D4A017] uppercase tracking-widest flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#D4A017] inline-block" />
-                Administrative Services
-              </span>
-              <Link href="/administrative-service" className="text-xs font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
-                View All <ArrowRight size={12} />
+            <div className="flex items-center justify-between mt-12 mb-6">
+              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Administrative Services</h2>
+              <Link href="/administrative-service" className="text-sm font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
+                View All <ArrowRight size={14} />
               </Link>
             </div>
 
@@ -475,9 +516,6 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="overflow-hidden w-full group relative">
-            {/* Gradient fade masks */}
-            <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
-            <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
 
             <style>{`
               @keyframes home-cultural-marquee {

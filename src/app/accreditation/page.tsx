@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Medal, Award, FileText, CheckCircle, ShieldCheck, GraduationCap, BarChart2 } from 'lucide-react';
+import { Medal, BarChart2, ShieldCheck, X, Maximize2, Download } from 'lucide-react';
 
 const accreditationNav = [
   { label: 'CERTIFICATES', href: '/accreditation', active: true },
@@ -11,11 +11,38 @@ const accreditationNav = [
   { label: 'AISHE', href: '/accreditation/aishe/annual-submissions', active: false },
 ];
 
+const pdfCertificates = [
+  {
+    title: '2(f) – Certificate',
+    description: 'UGC 2(f) recognition certificate',
+    url: '/2F.pdf',
+    accent: '#123B6D',
+  },
+  {
+    title: '12(B) – Certificate',
+    description: 'UGC 12(B) certification document',
+    url: '/12b.pdf',
+    accent: '#123B6D',
+  },
+  {
+    title: 'Conferment of Autonomy',
+    description: 'Certificate of autonomous status',
+    url: '/Conferment of Autonomy (Grant of Autonomy).pdf',
+    accent: '#123B6D',
+  },
+  {
+    title: 'NAAC Accreditation',
+    description: 'NAAC accreditation certificates',
+    url: '/NACC ACCREDITATION CERTIFICATES.pdf',
+    accent: '#D4A017',
+  },
+];
+
 export default function AccreditationPage() {
   const [navVisible, setNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [selectedPdf, setSelectedPdf] = useState<{ title: string; url: string } | null>(null);
 
-  // Scroll effect for header
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
@@ -27,22 +54,27 @@ export default function AccreditationPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedPdf) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedPdf]);
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen pb-12 font-sans">
-      
+
       {/* ── Secondary Accreditation Nav ── */}
       <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
-        {/* Static Nav (All Screens) */}
-        <div 
-          className="flex w-full h-12 items-center justify-center overflow-x-auto no-scrollbar"
-        >
+        <div className="flex w-full h-12 items-center justify-center overflow-x-auto no-scrollbar">
           <div className="flex items-center h-full whitespace-nowrap border-l border-white/10">
             {accreditationNav.map((item, i) => (
               <Link key={i} href={item.href}
                 className={`flex-shrink-0 h-full flex items-center px-6 md:px-8 lg:px-12 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${
-                  item.active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10 active:bg-white/10'
+                  item.active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
               >
                 {item.label}
@@ -71,64 +103,103 @@ export default function AccreditationPage() {
         </p>
       </div>
 
-      {/* ── Main Content Grid ── */}
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
-        
-        {/* Card 1 */}
-        <Link href="/accreditation/2b-certificate" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
-            <FileText className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">2 B – Certificate</h2>
-          <p className="text-gray-500 text-sm">View our UGC 2(f) and 12(B) recognition certificates and related documents.</p>
-        </Link>
+      {/* ── PDF Certificate Cards ── */}
+      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+          {pdfCertificates.map((cert) => (
+            <button
+              key={cert.title}
+              onClick={() => setSelectedPdf({ title: cert.title, url: cert.url })}
+              className="group bg-white rounded-2xl shadow-sm border border-[#E2E8F0] hover:shadow-lg hover:border-[#123B6D]/30 transition-all overflow-hidden flex flex-col text-left w-full"
+            >
+              {/* PDF Preview Thumbnail */}
+              <div className="relative w-full bg-gray-100 overflow-hidden" style={{ height: '260px' }}>
+                <iframe
+                  src={`${cert.url}#view=FitH&toolbar=0&navpanes=0&scrollbar=0`}
+                  className="w-full h-full pointer-events-none"
+                  title={cert.title}
+                  loading="lazy"
+                />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-[#123B6D]/0 group-hover:bg-[#123B6D]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 text-[#123B6D] font-bold text-sm shadow-lg">
+                    <Maximize2 size={16} /> View Full PDF
+                  </div>
+                </div>
+              </div>
 
-        {/* Card 2 */}
-        <Link href="/accreditation/12f-certificate" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
-            <CheckCircle className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">12 F – Certificate</h2>
-          <p className="text-gray-500 text-sm">Official documentation and certification for our 12 F status.</p>
-        </Link>
+              {/* Card Footer */}
+              <div className="p-4 border-t border-[#E2E8F0] flex items-center justify-between">
+                <div>
+                  <h2 className="font-bold text-[#123B6D] text-sm leading-tight">{cert.title}</h2>
+                  <p className="text-gray-400 text-xs mt-0.5">{cert.description}</p>
+                </div>
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ml-3"
+                  style={{ backgroundColor: `${cert.accent}15` }}
+                >
+                  <Maximize2 size={14} style={{ color: cert.accent }} />
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
 
-        {/* Card 3 */}
-        <Link href="/accreditation/autonomous/grant" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
-            <GraduationCap className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">Grant of Autonomy (Certificate)</h2>
-          <p className="text-gray-500 text-sm">Details and certificate regarding our grant of autonomy.</p>
-        </Link>
-
-        {/* Card 4 */}
-        <Link href="/accreditation/naac/certificates" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#D4A017]/10 flex items-center justify-center mb-6 group-hover:bg-[#D4A017] transition-colors">
-            <Award className="text-[#D4A017] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">NAAC</h2>
-          <p className="text-gray-500 text-sm">National Assessment and Accreditation Council certificates and reports.</p>
-        </Link>
-
-        {/* Card 5 */}
-        <Link href="/accreditation/nirf/annual-submissions" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
-            <BarChart2 className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">NIRF</h2>
-          <p className="text-gray-500 text-sm">National Institutional Ranking Framework annual submissions and data.</p>
-        </Link>
-
-        {/* Card 6 */}
-        <Link href="/accreditation/aishe/annual-submissions" className="bg-white rounded-3xl p-8 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center mb-6 group-hover:bg-[#123B6D] transition-colors">
-            <ShieldCheck className="text-[#123B6D] group-hover:text-white transition-colors" size={32} />
-          </div>
-          <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">AISHE</h2>
-          <p className="text-gray-500 text-sm">All India Survey on Higher Education reports and data submissions.</p>
-        </Link>
+        {/* Other Links Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link href="/accreditation/nirf/annual-submissions" className="bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center group-hover:bg-[#123B6D] transition-colors flex-shrink-0">
+              <BarChart2 className="text-[#123B6D] group-hover:text-white transition-colors" size={28} />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-[#123B6D] font-[var(--font-heading)] mb-1">NIRF</h2>
+              <p className="text-gray-500 text-sm">National Institutional Ranking Framework annual submissions and data.</p>
+            </div>
+          </Link>
+          <Link href="/accreditation/aishe/annual-submissions" className="bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center group-hover:bg-[#123B6D] transition-colors flex-shrink-0">
+              <ShieldCheck className="text-[#123B6D] group-hover:text-white transition-colors" size={28} />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-[#123B6D] font-[var(--font-heading)] mb-1">AISHE</h2>
+              <p className="text-gray-500 text-sm">All India Survey on Higher Education reports and data submissions.</p>
+            </div>
+          </Link>
+        </div>
       </div>
+
+      {/* ── Full-screen PDF Modal ── */}
+      {selectedPdf && (
+        <div className="fixed inset-0 z-[300] flex flex-col" style={{ background: 'rgba(0,0,0,0.85)' }}>
+          {/* Modal Header */}
+          <div className="flex items-center justify-between px-5 py-3 bg-[#123B6D] text-white shadow-lg flex-shrink-0">
+            <h3 className="font-bold text-base truncate">{selectedPdf.title}</h3>
+            <div className="flex items-center gap-2">
+              <a
+                href={selectedPdf.url}
+                download
+                className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 transition-colors px-3 py-1.5 rounded-lg text-sm font-semibold"
+              >
+                <Download size={15} /> Download
+              </a>
+              <button
+                onClick={() => setSelectedPdf(null)}
+                className="p-2 bg-white/15 hover:bg-white/25 rounded-full transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+          {/* PDF Viewer */}
+          <div className="flex-1 overflow-hidden">
+            <iframe
+              src={`${selectedPdf.url}#view=FitH`}
+              className="w-full h-full border-none"
+              title={selectedPdf.title}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

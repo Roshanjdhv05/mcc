@@ -77,7 +77,9 @@ export default function LibraryNav() {
       {/* Desktop nav - normal overflow-x-auto */}
       <div className="hidden md:flex justify-center max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar items-center h-12">
         {libraryNavLinks.map((item, i) => {
-          const isActive = pathname === item.href || (item.href !== '#' && pathname?.startsWith(item.href || ''));
+          const isActive = item.href === '/library' 
+            ? pathname === '/library' 
+            : (pathname === item.href || (item.href !== '#' && pathname?.startsWith(item.href || '')));
           return (
             <Link
               key={i}
@@ -104,7 +106,9 @@ export default function LibraryNav() {
         style={{ scrollBehavior: 'auto' }}
       >
         {[...libraryNavLinks, ...libraryNavLinks].map((item, i) => {
-          const isActive = pathname === item.href || (item.href !== '#' && pathname?.startsWith(item.href || ''));
+          const isActive = item.href === '/library' 
+            ? pathname === '/library' 
+            : (pathname === item.href || (item.href !== '#' && pathname?.startsWith(item.href || '')));
           return (
             <Link
               key={i}

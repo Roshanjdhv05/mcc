@@ -26,6 +26,8 @@ export default function BScITPageClient({ syllabusContent }: Props) {
 
   return (
     <CourseTemplate
+      festivals="Hack-A-Thon (Col)"
+      publication="Tech Anugraha (Col)"
       introductionContent={
         <>
           <p className="mb-4">

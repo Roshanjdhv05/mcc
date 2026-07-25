@@ -10,6 +10,7 @@ import {
   MessagesSquare, Briefcase, UserCircle, BookOpen
 } from 'lucide-react';
 import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
+import ProgramStructureNEP from '@/components/ui/ProgramStructureNEP';
 
 interface CourseTemplateProps {
   title: string;
@@ -19,10 +20,12 @@ interface CourseTemplateProps {
   quickActionsData?: { title: string; icon: any; info: string }[];
   courseKey?: string;
   category?: string;
-  facultyData?: { srNo: number; name: string; additionalRole: string; designation: string; email?: string; education?: string; teachingExp?: string }[];
+  facultyData?: { srNo: number; name: string; additionalRole: string; designation: string; email?: string; education?: string; teachingExp?: string; image?: string; department?: string }[];
+  festivals?: string;
+  publication?: string;
 }
 
-function FacultyFlipCard({ member }: { member: any }) {
+function FacultyFlipCard({ member, programmeName }: { member: any, programmeName?: string }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
@@ -54,7 +57,7 @@ function FacultyFlipCard({ member }: { member: any }) {
           {/* Profile Image */}
           <div className="relative mt-8 mb-4 z-10 w-[120px] h-[150px] rounded-lg shadow-md bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 border-2 border-white">
              {/* Actual Image with fallback */}
-             <img src={`/teaching staff/${member.name}.jpg`} alt={member.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+             <img src={member.image || `/teaching staff/${member.name}.jpg`} alt={member.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
              <UserCircle size={64} className="text-slate-400 hidden absolute" />
           </div>
           
@@ -69,6 +72,16 @@ function FacultyFlipCard({ member }: { member: any }) {
             {member.additionalRole && member.additionalRole !== '—' && (
               <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight">
                 {member.additionalRole}
+              </div>
+            )}
+            {member.department && (
+              <div className="text-[12px] text-[#123B6D] font-bold text-center leading-tight mt-1 px-2">
+                Dept: {member.department}
+              </div>
+            )}
+            {programmeName && (
+              <div className="text-[11px] text-[#64748B] font-medium text-center leading-tight mt-1.5 px-2">
+                {programmeName}
               </div>
             )}
             <div className="absolute bottom-10 w-full flex justify-center z-20 animate-bounce">
@@ -92,36 +105,36 @@ function FacultyFlipCard({ member }: { member: any }) {
            <div className="absolute top-2 w-12 h-2 bg-white/20 rounded-full shadow-inner"></div>
            
           <div className="flex flex-col items-center text-center mt-6 mb-3 pb-3 border-b border-white/20 w-full">
-            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mb-2 shrink-0">
-              <BookOpen size={18} className="text-[#D4A017]" />
+            <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-2 shrink-0">
+              <BookOpen size={20} className="text-[#D4A017]" />
             </div>
-            <h3 className="font-bold text-sm leading-tight text-white/95 mb-0.5">{member.name}</h3>
-            <p className="text-[9px] text-[#D4A017] tracking-wider uppercase font-bold">{member.designation}</p>
+            <h3 className="font-bold text-[16px] leading-tight text-white/95 mb-0.5">{member.name}</h3>
+            <p className="text-[11px] text-[#D4A017] tracking-wider uppercase font-bold">{member.designation}</p>
           </div>
           
-          <div className="space-y-2 flex-1 w-full px-1 overflow-y-auto">
+          <div className="space-y-3 flex-1 w-full px-2 overflow-y-auto">
              {member.additionalRole && member.additionalRole !== '—' && (
-               <div className="flex items-start gap-2">
-                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Role</span>
-                 <span className="text-[11px] text-white/85 leading-snug">{member.additionalRole}</span>
+               <div className="flex items-start gap-3">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Role</span>
+                 <span className="text-[13px] text-white/85 leading-snug">{member.additionalRole}</span>
                </div>
              )}
              {member.education && (
-               <div className="flex items-start gap-2">
-                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Edu.</span>
-                 <span className="text-[11px] text-white/85 leading-snug">{member.education}</span>
+               <div className="flex items-start gap-3">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Edu.</span>
+                 <span className="text-[13px] text-white/85 leading-snug">{member.education}</span>
                </div>
              )}
              {member.email && (
-               <div className="flex items-start gap-2">
-                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Email</span>
-                 <span className="text-[10px] text-white/75 leading-snug break-all">{member.email}</span>
+               <div className="flex items-start gap-3">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Email</span>
+                 <span className="text-[12px] text-white/75 leading-snug break-all">{member.email}</span>
                </div>
              )}
              {member.teachingExp && (
-               <div className="flex items-start gap-2">
-                 <span className="text-[#D4A017] text-[9px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-12">Exp.</span>
-                 <span className="text-[11px] text-white/85 leading-snug">{member.teachingExp}</span>
+               <div className="flex items-start gap-3">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Exp.</span>
+                 <span className="text-[13px] text-white/85 leading-snug">{member.teachingExp}</span>
                </div>
              )}
           </div>
@@ -133,14 +146,15 @@ function FacultyFlipCard({ member }: { member: any }) {
 
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-export default function CourseTemplate({ title, description, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey, facultyData }: CourseTemplateProps) {
+export default function CourseTemplate({ title, description, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey, facultyData, festivals, publication }: CourseTemplateProps) {
   const tabs = [
     'Overview',
+    'Structure',
     'Syllabus',
     'Faculty',
-    'Management Club - Inspira',
-    'Activity',
-    'Result & Prize Distribution',
+    'Events & Activities',
+    ...(festivals ? ['Festivals'] : []),
+    ...(publication ? ['Publication'] : []),
     'Industrial Visits'
   ];
   
@@ -208,28 +222,9 @@ export default function CourseTemplate({ title, description, introductionContent
                 Undergraduate Programme
               </div>
 
-              {/* Title & Floating Image for Mobile */}
+              {/* Title */}
               <div className="relative">
-                {/* Mobile Floating Image */}
-                <div className="md:hidden absolute top-0 right-[-10px] w-[140px] h-[140px] xs:w-[160px] xs:h-[160px] z-10 pointer-events-none">
-                  {/* Decorative Accent */}
-                  <div 
-                    className="absolute inset-[-6px] bg-[#D4A017] -z-10"
-                    style={{ borderRadius: '35% 65% 55% 45% / 45% 45% 65% 65%' }}
-                  ></div>
-                  <div 
-                    className="absolute inset-0 bg-[#123B6D] overflow-hidden"
-                    style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }}
-                  >
-                    <img 
-                      src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1000&auto=format&fit=crop" 
-                      alt="College"
-                      className="w-full h-full object-cover opacity-90"
-                    />
-                  </div>
-                </div>
-
-                <h1 className="text-2xl xs:text-3xl md:text-5xl lg:text-[54px] font-bold text-[#123B6D] leading-tight font-[var(--font-heading)] md:pr-0 pr-[140px] xs:pr-[160px]">
+                <h1 className="text-2xl xs:text-3xl md:text-5xl lg:text-[54px] font-bold text-[#123B6D] leading-tight font-[var(--font-heading)]">
                   {title}
                 </h1>
               </div>
@@ -238,8 +233,8 @@ export default function CourseTemplate({ title, description, introductionContent
                 {description || 'A dynamic undergraduate program that blends creativity, media technology, and communication skills for a future in the digital world.'}
               </p>
 
-              {/* Badges Row - 4 columns on mobile, auto on desktop */}
-              <div className="grid grid-cols-4 md:flex md:flex-nowrap gap-2 md:gap-3 pt-4 md:pt-2 overflow-x-auto scrollbar-hide">
+              {/* Badges Row - 4 columns on mobile, hidden on desktop since we have floating cards */}
+              <div className="grid grid-cols-4 md:hidden gap-2 md:gap-3 pt-4 md:pt-2 overflow-x-auto scrollbar-hide">
                 <div className="flex flex-col md:flex-row md:items-center items-center justify-center text-center md:text-left gap-1 md:gap-2 bg-transparent md:bg-[#F8FAFC] border-0 md:border border-[#E2E8F0] rounded-xl px-1 md:px-4 py-1 md:py-2.5">
                   <Clock className="text-[#3B82F6] shrink-0" size={24} strokeWidth={1.5} />
                   <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">3 Years<br className="hidden md:block"/><span className="font-medium text-gray-500"> Duration</span></span>
@@ -269,16 +264,97 @@ export default function CourseTemplate({ title, description, introductionContent
               </div>
             </div>
 
-            {/* Right Visual Image (Desktop Only) */}
-            <div className="hidden md:flex flex-1 relative w-full justify-end items-center h-[450px]">
-              <div className="relative w-[380px] h-[380px] lg:w-[420px] lg:h-[420px] ml-auto">
-                <div className="absolute inset-[-15px] bg-[#D4A017] -z-10 transition-transform duration-700 hover:scale-105" style={{ borderRadius: '35% 65% 55% 45% / 45% 45% 65% 65%' }}></div>
-                <div className="absolute inset-0 bg-[#123B6D] overflow-hidden" style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }}>
-                  <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1000&auto=format&fit=crop" alt="College Campus" className="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-700"/>
+            {/* Right Visual Image / Floating Cards (Desktop Only) */}
+            <div className="hidden lg:flex flex-1 relative w-full justify-center items-center h-[550px]">
+              
+              {/* Header Title for Infographic */}
+              <div className="absolute top-0 w-full flex items-center justify-center gap-4 z-10">
+                 <div className="h-px bg-[#D4A017] w-16"></div>
+                 <div className="w-1.5 h-1.5 rounded-full bg-[#D4A017]"></div>
+                 <h3 className="text-sm font-bold tracking-widest text-[#123B6D] uppercase">Programme Snapshot</h3>
+                 <div className="w-1.5 h-1.5 rounded-full bg-[#D4A017]"></div>
+                 <div className="h-px bg-[#D4A017] w-16"></div>
+              </div>
+
+              <div className="relative w-[500px] h-[500px] flex items-center justify-center mt-8">
+                
+                {/* Central Circle (Static) */}
+                <div className="absolute z-20 w-[220px] h-[220px] bg-white rounded-full shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center border-4 border-gray-50/50">
+                  <GraduationCap size={40} className="text-[#123B6D] mb-2" strokeWidth={1.5} />
+                  <h2 className="text-4xl font-bold text-[#123B6D] text-center px-4 leading-none font-[var(--font-heading)]">
+                    {title.split(' ')[0]}
+                  </h2>
+                  <div className="w-8 h-0.5 bg-[#F59E0B] mt-3"></div>
                 </div>
-                <div className="absolute top-[20%] -left-8 bg-white rounded-full p-4 shadow-2xl flex flex-col items-center justify-center w-[120px] h-[120px] border-4 border-[#F8FAFC]">
-                  <GraduationCap className="text-[#123B6D] mb-1" size={36} />
-                  <span className="text-[#1E293B] font-extrabold text-sm text-center leading-tight">MCC<br/>Autonomous</span>
+
+                {/* Rotating Wrapper */}
+                <div className="absolute w-full h-full flex items-center justify-center [animation:spin_40s_linear_infinite]">
+                  
+                  {/* Connecting Ring */}
+                  <div className="absolute w-[360px] h-[360px] rounded-full border border-gray-200 z-0"></div>
+                  
+                  {/* Colored dots on the ring */}
+                  <div className="absolute top-[25%] left-[19%] w-2.5 h-2.5 rounded-full bg-[#3B82F6] z-10"></div>
+                  <div className="absolute top-[25%] right-[19%] w-2.5 h-2.5 rounded-full bg-[#F59E0B] z-10"></div>
+                  <div className="absolute bottom-[25%] left-[19%] w-2.5 h-2.5 rounded-full bg-[#10B981] z-10"></div>
+                  <div className="absolute bottom-[25%] right-[19%] w-2.5 h-2.5 rounded-full bg-[#8B5CF6] z-10"></div>
+
+                  {/* Satellite 1: Top Left (Duration) */}
+                  <div className="absolute top-[5%] left-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[130px] h-[130px] bg-white rounded-full shadow-lg border border-[#3B82F6]/30 flex flex-col items-center justify-center relative">
+                      <Clock size={24} className="text-[#3B82F6] mb-1" strokeWidth={2} />
+                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">3</span>
+                      <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Years</span>
+                      <div className="absolute -bottom-3 bg-[#3B82F6] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">
+                        Duration
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Satellite 2: Top Right (Structure) */}
+                  <div className="absolute top-[5%] right-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[130px] h-[130px] bg-white rounded-full shadow-lg border border-[#F59E0B]/30 flex flex-col items-center justify-center relative">
+                      <Building2 size={24} className="text-[#F59E0B] mb-1" strokeWidth={2} />
+                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">6</span>
+                      <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Semesters</span>
+                      <div className="absolute -bottom-3 bg-[#F59E0B] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">
+                        Structure
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Satellite 3: Bottom Left (Capacity) */}
+                  <div className="absolute bottom-[5%] left-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#10B981]/30 flex flex-col items-center justify-center relative">
+                      <Users size={24} className="text-[#10B981] mb-1" strokeWidth={2} />
+                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">600</span>
+                      <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Seats</span>
+                      <span className="text-[8px] font-bold text-gray-500 uppercase leading-none">(Govt. Aided)</span>
+                      <div className="absolute -bottom-3 bg-[#10B981] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">
+                        Capacity
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Satellite 4: Bottom Right (Timings) */}
+                  <div className="absolute bottom-[5%] right-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative">
+                      <Calendar size={24} className="text-[#8B5CF6] mb-1" strokeWidth={2} />
+                      <div className="flex items-baseline gap-1 mt-1">
+                        <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">07:15</span>
+                        <span className="text-[8px] font-bold text-[#1E293B]">a.m.</span>
+                      </div>
+                      <div className="w-6 h-px bg-gray-200 my-1"></div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">10:51</span>
+                        <span className="text-[8px] font-bold text-[#1E293B]">a.m.</span>
+                      </div>
+                      <div className="absolute -bottom-3 bg-[#8B5CF6] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">
+                        Timings
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -315,7 +391,7 @@ export default function CourseTemplate({ title, description, introductionContent
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
               
               {/* Column 1: About */}
-              <div className="lg:col-span-8 bg-white rounded-3xl p-6 md:p-8 border border-[#E2E8F0] shadow-sm flex flex-col h-fit">
+              <div className="lg:col-span-12 bg-white rounded-3xl p-6 md:p-8 border border-[#E2E8F0] shadow-sm flex flex-col h-fit">
                 <h2 className="text-lg md:text-xl font-bold text-[#1E293B] mb-4">About the Programme</h2>
                 <div className="relative">
                   <div className={`prose prose-sm text-gray-600 transition-all duration-500 overflow-hidden text-xs md:text-sm ${!isReadMore ? 'max-h-[160px] md:max-h-[200px]' : 'max-h-[1500px]'}`}>
@@ -352,62 +428,20 @@ export default function CourseTemplate({ title, description, introductionContent
 
 
 
-              {/* Column 3: Quick Actions */}
-              <div className="lg:col-span-4">
-                <div className="bg-white rounded-3xl p-6 md:p-6 border border-[#E2E8F0] shadow-sm h-full">
-                  <h3 className="font-bold text-[#1E293B] mb-4 text-lg">Quick Actions</h3>
-                  <div className="flex flex-col gap-3" style={{ perspective: '1000px' }}>
-                    {quickActionsData.map((item, idx) => {
-                      const isFlipped = flippedCards[idx];
-                      return (
-                        <div 
-                          key={idx} 
-                          onClick={() => toggleFlip(idx)}
-                          className="relative w-full h-[64px] cursor-pointer group"
-                        >
-                          <div 
-                            className="w-full h-full transition-transform duration-500 ease-in-out"
-                            style={{ 
-                              transformStyle: 'preserve-3d', 
-                              transform: isFlipped ? 'rotateX(-180deg)' : 'rotateX(0deg)' 
-                            }}
-                          >
-                            {/* Front of card */}
-                            <div 
-                              className="absolute inset-0 flex items-center justify-between bg-[#F8FAFC] px-4 py-3 rounded-xl border border-transparent group-hover:border-[#3B82F6]/30 group-hover:bg-[#EBF3FF] transition-all"
-                              style={{ backfaceVisibility: 'hidden' }}
-                            >
-                              <div className="flex items-center gap-3">
-                                {React.isValidElement(item.icon) ? item.icon : React.createElement(item.icon as any, { className: "text-[#3B82F6]", size: 18 })}
-                                <span className="text-xs md:text-sm font-bold text-[#1E293B]">{item.title}</span>
-                              </div>
-                              <ChevronRight className="text-gray-400 group-hover:rotate-90 transition-transform" size={14} />
-                            </div>
-                            
-                            {/* Back of card */}
-                            <div 
-                              className="absolute inset-0 flex items-center justify-center bg-[#123B6D] px-3 py-2 rounded-xl shadow-inner"
-                              style={{ 
-                                backfaceVisibility: 'hidden', 
-                                transform: 'rotateX(180deg)' 
-                              }}
-                            >
-                              <p className="text-[10px] md:text-xs text-white leading-tight font-medium text-center">
-                                {item.info}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
             </div>
-          ) : activeTab === 'Syllabus' && syllabusContent ? (
+          ) : activeTab === 'Structure' && syllabusContent ? (
             <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">
               {syllabusContent}
+            </div>
+          ) : activeTab === 'Syllabus' ? (
+            <div className="bg-white rounded-3xl p-12 border border-[#E2E8F0] shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]">
+              <div className="w-16 h-16 rounded-2xl bg-[#EBF3FF] flex items-center justify-center mb-4">
+                <FileText className="text-[#123B6D]" size={32} />
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold text-[#123B6D] mb-2">Syllabus</h3>
+              <p className="text-gray-500 text-sm md:text-base max-w-sm">
+                The detailed syllabus for this programme is being updated. Please check back shortly or contact the department for more information.
+              </p>
             </div>
           ) : activeTab === 'Faculty' && facultyData && facultyData.length > 0 ? (
             <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">
@@ -422,9 +456,21 @@ export default function CourseTemplate({ title, description, introductionContent
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {facultyData.map((member) => (
-                  <FacultyFlipCard key={member.srNo} member={member} />
+                  <FacultyFlipCard key={member.srNo} member={member} programmeName={title} />
                 ))}
               </div>
+            </div>
+          ) : activeTab === 'Festivals' && festivals ? (
+            <div className="bg-white rounded-3xl p-8 border border-[#E2E8F0] shadow-sm text-center min-h-[250px] flex flex-col items-center justify-center">
+              <Award className="text-[#D4A017] mb-4" size={48} />
+              <h2 className="text-xl md:text-2xl font-bold text-[#123B6D] mb-2">Programme Festivals</h2>
+              <p className="text-gray-600 text-lg font-medium">{festivals}</p>
+            </div>
+          ) : activeTab === 'Publication' && publication ? (
+            <div className="bg-white rounded-3xl p-8 border border-[#E2E8F0] shadow-sm text-center min-h-[250px] flex flex-col items-center justify-center">
+              <BookOpen className="text-[#3B82F6] mb-4" size={48} />
+              <h2 className="text-xl md:text-2xl font-bold text-[#123B6D] mb-2">Programme Publication</h2>
+              <p className="text-gray-600 text-lg font-medium">{publication}</p>
             </div>
           ) : (
             <div className="bg-white rounded-3xl p-12 border border-[#E2E8F0] shadow-sm flex flex-col items-center justify-center text-center min-h-[250px]">

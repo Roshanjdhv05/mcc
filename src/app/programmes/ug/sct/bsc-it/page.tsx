@@ -17,6 +17,8 @@ const bscItFaculty = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
+      festivals="Hack-A-Thon (Col)"
+      publication="Tech Anugraha (Col)"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Science in Information Technology (B.Sc. IT) is an undergraduate program that focuses on the study of computing, software development, networking, data management, and cybersecurity. The course is designed to equip students with technical and analytical skills to solve real-world IT challenges and drive innovation in the digital era.</p>

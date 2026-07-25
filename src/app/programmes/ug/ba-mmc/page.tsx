@@ -18,6 +18,7 @@ const bammcFaculty = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
+      publication="Shutter Speed"
       introductionContent={
         <>
         <p className="mb-4">The Bachelor of Arts (BA) in Multimedia and Mass Communication is an undergraduate program that focuses on the dynamic fields of media, journalism, digital content creation, and communication strategies. This interdisciplinary course blends journalism, advertising, public relations, film studies, digital media, and multimedia production, equipping students with the skills needed for the fast-evolving media industry.</p>

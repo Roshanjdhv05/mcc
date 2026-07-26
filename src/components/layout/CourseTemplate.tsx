@@ -197,6 +197,21 @@ export default function CourseTemplate({ title, description, introductionContent
     setFlippedCards(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
+  const timingInfoStr = quickActionsData.find(q => q.title.toLowerCase().includes('timing') || q.title.toLowerCase().includes('time'))?.info || '07:15 a.m. - 10:51 a.m.';
+  const seatsInfoStr = quickActionsData.find(q => q.title.toLowerCase().includes('intake') || q.title.toLowerCase().includes('seat'))?.info || '600 Seats';
+  
+  const seatMatch = seatsInfoStr.match(/(\d+)/);
+  const seatCount = seatMatch ? seatMatch[1] : "TBD";
+
+  const timingMatch = timingInfoStr.match(/([\d:]+)\s*(AM|PM|a\.m\.|p\.m\.)?\s*(?:to|-|–)\s*([\d:]+)\s*(AM|PM|a\.m\.|p\.m\.)?/i);
+  let startT = timingInfoStr, startP = "", endT = "", endP = "";
+  if (timingMatch) {
+     startT = timingMatch[1];
+     startP = timingMatch[2] || '';
+     endT = timingMatch[3];
+     endP = timingMatch[4] || '';
+  }
+
   return (
     <div className="bg-[#F8FAFC] min-h-screen font-sans">
       
@@ -245,11 +260,11 @@ export default function CourseTemplate({ title, description, introductionContent
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center items-center justify-center text-center md:text-left gap-1 md:gap-2 bg-transparent md:bg-[#F8FAFC] border-0 md:border border-[#E2E8F0] rounded-xl px-1 md:px-4 py-1 md:py-2.5">
                   <Settings className="text-[#F59E0B] shrink-0" size={24} strokeWidth={1.5} />
-                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">07:15 a.m.<br className="hidden md:block"/><span className="font-medium text-gray-500"> – 10:51 a.m.</span><br className="hidden md:block"/><span className="font-normal text-[8px] md:text-xs text-gray-400">(Practicals till 12:30)</span></span>
+                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">{quickActionsData.find(q => q.title.toLowerCase().includes('timing') || q.title.toLowerCase().includes('time'))?.info || '07:15 a.m. – 10:51 a.m.'}<br className="hidden md:block"/><span className="font-medium text-gray-500"> Timings</span></span>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center items-center justify-center text-center md:text-left gap-1 md:gap-2 bg-transparent md:bg-[#F8FAFC] border-0 md:border border-[#E2E8F0] rounded-xl px-1 md:px-4 py-1 md:py-2.5">
                   <Award className="text-[#8B5CF6] shrink-0" size={24} strokeWidth={1.5} />
-                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">600 Seats<br className="hidden md:block"/><span className="font-medium text-gray-500"> Intake</span><br className="hidden md:block"/><span className="font-normal text-[8px] md:text-xs text-gray-400">(Govt. Aided)</span></span>
+                  <span className="text-[9px] md:text-sm font-bold text-[#1E293B] leading-tight">{quickActionsData.find(q => q.title.toLowerCase().includes('intake') || q.title.toLowerCase().includes('seat'))?.info || '600 Seats'}<br className="hidden md:block"/><span className="font-medium text-gray-500"> Intake</span></span>
                 </div>
               </div>
 
@@ -327,9 +342,8 @@ export default function CourseTemplate({ title, description, introductionContent
                   <div className="absolute bottom-[5%] left-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
                     <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#10B981]/30 flex flex-col items-center justify-center relative">
                       <Users size={24} className="text-[#10B981] mb-1" strokeWidth={2} />
-                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">600</span>
+                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">{seatCount}</span>
                       <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Seats</span>
-                      <span className="text-[8px] font-bold text-gray-500 uppercase leading-none">(Govt. Aided)</span>
                       <div className="absolute -bottom-3 bg-[#10B981] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">
                         Capacity
                       </div>
@@ -338,17 +352,23 @@ export default function CourseTemplate({ title, description, introductionContent
 
                   {/* Satellite 4: Bottom Right (Timings) */}
                   <div className="absolute bottom-[5%] right-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative">
-                      <Calendar size={24} className="text-[#8B5CF6] mb-1" strokeWidth={2} />
-                      <div className="flex items-baseline gap-1 mt-1">
-                        <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">07:15</span>
-                        <span className="text-[8px] font-bold text-[#1E293B]">a.m.</span>
-                      </div>
-                      <div className="w-6 h-px bg-gray-200 my-1"></div>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">10:51</span>
-                        <span className="text-[8px] font-bold text-[#1E293B]">a.m.</span>
-                      </div>
+                    <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative px-2">
+                      <Calendar size={24} className="text-[#8B5CF6] mb-1 shrink-0" strokeWidth={2} />
+                      {endT ? (
+                        <>
+                          <div className="flex items-baseline gap-1 mt-1">
+                            <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">{startT}</span>
+                            <span className="text-[8px] font-bold text-[#1E293B] uppercase">{startP}</span>
+                          </div>
+                          <div className="w-6 h-px bg-gray-200 my-1"></div>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">{endT}</span>
+                            <span className="text-[8px] font-bold text-[#1E293B] uppercase">{endP}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center font-bold text-[#123B6D] text-sm px-2 leading-snug">{timingInfoStr}</div>
+                      )}
                       <div className="absolute -bottom-3 bg-[#8B5CF6] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">
                         Timings
                       </div>

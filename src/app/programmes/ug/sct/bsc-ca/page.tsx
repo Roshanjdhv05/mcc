@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { renderSyllabusTable } from '@/lib/syllabusData';
+import { Users, Clock, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'B.Sc. (CA) | MCC Digital Experience Platform',
@@ -10,6 +11,13 @@ export const metadata: Metadata = {
 const bscCaFaculty = [
   { srNo: 26, name: 'Dr. Vishal Dnyandeo Borude',  additionalRole: 'Coordinator', designation: 'Assistant Professor' },
   { srNo: 27, name: 'Mr. Siddhesh Santosh Gotekar', additionalRole: '—',           designation: 'Assistant Professor' },
+];
+
+const quickActions = [
+  { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (any stream) with Maths/Stats OR Diploma in IT/CS/allied branches.' },
+  { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
+  { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '02:05 PM – 08:10 PM' },
+  { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' },
 ];
 
 export default function CoursePage() {
@@ -31,6 +39,7 @@ export default function CoursePage() {
       category="science"
       facultyData={bscCaFaculty}
       syllabusContent={renderSyllabusTable('BCA')}
+      quickActionsData={quickActions}
     />
   );
 }

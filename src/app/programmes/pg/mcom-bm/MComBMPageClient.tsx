@@ -20,8 +20,8 @@ export default function MComBMPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'B.Com from any recognised University in Maharashtra.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters | SFC (60 seats).' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Evening: 5:30 p.m. – 8:30 p.m.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats (SFC).' },
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '05:30 PM – 08:30 PM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' },
   ];
 
   return (
@@ -29,7 +29,7 @@ export default function MComBMPageClient({ syllabusContent }: Props) {
       title="M.Com (Business Management)"
       description="A postgraduate specialisation in strategic management, entrepreneurship, HRM, and marketing for commerce graduates."
       seats="60"
-      timing="5:30 PM – 8:30 PM"
+      timing="05:30 PM – 08:30 PM"
       coordinators={coordinators}
       quickActionsData={quickActions}
       syllabusContent={syllabusContent}

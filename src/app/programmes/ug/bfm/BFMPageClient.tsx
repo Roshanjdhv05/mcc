@@ -15,8 +15,8 @@ export default function BFMPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: '10+2 from any recognised Board in any stream.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years (NEP 4 Years), 6/8 Semesters.' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Morning / Afternoon Batches.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Contact College Administration.' }
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '12:00 PM – 04:30 PM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' }
   ];
 
   return (

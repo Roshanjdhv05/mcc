@@ -13,7 +13,8 @@ const programmes = [
     full: 'Master of Commerce (Advanced Accountancy)',
     level: 'POST GRADUATE',
     duration: '2 Years',
-    seats: 60,
+    seats: 80,
+    timing: '05:30 PM – 08:30 PM',
     color: 'from-[#dc2626] to-[#ef4444]',
     description: 'Advanced studies in accountancy, taxation, and auditing, preparing students for high-level roles in finance and accounting.',
     tags: ['Accountancy', 'Taxation', 'Auditing'],
@@ -25,6 +26,7 @@ const programmes = [
     level: 'POST GRADUATE',
     duration: '2 Years',
     seats: 60,
+    timing: '05:30 PM – 08:30 PM',
     color: 'from-[#7c3aed] to-[#9d5cf4]',
     description: 'Focuses on strategic management, organizational behavior, and leadership skills for future business leaders and entrepreneurs.',
     tags: ['Business Management', 'Leadership', 'Strategy'],
@@ -36,6 +38,7 @@ const programmes = [
     level: 'POST GRADUATE',
     duration: '2 Years',
     seats: 60,
+    timing: '05:30 PM – 08:30 PM',
     color: 'from-[#0e7490] to-[#06b6d4]',
     description: 'Specialized postgraduate programme covering advanced concepts in banking, financial markets, and investment management.',
     tags: ['Banking', 'Finance', 'Financial Markets'],
@@ -141,7 +144,10 @@ export default function PostGraduatePage() {
 
                 {/* Footer */}
                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                  <span className="text-[#123B6D] text-xs font-semibold">{prog.seats} seats available</span>
+                  <div className="flex flex-col">
+                    <span className="text-[#123B6D] text-xs font-semibold">{prog.seats} seats available</span>
+                    {prog.timing && <span className="text-gray-500 text-[10px] mt-0.5">{prog.timing}</span>}
+                  </div>
                   <Link
                     href={prog.href}
                     className="flex items-center gap-1.5 text-sm font-bold text-[#123B6D] hover:gap-2.5 transition-all duration-200 group"

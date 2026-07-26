@@ -6,11 +6,11 @@ export default function VicePrincipalPage() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] font-[var(--font-heading)] border-l-4 border-[#D4A017] pl-6 leading-relaxed inline-block">
-            Vice Principal's Desk
+          VICE PRINCIPAL'S DESK
           </h2>
         </div>
 
-        <div className="text-gray-700 leading-relaxed text-[17px] space-y-6">
+        <div className="text-gray-700 leading-relaxed text-[17px] space-y-6 text-justify">
           <p>
             I feel happy to welcome you to PTVA's Mulund College of Commerce (Autonomous). It is indeed my privilege to work in the position of Vice- Principal, with the dedicated and innovative team that aspires for the highest quality of education for the students.
           </p>

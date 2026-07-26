@@ -10,7 +10,7 @@ import {
 
 interface Coordinator {
   name: string;
-  designation: string;
+  designation: string | React.ReactNode;
   email?: string;
   phone?: string;
   education?: string;
@@ -197,8 +197,8 @@ export default function PGCourseTemplate({
                   <div className="absolute bottom-[5%] right-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
                     <div className="w-[98px] h-[98px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative">
                       <Calendar size={16} className="text-[#8B5CF6] mb-1" strokeWidth={2} />
-                      <span className="text-[10px] font-bold text-[#123B6D] leading-snug text-center px-2 font-[var(--font-heading)]">Evening</span>
-                      <span className="text-[7px] text-gray-500 text-center px-1">5:30–8:30 PM</span>
+                      <span className="text-[10px] font-bold text-[#123B6D] leading-snug text-center px-2 font-[var(--font-heading)]">Time</span>
+                      <span className="text-[7px] font-bold text-gray-500 text-center px-1">{timing}</span>
                       <div className="absolute -bottom-3 bg-[#8B5CF6] text-white text-[7px] font-bold tracking-wider px-2.5 py-1 rounded-full uppercase shadow-md">
                         Timings
                       </div>

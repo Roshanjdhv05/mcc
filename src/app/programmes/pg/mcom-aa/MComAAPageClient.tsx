@@ -6,8 +6,8 @@ import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const coordinators = [
   {
-    name: 'Dr. Riya Dhamapurkar',
-    designation: 'Coordinator, M.Com (Advanced Accountancy)',
+    name: 'Mr. Nikhil Karkhanis',
+    designation: <span className="flex flex-col"><span>Coordinator, M.Com</span> <span>(Advanced Accountancy)</span></span>,
     education: 'M.Com, Ph.D.',
     email: '',
   },
@@ -17,8 +17,8 @@ export default function MComAAPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Graduation in relevant field from a recognised university.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '2 Years, 4 Semesters.' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '5:30 PM – 8:30 PM (Evening).' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '80 Seats.' },
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '05:30 PM – 08:30 PM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '80 Seats' },
   ];
 
   return (
@@ -26,7 +26,7 @@ export default function MComAAPageClient() {
       title="Master of Commerce (Advanced Accountancy)"
       description="An advanced postgraduate program providing deep expertise in accounting principles, financial management, and corporate taxation."
       seats="80"
-      timing="5:30 PM – 8:30 PM"
+      timing="05:30 PM – 08:30 PM"
       coordinators={coordinators}
       quickActionsData={quickActions}
       syllabusContent={<SyllabusRenderer programKey="MCOM_AA" />}

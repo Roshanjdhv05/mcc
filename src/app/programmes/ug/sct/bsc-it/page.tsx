@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import { renderSyllabusTable } from '@/lib/syllabusData';
+import { Users, Clock, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'B.Sc (IT) | MCC Digital Experience Platform',
@@ -12,6 +13,13 @@ const bscItFaculty = [
   { srNo: 31, name: 'Dr. Sandhya Pandey',          additionalRole: '—',           designation: 'Assistant Professor' },
   { srNo: 32, name: 'Ms. Suvarna Ramesh Sawant',   additionalRole: '—',           designation: 'Assistant Professor' },
   { srNo: 37, name: 'Ms. Nikhita Khedekar',        additionalRole: '—',           designation: 'Assistant Professor' },
+];
+
+const quickActions = [
+  { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (any stream) with Mathematics OR 3-yr Diploma from MSBTE.' },
+  { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
+  { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '10:40 AM – 04:15 PM' },
+  { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '120 Seats' },
 ];
 
 export default function CoursePage() {
@@ -33,6 +41,7 @@ export default function CoursePage() {
       category="science"
       facultyData={bscItFaculty}
       syllabusContent={renderSyllabusTable('BSC_IT')}
+      quickActionsData={quickActions}
     />
   );
 }

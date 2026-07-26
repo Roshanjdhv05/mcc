@@ -7,7 +7,7 @@ import { GraduationCap, ChevronRight, ChevronDown, ExternalLink, BookOpen, Users
 import { motion, AnimatePresence } from 'framer-motion';
 
 const autonomyNav = [
-  { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
+  { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' },
   { 
     label: 'Board of Studies', 
     href: '#',

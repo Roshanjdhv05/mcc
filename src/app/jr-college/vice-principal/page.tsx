@@ -5,12 +5,12 @@ export default function VicePrincipalDeskPage() {
     <div className="bg-gray-50 min-h-screen py-16">
       <div className="max-w-5xl mx-auto px-6">
         <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] font-[var(--font-heading)] italic border-l-4 border-[#D4A017] pl-6 leading-relaxed inline-block">
-            THE JUNIOR COLLEGE VICE PRINCIPAL'S DESK
+          <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] font-[var(--font-heading)] border-l-4 border-[#D4A017] pl-6 leading-relaxed inline-block">
+            VICE PRINCIPAL'S DESK
           </h2>
         </div>
 
-        <div className="text-gray-700 leading-relaxed text-[17px] space-y-6 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-100">
+        <div className="text-gray-700 leading-relaxed text-[17px] space-y-6 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-100 text-justify">
           <p>
             Our college continues to uphold its unwavering commitment to academics. This year, students achieved impressive results, surpassing new benchmarks in board exam performance. The dedication of our teaching faculty, combined with the resilience of our students, has fostered a learning environment that balances intellectual growth with practical application. Beyond the regular curriculum, specialized workshops and guest lectures have kept students ahead of the curve, with many securing top positions in prestigious competitions and earning internships and placements in renowned organizations.
           </p>

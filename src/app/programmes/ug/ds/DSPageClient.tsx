@@ -19,8 +19,8 @@ export default function DSPageClient({ syllabusContent }: Props) {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (any stream) with Maths/Stats OR Diploma in IT/CS/allied branches.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '2:30 p.m. – 8:30 p.m.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats.' }
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '02:05 PM – 08:10 PM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' }
   ];
 
   return (

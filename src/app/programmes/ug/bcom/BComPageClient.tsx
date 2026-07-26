@@ -36,8 +36,8 @@ export default function BComPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: '10+2 from any recognised Board in any stream.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years (NEP 4 Years), 6/8 Semesters.' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Morning Batches.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Contact College Administration.' }
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '07:15 AM – 10:40 AM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '600 Seats' }
   ];
 
   return (

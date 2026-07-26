@@ -20,8 +20,8 @@ export default function BAFPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC (Std. XII) passed from Maharashtra Board or equivalent.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '07:15 a.m. - 12:00 p.m.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '120 Seats.' }
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '07:15 AM – 11:40 AM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '120 Seats' }
   ];
 
   return (

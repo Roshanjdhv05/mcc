@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase';
 const formatCourseLabel = (label: string) => {
   if (typeof label !== 'string') return label;
   
-  const isCourse = /^(Bachelor|Master|B\.Com|B\.Sc|M\.Com|M\.Sc|B\.A\.|PhD)/i.test(label);
+  const isCourse = /^(Bachelor|Master|B\.Com|B\.Sc|M\.Com|M\.Sc|B\.A\.|PhD|BAMMC|BNMMC|Commerce)/i.test(label);
   
   if (isCourse) {
     const parenIndex = label.indexOf('(');
@@ -30,7 +30,62 @@ const formatCourseLabel = (label: string) => {
 const navLinks = [
   { label: 'Home', href: '/', icon: <Home size={18} /> },
   {
-    label: 'About Us', href: '#', icon: <Users size={18} />, sub: [
+    label: 'About Us', href: '#', icon: <Users size={18} />,
+    isMegaMenu: true,
+    megaMenuAlign: 'left',
+    megaMenuImage: '/college_campus_hero.png',
+    megaMenuColumns: [
+      {
+        title: 'College',
+        sections: [
+          {
+            links: [
+              { label: 'Vision-Mission', href: '/about/vision-mission' },
+              { label: 'PTVA Trust', href: '/about/ptva-trust' },
+              { label: 'Board of Trustees', href: '/about/board-of-trustees' },
+              { label: 'Our Milestones', href: '/about/milestones' },
+              { label: 'Our Other Institutions', href: '/about/other-institutions' },
+              { label: 'Organogram', href: '/about/organogram' },
+              { label: 'Code of Conduct', href: '/about/code-of-conduct' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Leadership',
+        sections: [
+          {
+            links: [
+              { label: "Principal's Desk", href: '/principal' },
+              { label: "Vice Principal's Desk", href: '/vice-principal' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Development Committee',
+        sections: [
+          {
+            links: [
+              { label: 'Members (Year Wise)', href: '/about/cdc-members' },
+              { label: 'Minutes of the meeting', href: '/about/cdc-minutes' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Special Lectures',
+        sections: [
+          {
+            links: [
+              { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
+              { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
+            ]
+          }
+        ]
+      },
+    ],
+    sub: [
       { label: 'Vision-Mission', href: '/about/vision-mission' },
       { label: 'PTVA Trust', href: '/about/ptva-trust' },
       { label: 'Board of Trustees', href: '/about/board-of-trustees' },
@@ -46,6 +101,8 @@ const navLinks = [
         ]
       },
       { label: 'Our Other Institutions', href: '/about/other-institutions' },
+      { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
+      { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
     ]
   },
   {
@@ -57,7 +114,7 @@ const navLinks = [
       {
         title: 'Certificates',
         sections: [
-          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }, { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' }] }
+          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }, { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' }] }
         ]
       },
       {
@@ -82,7 +139,7 @@ const navLinks = [
     sub: [
       { label: '2 B – Certificate', href: '/accreditation/2b-certificate' },
       { label: '12 F – Certificate', href: '/accreditation/12f-certificate' },
-      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
+      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' },
       { 
         label: 'NAAC', href: '#', sub: [
           { label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }
@@ -110,7 +167,7 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
+              { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' },
             ]
           }
         ]
@@ -151,7 +208,7 @@ const navLinks = [
       }
     ],
     sub: [
-      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/grant' },
+      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' },
       { 
         label: 'Board of Studies', href: '#', sub: [
           { label: 'Members', href: '/autonomous/bos/members' },
@@ -208,8 +265,6 @@ const navLinks = [
               { label: 'SSR Supporting Documents', href: '/iqac/ssr-supporting-documents' },
               { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
               { label: 'Perspective plan', href: '/iqac#perspective-plan' },
-              { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
-              { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
               { label: 'Deeksharambh', href: '/iqac#deeksharambh' },
               { label: 'Disability Sensitisation', href: '/iqac#disability' },
               { label: 'Environmental Commitments', href: '/iqac#environment' },
@@ -230,8 +285,6 @@ const navLinks = [
       { label: 'SSR Supporting Documents', href: '/iqac/ssr-supporting-documents' },
       { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
       { label: 'Perspective plan', href: '/iqac#perspective-plan' },
-      { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
-      { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
       { label: 'Deeksharambh', href: '/iqac#deeksharambh' },
       { label: 'Disability Sensitisation', href: '/iqac#disability' },
       { label: 'Environmental Commitments', href: '/iqac#environment' },
@@ -266,7 +319,7 @@ const navLinks = [
           { label: 'B.COM (Financial Markets)', href: '/programmes/ug/bfm' },
           { label: 'B.COM (Management Studies)', href: '/programmes/ug/bcom-ms' },
           { label: 'B.COM (Business Administration)', href: '/programmes/ug/bcom-ba' },
-          { label: 'BNMMC (Mass Media & Communication)', href: '/programmes/ug/bammc' },
+          { label: 'BAMMC (Mass Media & Communication)', href: '/programmes/ug/bammc' },
           { label: 'B.SC. (Computer Science)', href: '/programmes/ug/sct/bsc-cs', isBoldBlack: true },
           { label: 'B.SC. (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
           { label: 'B.SC. (Computer Applications)', href: '/programmes/ug/sct/bsc-ca' },
@@ -302,7 +355,7 @@ const navLinks = [
           { label: 'B.COM (Financial Markets)', href: '/programmes/ug/bfm' },
           { label: 'B.COM (Management Studies)', href: '/programmes/ug/bcom-ms' },
           { label: 'B.COM (Business Administration)', href: '/programmes/ug/bcom-ba' },
-          { label: 'BNMMC (Mass Media & Communication)', href: '/programmes/ug/bammc' },
+          { label: 'BAMMC (Mass Media & Communication)', href: '/programmes/ug/bammc' },
           { label: 'B.SC. (Computer Science)', href: '/programmes/ug/sct/bsc-cs', isBoldBlack: true },
           { label: 'B.SC. (Information Technology)', href: '/programmes/ug/sct/bsc-it' },
           { label: 'B.SC. (Computer Applications)', href: '/programmes/ug/sct/bsc-ca' },
@@ -614,11 +667,7 @@ const navLinks = [
           {
             subTitle: 'Professional Course Examinations',
             subTitleHighlight: true,
-            links: [
-              { label: 'CA', href: '#' },
-              { label: 'CS', href: '#' },
-              { label: 'CMA', href: '#' },
-            ]
+            links: []
           },
           {
             links: [
@@ -659,13 +708,7 @@ const navLinks = [
       },
       {
         label: 'Wall of Fame (Students)', href: '#', sub: [
-          {
-            label: 'Professional Course Examinations', href: '#', sub: [
-              { label: 'CA', href: '#' },
-              { label: 'CS', href: '#' },
-              { label: 'CMA', href: '#' },
-            ]
-          },
+          { label: 'Professional Course Examinations', href: '#' },
           { label: 'Sports & Games', href: '#' },
           { label: 'Cultural', href: '#' },
           { label: 'Theatre', href: '#' },
@@ -890,11 +933,20 @@ export default function Navbar() {
                     </div>
                     <div className="w-[1px] h-4 lg:h-7 bg-[#D4A017]/40"></div>
                     
-                    <div className="flex items-center gap-1 xl:gap-1.5 pr-2 lg:pr-12">
+                    <div className="flex items-center gap-1 xl:gap-1.5">
                       <Award className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
                       <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
                         <span>NAAC Accredited</span>
                         <span>A Grade - III Cycle (2016-2026)</span>
+                      </span>
+                    </div>
+                    <div className="w-[1px] h-4 lg:h-7 bg-[#D4A017]/40"></div>
+
+                    <div className="flex items-center gap-1 xl:gap-1.5 pr-2 lg:pr-12">
+                      <Star className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
+                      <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
+                        <span>SQAAF Accreditation</span>
+                        <span>A+ Grade</span>
                       </span>
                     </div>
                   </div>
@@ -1136,10 +1188,10 @@ export default function Navbar() {
                               {col.sections.map((sec: any, sidx: number) => (
                                 <div key={sidx} className={col.colSpan === 2 ? "break-inside-avoid mb-6" : ""}>
                                   {sec.subTitle && (sec.subTitleHighlight ? (
-                                    <h5 className="font-bold text-[#123B6D] text-[15px] mb-2 flex items-center gap-2">
+                                    <p className="font-medium text-[#1E293B] text-[15px] mb-2 flex items-center gap-2">
                                       <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0"></span>
                                       {sec.subTitle}
-                                    </h5>
+                                    </p>
                                   ) : (
                                     <h5 className="font-bold text-[#123B6D] text-[15px] mb-2">{sec.subTitle}</h5>
                                   ))}
@@ -1204,7 +1256,7 @@ export default function Navbar() {
                                     
                                     <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Arts</h4>
                                     <ul className="space-y-2.5 mb-6">
-                                       <li><Link href="/programmes/ug/bammc" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>BNMMC</strong> (Mass Media &amp; Communication)</span></Link></li>
+                                       <li><Link href="/programmes/ug/bammc" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>BAMMC</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Mass Media &amp; Communication)</span></span></Link></li>
                                     </ul>
                                     
                                     <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Apprenticeship</h4>
@@ -1241,7 +1293,7 @@ export default function Navbar() {
                               <h3 className="font-bold text-[#123B6D] text-[20px] text-center mb-6">Ph.D.</h3>
                               <div>
                                  <ul className="space-y-2.5">
-                                    <li><Link href="/programmes/phd/be" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span>Commerce (Specialisation in Business Economics)</span></Link></li>
+                                    <li><Link href="/programmes/phd/be" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>Commerce</strong> (Specialisation in Business Economics)</span></Link></li>
                                  </ul>
                               </div>
                            </div>

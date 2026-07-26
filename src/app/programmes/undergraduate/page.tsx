@@ -14,6 +14,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 120,
+    timing: '12:00 PM – 04:30 PM',
     color: 'from-[#123B6D] to-[#1a5294]',
     description: 'A commerce degree integrated with management studies, preparing students for leadership roles in corporate and business environments.',
     tags: ['Management', 'Commerce', 'Leadership', 'Business Strategy'],
@@ -24,7 +25,8 @@ const programmes = [
     full: 'Bachelor of Commerce (Business Administration)',
     level: 'GRADUATE',
     duration: '3 Years',
-    seats: 120,
+    seats: 60,
+    timing: '12:00 PM – 04:30 PM',
     color: 'from-[#7c3aed] to-[#9d5cf4]',
     description: 'Combines commerce fundamentals with business administration skills to prepare students for managerial and entrepreneurial careers.',
     tags: ['Business Admin', 'Commerce', 'Entrepreneurship'],
@@ -36,6 +38,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 60,
+    timing: '12:00 PM – 04:30 PM',
     color: 'from-[#0891b2] to-[#0ea5e9]',
     description: 'A dynamic programme covering journalism, digital media, advertising, and communication arts for the modern media landscape.',
     tags: ['Media', 'Journalism', 'Digital Content', 'Communication'],
@@ -47,6 +50,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 120,
+    timing: '07:15 AM – 11:40 AM',
     color: 'from-[#059669] to-[#10b981]',
     description: 'A robust programme focused on computer programming, algorithms, and software development for the tech innovators of tomorrow.',
     tags: ['Computer Science', 'Programming', 'Software', 'Algorithms'],
@@ -58,6 +62,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 120,
+    timing: '10:40 AM – 04:15 PM',
     color: 'from-[#047857] to-[#34d399]',
     description: 'Specialized in network infrastructure, database systems, and modern web technologies to build enterprise-grade IT solutions.',
     tags: ['IT', 'Networks', 'Databases', 'Web Technologies'],
@@ -69,6 +74,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 60,
+    timing: '02:05 PM – 08:10 PM',
     color: 'from-[#10b981] to-[#6ee7b7]',
     description: 'Designed to equip students with skills in data analytics, machine learning, and statistical modeling in a data-driven world.',
     tags: ['Data Science', 'Machine Learning', 'Analytics', 'Statistics'],
@@ -80,6 +86,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 60,
+    timing: '02:05 PM – 08:10 PM',
     color: 'from-[#059669] to-[#047857]',
     description: 'Focuses on practical computer applications, software engineering, and systems development to solve real-world problems.',
     tags: ['Computer Applications', 'Software Engineering', 'Systems'],
@@ -90,7 +97,8 @@ const programmes = [
     full: 'Bachelor of Commerce',
     level: 'GRADUATE',
     duration: '3 Years',
-    seats: 360,
+    seats: 600,
+    timing: '07:15 AM – 10:40 AM',
     color: 'from-[#D4A017] to-[#f59e0b]',
     description: 'A comprehensive programme covering accounting, finance, management, and economics — the gateway to a thriving commerce career.',
     tags: ['Accounting', 'Finance', 'Economics', 'Business Law'],
@@ -102,6 +110,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 120,
+    timing: '07:15 AM – 11:40 AM',
     color: 'from-[#dc2626] to-[#ef4444]',
     description: 'Specialized programme in accounting principles, financial reporting, taxation, and auditing for aspiring finance professionals.',
     tags: ['Accounting', 'Taxation', 'Auditing', 'Finance'],
@@ -112,7 +121,8 @@ const programmes = [
     full: 'Bachelor of Commerce (Banking & Insurance)',
     level: 'GRADUATE',
     duration: '3 Years',
-    seats: 120,
+    seats: 160,
+    timing: '07:15 AM – 11:40 AM',
     color: 'from-[#0e7490] to-[#06b6d4]',
     description: 'An industry-aligned programme preparing students for careers in banking, insurance, and financial services sectors.',
     tags: ['Banking', 'Insurance', 'Finance', 'Risk Management'],
@@ -124,6 +134,7 @@ const programmes = [
     level: 'GRADUATE',
     duration: '3 Years',
     seats: 60,
+    timing: '12:00 PM – 04:30 PM',
     color: 'from-[#d97706] to-[#f59e0b]',
     description: 'Focused on capital markets, investment banking, securities, and financial market operations for future market professionals.',
     tags: ['Stock Market', 'Investment', 'Securities', 'Capital Markets'],
@@ -218,7 +229,10 @@ export default function GraduatePage() {
 
                 {/* Footer */}
                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                  <span className="text-[#123B6D] text-xs font-semibold">{prog.seats} seats available</span>
+                  <div className="flex flex-col">
+                    <span className="text-[#123B6D] text-xs font-semibold">{prog.seats} seats available</span>
+                    {prog.timing && <span className="text-gray-500 text-[10px] mt-0.5">{prog.timing}</span>}
+                  </div>
                   <Link
                     href={prog.href}
                     className="flex items-center gap-1.5 text-sm font-bold text-[#123B6D] hover:gap-2.5 transition-all duration-200 group"

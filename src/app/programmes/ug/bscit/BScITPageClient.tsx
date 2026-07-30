@@ -61,10 +61,11 @@ export default function BScITPageClient({ syllabusContent }: Props) {
         </>
       }
       title="B.Sc. (Information Technology)"
-      description="A three-year full-time programme preparing students to meet the ICT needs of government, business, healthcare, and other organisations."
+      fundingType="Self Financing"
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
       facultyData={bscitFaculty}
     />
   );
 }
+

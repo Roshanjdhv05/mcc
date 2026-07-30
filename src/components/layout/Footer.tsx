@@ -38,7 +38,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-white/80">
               {[
                 { label: 'About MCC', href: '/about' },
-                { label: 'Academic Programmes', href: '/academics' },
+                { label: 'Academic Programmes', href: '/programmes' },
                 { label: 'Admissions', href: '/admissions' },
                 { label: 'Examination Hub', href: '/examination' },
                 { label: 'Notice Board', href: '/notices' },
@@ -59,7 +59,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-white/80">
               {['FYJC Arts & Commerce', 'SYJC Arts & Commerce', 'B.Com (General)', 'M.Com', 'M.Sc. IT', 'Ph.D Research'].map((p) => (
                 <li key={p}>
-                  <Link href="/academics" className="hover:text-[#D4A017] hover:pl-1 transition-all">{p}</Link>
+                  <Link href="/programmes" className="hover:text-[#D4A017] hover:pl-1 transition-all">{p}</Link>
                 </li>
               ))}
             </ul>

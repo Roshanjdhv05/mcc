@@ -7,14 +7,14 @@ import {
   Send, Download, CheckCircle2,
   Building2, Users, GraduationCap, FileText,
   ChevronRight, Lightbulb, Activity, MonitorSmartphone, Target,
-  MessagesSquare, Briefcase, UserCircle, BookOpen
+  MessagesSquare, Briefcase, UserCircle, BookOpen, Star, Trophy, MapPin
 } from 'lucide-react';
 import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 import ProgramStructureNEP from '@/components/ui/ProgramStructureNEP';
 
 interface CourseTemplateProps {
   title: string;
-  description?: string;
+  fundingType?: 'Aided' | 'Self Financing' | string;
   introductionContent?: React.ReactNode;
   syllabusContent?: React.ReactNode;
   quickActionsData?: { title: string; icon: any; info: string }[];
@@ -146,12 +146,13 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
 
 const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-export default function CourseTemplate({ title, description, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey, facultyData, festivals, publication }: CourseTemplateProps) {
+export default function CourseTemplate({ title, fundingType, introductionContent, syllabusContent, quickActionsData: customQuickActionsData, courseKey, facultyData, festivals, publication }: CourseTemplateProps) {
   const tabs = [
     'Overview',
     'Structure',
     'Syllabus',
     'Faculty',
+    'Illustrious Alumni',
     'Events & Activities',
     ...(festivals ? ['Festivals'] : []),
     ...(publication ? ['Publication'] : []),
@@ -227,26 +228,31 @@ export default function CourseTemplate({ title, description, introductionContent
             Home <span className="mx-1 md:mx-2">{'>'}</span> Programmes <span className="mx-1 md:mx-2">{'>'}</span> <span className="text-[#123B6D]">{title}</span>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center w-full gap-6 md:gap-12">
+          <div className="flex flex-col md:flex-row items-start w-full gap-6 md:gap-12">
             
             {/* Left Content */}
             <div className="flex-1 space-y-4 md:space-y-6 z-10 relative">
               
               {/* Badge */}
-              <div className="inline-block bg-[#EBF3FF] text-[#123B6D] text-[10px] md:text-xs font-bold px-3 py-1 md:px-4 md:py-1.5 rounded-full uppercase tracking-wider">
-                Undergraduate Programme
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-block bg-[#EBF3FF] text-[#123B6D] text-[10px] md:text-xs font-bold px-3 py-1 md:px-4 md:py-1.5 rounded-full uppercase tracking-wider">
+                  Undergraduate Programme
+                </div>
+                {fundingType && (
+                  <div className={`inline-block text-[10px] md:text-xs font-bold px-3 py-1 md:px-4 md:py-1.5 rounded-full uppercase tracking-wider ${
+                    fundingType === 'Aided' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'
+                  }`}>
+                    {fundingType}
+                  </div>
+                )}
               </div>
 
               {/* Title */}
-              <div className="relative">
+              <div className="relative mt-2">
                 <h1 className="text-2xl xs:text-3xl md:text-5xl lg:text-[54px] font-bold text-[#123B6D] leading-tight font-[var(--font-heading)]">
                   {title}
                 </h1>
               </div>
-              
-              <p className="text-gray-600 text-xs md:text-lg max-w-xl leading-relaxed mt-2 md:mt-4">
-                {description || 'A dynamic undergraduate program that blends creativity, media technology, and communication skills for a future in the digital world.'}
-              </p>
 
               {/* Badges Row - 4 columns on mobile, hidden on desktop since we have floating cards */}
               <div className="grid grid-cols-4 md:hidden gap-2 md:gap-3 pt-4 md:pt-2 overflow-x-auto scrollbar-hide">
@@ -478,6 +484,69 @@ export default function CourseTemplate({ title, description, introductionContent
                 {facultyData.map((member) => (
                   <FacultyFlipCard key={member.srNo} member={member} programmeName={title} />
                 ))}
+              </div>
+            </div>
+          ) : activeTab === 'Illustrious Alumni' ? (
+            <div className="bg-white rounded-3xl p-6 md:p-10 border border-[#E2E8F0] shadow-sm">
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-[#FFF8E7] flex items-center justify-center">
+                  <Trophy className="text-[#D4A017]" size={20} />
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#123B6D]">Illustrious Alumni</h2>
+                  <p className="text-sm text-[#64748B]">Proud achievers who walked these halls</p>
+                </div>
+              </div>
+              <div className="w-16 h-1 bg-gradient-to-r from-[#D4A017] to-[#123B6D] rounded-full mb-8" />
+
+              {/* Alumni Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                {[
+                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                ].map((alumni, idx) => (
+                  <div key={idx} className="group relative bg-gradient-to-br from-[#F8FAFC] to-[#EBF3FF] rounded-2xl p-5 border border-[#E2E8F0] hover:border-[#D4A017] hover:shadow-lg transition-all duration-300 overflow-hidden">
+                    {/* Gold accent bar */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D4A017] to-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="flex items-start gap-4">
+                      {/* Avatar */}
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#123B6D] to-[#1e5ba8] flex items-center justify-center shrink-0 shadow-md">
+                        <span className="text-white font-bold text-lg">{alumni.initials}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-[#123B6D] text-sm leading-tight mb-0.5">{alumni.name}</h3>
+                        <div className="flex items-center gap-1 mb-1">
+                          <Star size={10} className="text-[#D4A017] fill-[#D4A017]" />
+                          <span className="text-[10px] font-semibold text-[#D4A017] uppercase tracking-wider">{alumni.batch}</span>
+                        </div>
+                        <p className="text-xs font-semibold text-gray-700 leading-tight">{alumni.role}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <MapPin size={10} className="text-gray-400 shrink-0" />
+                          <p className="text-[11px] text-gray-500 truncate">{alumni.org}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-[#3B82F6] uppercase tracking-wider bg-[#EBF3FF] px-2 py-1 rounded-full">{alumni.field}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom note */}
+              <div className="mt-8 bg-[#FFF8E7] border border-[#F59E0B]/30 rounded-2xl p-5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#D4A017]/10 flex items-center justify-center shrink-0">
+                  <Star className="text-[#D4A017]" size={20} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#1E293B]">Are you a proud MCC alumnus?</p>
+                  <p className="text-xs text-gray-500 mt-0.5">We would love to feature your success story. Contact us at <span className="text-[#3B82F6] font-semibold">alumni@mccmulund.ac.in</span></p>
+                </div>
               </div>
             </div>
           ) : activeTab === 'Festivals' && festivals ? (

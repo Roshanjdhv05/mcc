@@ -34,9 +34,10 @@ export default function BFMPageClient() {
       syllabusContent={<SyllabusRenderer programKey="BFM" />}
       courseKey="BFM"
       title="Bachelor of Commerce (Financial Markets)"
-      description="A specialized undergraduate program providing comprehensive understanding of financial markets, investment strategies, and economic environments."
+      fundingType="Self Financing"
       facultyData={bfmFaculty}
       quickActionsData={quickActions}
     />
   );
 }
+

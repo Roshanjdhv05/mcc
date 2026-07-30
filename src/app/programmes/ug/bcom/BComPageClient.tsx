@@ -53,9 +53,10 @@ export default function BComPageClient() {
       syllabusContent={<SyllabusRenderer programKey="BCOM" />}
       courseKey="BCOM"
       title="Bachelor of Commerce (B.Com)"
-      description="A versatile undergraduate program providing a solid foundation in business, accounting, economics, and finance."
+      fundingType="Aided"
       facultyData={bcomFaculty}
       quickActionsData={quickActions}
     />
   );
 }
+

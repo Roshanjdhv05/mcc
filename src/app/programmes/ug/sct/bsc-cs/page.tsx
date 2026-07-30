@@ -31,7 +31,7 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Computer Science)"
-      description="The Bachelor of Science (Computer Science) programme focuses on computing and modern technologies."
+      fundingType="Self Financing"
       courseKey="BSC_CS"
       category="science"
       facultyData={bscCsFaculty}
@@ -45,3 +45,4 @@ export default function CoursePage() {
     />
   );
 }
+

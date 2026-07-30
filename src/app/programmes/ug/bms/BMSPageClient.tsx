@@ -55,7 +55,7 @@ export default function BMSPageClient() {
         </>
       }
       title="B.Com (Management Studies)"
-      description="The BMS programme offers deep insights into management practices, preparing dynamic leaders and entrepreneurs for the future."
+      fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BMS" />}
       quickActionsData={quickActions}
       courseKey="BMS"
@@ -63,3 +63,4 @@ export default function BMSPageClient() {
     />
   );
 }
+

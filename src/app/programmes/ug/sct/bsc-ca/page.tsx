@@ -34,7 +34,7 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Computer Applications)"
-      description="The Bachelor of Science (Computer Applications) programme focuses on computing and application development."
+      fundingType="Self Financing"
       courseKey="BSC_CA"
       category="science"
       facultyData={bscCaFaculty}
@@ -43,3 +43,4 @@ export default function CoursePage() {
     />
   );
 }
+

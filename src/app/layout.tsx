@@ -17,6 +17,7 @@ const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
   display: "swap",
 });
+// Cache bust for Next.js hot reload
 
 const hankenGrotesk = Hanken_Grotesk({
   variable: "--font-sans",

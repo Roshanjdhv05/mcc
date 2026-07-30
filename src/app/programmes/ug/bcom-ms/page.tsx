@@ -30,8 +30,9 @@ export default function CoursePage() {
       }
       syllabusContent={<SyllabusRenderer programKey="BMS" />}
       title="Bachelor of Commerce (Management Studies)"
-      description="The Bachelor of Commerce (Management Studies) programme details will be updated shortly."
+      fundingType="Self Financing"
       facultyData={bcomMsFaculty}
     />
   );
 }
+

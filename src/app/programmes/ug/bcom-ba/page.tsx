@@ -26,8 +26,9 @@ export default function CoursePage() {
       }
       syllabusContent={<SyllabusRenderer programKey="BBA" />}
       title="Bachelor of Commerce (Business Administration)"
-      description="The Bachelor of Commerce (Business Administration) programme details will be updated shortly."
+      fundingType="Self Financing"
       facultyData={bcomBaFaculty}
     />
   );
 }
+

@@ -78,8 +78,8 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
-              { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
+              { label: 'Tilak Smruti Vyakhyan', href: '/about/tilak-lecture' },
+              { label: 'B. G. Bapat Memorial Lecture', href: '/about/bg-bapat-lecture' },
             ]
           }
         ]
@@ -101,8 +101,8 @@ const navLinks = [
         ]
       },
       { label: 'Our Other Institutions', href: '/about/other-institutions' },
-      { label: 'Tilak Smruti Vyakhyan', href: '/iqac#tilak-lecture' },
-      { label: 'B. G. Bapat Memorial Lecture', href: '/iqac#bapat-lecture' },
+      { label: 'Tilak Smruti Vyakhyan', href: '/about/tilak-lecture' },
+      { label: 'B. G. Bapat Memorial Lecture', href: '/about/bg-bapat-lecture' },
     ]
   },
   {
@@ -305,7 +305,7 @@ const navLinks = [
     ]
   },
   {
-    label: 'Programmes', href: '/academics', icon: <GraduationCap size={18} />, 
+    label: 'Programmes', href: '/programmes', icon: <GraduationCap size={18} />, 
     isMegaMenu: true,
     megaMenuType: 'programmes',
     megaMenuColumns: [
@@ -534,18 +534,18 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: "Students' Council", href: '/students-corner/council' },
-              { label: 'National Service Scheme', href: '/students-corner/nss' },
-              { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
-              { label: 'Sports and Gymkhana', href: '/students-corner/sports' },
-              { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/natyakarmi' },
-              { label: 'Marathi Vangmay Mandal', href: '/students-corner/marathi-mandal' },
-              { label: 'Aaroh (Music Club)', href: '/students-corner/aaroh' },
-              { label: 'Music Club', href: '/students-corner/music-club' },
-              { label: 'Nature Club', href: '/students-corner/nature-club' },
-              { label: 'Women Development Cell', href: '/students-corner/wdc' },
-              { label: 'Entrepreneurship Development Cell', href: '/students-corner/edc' },
-              { label: 'Students\' Research', href: '/research' },
+              { label: "Students' Council", href: '/students-corner/Forums-and-Clubs?club=students-council' },
+              { label: 'National Service Scheme', href: '/students-corner/Forums-and-Clubs?club=nss' },
+              { label: 'Cultural Forum', href: '/students-corner/Forums-and-Clubs?club=cultural-forum' },
+              { label: 'Sports and Gymkhana', href: '/students-corner/Forums-and-Clubs?club=sports' },
+              { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/Forums-and-Clubs?club=natyakarmi' },
+              { label: 'Marathi Vangmay Mandal', href: '/students-corner/Forums-and-Clubs?club=mvm' },
+              { label: 'Aaroh (Music Club)', href: '/students-corner/Forums-and-Clubs?club=aaroh' },
+              { label: 'Music Club', href: '/students-corner/Forums-and-Clubs?club=music-club' },
+              { label: 'Nature Club', href: '/students-corner/Forums-and-Clubs?club=nature-club' },
+              { label: 'Women Development Cell', href: '/students-corner/Forums-and-Clubs?club=wdc' },
+              { label: 'Entrepreneurship Development Cell', href: '/students-corner/Forums-and-Clubs?club=edc' },
+              { label: "Students' Research", href: '/students-corner/Forums-and-Clubs?club=research' },
             ]
           }
         ]
@@ -555,12 +555,12 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Spectrum', href: '/students-corner/cultural-forum' },
-              { label: 'Inspira', href: '/programmes/ug/bms' },
-              { label: 'Hack-A-Thon', href: '#' },
-              { label: 'Emporio', href: '/programmes/ug/bcom' },
-              { label: 'Quantomania', href: '#' },
-              { label: 'Manthan', href: '#' },
+              { label: 'Spectrum', href: '/students-corner/Events-and-Festivals?event=spectrum' },
+              { label: 'Inspira', href: '/students-corner/Events-and-Festivals?event=inspira' },
+              { label: 'Hack-A-Thon', href: '/students-corner/Events-and-Festivals?event=hackathon' },
+              { label: 'Emporio', href: '/students-corner/Events-and-Festivals?event=emporio' },
+              { label: 'Quantomania', href: '/students-corner/Events-and-Festivals?event=quantomania' },
+              { label: 'Manthan', href: '/students-corner/Events-and-Festivals?event=manthan' },
             ]
           }
         ]
@@ -570,9 +570,20 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Pratibimb', href: '/programmes/ug/baf' },
-              { label: 'Finanza', href: '/programmes/ug/bfm' },
-              { label: 'Techanugraha', href: '#' },
+              { label: 'Pratibimb', href: '/students-corner/Students-Publications?publication=pratibimb' },
+              { label: 'Finanza', href: '/students-corner/Students-Publications?publication=finanza' },
+              { label: 'Techanugraha', href: '/students-corner/Students-Publications?publication=techanugraha' },
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Gallery',
+        sections: [
+          {
+            links: [
+              { label: 'Events Gallery', href: '/students-corner/gallery' },
+              { label: 'Event Calendar', href: '/students-corner/event-calendar' },
             ]
           }
         ]
@@ -581,35 +592,41 @@ const navLinks = [
     sub: [
       {
         label: 'Forums and Clubs', href: '#', sub: [
-          { label: "Students' Council", href: '/students-corner/council' },
-          { label: 'National Service Scheme', href: '/students-corner/nss' },
-          { label: 'Cultural Forum', href: '/students-corner/cultural-forum' },
-          { label: 'Sports and Gymkhana', href: '/students-corner/sports' },
-          { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/natyakarmi' },
-          { label: 'Marathi Vangmay Mandal', href: '/students-corner/marathi-mandal' },
-          { label: 'Aaroh (Music Club)', href: '/students-corner/aaroh' },
-          { label: 'Music Club', href: '/students-corner/music-club' },
-          { label: 'Nature Club', href: '/students-corner/nature-club' },
-          { label: 'Women Development Cell', href: '/students-corner/wdc' },
-          { label: 'Entrepreneurship Development Cell', href: '/students-corner/edc' },
-          { label: 'Students\' Research', href: '/research' },
+          { label: "Students' Council", href: '/students-corner/Forums-and-Clubs?club=students-council' },
+          { label: 'National Service Scheme', href: '/students-corner/Forums-and-Clubs?club=nss' },
+          { label: 'Cultural Forum', href: '/students-corner/Forums-and-Clubs?club=cultural-forum' },
+          { label: 'Sports and Gymkhana', href: '/students-corner/Forums-and-Clubs?club=sports' },
+          { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/Forums-and-Clubs?club=natyakarmi' },
+          { label: 'Marathi Vangmay Mandal', href: '/students-corner/Forums-and-Clubs?club=mvm' },
+          { label: 'Aaroh (Music Club)', href: '/students-corner/Forums-and-Clubs?club=aaroh' },
+          { label: 'Music Club', href: '/students-corner/Forums-and-Clubs?club=music-club' },
+          { label: 'Nature Club', href: '/students-corner/Forums-and-Clubs?club=nature-club' },
+          { label: 'Women Development Cell', href: '/students-corner/Forums-and-Clubs?club=wdc' },
+          { label: 'Entrepreneurship Development Cell', href: '/students-corner/Forums-and-Clubs?club=edc' },
+          { label: "Students' Research", href: '/students-corner/Forums-and-Clubs?club=research' },
         ]
       },
       {
         label: 'Events & Festivals', href: '#', sub: [
-          { label: 'Spectrum', href: '/students-corner/cultural-forum' },
-          { label: 'Inspira', href: '/programmes/ug/bms' },
-          { label: 'Hack-A-Thon', href: '#' },
-          { label: 'Emporio', href: '/programmes/ug/bcom' },
-          { label: 'Quantomania', href: '#' },
-          { label: 'Manthan', href: '#' },
+          { label: 'Spectrum', href: '/students-corner/Events-and-Festivals?event=spectrum' },
+          { label: 'Inspira', href: '/students-corner/Events-and-Festivals?event=inspira' },
+          { label: 'Hack-A-Thon', href: '/students-corner/Events-and-Festivals?event=hackathon' },
+          { label: 'Emporio', href: '/students-corner/Events-and-Festivals?event=emporio' },
+          { label: 'Quantomania', href: '/students-corner/Events-and-Festivals?event=quantomania' },
+          { label: 'Manthan', href: '/students-corner/Events-and-Festivals?event=manthan' },
         ]
       },
       {
         label: "Student's Publications", href: '#', sub: [
-          { label: 'Pratibimb', href: '/programmes/ug/baf' },
-          { label: 'Finanza', href: '/programmes/ug/bfm' },
-          { label: 'Techanugraha', href: '#' },
+          { label: 'Pratibimb', href: '/students-corner/Students-Publications?publication=pratibimb' },
+          { label: 'Finanza', href: '/students-corner/Students-Publications?publication=finanza' },
+          { label: 'Techanugraha', href: '/students-corner/Students-Publications?publication=techanugraha' },
+        ]
+      },
+      {
+        label: 'Gallery', href: '#', sub: [
+          { label: 'Events Gallery', href: '/students-corner/gallery' },
+          { label: 'Event Calendar', href: '/students-corner/event-calendar' },
         ]
       }
     ]
@@ -650,13 +667,13 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'Grievance Cell', href: '/grievance-cell' },
-              { label: 'Internal Complaint Committee', href: '/internal-complaint-cell' },
-              { label: 'Anti-Ragging Committee', href: '/anti-ragging-cell' },
-              { label: 'Counselling cell', href: '/counselling-cell' },
-              { label: 'Career Katta (Govt of Maharashtra)', href: '#' },
-              { label: 'Special Cell', href: '#' },
-              { label: 'Remedial Coaching Cell', href: '#' },
+              { label: 'Grievance Cell', href: '/statutory-bodies?body=grievance-cell' },
+              { label: 'Internal Complaint Committee', href: '/statutory-bodies?body=icc' },
+              { label: 'Anti-Ragging Committee', href: '/statutory-bodies?body=anti-ragging' },
+              { label: 'Counselling cell', href: '/statutory-bodies?body=counselling' },
+              { label: 'Career Katta (Govt of Maharashtra)', href: '/statutory-bodies?body=career-katta' },
+              { label: 'Special Cell', href: '/statutory-bodies?body=special-cell' },
+              { label: 'Remedial Coaching Cell', href: '/statutory-bodies?body=remedial-coaching' },
             ]
           }
         ]
@@ -697,13 +714,13 @@ const navLinks = [
       },
       {
         label: 'Statutory Bodies', href: '#', sub: [
-          { label: 'Grievance Cell', href: '/grievance-cell' },
-          { label: 'Internal Complaint Committee', href: '/internal-complaint-cell' },
-          { label: 'Anti-Ragging Committee', href: '/anti-ragging-cell' },
-          { label: 'Counselling cell', href: '/counselling-cell' },
-          { label: 'Career Katta (Govt of Maharashtra)', href: '#' },
-          { label: 'Special Cell', href: '#' },
-          { label: 'Remedial Coaching Cell', href: '#' },
+          { label: 'Grievance Cell', href: '/statutory-bodies?body=grievance-cell' },
+          { label: 'Internal Complaint Committee', href: '/statutory-bodies?body=icc' },
+          { label: 'Anti-Ragging Committee', href: '/statutory-bodies?body=anti-ragging' },
+          { label: 'Counselling cell', href: '/statutory-bodies?body=counselling' },
+          { label: 'Career Katta (Govt of Maharashtra)', href: '/statutory-bodies?body=career-katta' },
+          { label: 'Special Cell', href: '/statutory-bodies?body=special-cell' },
+          { label: 'Remedial Coaching Cell', href: '/statutory-bodies?body=remedial-coaching' },
         ]
       },
       {
@@ -1299,7 +1316,7 @@ export default function Navbar() {
                            </div>
                         </div>
                         {/* Explore all bottom bar */}
-                        <Link href="/academics" className="bg-[#E2E8F0]/30 px-6 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[16px] hover:bg-[#E2E8F0]/50 transition-colors border-t border-[#E2E8F0] group/btn">
+                        <Link href="/programmes" className="bg-[#E2E8F0]/30 px-6 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[16px] hover:bg-[#E2E8F0]/50 transition-colors border-t border-[#E2E8F0] group/btn">
                            Explore all Programmes <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
                      </div>

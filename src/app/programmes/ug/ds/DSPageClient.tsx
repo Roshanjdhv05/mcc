@@ -54,10 +54,11 @@ export default function DSPageClient({ syllabusContent }: Props) {
         </>
       }
       title="B.Sc. (Data Science)"
-      description="A programme that combines data science, machine learning, statistics, and mathematics to produce industry-ready data professionals."
+      fundingType="Self Financing"
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
       facultyData={dsFaculty}
     />
   );
 }
+

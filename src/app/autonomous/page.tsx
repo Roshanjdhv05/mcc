@@ -387,11 +387,7 @@ export default function AutonomousHEIPage() {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6">
-                    <a href="#" className="inline-flex items-center gap-2 bg-[#123B6D] text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-[#0f2f58] transition-colors">
-                      <ExternalLink size={16} /> View Autonomy Certificate (PDF)
-                    </a>
-                  </div>
+
                 </div>
               </>
             )}

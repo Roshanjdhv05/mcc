@@ -36,7 +36,7 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Information Technology)"
-      description="The Bachelor of Science (Information Technology) programme focuses on the study of computing, software development, networking, and data management."
+      fundingType="Self Financing"
       courseKey="BSC_IT"
       category="science"
       facultyData={bscItFaculty}
@@ -45,3 +45,4 @@ export default function CoursePage() {
     />
   );
 }
+

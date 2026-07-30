@@ -40,9 +40,10 @@ export default function BBAPageClient() {
         </>
       }
       title="B.Com (Business Administration)"
-      description="The BBA programme provides a fundamental education in business and management principles, preparing students for leadership roles in the corporate sector."
+      fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BBA" />}
       quickActionsData={quickActions}
     />
   );
 }
+

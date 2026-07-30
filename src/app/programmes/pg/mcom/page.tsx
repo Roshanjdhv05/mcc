@@ -10,7 +10,8 @@ export default function MComPage() {
   return (
     <CourseTemplate 
       title="Master of Commerce (MCom)"
-      description="The MCom programme offers postgraduate mastery over commerce, accounting, and advanced financial management."
+      fundingType="Self Financing"
     />
   );
 }
+

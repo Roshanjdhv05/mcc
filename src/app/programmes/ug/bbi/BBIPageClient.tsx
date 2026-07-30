@@ -38,9 +38,10 @@ export default function BBIPageClient() {
       syllabusContent={<SyllabusRenderer programKey="BBI" />}
       courseKey="BBI"
       title="Bachelor of Commerce (Banking & Insurance)"
-      description="A specialized undergraduate program designed to provide comprehensive knowledge of the banking, finance, and insurance sectors."
+      fundingType="Self Financing"
       facultyData={bbiFaculty}
       quickActionsData={quickActions}
     />
   );
 }
+

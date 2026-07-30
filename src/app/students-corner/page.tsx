@@ -6,42 +6,47 @@ import type { CategoryItem, DataItem } from '@/components/layout/CornerPageLayou
 import {
   Users, BookOpen, UserPlus, Heart, Link as LinkIcon,
   ShieldAlert, Activity, Music, Leaf, Rocket,
-  Compass, Shield, UserCircle, MessageCircle, AlertTriangle
+  Compass, Shield, UserCircle, MessageCircle, AlertTriangle, Image as ImageIcon, Calendar
 } from 'lucide-react';
 
 const categories: CategoryItem[] = [
-  { id: 'forums', label: 'Forums', icon: Users },
+  { id: 'forums', label: 'Forums and Clubs', icon: Users },
   { id: 'events', label: 'Events & Festivals', icon: Music },
   { id: 'publications', label: 'Student\'s Publications', icon: BookOpen },
+  { id: 'gallery', label: 'Gallery', icon: ImageIcon },
 ];
 
 const data: Record<string, DataItem[]> = {
   forums: [
-    { title: 'Students Council', icon: Users, links: [] },
-    { title: 'National Service Scheme', icon: Heart, links: [] },
-    { title: 'Cultural Forum', icon: Music, links: [] },
-    { title: 'Sports and Gymkhana', icon: Activity, links: [] },
-    { title: 'Natyakarmi (Theatre Group)', icon: UserPlus, links: [] },
-    { title: 'Marathi Vangmay Mandal', icon: BookOpen, links: [] },
-    { title: 'Aaroh (Music Club)', icon: Music, links: [] },
-    { title: 'Music Club', icon: Music, links: [] },
-    { title: 'Nature Club', icon: Leaf, links: [] },
-    { title: 'Women Development Cell', icon: Shield, links: [] },
-    { title: 'Entrepreneurship Development Cell', icon: Rocket, links: [] },
-    { title: 'Students\' Research', icon: BookOpen, links: [{ label: 'Redirect to the Research Cell', href: '/research' }] },
+    { title: 'Students Council', icon: Users, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=students-council' }] },
+    { title: 'National Service Scheme', icon: Heart, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=nss' }] },
+    { title: 'Cultural Forum', icon: Music, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=cultural-forum' }] },
+    { title: 'Sports and Gymkhana', icon: Activity, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=sports' }] },
+    { title: 'Natyakarmi (Theatre Group)', icon: UserPlus, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=natyakarmi' }] },
+    { title: 'Marathi Vangmay Mandal', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=mvm' }] },
+    { title: 'Aaroh (Music Club)', icon: Music, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=aaroh' }] },
+    { title: 'Music Club', icon: Music, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=music-club' }] },
+    { title: 'Nature Club', icon: Leaf, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=nature-club' }] },
+    { title: 'Women Development Cell', icon: Shield, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=wdc' }] },
+    { title: 'Entrepreneurship Development Cell', icon: Rocket, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=edc' }] },
+    { title: 'Students\' Research', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Forums-and-Clubs?club=research' }] },
   ],
   events: [
-    { title: 'Spectrum', icon: Music, links: [{ label: 'Redirect to Cultural Forum', href: '/students-corner/cultural-forum' }] },
-    { title: 'Inspira', icon: Rocket, links: [{ label: 'Redirect to the BCOM MS Section', href: '/programmes/ug/bms' }] },
-    { title: 'Hack-A-Thon', icon: Activity, links: [] },
-    { title: 'Emporio', icon: Users, links: [{ label: 'Redirect to BCOM Section', href: '/programmes/ug/bcom' }] },
-    { title: 'Quantomania', icon: Activity, links: [{ label: 'Redirect to Quantomania', href: '#' }] },
-    { title: 'Manthan', icon: Compass, links: [] },
+    { title: 'Spectrum', icon: Music, links: [{ label: 'View Details', href: '/students-corner/Events-and-Festivals?event=spectrum' }] },
+    { title: 'Inspira', icon: Rocket, links: [{ label: 'View Details', href: '/students-corner/Events-and-Festivals?event=inspira' }] },
+    { title: 'Hack-A-Thon', icon: Activity, links: [{ label: 'View Details', href: '/students-corner/Events-and-Festivals?event=hackathon' }] },
+    { title: 'Emporio', icon: Users, links: [{ label: 'View Details', href: '/students-corner/Events-and-Festivals?event=emporio' }] },
+    { title: 'Quantomania', icon: Activity, links: [{ label: 'View Details', href: '/students-corner/Events-and-Festivals?event=quantomania' }] },
+    { title: 'Manthan', icon: Compass, links: [{ label: 'View Details', href: '/students-corner/Events-and-Festivals?event=manthan' }] },
   ],
   publications: [
-    { title: 'Pratibimb', icon: BookOpen, links: [{ label: 'Redirect to BAF Section', href: '/programmes/ug/baf' }] },
-    { title: 'Finanza', icon: BookOpen, links: [{ label: 'Redirect to BCOM FM section', href: '/programmes/ug/bfm' }] },
-    { title: 'Techanugraha', icon: BookOpen, links: [] },
+    { title: 'Pratibimb', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Students-Publications?publication=pratibimb' }] },
+    { title: 'Finanza', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Students-Publications?publication=finanza' }] },
+    { title: 'Techanugraha', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Students-Publications?publication=techanugraha' }] },
+  ],
+  gallery: [
+    { title: 'Events Gallery', icon: ImageIcon, links: [{ label: 'View Gallery', href: '/students-corner/gallery' }] },
+    { title: 'Event Calendar', icon: Calendar, links: [{ label: 'View Calendar', href: '/students-corner/event-calendar' }] },
   ],
 };
 

@@ -18,7 +18,6 @@ export default function CoursePage() {
       </>
       }
       title="Ph.D. in Business Economics"
-      description="The Ph.D. in Business Economics programme details will be updated shortly."
     />
   );
 }

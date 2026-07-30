@@ -35,7 +35,7 @@ export default function CoursePage() {
       </>
       }
       title="Bachelor of Science (Data Science)"
-      description="The Bachelor of Science (Data Science) programme focuses on data analysis and computational techniques."
+      fundingType="Self Financing"
       courseKey="BSC_DS"
       category="science"
       facultyData={bscDsFaculty}
@@ -44,3 +44,4 @@ export default function CoursePage() {
     />
   );
 }
+

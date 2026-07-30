@@ -48,7 +48,7 @@ export default function BAFPageClient() {
         </>
       }
       title="B.COM (Accounting & Finance)"
-      description="An in-depth program bringing out analytical financial acumen and making a learner Industry ready for the accounting & finance sectors."
+      fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BAF" />}
       quickActionsData={quickActions}
       courseKey="BAF"
@@ -56,3 +56,4 @@ export default function BAFPageClient() {
     />
   );
 }
+

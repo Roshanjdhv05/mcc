@@ -27,7 +27,7 @@ export default function MScITPageClient({ syllabusContent }: Props) {
   return (
     <PGCourseTemplate
       title="M.Sc. (Information Technology)"
-      description="A two-year postgraduate programme developing advanced technical competence in AI, ML, Cloud Computing, Data Science, and emerging IT technologies."
+      fundingType="Self Financing"
       seats="60"
       timing="8:00 AM – 12:30 PM"
       coordinators={coordinators}
@@ -67,3 +67,4 @@ export default function MScITPageClient({ syllabusContent }: Props) {
     />
   );
 }
+

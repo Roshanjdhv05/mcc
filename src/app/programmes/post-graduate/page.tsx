@@ -146,7 +146,7 @@ export default function PostGraduatePage() {
                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex flex-col">
                     <span className="text-[#123B6D] text-xs font-semibold">{prog.seats} seats available</span>
-                    {prog.timing && <span className="text-gray-500 text-[10px] mt-0.5">{prog.timing}</span>}
+                    {prog.timing && <span className="text-gray-500 text-sm mt-0.5">{prog.timing}</span>}
                   </div>
                   <Link
                     href={prog.href}

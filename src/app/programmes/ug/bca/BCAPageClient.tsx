@@ -58,10 +58,11 @@ export default function BCAPageClient({ syllabusContent }: Props) {
         </>
       }
       title="B.Sc. (Computer Applications)"
-      description="A programme focused on computing fundamentals, software development, and modern technologies, preparing students to build applications for organisations."
+      fundingType="Self Financing"
       syllabusContent={syllabusContent}
       quickActionsData={quickActions}
       facultyData={bcaFaculty}
     />
   );
 }
+

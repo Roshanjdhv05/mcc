@@ -24,7 +24,7 @@ export default function MSFPageClient() {
   return (
     <PGCourseTemplate
       title="Master of Science (Finance)"
-      description="A specialized postgraduate program covering econometrics, financial modelling, corporate finance, and derivatives for aspiring financial professionals."
+      fundingType="Self Financing"
       seats="30"
       timing="6:00 PM – 9:00 PM (Weekdays)"
       coordinators={coordinators}
@@ -60,3 +60,4 @@ export default function MSFPageClient() {
     />
   );
 }
+

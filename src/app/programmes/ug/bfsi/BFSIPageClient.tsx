@@ -7,9 +7,9 @@ import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 export default function BFSIPageClient() {
   const quickActions = [
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: '10+2 from any recognised Board in any stream.' },
-    { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years (NEP 4 Years), 6/8 Semesters.' },
-    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: 'Morning / Afternoon Batches.' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'Contact College Administration.' }
+    { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '6 Years, 8 Semesters.' },
+    { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '04:30 PM – 08:30 PM' },
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' }
   ];
 
   return (
@@ -23,9 +23,10 @@ export default function BFSIPageClient() {
       </>
       }
       title="Bachelor of Commerce (Banking, Financial Services and Insurance)"
-      description="A specialized undergraduate program focusing on banking, investment, risk management, insurance, and financial services."
+      fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BFSI" />}
       quickActionsData={quickActions}
     />
   );
 }
+

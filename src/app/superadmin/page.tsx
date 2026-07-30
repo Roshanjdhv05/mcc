@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X } from 'lucide-react';
+import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays } from 'lucide-react';
 import NoticeForm from './NoticeForm';
 import NoticeList from './NoticeList';
+import EventPublishForm from '@/app/admin/events/EventPublishForm';
+import EventsList from '@/app/admin/events/EventsList';
 
 const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
 
@@ -21,8 +23,10 @@ function SuperAdminContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
-  const [activeTab, setActiveTab] = useState<'overview' | 'notice'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'notice' | 'events'>('overview');
   const [showNoticeForm, setShowNoticeForm] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [eventsRefreshKey, setEventsRefreshKey] = useState(0);
 
   // Check auth state on mount
   useEffect(() => {
@@ -39,9 +43,10 @@ function SuperAdminContent() {
     }
   }, [tabParam]);
 
-  const handleTabChange = (tab: 'overview' | 'notice') => {
+  const handleTabChange = (tab: 'overview' | 'notice' | 'events') => {
     setActiveTab(tab);
     setShowNoticeForm(false);
+    setShowEventForm(false);
     router.push(`/superadmin?tab=${tab}`);
   };
 
@@ -101,8 +106,9 @@ function SuperAdminContent() {
           {/* ─── Sidebar ─── */}
           <aside className="w-56 bg-white border-r border-[#E2E8F0] flex flex-col py-4 gap-1 shadow-sm flex-shrink-0">
             {([
-              { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={18} /> },
-              { key: 'notice', label: 'Notice System', icon: <Bell size={18} /> },
+              { key: 'overview', label: 'Overview',           icon: <LayoutDashboard size={18} /> },
+              { key: 'notice',   label: 'Notice System',      icon: <Bell size={18} /> },
+              { key: 'events',   label: 'Events Publication', icon: <CalendarDays size={18} /> },
             ] as const).map(item => (
               <button
                 key={item.key}
@@ -176,15 +182,56 @@ function SuperAdminContent() {
                 {showNoticeForm && (
                   <div className="mb-6">
                     <NoticeForm
-                      onSuccess={() => {
-                        setShowNoticeForm(false);
-                      }}
+                      onSuccess={() => { setShowNoticeForm(false); }}
                       onCancel={() => setShowNoticeForm(false)}
                     />
                   </div>
                 )}
 
                 <NoticeList />
+              </div>
+            )}
+
+            {/* ── Events Publication ── */}
+            {activeTab === 'events' && (
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-800">Events Publication</h2>
+                    <p className="text-sm text-gray-500">Publish events to gallery, homepage & academic calendar</p>
+                  </div>
+                  {!showEventForm ? (
+                    <button
+                      onClick={() => setShowEventForm(true)}
+                      className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm"
+                    >
+                      <Plus size={16} /> Publish New Event
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowEventForm(false)}
+                      className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+                    >
+                      <X size={16} /> Close Form
+                    </button>
+                  )}
+                </div>
+
+                {showEventForm && (
+                  <div className="mb-6 bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-6">
+                    <EventPublishForm onSuccess={() => {
+                      setShowEventForm(false);
+                      setEventsRefreshKey(k => k + 1);
+                    }} />
+                  </div>
+                )}
+
+                <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100">
+                    <h3 className="font-bold text-gray-900">All Published Events</h3>
+                  </div>
+                  <EventsList refreshKey={eventsRefreshKey} />
+                </div>
               </div>
             )}
 

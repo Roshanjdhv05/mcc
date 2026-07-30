@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 const tabs = [
   { label: 'Home', href: '/', icon: Home },
   { label: 'Search', href: '/search', icon: Search },
-  { label: 'Courses', href: '/academics', icon: BookOpen },
+  { label: 'Courses', href: '/programmes', icon: BookOpen },
   { label: 'Broadcasts', href: '#', icon: Megaphone },
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
 ];

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { Medal, BarChart2, ShieldCheck, X, Maximize2, Download } from 'lucide-react';
 
 const accreditationNav = [
-  { label: 'CERTIFICATES', href: '/accreditation', active: true },
+  { label: 'ABOUT ACCREDITATION', href: '/accreditation', active: true },
+  { label: 'CERTIFICATES', href: '/accreditation/certificates', active: false },
   { label: 'NAAC', href: '/accreditation/naac/certificates', active: false },
   { label: 'NIRF', href: '/accreditation/nirf/annual-submissions', active: false },
   { label: 'AISHE', href: '/accreditation/aishe/annual-submissions', active: false },
@@ -103,29 +104,35 @@ export default function AccreditationPage() {
         </p>
       </div>
 
-      {/* ── PDF Certificate Cards ── */}
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 pb-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 pb-10 space-y-8">
+        <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-sm border border-[#E2E8F0] space-y-6">
+           <h2 className="text-2xl lg:text-3xl font-bold text-[#123B6D]">About Our Accreditations</h2>
+           <p className="text-gray-600 leading-relaxed text-lg">
+             Accreditation is a mark of quality assurance and institutional excellence. Over the years, Mulund College of Commerce has consistently achieved outstanding grades and recognition from various statutory and accrediting bodies. These accolades are a testament to our continuous pursuit of academic rigor, holistic student development, and robust infrastructural facilities.
+           </p>
+           <p className="text-gray-600 leading-relaxed text-lg">
+             Our institution is proudly recognized by the University Grants Commission (UGC) under Section 2(f) and 12(B) of the UGC Act. Furthermore, we have successfully undergone multiple cycles of assessment and accreditation by the National Assessment and Accreditation Council (NAAC), achieving commendable grades that reflect our dedication to educational excellence.
+           </p>
+           <p className="text-gray-600 leading-relaxed text-lg">
+             We also actively participate in the National Institutional Ranking Framework (NIRF) and submit our data annually to the All India Survey on Higher Education (AISHE). These participations ensure transparency, accountability, and continuous improvement in our educational practices.
+           </p>
+        </div>
+
+        {/* ── PDF Certificate Cards (Interactive) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           {pdfCertificates.map((cert) => (
-            <button
+            <div
               key={cert.title}
-              onClick={() => setSelectedPdf({ title: cert.title, url: cert.url })}
               className="group bg-white rounded-2xl shadow-sm border border-[#E2E8F0] hover:shadow-lg hover:border-[#123B6D]/30 transition-all overflow-hidden flex flex-col text-left w-full"
             >
-              {/* PDF Preview Thumbnail */}
-              <div className="relative w-full bg-gray-100 overflow-hidden" style={{ height: '260px' }}>
+              {/* PDF Preview Thumbnail (Interactive) */}
+              <div className="relative w-full bg-gray-100 overflow-hidden" style={{ height: '350px' }}>
                 <iframe
-                  src={`${cert.url}#view=FitH&toolbar=0&navpanes=0&scrollbar=0`}
-                  className="w-full h-full pointer-events-none"
+                  src={`${cert.url}#view=FitH&toolbar=1&navpanes=0&scrollbar=1`}
+                  className="w-full h-full"
                   title={cert.title}
                   loading="lazy"
                 />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-[#123B6D]/0 group-hover:bg-[#123B6D]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 text-[#123B6D] font-bold text-sm shadow-lg">
-                    <Maximize2 size={16} /> View Full PDF
-                  </div>
-                </div>
               </div>
 
               {/* Card Footer */}
@@ -134,19 +141,21 @@ export default function AccreditationPage() {
                   <h2 className="font-bold text-[#123B6D] text-sm leading-tight">{cert.title}</h2>
                   <p className="text-gray-400 text-xs mt-0.5">{cert.description}</p>
                 </div>
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ml-3"
+                <button
+                  onClick={() => setSelectedPdf({ title: cert.title, url: cert.url })}
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ml-3 hover:opacity-80 transition-opacity cursor-pointer"
                   style={{ backgroundColor: `${cert.accent}15` }}
+                  title="View Fullscreen"
                 >
                   <Maximize2 size={14} style={{ color: cert.accent }} />
-                </div>
+                </button>
               </div>
-            </button>
+            </div>
           ))}
         </div>
 
         {/* Other Links Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
           <Link href="/accreditation/nirf/annual-submissions" className="bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow group flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[#123B6D]/10 flex items-center justify-center group-hover:bg-[#123B6D] transition-colors flex-shrink-0">
               <BarChart2 className="text-[#123B6D] group-hover:text-white transition-colors" size={28} />

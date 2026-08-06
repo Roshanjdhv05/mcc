@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { ShieldCheck, ChevronLeft, FileText, Calendar, ExternalLink } from 'lucide-react';
 
 const accreditationNav = [
-  { label: 'CERTIFICATES', href: '/accreditation', active: false },
+  { label: 'ABOUT ACCREDITATION', href: '/accreditation', active: false },
+  { label: 'CERTIFICATES', href: '/accreditation/certificates', active: false },
   { label: 'NAAC', href: '/accreditation/naac/certificates', active: false },
   { label: 'NIRF', href: '/accreditation/nirf/annual-submissions', active: false },
   { label: 'AISHE', href: '/accreditation/aishe/annual-submissions', active: true },
@@ -96,7 +97,7 @@ export default function AisheAnnualSubmissionsPage() {
         </p>
 
         <Link
-          href="/accreditation"
+          href="/accreditation/certificates"
           className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#123B6D]/30 text-[#123B6D] text-sm font-semibold hover:bg-[#123B6D]/5 transition-colors"
         >
           <ChevronLeft size={16} /> Back to Certificates
@@ -161,3 +162,5 @@ export default function AisheAnnualSubmissionsPage() {
     </div>
   );
 }
+
+

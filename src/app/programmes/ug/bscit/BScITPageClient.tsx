@@ -8,12 +8,12 @@ interface Props {
 }
 
 const bscitFaculty = [
-  { srNo: 1, name: 'Dr.Jyotika Chheda',        additionalRole: 'IT Co-ordinator',  designation: 'Assistant Professor', email: 'jyotika.chheda@mccmulund.ac.in',  education: 'MCA., NET., Ph.D.',                                                              teachingExp: '' },
-  { srNo: 2, name: 'Dr.Vishal Borude',          additionalRole: '—',               designation: 'Assistant Professor', email: 'vishal.borude@mccmulund.ac.in',   education: 'M.Sc.(IT)., Ph.D.',                                                             teachingExp: '12 yrs' },
-  { srNo: 3, name: 'Dr.Priti Pathak',           additionalRole: 'DS Co-Ordinator', designation: 'Assistant Professor', email: 'priti.pathak@mccmulund.ac.in',    education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.',     teachingExp: '' },
-  { srNo: 4, name: 'Ms. Suvarna Ramesh Sawant', additionalRole: '—',               designation: 'Assistant Professor', email: 'suvarna.sawant@mccmulund.ac.in',   education: 'Master in Computer Application',                                               teachingExp: '' },
-  { srNo: 5, name: 'Dr. Sandhya Pandey',        additionalRole: '—',               designation: 'Assistant Professor', email: 'sandhya.pandey@mccmulund.ac.in',  education: 'M.C.A., Ph.D. (Computer Science), M.A.(Sociology)',                          teachingExp: '17 yrs' },
-  { srNo: 6, name: 'Mr.Siddhesh Gotekar',       additionalRole: '—',               designation: 'Assistant Professor', email: 'gotekarsiddhesh@gmail.com',        education: 'M.Sc.(IT)',                                                                     teachingExp: '3 yrs' },
+  { srNo: 1, name: 'Dr.Jyotika Chheda', additionalRole: 'IT Co-ordinator', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'MCA., NET., Ph.D.', email: 'jyotika.chheda@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Jyotika Chheda.png' },
+  { srNo: 2, name: 'Dr.Vishal Borude', additionalRole: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'M.Sc.(IT).,Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
+  { srNo: 3, name: 'Dr.Priti Pathak', additionalRole: 'DS Co-Ordinator', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'MSc(I.T).,MTech(I.T)., MBA(I.T).,LLB.,Diploma in Cyber Law., Ph.D.', email: 'priti.pathak@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Priti Pathak.png' },
+  { srNo: 4, name: 'Ms. Suvarna Ramesh Sawant', additionalRole: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'Master in Computer Application', email: 'suvarna.sawant@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Suvarna Sawant.png' },
+  { srNo: 5, name: 'Dr. Sandhya Pandey', additionalRole: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'M.C.A., P.H.D.(Computer Science and Application), M.A.(Sociology)', email: 'sandhya.pandey@mccmulund.ac.in', teachingExp: '17 yrs', image: '/Degree College Teachers/Sandhya Pandey.png' },
+  { srNo: 6, name: 'Mr.Siddhesh Gotekar', additionalRole: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'M.Sc.(IT)', email: 'gotekarsiddhesh@gmail.com', teachingExp: '3 yrs', image: '/Degree College Teachers/Siddhesh Gotekar.png' },
 ];
 
 export default function BScITPageClient({ syllabusContent }: Props) {
@@ -26,8 +26,10 @@ export default function BScITPageClient({ syllabusContent }: Props) {
 
   return (
     <CourseTemplate
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      courseKey="BSC_IT"
+      shortInfo="A technology-driven programme preparing students for software development, IT consulting, and network administration."
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
           <p className="mb-4">

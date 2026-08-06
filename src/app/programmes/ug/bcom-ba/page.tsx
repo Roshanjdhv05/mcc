@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const bcomBaFaculty = [
-  { srNo: 1, name: 'Dr. Viji Kannan',           additionalRole: 'Head of Dept',  designation: 'Associate Professor', email: 'viji.kannan@mccmulund.ac.in',     education: 'BCS, MBA, NET, PhD',                                               teachingExp: '24 yrs' },
-  { srNo: 2, name: 'Ms. Prajakta Vaibhav Khamkar', additionalRole: '—',          designation: 'Assistant Professor', email: 'prajakta@gmail.com',             education: 'MBA',                                                              teachingExp: '8 yrs' },
-  { srNo: 3, name: 'Ms. Rutuja Birje',           additionalRole: '—',           designation: 'Assistant Professor', email: 'rutuja.birje@mccmulund.ac.in',    education: 'MCom (Accountancy), NET, CS (Executive), Diploma in Tax Management', teachingExp: '9 yrs' },
+  { srNo: 1, name: 'Dr. Vijayalakshmi Kannan', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BCOM BA', education: 'BCS, MBA, NET, PhD', email: 'viji.kannan@mccmulund.ac.in', teachingExp: '24 yrs', image: '/Degree College Teachers/Viji Kannan.png' },
+  { srNo: 2, name: 'Ms. Prajakta Khamkar', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MBA', email: 'prajakta@gmail.com', teachingExp: '8 yrs', image: '/Degree College Teachers/Prajakta Khamkar.png' },
+  { srNo: 3, name: 'Ms. Rutuja Birje', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MCom (Accountancy) , NET, CS (Executive), Diploma in Tax Management', email: 'rutuja.birje@mccmulund.ac.in', teachingExp: '9 yrs', image: '/Degree College Teachers/Rutuja Birje.png' },
 ];
 
 export default function CoursePage() {
@@ -26,9 +26,9 @@ export default function CoursePage() {
       }
       syllabusContent={<SyllabusRenderer programKey="BBA" />}
       title="Bachelor of Commerce (Business Administration)"
+      shortInfo="An integrated programme merging core commerce education with advanced data analysis, predictive modeling, and business intelligence techniques."
       fundingType="Self Financing"
       facultyData={bcomBaFaculty}
     />
   );
 }
-

@@ -8,11 +8,11 @@ interface Props {
 }
 
 const dsFaculty = [
-  { srNo: 1, name: 'Dr.Priti Pathak',   additionalRole: 'DS Co-ordinator', designation: 'Assistant Professor', email: 'priti.pathak@mccmulund.ac.in',  education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.', teachingExp: '' },
-  { srNo: 2, name: 'Dr.Vishal Borude',  additionalRole: '—',              designation: 'Assistant Professor', email: 'vishal.borude@mccmulund.ac.in',  education: 'M.Sc.(IT)., Ph.D.',                                                    teachingExp: '' },
-  { srNo: 3, name: 'Dr.Reena Nagda',    additionalRole: 'SCT Co-ordinator', designation: 'Assistant Professor', email: 'reena.shah@mccmulund.ac.in',    education: 'M.Sc. Mathematics, NET, Ph.D.',                                        teachingExp: '' },
-  { srNo: 4, name: 'Dr. Sandhya Pandey', additionalRole: '—',             designation: 'Assistant Professor', email: 'sandhya.pandey@mccmulund.ac.in', education: 'M.C.A., Ph.D. (Computer Science), M.A.(Sociology)',                    teachingExp: '' },
-  { srNo: 5, name: 'Mr.Siddhesh Gotekar', additionalRole: '—',            designation: 'Assistant Professor', email: 'gotekarsiddhesh@gmail.com',       education: 'M.Sc.(IT)',                                                            teachingExp: '' },
+  { srNo: 1, name: 'Dr.Priti Pathak', additionalRole: 'DS Co-ordinator', designation: 'Assistant Professor', department: 'Not Assigned', education: 'MSc(I.T).,MTech(I.T)., MBA(I.T).,LLB.,Diploma in Cyber Law., Ph.D.', email: 'priti.pathak@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Priti Pathak.png' },
+  { srNo: 2, name: 'Dr.Vishal Borude', additionalRole: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc.(IT).,Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
+  { srNo: 3, name: 'Dr.Reena Nagda', additionalRole: 'SCT Co-ordinator', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc. Mathematics,NET,Ph.D.', email: 'reena.shah@mccmulund.ac.in', teachingExp: '' },
+  { srNo: 4, name: 'Dr. Sandhya Pandey', additionalRole: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.C.A., P.H.D.(Computer Science and Application), M.A.(Sociology)', email: 'sandhya.pandey@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Sandhya Pandey.png' },
+  { srNo: 5, name: 'Mr.Siddhesh Gotekar', additionalRole: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc.(IT)', email: 'gotekarsiddhesh@gmail.com', teachingExp: '0 yrs', image: '/Degree College Teachers/Siddhesh Gotekar.png' },
 ];
 
 export default function DSPageClient({ syllabusContent }: Props) {
@@ -25,8 +25,10 @@ export default function DSPageClient({ syllabusContent }: Props) {
 
   return (
     <CourseTemplate
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      courseKey="DS"
+      shortInfo="A cutting-edge course focused on data analytics, machine learning, and statistical modeling to solve real-world business problems."
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
           <p className="mb-4">

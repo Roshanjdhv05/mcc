@@ -4,24 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Download, FileText, Calendar, Users, Target, BarChart2, Shield, Star, Leaf, BookOpen, Mic, GraduationCap, Accessibility, ArrowRight } from 'lucide-react';
 
-const iqacNav = [
-  { label: 'HOME', active: true, href: '/iqac' },
-  { label: 'ABOUT THE IQAC', href: '/iqac#about' },
-  { label: 'QUALITY POLICY', href: '/iqac/quality-policy' },
-  { label: 'MEMBERS (YEAR WISE)', href: '/iqac#members' },
-  { label: 'MINUTES OF THE MEETING', href: '/iqac/minutes' },
-  { label: 'BEST PRACTICES', href: '/iqac#best-practices' },
-  { label: 'INSTITUTIONAL DISTINCTIVENESS', href: '/iqac#distinctiveness' },
-  { label: 'ANNUAL REPORTS', href: '/iqac#annual-reports' },
-  { label: 'AQAR', href: '/iqac#aqar' },
-  { label: 'SSR SUPPORTING DOCUMENTS', href: '/iqac/ssr-supporting-documents' },
-  { label: 'ACADEMIC CALENDAR', href: '/iqac#academic-calendar' },
-  { label: 'TILAK SMRUTI VYAKHYAN', href: '/about/tilak-lecture' },
-  { label: 'BAPAT MEMORIAL LECTURE', href: '/about/bg-bapat-lecture' },
-  { label: 'DEEKSHARAMBH', href: '/iqac#deeksharambh' },
-  { label: 'DISABILITY SENSITISATION', href: '/iqac#disability' },
-  { label: 'ENVIRONMENTAL COMMITMENTS', href: '/iqac#environment' },
-];
 
 const meetings = [
   { date: 'March 2024', agenda: 'Annual Quality Review & Academic Calendar Planning', minutes: true },
@@ -63,9 +45,6 @@ const quickLinks = [
 ];
 
 export default function IQACPage() {
-  const [navVisible, setNavVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
   // Mobile ticker state
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
   const tickerRef = useRef<HTMLDivElement>(null);
@@ -75,17 +54,6 @@ export default function IQACPage() {
   const pausedOffset = useRef(0);
 
   const resumeAutoScroll = useCallback(() => setIsAutoScrolling(true), []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY;
-      if (y > lastScrollY && y > 200) setNavVisible(false);
-      else if (y < lastScrollY) setNavVisible(true);
-      setLastScrollY(y);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
 
   const pauseAutoScroll = useCallback(() => {
     if (tickerRef.current) {
@@ -103,66 +71,9 @@ export default function IQACPage() {
 
   useEffect(() => () => { if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current); }, []);
 
-  // Native smooth auto-scroll for nav
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    let animationId: number;
-    let lastTime = performance.now();
-    
-    const scroll = (time: number) => {
-      const delta = time - lastTime;
-      lastTime = time;
-      
-      if (scrollContainerRef.current && !isPaused) {
-        // Scroll speed: roughly 30 pixels per second
-        scrollContainerRef.current.scrollLeft += (30 * delta) / 1000;
-        
-        // Infinite loop: if we scrolled past half, reset to 0
-        // (We render 4 copies, so halfway is seamless)
-        if (scrollContainerRef.current.scrollLeft >= scrollContainerRef.current.scrollWidth / 2) {
-          scrollContainerRef.current.scrollLeft -= scrollContainerRef.current.scrollWidth / 2;
-        }
-      }
-      animationId = requestAnimationFrame(scroll);
-    };
-    
-    animationId = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animationId);
-  }, [isPaused]);
-
   return (
     <div className="bg-[#F8FAFC] min-h-screen pb-12 font-sans">
 
-      {/* ── Secondary IQAC Nav (Library-style) ── */}
-      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
-
-        {/* Continuous Native Scroll Nav (All Screens) */}
-        <div 
-          className="flex w-full overflow-hidden h-12 items-center"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
-        >
-          <div 
-            ref={scrollContainerRef} 
-            className="flex items-center h-full whitespace-nowrap overflow-x-auto no-scrollbar w-full"
-            style={{ scrollBehavior: 'auto' }}
-          >
-            {[...iqacNav, ...iqacNav, ...iqacNav, ...iqacNav].map((item, i) => (
-              <Link key={i} href={item.href}
-                className={`flex-shrink-0 h-full flex items-center px-6 md:px-8 lg:px-12 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${
-                  item.active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10 active:bg-white/10'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* ── Hero ── */}
       <div id="about" className="relative py-14 flex flex-col items-center text-center overflow-hidden">

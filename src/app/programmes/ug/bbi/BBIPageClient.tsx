@@ -5,14 +5,10 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bbiFaculty = [
-  { srNo: 1, name: 'Ms.Shilpa Thakur',       additionalRole: 'Co-ordinator',  designation: 'Assistant Professor', email: 'shilpa.thakur@mccmulund.ac.in',     education: 'MCom, MPhil',                teachingExp: '28 yrs' },
-  { srNo: 2, name: 'Dr. Rajashri Deshpande', additionalRole: '—',             designation: 'Assistant Professor', email: 'rajashri.deshpande@mccmulund.ac.in', education: 'M.Com., MA., NET, Ph.D.',    teachingExp: '18 yrs' },
-  { srNo: 3, name: 'Ms.Alpa Katira',         additionalRole: '—',             designation: 'Assistant Professor', email: 'alpa.katira@mccmulund.ac.in',        education: 'M.Com., B.Ed., SET',        teachingExp: '20 yrs' },
-  { srNo: 4, name: 'Ms.Archana Kadam',       additionalRole: '—',             designation: 'Assistant Professor', email: 'archana.kadam@mccmulund.ac.in',      education: 'M.Com., MA., NET, PGDFM',   teachingExp: '17 yrs' },
-  { srNo: 5, name: 'Ms.Seema Attarde',       additionalRole: '—',             designation: 'Assistant Professor', email: 'seema.attarde@mccmulund.ac.in',      education: 'M.Sc.',                     teachingExp: '26 yrs' },
-  { srNo: 6, name: 'Mr.Nitin Pawar',         additionalRole: '—',             designation: 'Assistant Professor', email: 'nitin.pawar@mccmulund.ac.in',        education: 'M.Com., M.Phil., MBA., SET', teachingExp: '16 yrs' },
-  { srNo: 7, name: 'Ms.Sneha Prajapati',     additionalRole: '—',             designation: 'Assistant Professor', email: 'sneha.prajapati@mccmulund.ac.in',    education: 'M.Com., B.Ed., SET, NET',   teachingExp: '8 yrs' },
-  { srNo: 8, name: 'Ms.Swapna Acharya',      additionalRole: '—',             designation: 'Assistant Professor', email: 'swapna.acharya@mccmulund.ac.in',     education: 'M.Com., LLB, SET',          teachingExp: '8 yrs' },
+  { srNo: 1, name: 'Ms.Shilpa Thakur', additionalRole: 'Vice-Principal (SFC), Coordinatore', designation: 'Assistant Professor', department: 'BBI', education: 'MCom,Mphil', email: 'shilpa.thakur@mccmulund.ac.in', teachingExp: '28 yrs', image: '/Degree College Teachers/Shilpa Thakur.png' },
+  { srNo: 2, name: 'Dr. Rajashri Deshpande', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BBI', education: 'M.Com.,MA., NET, Ph.D.', email: 'rajashri.deshpande@mccmulund.ac.in', teachingExp: '18 yrs' },
+  { srNo: 3, name: 'Ms.Archana Kadam', additionalRole: '—', designation: 'Assistant Professor', department: 'BBI', education: 'M.Com.,MA., NET, PGDFM', email: 'archana.kadam@mccmulund.ac.in', teachingExp: '17 yrs', image: '/Degree College Teachers/Archana Kadam.png' },
+  { srNo: 4, name: 'Ms.Seema Attarde', additionalRole: '—', designation: 'Assistant Professor', department: 'BBI', education: 'M.Sc.', email: 'seema.attarde@mccmulund.ac.in', teachingExp: '26 yrs', image: '/Degree College Teachers/Seema Attarde.png' },
 ];
 
 export default function BBIPageClient() {
@@ -25,8 +21,8 @@ export default function BBIPageClient() {
 
   return (
     <CourseTemplate
-      festivals="Manthan (Col) + Shodh (Col)"
-      publication="Pratibimb (Col.)"
+      festivals="Manthan + Shodh"
+      publication="Pratibimb"
       introductionContent={
         <>
         <p className="mb-4">The Bachelor of Commerce (B.Com) in Banking & Insurance (BBI) is a specialized undergraduate program designed to provide students with comprehensive knowledge of the banking, finance, and insurance sectors. This course focuses on key financial concepts, risk management, investment strategies, and regulatory frameworks that govern the banking and insurance industries.</p>
@@ -37,6 +33,7 @@ export default function BBIPageClient() {
       }
       syllabusContent={<SyllabusRenderer programKey="BBI" />}
       courseKey="BBI"
+      shortInfo="A specialized programme focused on the banking and insurance sectors, equipping students with deep knowledge of financial services, risk management, and banking operations."
       title="Bachelor of Commerce (Banking & Insurance)"
       fundingType="Self Financing"
       facultyData={bbiFaculty}

@@ -382,36 +382,133 @@ export default function PGCourseTemplate({
               <div className="w-16 h-1 bg-gradient-to-r from-[#D4A017] to-[#123B6D] rounded-full mb-8" />
 
               {/* Alumni Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[
-                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
-                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
-                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
-                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
-                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
-                  { name: 'Alumni Name', batch: 'Batch Year', role: 'Current Designation', org: 'Organisation', field: 'Industry / Domain', initials: 'AN' },
+                  {
+                    name: 'Alumni Name',
+                    programme: 'M.Com (Advanced Accountancy)',
+                    year: '2018',
+                    designation: 'Senior Financial Analyst',
+                    organisation: 'Deloitte India',
+                    about: 'Leading cross-functional finance teams and driving strategic insights across global markets with over 6 years of expertise.',
+                    linkedin: '#',
+                    image: '',
+                    initials: 'AN',
+                  },
+                  {
+                    name: 'Alumni Name',
+                    programme: 'M.Sc. (IT)',
+                    year: '2020',
+                    designation: 'Software Engineer',
+                    organisation: 'Infosys Technologies',
+                    about: 'Building scalable cloud-native applications and contributing to open-source projects in the fintech domain.',
+                    linkedin: '#',
+                    image: '',
+                    initials: 'AN',
+                  },
+                  {
+                    name: 'Alumni Name',
+                    programme: 'M.Com (Business Management)',
+                    year: '2019',
+                    designation: 'Chartered Accountant',
+                    organisation: 'KPMG Mumbai',
+                    about: 'Specialising in audit and assurance services for mid-cap and large enterprises across the manufacturing sector.',
+                    linkedin: '#',
+                    image: '',
+                    initials: 'AN',
+                  },
+                  {
+                    name: 'Alumni Name',
+                    programme: 'M.Com (Banking & Finance)',
+                    year: '2017',
+                    designation: 'Investment Banking Analyst',
+                    organisation: 'HDFC Securities',
+                    about: 'Managing client portfolios and providing equity research insights to institutional investors across South Asia.',
+                    linkedin: '#',
+                    image: '',
+                    initials: 'AN',
+                  },
+                  {
+                    name: 'Alumni Name',
+                    programme: 'M.Sc. (Finance)',
+                    year: '2021',
+                    designation: 'Risk Analyst',
+                    organisation: 'Morgan Stanley India',
+                    about: 'Evaluating market and credit risk for structured finance products across emerging market portfolios.',
+                    linkedin: '#',
+                    image: '',
+                    initials: 'AN',
+                  },
+                  {
+                    name: 'Alumni Name',
+                    programme: 'M.Sc. (IT)',
+                    year: '2022',
+                    designation: 'Data Scientist',
+                    organisation: 'Google India',
+                    about: 'Designing ML pipelines and predictive models that power personalised search and recommendation experiences globally.',
+                    linkedin: '#',
+                    image: '',
+                    initials: 'AN',
+                  },
                 ].map((alumni, idx) => (
-                  <div key={idx} className="group relative bg-gradient-to-br from-[#F8FAFC] to-[#EBF3FF] rounded-2xl p-5 border border-[#E2E8F0] hover:border-[#D4A017] hover:shadow-lg transition-all duration-300 overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D4A017] to-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#123B6D] to-[#1e5ba8] flex items-center justify-center shrink-0 shadow-md">
-                        <span className="text-white font-bold text-lg">{alumni.initials}</span>
+                  <div
+                    key={idx}
+                    className="group relative bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#D4A017] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
+                  >
+                    {/* Gold top accent */}
+                    <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[#D4A017] to-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    {/* Top section: photo + info side by side */}
+                    <div className="flex gap-4 p-4">
+                      {/* Photo box */}
+                      <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-[#123B6D] to-[#1e5ba8] flex items-center justify-center shrink-0 overflow-hidden shadow-md">
+                        {alumni.image ? (
+                          <img src={alumni.image} alt={alumni.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-white font-bold text-2xl">{alumni.initials}</span>
+                        )}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-[#123B6D] text-sm leading-tight mb-0.5">{alumni.name}</h3>
-                        <div className="flex items-center gap-1 mb-1">
-                          <Star size={10} className="text-[#D4A017] fill-[#D4A017]" />
-                          <span className="text-[10px] font-semibold text-[#D4A017] uppercase tracking-wider">{alumni.batch}</span>
+
+                      {/* Info lines */}
+                      <div className="flex-1 min-w-0 flex flex-col justify-center gap-[3px]">
+                        <h3 className="font-bold text-[#123B6D] text-sm leading-snug truncate">{alumni.name}</h3>
+                        <div className="flex items-center gap-1">
+                          <GraduationCap size={11} className="text-[#D4A017] shrink-0" />
+                          <span className="text-[11px] text-[#475569] font-medium truncate">{alumni.programme}</span>
                         </div>
-                        <p className="text-xs font-semibold text-gray-700 leading-tight">{alumni.role}</p>
-                        <div className="flex items-center gap-1 mt-1">
-                          <MapPin size={10} className="text-gray-400 shrink-0" />
-                          <p className="text-[11px] text-gray-500 truncate">{alumni.org}</p>
+                        <div className="flex items-center gap-1">
+                          <Calendar size={11} className="text-[#3B82F6] shrink-0" />
+                          <span className="text-[11px] text-[#475569]">Class of {alumni.year}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Briefcase size={11} className="text-[#10B981] shrink-0" />
+                          <span className="text-[11px] text-gray-700 font-semibold leading-tight line-clamp-1">{alumni.designation}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Building2 size={11} className="text-gray-400 shrink-0" />
+                          <span className="text-[11px] text-gray-500 truncate">{alumni.organisation}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="mt-3 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-[#3B82F6] uppercase tracking-wider bg-[#EBF3FF] px-2 py-1 rounded-full">{alumni.field}</span>
+
+                    {/* LinkedIn button */}
+                    <div className="px-4 pb-3">
+                      <a
+                        href={alumni.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 w-full py-1.5 rounded-lg bg-[#0077B5]/10 hover:bg-[#0077B5] text-[#0077B5] hover:text-white text-[11px] font-semibold transition-all duration-200 border border-[#0077B5]/30 hover:border-[#0077B5]"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        View on LinkedIn
+                      </a>
+                    </div>
+
+                    {/* About description — 2 lines */}
+                    <div className="mx-4 mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2.5">
+                      <p className="text-[11px] text-gray-600 leading-relaxed line-clamp-2">{alumni.about}</p>
                     </div>
                   </div>
                 ))}

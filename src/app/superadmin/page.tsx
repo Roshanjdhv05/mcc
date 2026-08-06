@@ -2,11 +2,16 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays } from 'lucide-react';
+import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays, Home, FileText, GraduationCap } from 'lucide-react';
 import NoticeForm from './NoticeForm';
 import NoticeList from './NoticeList';
 import EventPublishForm from '@/app/admin/events/EventPublishForm';
 import EventsList from '@/app/admin/events/EventsList';
+import HomeEventsManager from './HomeEventsManager';
+import ProgrammesManagerV2 from './ProgrammesManagerV2';
+import CalendarManager from './CalendarManager';
+import StudentsCornerManager from './StudentsCornerManager';
+import StatutoryBodiesManager from './StatutoryBodiesManager';
 
 const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
 
@@ -23,7 +28,7 @@ function SuperAdminContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
-  const [activeTab, setActiveTab] = useState<'overview' | 'notice' | 'events'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'notice' | 'events' | 'home-events' | 'calendar-management' | 'degree-programmes' | 'programme-management' | 'students-corner' | 'statutory-bodies'>('overview');
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [eventsRefreshKey, setEventsRefreshKey] = useState(0);
@@ -43,7 +48,7 @@ function SuperAdminContent() {
     }
   }, [tabParam]);
 
-  const handleTabChange = (tab: 'overview' | 'notice' | 'events') => {
+  const handleTabChange = (tab: 'overview' | 'notice' | 'events' | 'home-events' | 'calendar-management' | 'degree-programmes' | 'programme-management' | 'students-corner' | 'statutory-bodies') => {
     setActiveTab(tab);
     setShowNoticeForm(false);
     setShowEventForm(false);
@@ -55,7 +60,7 @@ function SuperAdminContent() {
     setLoading(true);
     setError(null);
     setTimeout(() => {
-      if (username === 'mccwebsite' && password === 'mccwebsite210726') {
+      if (username === 'mccwebsite' && password === 'Roshan&Yash') {
         setIsLoggedIn(true);
         localStorage.setItem('mccSuperadmin', 'true');
         // Ensure URL param is set on login if missing
@@ -106,9 +111,15 @@ function SuperAdminContent() {
           {/* ─── Sidebar ─── */}
           <aside className="w-56 bg-white border-r border-[#E2E8F0] flex flex-col py-4 gap-1 shadow-sm flex-shrink-0">
             {([
-              { key: 'overview', label: 'Overview',           icon: <LayoutDashboard size={18} /> },
-              { key: 'notice',   label: 'Notice System',      icon: <Bell size={18} /> },
-              { key: 'events',   label: 'Events Publication', icon: <CalendarDays size={18} /> },
+              { key: 'overview',            label: 'Overview',             icon: <LayoutDashboard size={18} /> },
+              { key: 'notice',              label: 'Notice System',        icon: <Bell size={18} /> },
+              { key: 'events',              label: 'Events Publication',   icon: <CalendarDays size={18} /> },
+              { key: 'home-events',         label: 'Homepage Events',      icon: <Home size={18} /> },
+              { key: 'calendar-management', label: 'Calendar Management',  icon: <CalendarDays size={18} /> },
+              { key: 'programme-management', label: 'Programme Management', icon: <GraduationCap size={18} /> },
+              { key: 'students-corner',     label: 'Students Corner',      icon: <LayoutDashboard size={18} /> },
+              { key: 'statutory-bodies',    label: 'Statutory Bodies',     icon: <FileText size={18} /> },
+              { key: 'degree-programmes',   label: 'Degree Programmes',    icon: <FileText size={18} /> },
             ] as const).map(item => (
               <button
                 key={item.key}
@@ -198,7 +209,7 @@ function SuperAdminContent() {
                 <div className="flex items-center justify-between mb-5">
                   <div>
                     <h2 className="text-xl font-bold text-gray-800">Events Publication</h2>
-                    <p className="text-sm text-gray-500">Publish events to gallery, homepage & academic calendar</p>
+                    <p className="text-sm text-gray-500">Publish events to gallery, homepage & programme pages</p>
                   </div>
                   {!showEventForm ? (
                     <button
@@ -233,6 +244,44 @@ function SuperAdminContent() {
                   <EventsList refreshKey={eventsRefreshKey} />
                 </div>
               </div>
+            )}
+
+            {/* ── Homepage Events Manager ── */}
+            {activeTab === 'home-events' && (
+              <HomeEventsManager />
+            )}
+
+            {/* ── Calendar Management ── */}
+            {activeTab === 'calendar-management' && (
+              <CalendarManager />
+            )}
+
+            {/* ── Programme Management (New Normalized Schema) ── */}
+            {activeTab === 'programme-management' && (
+              <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
+                <ProgrammesManagerV2 />
+              </Suspense>
+            )}
+
+            {/* ── Students Corner Management ── */}
+            {activeTab === 'students-corner' && (
+              <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
+                <StudentsCornerManager />
+              </Suspense>
+            )}
+
+            {/* ── Statutory Bodies Management ── */}
+            {activeTab === 'statutory-bodies' && (
+              <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
+                <StatutoryBodiesManager />
+              </Suspense>
+            )}
+
+            {/* ── Degree Programmes Manager (Legacy) ── */}
+            {activeTab === 'degree-programmes' && (
+              <Suspense fallback={<div>Loading...</div>}>
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-700 font-semibold">⚠️ This is the legacy programme manager. Use <strong>Programme Management</strong> for the new normalized system.</div>
+              </Suspense>
             )}
 
           </main>

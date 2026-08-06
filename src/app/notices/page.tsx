@@ -58,6 +58,7 @@ export default function NoticesPage() {
     const { data } = await supabase
       .from('notices')
       .select('*')
+      .eq('is_calendar_only', false)
       .lte('schedule_time', now)
       .or(`expiry_time.is.null,expiry_time.gt.${now}`)
       .order('schedule_time', { ascending: false });

@@ -20,7 +20,7 @@ export default function CoursePage() {
       title="Master of Science (Information Technology)"
       fundingType="Self Financing"
       facultyData={[
-        { srNo: 1, name: 'Dr. Vishal Borude', designation: 'MS.C IT Co-ordinator', additionalRole: '—', education: 'M.Sc.(IT)., Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teachingExp: '0 yrs' }
+        { srNo: 1, name: 'Dr. Vishal Borude', designation: 'MS.C IT Co-ordinator', additionalRole: '—', education: 'M.Sc.(IT)., Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
       ]}
     />
   );

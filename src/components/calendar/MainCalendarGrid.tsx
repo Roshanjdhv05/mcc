@@ -1,13 +1,17 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, CalendarDays, X, MapPin, Clock } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 type Event = {
-  month: number; // 1-12 (repeats each year for demo purposes)
+  id?: string;
+  month: number; // 1-12
   date: number;
   type: string;
   label: string;
+  venue?: string;
+  time?: string;
 };
 
 const eventTypes: Record<string, { color: string; bg: string; dot: string; border: string; label: string }> = {
@@ -123,7 +127,7 @@ const events: Event[] = [
 
 const YEAR_RANGE = Array.from({ length: 11 }, (_, i) => 2020 + i); // 2020–2030
 
-export default function MainCalendarGrid() {
+export default function MainCalendarGrid({ isAdmin = false }: { isAdmin?: boolean }) {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1); // 1-indexed
@@ -131,6 +135,46 @@ export default function MainCalendarGrid() {
   const [selectedDate, setSelectedDate] = useState<number | null>(today.getDate());
   const [showYearPicker, setShowYearPicker] = useState(false);
   const yearRef = useRef<HTMLDivElement>(null);
+  const [liveEvents, setLiveEvents] = useState<Event[]>([]);
+
+  // Popup state
+  const [popup, setPopup] = useState<{ day: number; events: Event[] } | null>(null);
+
+  // Fetch notice-calendar events from Supabase
+  const fetchNoticeCalEvents = async () => {
+    const { data } = await supabase
+      .from('notices')
+      .select('id, calendar_title, calendar_date, calendar_category, calendar_venue, calendar_time')
+      .eq('publish_calendar', true)
+      .not('calendar_date', 'is', null);
+    if (data) {
+      setLiveEvents(data.map((n: any) => {
+        const d = new Date(n.calendar_date);
+        return {
+          id: n.id,
+          month: d.getMonth() + 1,
+          date: d.getDate(),
+          type: n.calendar_category || 'Event',
+          label: n.calendar_title || 'Event',
+          venue: n.calendar_venue,
+          time: n.calendar_time,
+        };
+      }));
+    }
+  };
+
+  useEffect(() => {
+    fetchNoticeCalEvents();
+  }, []);
+
+  const handleDeleteEvent = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this event from the calendar?')) return;
+    await supabase.from('notices').delete().eq('id', id);
+    // Refresh the events or filter them out locally
+    setLiveEvents(prev => prev.filter(e => e.id !== id));
+    // Also remove from popup if currently viewing
+    setPopup(prev => prev ? { ...prev, events: prev.events.filter(e => e.id !== id) } : null);
+  };
 
   // Close year picker on outside click
   useEffect(() => {
@@ -161,8 +205,9 @@ export default function MainCalendarGrid() {
     setSelectedDate(today.getDate());
   };
 
-  // Get events for current month
-  const monthEvents = events.filter(e => e.month === currentMonth);
+  // Get events for current month — merge hardcoded + live
+  const allEvents = useMemo(() => [...events, ...liveEvents], [liveEvents]);
+  const monthEvents = allEvents.filter(e => e.month === currentMonth);
   const filteredEvents = monthEvents.filter(e => activeFilter === 'All' || e.type === activeFilter);
   const getEventsForDate = (date: number) => filteredEvents.filter(e => e.date === date);
 
@@ -297,7 +342,15 @@ export default function MainCalendarGrid() {
               return (
                 <div
                   key={di}
-                  onClick={() => day && setSelectedDate(day)}
+                  onClick={() => {
+                    if (!day) return;
+                    setSelectedDate(day);
+                    // Get ALL events for this day (unfiltered by type filter) for the popup
+                    const dayAllEvents = allEvents.filter(e => e.month === currentMonth && e.date === day);
+                    if (dayAllEvents.length > 0) {
+                      setPopup({ day, events: dayAllEvents });
+                    }
+                  }}
                   className={`min-h-[90px] p-2 border-r last:border-r-0 border-slate-100 relative transition-colors ${
                     !day
                       ? 'bg-slate-50/70 cursor-default'
@@ -363,6 +416,102 @@ export default function MainCalendarGrid() {
       {filteredEvents.length === 0 && (
         <div className="text-center py-8 text-slate-400 text-sm font-medium mt-4">
           No {activeFilter === 'All' ? '' : activeFilter} events found for {MONTHS[currentMonth - 1]} {currentYear}.
+        </div>
+      )}
+
+      {/* ── Date Event Popup Modal ── */}
+      {popup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => setPopup(null)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+          {/* Modal */}
+          <div
+            className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-[#123B6D] px-6 py-5 flex items-center justify-between">
+              <div>
+                <p className="text-white/70 text-xs font-semibold uppercase tracking-wider">{MONTHS[currentMonth - 1]} {currentYear}</p>
+                <h3 className="text-white text-2xl font-black mt-0.5">
+                  {String(popup.day).padStart(2, '0')} {SHORT_MONTHS[currentMonth - 1]}
+                </h3>
+              </div>
+              <div className="text-center">
+                <div className="bg-white/10 rounded-2xl px-4 py-2">
+                  <span className="text-white font-black text-lg">{popup.events.length}</span>
+                  <p className="text-white/70 text-[10px] font-semibold uppercase tracking-wide">Event{popup.events.length !== 1 ? 's' : ''}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setPopup(null)}
+                className="absolute top-4 right-4 p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Events List */}
+            <div className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
+              {popup.events.map((ev, i) => {
+                const style = eventTypes[ev.type] ?? eventTypes['Event'];
+                return (
+                  <div key={i} className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50 transition-colors">
+                    {/* Colour strip */}
+                    <div className={`w-1 self-stretch rounded-full ${style.dot} flex-shrink-0`} />
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <h4 className="font-bold text-sm text-slate-800 leading-tight">{ev.label}</h4>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${style.bg} ${style.color}`}>
+                          {ev.type}
+                        </span>
+                      </div>
+                      {(ev as any).venue && (
+                        <div className="flex items-center gap-1 text-xs text-slate-500 mb-0.5">
+                          <MapPin size={10} className="flex-shrink-0" />
+                          <span>{(ev as any).venue}</span>
+                        </div>
+                      )}
+                      {(ev as any).time && (
+                        <div className="flex items-center gap-1 text-xs text-slate-500">
+                          <Clock size={10} className="flex-shrink-0" />
+                          <span>{(ev as any).time}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {isAdmin && ev.id && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteEvent(ev.id!);
+                        }}
+                        className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                        title="Delete Event"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-slate-50 border-t border-slate-100">
+              <button
+                onClick={() => setPopup(null)}
+                className="w-full py-2.5 bg-[#123B6D] text-white rounded-xl text-sm font-bold hover:bg-[#0f3059] transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

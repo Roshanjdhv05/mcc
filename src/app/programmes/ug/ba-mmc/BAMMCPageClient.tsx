@@ -5,46 +5,9 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bammcFaculty = [
-  {
-    srNo: 1,
-    name: 'Dr. Viji Kannan',
-    additionalRole: 'Head of Dept',
-    designation: 'Associate Professor',
-    email: 'viji.kannan@mccmulund.ac.in',
-    education: 'BCS, MBA, NET, PhD',
-    teachingExp: '24 yrs',
-    department: 'Media Studies',
-  },
-  {
-    srNo: 2,
-    name: 'Dr. Shriya Shenoy',
-    additionalRole: '—',
-    designation: 'Assistant Professor',
-    email: 'shriya.shenoy@mccmulund.ac.in',
-    education: 'PhD, SET-M, MA (Mass Communication & Journalism)',
-    teachingExp: '10 yrs',
-    department: 'Media Studies',
-  },
-  {
-    srNo: 3,
-    name: 'Dr. Nimisha Gadkari',
-    additionalRole: '—',
-    designation: 'Assistant Professor',
-    email: 'nimisha.gadkari@mccmulund.ac.in',
-    education: 'PhD in Mass Communication & Journalism, MA in Entertainment, Media & Marketing',
-    teachingExp: '7 yrs',
-    department: 'Media Studies',
-  },
-  {
-    srNo: 4,
-    name: 'Ms. Sanika Ratnaparkhi',
-    additionalRole: '—',
-    designation: 'Assistant Professor',
-    email: 'sanika.ratnaparkhi@mccmulund.ac.in',
-    education: 'BA & MA in English Literature, PGDM in Journalism & Mass Communication, Pursuing PhD',
-    teachingExp: '1 yr',
-    department: 'Media Studies',
-  },
+  { srNo: 1, name: 'Dr. Shriya Shenoy', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BAMMC', education: 'PhD, SET -M, MA (Mass Communication & Journalism).', email: 'shriya.shenoy@mccmulund.ac.in', teachingExp: '10 yrs', image: '/Degree College Teachers/Shriya Shenoy.png' },
+  { srNo: 2, name: 'Dr.Nimisha Gadkari', additionalRole: '—', designation: 'Assistant Professor', department: 'BAMMC', education: 'PhD in Mass Communication & Journalism, MA in Entertainment, Media & Marketing', email: 'nimisha.gadkari@mccmulund.ac.in', teachingExp: '7 yrs', image: '/Degree College Teachers/Nimisha Gadkari.png' },
+  { srNo: 3, name: 'Ms. Sanika Ratnaparkhi', additionalRole: '—', designation: 'Assistant Professor', department: 'BAMMC', education: 'BA and MA in English Literature and PGDM in Journalism and Mass communication, pursuing a PhD in literature', email: 'sanika.ratnaparkhi@mccmulund.ac.in', teachingExp: '1 yrs', image: '/Degree College Teachers/Sanika Ratnaparkhi.png' },
 ];
 
 export default function BAMMCPageClient() {
@@ -58,9 +21,11 @@ export default function BAMMCPageClient() {
   return (
     <CourseTemplate
       title="Bachelor of Arts (Multimedia and Mass Communication)"
+      festivals="Festivals"
       fundingType="Self Financing"
       publication="Shutter Speed"
       courseKey="BAMMC"
+      shortInfo="An interdisciplinary media programme covering journalism, advertising, public relations, and digital media — preparing students for dynamic careers in the fast-paced world of mass communication."
       facultyData={bammcFaculty}
       quickActionsData={quickActions}
       syllabusContent={<SyllabusRenderer programKey="BAMMC" />}

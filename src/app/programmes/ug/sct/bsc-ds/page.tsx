@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 };
 
 const bscDsFaculty = [
-  { srNo: 25, name: 'Dr. Priti Harekrishna Pathak', additionalRole: 'Coordinator', designation: 'Assistant Professor' },
-  { srNo: 35, name: 'Mr. Avinash Dongare',          additionalRole: '—',           designation: 'Assistant Professor' },
-  { srNo: 36, name: 'Dr. Deepa Nyayadish',          additionalRole: '—',           designation: 'Assistant Professor' },
+  { srNo: 1, name: 'Dr. Priti Pathak', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'B.Sc. DS', education: 'MSc(I.T).,MTech(I.T)., MBA(I.T).,LLB.,Diploma in Cyber Law., Ph.D.', email: 'priti.pathak@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Priti Pathak.png' },
+  { srNo: 2, name: 'Mr. Avinash Dongare', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. DS', education: '—', email: '—', teachingExp: '—' },
+  { srNo: 3, name: 'Dr. Deepa Nyayadish', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. DS', education: '—', email: '—', teachingExp: '—' },
 ];
 
 const quickActions = [
@@ -24,8 +24,8 @@ const quickActions = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Science (B.Sc.) in Data Science is an undergraduate program that focuses on the study of data analysis, machine learning, statistics, and computational techniques to extract meaningful insights from large datasets. This interdisciplinary course combines elements of mathematics, computer science, and business intelligence, preparing students for the growing field of data-driven decision-making.</p>
@@ -37,6 +37,7 @@ export default function CoursePage() {
       title="Bachelor of Science (Data Science)"
       fundingType="Self Financing"
       courseKey="BSC_DS"
+      shortInfo="An interdisciplinary program combining mathematics, statistics, and computer science to extract actionable insights from big data."
       category="science"
       facultyData={bscDsFaculty}
       syllabusContent={renderSyllabusTable('BSC_DS')}

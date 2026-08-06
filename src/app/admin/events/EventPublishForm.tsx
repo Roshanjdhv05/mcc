@@ -21,14 +21,13 @@ const DEPARTMENTS = [
   "Spectrum", "Inspira", "Hack-A-Thon", "Emporio", "Quantomania", "Manthan",
 ];
 
-// ─── Programmes with their event sections ────────────────────────────────────
 const PROGRAMMES: {
   code: string;
   label: string;
   sections: string[];
 }[] = [
   {
-    code: 'BCom',
+    code: 'B.COM',
     label: 'B.Com (Commerce)',
     sections: ['Events & Activities', 'Festivals', 'Publication', 'Industrial Visits'],
   },
@@ -58,17 +57,17 @@ const PROGRAMMES: {
     sections: ['Events & Activities', 'Festivals', 'Publication', 'Industrial Visits'],
   },
   {
-    code: 'BCom-BA',
+    code: 'BCOM-BA',
     label: 'B.Com (Business Analytics)',
     sections: ['Events & Activities', 'Festivals – Quantomania', 'Publication', 'Industrial Visits'],
   },
   {
-    code: 'BCom-MS',
+    code: 'BCOM-MS',
     label: 'B.Com (Marketing & Salesmanship)',
     sections: ['Events & Activities', 'Festivals', 'Publication', 'Industrial Visits'],
   },
   {
-    code: 'BSc IT',
+    code: 'BSC-IT',
     label: 'B.Sc. Information Technology',
     sections: ['Events & Activities', 'Festivals – Hack-A-Thon', 'Publication', 'Industrial Visits'],
   },
@@ -78,7 +77,7 @@ const PROGRAMMES: {
     sections: ['Events & Activities', 'Festivals – Hack-A-Thon', 'Publication', 'Industrial Visits'],
   },
   {
-    code: 'DS',
+    code: 'BSC-DS',
     label: 'Data Science',
     sections: ['Events & Activities', 'Festivals', 'Publication', 'Industrial Visits'],
   },
@@ -122,19 +121,13 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
   const [category, setCategory] = useState('');
   const [department, setDepartment] = useState('');
 
-  // ── Programme targeting
-  const [selectedProgramme, setSelectedProgramme] = useState('');
-  const [selectedSection, setSelectedSection]     = useState('');
+  const [selectedProgrammes, setSelectedProgrammes] = useState<string[]>([]);
+  const [selectedSections, setSelectedSections] = useState<Record<string, string>>({});
 
   // ── Publish targets
   const [toGallery, setToGallery]   = useState(true);
   const [toHome, setToHome]         = useState(false);
-  const [toCalendar, setToCalendar] = useState(false);
   const [toProgramme, setToProgramme] = useState(false);
-
-  // ── Calendar-specific
-  const [calendarDate, setCalendarDate] = useState('');
-  const [calendarType, setCalendarType] = useState('Event');
 
   // ── Media
   const [uploads, setUploads]   = useState<UploadedFile[]>([]);
@@ -144,10 +137,7 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
   const [success, setSuccess]   = useState(false);
 
   const imageRef = useRef<HTMLInputElement>(null);
-  const videoRef = useRef<HTMLInputElement>(null);
   const docRef   = useRef<HTMLInputElement>(null);
-
-  const activeProgramme = PROGRAMMES.find(p => p.code === selectedProgramme);
 
   // ── Upload
   const handleUpload = async (
@@ -172,23 +162,23 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
     e.preventDefault();
     if (!title.trim()) { setError('Title is required'); return; }
     if (!category)     { setError('Please select a category'); return; }
-    if (!toGallery && !toHome && !toCalendar && !toProgramme) {
+    if (!toGallery && !toHome && !toProgramme) {
       setError('Select at least one publish target'); return;
     }
-    if (toCalendar && !calendarDate) {
-      setError('Calendar date is required when publishing to calendar'); return;
+    if (toProgramme && selectedProgrammes.length === 0) {
+      setError('Please select at least one programme'); return;
     }
-    if (toProgramme && !selectedProgramme) {
-      setError('Please select a programme'); return;
-    }
-    if (toProgramme && !selectedSection) {
-      setError('Please select a programme section'); return;
+    if (toProgramme) {
+      for (const prog of selectedProgrammes) {
+        if (!selectedSections[prog]) {
+          setError(`Please select a section for ${prog}`); return;
+        }
+      }
     }
 
     setSaving(true); setError(null);
 
     const imageUrls    = uploads.filter(u => u.type === 'image').map(u => u.url);
-    const videoUrls    = uploads.filter(u => u.type === 'video').map(u => u.url);
     const documentUrls = uploads.filter(u => u.type === 'document').map(u => u.url);
 
     const payload = {
@@ -196,17 +186,17 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
       description:        description.trim(),
       category,
       department:         department || null,
-      programme:          toProgramme ? selectedProgramme : null,
-      programme_section:  toProgramme ? selectedSection   : null,
+      programme:          toProgramme ? selectedProgrammes.join(', ') : null,
+      programme_section:  toProgramme ? JSON.stringify(selectedSections) : null,
       images:             imageUrls,
-      videos:             videoUrls,
+      videos:             [], // removed video support
       documents:          documentUrls,
       publish_gallery:    toGallery,
       publish_home:       toHome,
-      publish_calendar:   toCalendar,
+      publish_calendar:   false,
       publish_programme:  toProgramme,
-      calendar_date:      toCalendar ? calendarDate : null,
-      calendar_type:      toCalendar ? calendarType : null,
+      calendar_date:      null,
+      calendar_type:      null,
       status:             'published',
       published_at:       new Date().toISOString(),
     };
@@ -216,9 +206,9 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
 
     setSuccess(true); setSaving(false);
     setTitle(''); setDescription(''); setCategory(''); setDepartment('');
-    setSelectedProgramme(''); setSelectedSection('');
-    setToGallery(true); setToHome(false); setToCalendar(false); setToProgramme(false);
-    setCalendarDate(''); setCalendarType('Event'); setUploads([]);
+    setSelectedProgrammes([]); setSelectedSections({});
+    setToGallery(true); setToHome(false); setToProgramme(false);
+    setUploads([]);
     onSuccess?.();
     setTimeout(() => setSuccess(false), 4000);
   };
@@ -308,7 +298,7 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
             </div>
           </label>
 
-          {/* Homepage */}
+          {/* Homepage – Latest in MCC */}
           <label className={`flex items-start gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${toHome ? 'border-[#D4A017] bg-yellow-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
             <button type="button" onClick={() => setToHome(v => !v)} className="mt-0.5 flex-shrink-0">
               {toHome ? <CheckSquare size={20} className="text-[#D4A017]" /> : <Square size={20} className="text-gray-300" />}
@@ -320,42 +310,6 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
               <p className="text-xs text-gray-500 mt-0.5">Appears in "Latest Events" section on the home page</p>
             </div>
           </label>
-
-          {/* Calendar */}
-          <div className={`p-4 rounded-2xl border-2 transition-all ${toCalendar ? 'border-green-500 bg-green-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
-            <label className="flex items-start gap-3 cursor-pointer">
-              <button type="button" onClick={() => setToCalendar(v => !v)} className="mt-0.5 flex-shrink-0">
-                {toCalendar ? <CheckSquare size={20} className="text-green-600" /> : <Square size={20} className="text-gray-300" />}
-              </button>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 font-bold text-sm text-gray-800">
-                  <BookOpen size={16} className="text-green-600" /> Academic Calendar
-                </div>
-                <p className="text-xs text-gray-500 mt-0.5 mb-3">Adds a dot/entry on the home page & full calendar page</p>
-                {toCalendar && (
-                  <div className="grid grid-cols-2 gap-3" onClick={e => e.preventDefault()}>
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">
-                        Event Date <span className="text-red-500">*</span>
-                      </label>
-                      <input type="date" value={calendarDate} onChange={e => setCalendarDate(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-400" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">Calendar Type</label>
-                      <div className="relative">
-                        <select value={calendarType} onChange={e => setCalendarType(e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm appearance-none focus:outline-none focus:ring-1 focus:ring-green-400 bg-white pr-7">
-                          {CALENDAR_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                        </select>
-                        <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </label>
-          </div>
 
           {/* Programme Page */}
           <div className={`p-4 rounded-2xl border-2 transition-all ${toProgramme ? 'border-purple-500 bg-purple-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
@@ -373,51 +327,72 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
                   <div className="space-y-3" onClick={e => e.preventDefault()}>
                     {/* Programme select */}
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1">
-                        Select Programme <span className="text-red-500">*</span>
+                      <label className="block text-xs font-semibold text-gray-600 mb-2">
+                        Select Programmes <span className="text-red-500">*</span>
                       </label>
-                      <div className="relative">
-                        <select
-                          value={selectedProgramme}
-                          onChange={e => { setSelectedProgramme(e.target.value); setSelectedSection(''); }}
-                          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm appearance-none focus:outline-none focus:ring-1 focus:ring-purple-400 bg-white pr-8"
-                        >
-                          <option value="">Select programme...</option>
-                          {PROGRAMMES.map(p => (
-                            <option key={p.code} value={p.code}>{p.code} – {p.label}</option>
-                          ))}
-                        </select>
-                        <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      <div className="flex flex-wrap gap-2">
+                        {PROGRAMMES.map(p => {
+                          const isSelected = selectedProgrammes.includes(p.code);
+                          return (
+                            <button
+                              key={p.code}
+                              type="button"
+                              onClick={() => {
+                                setSelectedProgrammes(prev => {
+                                  if (isSelected) {
+                                    const next = prev.filter(c => c !== p.code);
+                                    // Remove section for this programme
+                                    const newSections = { ...selectedSections };
+                                    delete newSections[p.code];
+                                    setSelectedSections(newSections);
+                                    return next;
+                                  }
+                                  return [...prev, p.code];
+                                });
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                                isSelected
+                                  ? 'bg-purple-100 text-purple-700 border-purple-200'
+                                  : 'bg-white text-gray-600 border-gray-200 hover:border-purple-200'
+                              }`}
+                            >
+                              {p.code}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 
-                    {/* Section select – only shows when programme is chosen */}
-                    {activeProgramme && (
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-600 mb-1">
-                          Select Section <span className="text-red-500">*</span>
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {activeProgramme.sections.map(sec => (
-                            <button
-                              key={sec}
-                              type="button"
-                              onClick={() => setSelectedSection(sec)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                                selectedSection === sec
-                                  ? 'bg-purple-600 text-white border-purple-600'
-                                  : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300'
-                              }`}
-                            >
-                              {sec}
-                            </button>
-                          ))}
-                        </div>
-                        {selectedProgramme && selectedSection && (
-                          <p className="mt-2 text-xs text-purple-700 font-medium">
-                            ✓ Will post to: <strong>{selectedProgramme}</strong> → <strong>{selectedSection}</strong>
-                          </p>
-                        )}
+                    {/* Distinct Section select for each chosen programme */}
+                    {selectedProgrammes.length > 0 && (
+                      <div className="pt-2 space-y-4">
+                        {selectedProgrammes.map(progCode => {
+                          const prog = PROGRAMMES.find(p => p.code === progCode);
+                          if (!prog) return null;
+                          return (
+                            <div key={progCode} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                              <label className="block text-xs font-bold text-gray-800 mb-2">
+                                Select Section for {progCode} <span className="text-red-500">*</span>
+                              </label>
+                              <div className="flex flex-wrap gap-2">
+                                {prog.sections.map(sec => (
+                                  <button
+                                    key={sec}
+                                    type="button"
+                                    onClick={() => setSelectedSections(prev => ({ ...prev, [progCode]: sec }))}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                                      selectedSections[progCode] === sec
+                                        ? 'bg-purple-600 text-white border-purple-600'
+                                        : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300'
+                                    }`}
+                                  >
+                                    {sec}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -432,20 +407,13 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
       {/* ── Media Upload ── */}
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-3">Media & Attachments</label>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 max-w-lg">
           <label className="flex flex-col items-center gap-2 border-2 border-dashed border-blue-200 rounded-xl p-4 cursor-pointer hover:bg-blue-50 transition-colors text-center">
             <Image size={22} className="text-blue-500" />
             <span className="text-xs font-semibold text-blue-700">Images</span>
             <span className="text-[10px] text-gray-400">JPG, PNG, WEBP</span>
             <input ref={imageRef} type="file" multiple accept="image/*" className="hidden"
               onChange={e => handleUpload(e, 'event-images', 'events', 'image')} />
-          </label>
-          <label className="flex flex-col items-center gap-2 border-2 border-dashed border-purple-200 rounded-xl p-4 cursor-pointer hover:bg-purple-50 transition-colors text-center">
-            <Video size={22} className="text-purple-500" />
-            <span className="text-xs font-semibold text-purple-700">Videos</span>
-            <span className="text-[10px] text-gray-400">MP4, MOV, WEBM</span>
-            <input ref={videoRef} type="file" multiple accept="video/*" className="hidden"
-              onChange={e => handleUpload(e, 'event-videos', 'events', 'video')} />
           </label>
           <label className="flex flex-col items-center gap-2 border-2 border-dashed border-amber-200 rounded-xl p-4 cursor-pointer hover:bg-amber-50 transition-colors text-center">
             <FileText size={22} className="text-amber-500" />
@@ -465,10 +433,9 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
             {uploads.map((u, i) => (
               <div key={i} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${
                 u.type === 'image' ? 'bg-blue-100 text-blue-700'
-                  : u.type === 'video' ? 'bg-purple-100 text-purple-700'
                   : 'bg-amber-100 text-amber-700'
               }`}>
-                {u.type === 'image' ? <Image size={11} /> : u.type === 'video' ? <Video size={11} /> : <FileText size={11} />}
+                {u.type === 'image' ? <Image size={11} /> : <FileText size={11} />}
                 <span className="max-w-[120px] truncate">{u.name}</span>
                 <button type="button" onClick={() => removeUpload(i)} className="hover:opacity-70 ml-1">
                   <X size={11} />

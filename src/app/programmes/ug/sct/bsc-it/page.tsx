@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 };
 
 const bscItFaculty = [
-  { srNo: 24, name: 'Dr. Jyotika Dhiren Chheda',  additionalRole: 'Coordinator', designation: 'Assistant Professor' },
-  { srNo: 31, name: 'Dr. Sandhya Pandey',          additionalRole: '—',           designation: 'Assistant Professor' },
-  { srNo: 32, name: 'Ms. Suvarna Ramesh Sawant',   additionalRole: '—',           designation: 'Assistant Professor' },
-  { srNo: 37, name: 'Ms. Nikhita Khedekar',        additionalRole: '—',           designation: 'Assistant Professor' },
+  { srNo: 1, name: 'Dr. Jyotika Chheda', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'B.Sc. IT', education: 'MCA., NET., Ph.D.', email: 'jyotika.chheda@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Jyotika Chheda.png' },
+  { srNo: 2, name: 'Dr. Sandhya Pandey', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. IT', education: 'M.C.A., P.H.D.(Computer Science and Application), M.A.(Sociology)', email: 'sandhya.pandey@mccmulund.ac.in', teachingExp: '17 yrs', image: '/Degree College Teachers/Sandhya Pandey.png' },
+  { srNo: 3, name: 'Ms. Suvarna Sawant', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. IT', education: 'Master in Computer Application', email: 'suvarna.sawant@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Suvarna Sawant.png' },
+  { srNo: 4, name: 'Ms. Nikhita Khedekar', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. IT', education: '—', email: '—', teachingExp: '—' },
 ];
 
 const quickActions = [
@@ -25,8 +25,8 @@ const quickActions = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Science in Information Technology (B.Sc. IT) is an undergraduate program that focuses on the study of computing, software development, networking, data management, and cybersecurity. The course is designed to equip students with technical and analytical skills to solve real-world IT challenges and drive innovation in the digital era.</p>
@@ -38,6 +38,7 @@ export default function CoursePage() {
       title="Bachelor of Science (Information Technology)"
       fundingType="Self Financing"
       courseKey="BSC_IT"
+      shortInfo="A specialized technology degree preparing students for roles in software development, cloud computing, and IT infrastructure management."
       category="science"
       facultyData={bscItFaculty}
       syllabusContent={renderSyllabusTable('BSC_IT')}

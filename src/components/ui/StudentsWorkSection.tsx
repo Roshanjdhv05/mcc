@@ -46,7 +46,7 @@ export default function StudentsWorkSection() {
   return (
     <ScrollReveal>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Students Work</h2>
+        <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Illustrious Alumni</h2>
         <Link href="/students-work" className="text-sm font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
           View All <ArrowRight size={14} />
         </Link>

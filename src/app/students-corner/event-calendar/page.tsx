@@ -3,7 +3,6 @@ import CalendarHero from '@/components/calendar/CalendarHero';
 import CalendarStats from '@/components/calendar/CalendarStats';
 import MainCalendarGrid from '@/components/calendar/MainCalendarGrid';
 import UpcomingEventsSidebar from '@/components/calendar/UpcomingEventsSidebar';
-import EventsTimeline from '@/components/calendar/EventsTimeline';
 
 export const metadata = {
   title: 'Event Calendar | Mulund College of Commerce',
@@ -29,9 +28,6 @@ export default function EventCalendarPage() {
           {/* Upcoming Events Sidebar */}
           <UpcomingEventsSidebar />
         </div>
-
-        {/* Timeline + Legend */}
-        <EventsTimeline />
       </div>
     </main>
   );

@@ -9,19 +9,19 @@ export const metadata: Metadata = {
 };
 
 const bscCsFaculty = [
-  { srNo: 18, name: 'Dr. Reena Deepak Nagda',              additionalRole: 'Examination Co-Controller', designation: 'Assistant Professor' },
-  { srNo: 19, name: 'Dr. Vaishnavi Assar',                 additionalRole: 'Coordinator',               designation: 'Assistant Professor' },
-  { srNo: 20, name: 'Dr. Pooja Raosaheb Patil',            additionalRole: '—',                         designation: 'Assistant Professor' },
-  { srNo: 21, name: 'Ms. Bhumika Shailesh Nakum',          additionalRole: '—',                         designation: 'Assistant Professor' },
-  { srNo: 22, name: 'Ms. Pratiksha Siddheshwar Harwalkar', additionalRole: '—',                         designation: 'Assistant Professor' },
-  { srNo: 23, name: 'Ms. Bhoomika Ramchandra Pansare',     additionalRole: '—',                         designation: 'Assistant Professor' },
+  { srNo: 1, name: 'Dr. Reena Nagda', additionalRole: 'Examination Co-Controller', designation: 'Assistant Professor', department: 'B.Sc. CS', education: 'M.Sc. Mathematics,NET,Ph.D.', email: 'reena.shah@mccmulund.ac.in', teachingExp: '21 yrs' },
+  { srNo: 2, name: 'Dr. Vaishnavi Assar', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'B.Sc. CS', education: 'M.Sc.,Ph.D', email: 'Vaishnavi.assar@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Vaishnavi Assar.png' },
+  { srNo: 3, name: 'Dr. Pooja Patil', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. CS', education: 'M.Sc.(Statistics)', email: 'pooja.patil@mccmulund.ac.in', teachingExp: '0 yrs' },
+  { srNo: 4, name: 'Ms. Bhumika Nakum', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. CS', education: 'M.Sc.(IT).,NET', email: 'bhumika.nakum@mccmulund.ac.in', teachingExp: '0 yrs' },
+  { srNo: 5, name: 'Ms. Pratiksha Harwalkar', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. CS', education: 'M.Sc.(IT), NET', email: 'pratiksha.harwalkar@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Pratiksha Harwalkar.png' },
+  { srNo: 6, name: 'Ms. Bhoomika Pansare', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. CS', education: 'MSc. (CS)', email: 'bhoomika.pansare@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Bhoomika Pansare.png' }
 ];
 
 export default function CoursePage() {
   return (
     <CourseTemplate 
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
         <p className="mb-4">The Bachelor of Science (B.Sc.) in Computer Science is a three-year undergraduate program that focuses on the theoretical and practical aspects of computing, programming, and information technology. This course provides students with a strong foundation in computer programming, algorithms, data structures, software development, databases, networking, and artificial intelligence.</p>
@@ -33,6 +33,7 @@ export default function CoursePage() {
       title="Bachelor of Science (Computer Science)"
       fundingType="Self Financing"
       courseKey="BSC_CS"
+      shortInfo="A rigorous computing degree focusing on theoretical computer science, algorithms, software engineering, and artificial intelligence."
       category="science"
       facultyData={bscCsFaculty}
       syllabusContent={renderSyllabusTable('BSC_CS')}

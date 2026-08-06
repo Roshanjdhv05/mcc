@@ -10,14 +10,14 @@ export default function Footer() {
   return (
     <footer className="bg-[#123B6D] text-white">
       <div className="max-w-7xl mx-auto px-4 md:px-12 pt-16 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-12">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xl font-[var(--font-heading)]">M</div>
+              <img src="/mcclogo.png" alt="MCC Logo" className="w-12 h-12 object-contain bg-white rounded-full p-1" />
               <div>
-                <div className="font-bold font-[var(--font-heading)]">MCC Autonomous</div>
-                <div className="text-xs text-white/70">Mulund College of Commerce</div>
+                <div className="font-bold font-[var(--font-heading)]">MULUND COLLEGE OF COMMERCE</div>
+                <div className="text-xs text-white/70">(AUTONOMOUS)</div>
               </div>
             </div>
             <p className="text-white/70 text-sm leading-relaxed mb-5">
@@ -37,29 +37,18 @@ export default function Footer() {
             <h3 className="font-semibold text-[#D4A017] mb-5 font-[var(--font-heading)]">Quick Links</h3>
             <ul className="space-y-3 text-sm text-white/80">
               {[
-                { label: 'About MCC', href: '/about' },
-                { label: 'Academic Programmes', href: '/programmes' },
-                { label: 'Admissions', href: '/admissions' },
-                { label: 'Examination Hub', href: '/examination' },
-                { label: 'Notice Board', href: '/notices' },
-                { label: 'Student Services', href: '/services' },
-                { label: 'IQAC & NAAC', href: '/iqac' },
-                { label: "From the Principal's Desk", href: '/principal' },
+                { label: 'About us', href: '/about' },
+                { label: 'Degree Programmes', href: '/programmes' },
+                { label: 'Junior College', href: '/junior-college' },
+                { label: 'Examination', href: '/examination' },
+                { label: 'Admission', href: '/admissions' },
+                { label: 'Student Corner', href: '/students-corner' },
+                { label: 'Accreditation', href: '/accreditation' },
+                { label: 'Autonomy', href: '/autonomy' },
+                { label: 'IQAC', href: '/iqac' },
               ].map((l) => (
-                <li key={l.href}>
+                <li key={l.label}>
                   <Link href={l.href} className="hover:text-[#D4A017] hover:pl-1 transition-all">{l.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Programmes */}
-          <div>
-            <h3 className="font-semibold text-[#D4A017] mb-5 font-[var(--font-heading)]">Programmes</h3>
-            <ul className="space-y-3 text-sm text-white/80">
-              {['FYJC Arts & Commerce', 'SYJC Arts & Commerce', 'B.Com (General)', 'M.Com', 'M.Sc. IT', 'Ph.D Research'].map((p) => (
-                <li key={p}>
-                  <Link href="/programmes" className="hover:text-[#D4A017] hover:pl-1 transition-all">{p}</Link>
                 </li>
               ))}
             </ul>

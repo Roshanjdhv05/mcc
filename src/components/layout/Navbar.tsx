@@ -30,7 +30,7 @@ const formatCourseLabel = (label: string) => {
 const navLinks = [
   { label: 'Home', href: '/', icon: <Home size={18} /> },
   {
-    label: 'About Us', href: '#', icon: <Users size={18} />,
+    label: 'About Us', href: '/about', icon: <Users size={18} />,
     isMegaMenu: true,
     megaMenuAlign: 'left',
     megaMenuImage: '/college_campus_hero.png',
@@ -298,10 +298,6 @@ const navLinks = [
       { label: 'SMAF/Scholarship/Freeship', href: '/jr-college/scholarships' },
       { label: 'Notice', href: '/jr-college/notice' },
       { label: 'Timetable', href: '/jr-college/timetable' },
-      { label: 'Sports', href: '/jr-college/sports' },
-      { label: 'Cultural', href: '/jr-college/cultural' },
-      { label: 'Committee', href: '/jr-college/committee' },
-      { label: 'Special Days', href: '/jr-college/special-days' },
     ]
   },
   {
@@ -541,7 +537,7 @@ const navLinks = [
               { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/Forums-and-Clubs?club=natyakarmi' },
               { label: 'Marathi Vangmay Mandal', href: '/students-corner/Forums-and-Clubs?club=mvm' },
               { label: 'Aaroh (Music Club)', href: '/students-corner/Forums-and-Clubs?club=aaroh' },
-              { label: 'Music Club', href: '/students-corner/Forums-and-Clubs?club=music-club' },
+              { label: 'Artelier (Fine Arts Club)', href: '/students-corner/Forums-and-Clubs?club=artelier' },
               { label: 'Nature Club', href: '/students-corner/Forums-and-Clubs?club=nature-club' },
               { label: 'Women Development Cell', href: '/students-corner/Forums-and-Clubs?club=wdc' },
               { label: 'Entrepreneurship Development Cell', href: '/students-corner/Forums-and-Clubs?club=edc' },
@@ -584,6 +580,7 @@ const navLinks = [
             links: [
               { label: 'Events Gallery', href: '/students-corner/gallery' },
               { label: 'Event Calendar', href: '/students-corner/event-calendar' },
+              { label: 'Wall of Fame', href: '/students-corner/wall-of-fame' },
             ]
           }
         ]
@@ -599,7 +596,7 @@ const navLinks = [
           { label: 'Natyakarmi (Theatre Group)', href: '/students-corner/Forums-and-Clubs?club=natyakarmi' },
           { label: 'Marathi Vangmay Mandal', href: '/students-corner/Forums-and-Clubs?club=mvm' },
           { label: 'Aaroh (Music Club)', href: '/students-corner/Forums-and-Clubs?club=aaroh' },
-          { label: 'Music Club', href: '/students-corner/Forums-and-Clubs?club=music-club' },
+          { label: 'Artelier (Fine Arts Club)', href: '/students-corner/Forums-and-Clubs?club=artelier' },
           { label: 'Nature Club', href: '/students-corner/Forums-and-Clubs?club=nature-club' },
           { label: 'Women Development Cell', href: '/students-corner/Forums-and-Clubs?club=wdc' },
           { label: 'Entrepreneurship Development Cell', href: '/students-corner/Forums-and-Clubs?club=edc' },
@@ -627,6 +624,7 @@ const navLinks = [
         label: 'Gallery', href: '#', sub: [
           { label: 'Events Gallery', href: '/students-corner/gallery' },
           { label: 'Event Calendar', href: '/students-corner/event-calendar' },
+          { label: 'Wall of Fame', href: '/students-corner/wall-of-fame' },
         ]
       }
     ]
@@ -638,26 +636,17 @@ const navLinks = [
     megaMenuImage: '/vision_card_img.png',
     megaMenuColumns: [
       {
-        title: 'Infrastructure',
+        title: 'Infrastructure (Gallery)',
         sections: [
           {
             links: [
+              { label: 'View Gallery', href: '/Infrastructure-gallery' },
               { label: 'Library', href: '/library' },
               { label: 'Auditorium', href: '#' },
               { label: 'Class-Rooms', href: '#' },
               { label: 'Computer Labs', href: '#' },
               { label: 'Sports & Gymkhana', href: '#' },
               { label: 'Canteen', href: '#' },
-            ]
-          }
-        ]
-      },
-      {
-        title: 'Gallery',
-        sections: [
-          {
-            links: [
-              { label: 'View Gallery', href: '/gallery' }
             ]
           }
         ]
@@ -677,30 +666,12 @@ const navLinks = [
             ]
           }
         ]
-      },
-      {
-        title: 'Wall of Fame (Students)',
-        sections: [
-          {
-            subTitle: 'Professional Course Examinations',
-            subTitleHighlight: true,
-            links: []
-          },
-          {
-            links: [
-              { label: 'Sports & Games', href: '#' },
-              { label: 'Cultural', href: '#' },
-              { label: 'Theatre', href: '#' },
-              { label: 'Research', href: '#' },
-              { label: 'Entrepreneurship', href: '#' },
-            ]
-          }
-        ]
       }
     ],
     sub: [
       {
-        label: 'Infrastructure', href: '#', sub: [
+        label: 'Infrastructure (Gallery)', href: '#', sub: [
+          { label: 'View Gallery', href: '/Infrastructure-gallery' },
           { label: 'Library', href: '/library' },
           { label: 'Auditorium', href: '#' },
           { label: 'Class-Rooms', href: '#' },
@@ -708,9 +679,6 @@ const navLinks = [
           { label: 'Sports & Gymkhana', href: '#' },
           { label: 'Canteen', href: '#' },
         ]
-      },
-      {
-        label: 'Gallery', href: '/gallery', sub: []
       },
       {
         label: 'Statutory Bodies', href: '#', sub: [
@@ -721,16 +689,6 @@ const navLinks = [
           { label: 'Career Katta (Govt of Maharashtra)', href: '/statutory-bodies?body=career-katta' },
           { label: 'Special Cell', href: '/statutory-bodies?body=special-cell' },
           { label: 'Remedial Coaching Cell', href: '/statutory-bodies?body=remedial-coaching' },
-        ]
-      },
-      {
-        label: 'Wall of Fame (Students)', href: '#', sub: [
-          { label: 'Professional Course Examinations', href: '#' },
-          { label: 'Sports & Games', href: '#' },
-          { label: 'Cultural', href: '#' },
-          { label: 'Theatre', href: '#' },
-          { label: 'Research', href: '#' },
-          { label: 'Entrepreneurship', href: '#' },
         ]
       }
     ]

@@ -23,6 +23,7 @@ export default function BFSIPageClient() {
       </>
       }
       title="Bachelor of Commerce (Banking, Financial Services and Insurance)"
+      shortInfo="A highly specialized program equipping students with core competencies in commercial banking, investment analysis, and risk management."
       fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BFSI" />}
       quickActionsData={quickActions}

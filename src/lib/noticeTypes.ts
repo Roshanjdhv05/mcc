@@ -81,4 +81,17 @@ export interface Notice {
   expiry_time: string;
   attachments: { name: string; url: string; type: string }[];
   created_at?: string;
+  // Calendar integration
+  publish_calendar?: boolean;
+  is_calendar_only?: boolean;
+  calendar_title?: string | null;
+  calendar_category?: string | null;
+  calendar_date?: string | null;
+  calendar_venue?: string | null;
+  calendar_time?: string | null;
 }
+
+export const CALENDAR_CATEGORIES = [
+  'Academic', 'Examination', 'Holiday', 'Seminar',
+  'Workshop', 'Sports', 'Cultural', 'NSS', 'NCC', 'Event',
+];

@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from 'react';
 import {
-  Bell, X, Upload, Calendar, Clock, ChevronDown, ChevronUp, CheckSquare, Square, Loader2
+  Bell, X, Upload, Calendar, Clock, ChevronDown, ChevronUp, CheckSquare, Square, Loader2, CalendarDays, MapPin
 } from 'lucide-react';
 import {
-  NOTICE_CATEGORIES, DEPARTMENTS, Notice
+  NOTICE_CATEGORIES, DEPARTMENTS, Notice, CALENDAR_CATEGORIES
 } from '@/lib/noticeTypes';
 import { supabase } from '@/lib/supabase';
 
@@ -63,6 +63,15 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Calendar fields
+  const [publishCalendar, setPublishCalendar] = useState(false);
+  const [calTitleSameAsNotice, setCalTitleSameAsNotice] = useState(true);
+  const [calTitle, setCalTitle] = useState('');
+  const [calCategory, setCalCategory] = useState('');
+  const [calDate, setCalDate] = useState('');
+  const [calVenue, setCalVenue] = useState('');
+  const [calTime, setCalTime] = useState('');
+
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -105,6 +114,9 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
     setSaving(true);
     setError(null);
 
+    if (publishCalendar && !calDate) { setError('Calendar date is required when "Show in Calendar" is enabled'); return; }
+    if (publishCalendar && !calCategory) { setError('Calendar category is required when "Show in Calendar" is enabled'); return; }
+
     const payload: Notice = {
       title: title.trim(),
       description: description.trim(),
@@ -117,6 +129,13 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
       schedule_time: scheduleTime ? new Date(scheduleTime).toISOString() : new Date().toISOString(),
       expiry_time: new Date(expiryTime).toISOString(),
       attachments,
+      // Calendar
+      publish_calendar: publishCalendar,
+      calendar_title: publishCalendar ? (calTitleSameAsNotice ? title.trim() : calTitle.trim()) : null,
+      calendar_category: publishCalendar ? calCategory : null,
+      calendar_date: publishCalendar ? calDate : null,
+      calendar_venue: publishCalendar && calVenue.trim() ? calVenue.trim() : null,
+      calendar_time: publishCalendar && calTime.trim() ? calTime.trim() : null,
     };
 
     const { data, error: dbError } = await supabase
@@ -302,6 +321,125 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
           />
           <p className="text-xs text-gray-400 mt-1">Notice auto-archives after this date</p>
         </div>
+      </div>
+
+      {/* ── Show in Calendar ── */}
+      <div className={`rounded-2xl border-2 transition-all ${
+        publishCalendar ? 'border-emerald-400 bg-emerald-50' : 'border-gray-100 bg-white'
+      }`}>
+        <label className="flex items-start gap-3 p-4 cursor-pointer">
+          <button type="button" onClick={() => setPublishCalendar(v => !v)} className="mt-0.5 flex-shrink-0">
+            {publishCalendar
+              ? <CheckSquare size={22} className="text-emerald-600" />
+              : <Square size={22} className="text-gray-400" />}
+          </button>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 font-bold text-sm text-gray-800">
+              <CalendarDays size={16} className="text-emerald-600" /> Also Show in Academic Calendar
+            </div>
+            <p className="text-xs text-gray-500 mt-0.5">
+              This notice will appear as an event on the home page calendar and the full event-calendar page. It does <strong>not</strong> expire like the notice.
+            </p>
+
+            {publishCalendar && (
+              <div className="mt-4 space-y-4" onClick={e => e.stopPropagation()}>
+
+                {/* Calendar Title */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                    Calendar Title <span className="text-red-500">*</span>
+                  </label>
+                  <label className="flex items-center gap-2 mb-2 cursor-pointer">
+                    <button type="button" onClick={() => setCalTitleSameAsNotice(v => !v)}
+                      className="flex-shrink-0">
+                      {calTitleSameAsNotice
+                        ? <CheckSquare size={16} className="text-emerald-600" />
+                        : <Square size={16} className="text-gray-400" />}
+                    </button>
+                    <span className="text-xs text-gray-600">Same as notice title</span>
+                  </label>
+                  {!calTitleSameAsNotice && (
+                    <input
+                      type="text"
+                      value={calTitle}
+                      onChange={e => setCalTitle(e.target.value)}
+                      placeholder="e.g. Orientation Programme 2025"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    />
+                  )}
+                </div>
+
+                {/* Category */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-2">
+                    Category <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {CALENDAR_CATEGORIES.map(cat => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setCalCategory(cat)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                          calCategory === cat
+                            ? 'bg-emerald-600 text-white border-emerald-600'
+                            : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-300'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                    Event Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={calDate}
+                    onChange={e => setCalDate(e.target.value)}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">This date is independent of the notice expiry.</p>
+                </div>
+
+                {/* Optional: Venue & Time */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-gray-700 mb-1.5">
+                      <MapPin size={12} /> Venue
+                      <span className="font-normal text-gray-400">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={calVenue}
+                      onChange={e => setCalVenue(e.target.value)}
+                      placeholder="e.g. Hall A, Main Building"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-gray-700 mb-1.5">
+                      <Clock size={12} /> Time
+                      <span className="font-normal text-gray-400">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={calTime}
+                      onChange={e => setCalTime(e.target.value)}
+                      placeholder="e.g. 10:00 AM – 12:00 PM"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    />
+                  </div>
+                </div>
+
+              </div>
+            )}
+          </div>
+        </label>
       </div>
 
       {/* Attachments */}

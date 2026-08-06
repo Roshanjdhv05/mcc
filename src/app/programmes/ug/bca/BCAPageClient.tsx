@@ -10,10 +10,10 @@ interface Props {
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bcaFaculty = [
-  { srNo: 1, name: 'Dr.Vishal Borude',    additionalRole: 'BCA Co-ordinator', designation: 'Assistant Professor', email: 'vishal.borude@mccmulund.ac.in', education: 'M.Sc.(IT)., Ph.D.', teachingExp: '12 yrs' },
-  { srNo: 2, name: 'Dr. Priti Pathak',    additionalRole: 'DS Co-Ordinator',  designation: 'Assistant Professor', email: 'priti.pathak@mccmulund.ac.in',  education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.', teachingExp: '' },
-  { srNo: 3, name: 'Mr. Siddhesh Gotekar', additionalRole: '—',              designation: 'Assistant Professor', email: 'gotekarsiddhesh@gmail.com',       education: 'M.Sc.(IT)', teachingExp: '' },
-  { srNo: 4, name: 'Dr. Sandhya Pandey',  additionalRole: '—',               designation: 'Assistant Professor', email: 'sandhya.pandey@mccmulund.ac.in', education: 'M.C.A., Ph.D. (Computer Science), M.A.(Sociology)', teachingExp: '17 yrs' },
+  { srNo: 1, name: 'Dr.Vishal Borude', additionalRole: 'BCA Co-ordinator', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc.(IT).,Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
+  { srNo: 2, name: 'Dr. Priti Pathak', additionalRole: 'DS Co-Ordinator', designation: 'Assistant Professor', department: 'Not Assigned', education: 'MSc(I.T).,MTech(I.T)., MBA(I.T).,LLB.,Diploma in Cyber Law., Ph.D.', email: 'priti.pathak@mccmulund.ac.in', teachingExp: '', image: '/Degree College Teachers/Priti Pathak.png' },
+  { srNo: 3, name: 'Mr. Siddhesh Gotekar', additionalRole: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc.(IT)', email: 'gotekarsiddhesh@gmail.com', teachingExp: '0 yrs', image: '/Degree College Teachers/Siddhesh Gotekar.png' },
+  { srNo: 4, name: 'Dr. Sandhya Pandey', additionalRole: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.C.A., P.H.D.(Computer Science and Application), M.A.(Sociology)', email: 'sandhya.pandey@mccmulund.ac.in', teachingExp: '17 yrs', image: '/Degree College Teachers/Sandhya Pandey.png' },
 ];
 
 export default function BCAPageClient({ syllabusContent }: Props) {
@@ -26,8 +26,10 @@ export default function BCAPageClient({ syllabusContent }: Props) {
 
   return (
     <CourseTemplate
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      courseKey="BCA"
+      shortInfo="An application-oriented IT degree combining computer science fundamentals with software development and programming skills."
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
           <p className="mb-4">

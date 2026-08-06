@@ -6,14 +6,10 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bafFaculty = [
-  { srNo: 1, name: 'Ms.Shilpa Thakur',        additionalRole: 'Co-ordinator',      designation: 'Assistant Professor', email: 'shilpa.thakur@mccmulund.ac.in',     education: 'MCom, MPhil',                       teachingExp: '28 yrs' },
-  { srNo: 2, name: 'Dr. Rajashri Deshpande',  additionalRole: '—',                 designation: 'Assistant Professor', email: 'rajashri.deshpande@mccmulund.ac.in', education: 'M.Com., MA., NET, Ph.D.',           teachingExp: '18 yrs' },
-  { srNo: 3, name: 'Ms.Alpa Katira',          additionalRole: '—',                 designation: 'Assistant Professor', email: 'alpa.katira@mccmulund.ac.in',        education: 'M.Com., B.Ed., SET',               teachingExp: '20 yrs' },
-  { srNo: 4, name: 'Ms.Archana Kadam',        additionalRole: '—',                 designation: 'Assistant Professor', email: 'archana.kadam@mccmulund.ac.in',      education: 'M.Com., MA., NET, PGDFM',          teachingExp: '17 yrs' },
-  { srNo: 5, name: 'Ms.Seema Attarde',        additionalRole: '—',                 designation: 'Assistant Professor', email: 'seema.attarde@mccmulund.ac.in',      education: 'M.Sc.',                            teachingExp: '26 yrs' },
-  { srNo: 6, name: 'Mr.Nitin Pawar',          additionalRole: 'Coordinator',       designation: 'Assistant Professor', email: 'nitin.pawar@mccmulund.ac.in',        education: 'M.Com., M.Phil., MBA., SET',       teachingExp: '16 yrs' },
-  { srNo: 7, name: 'Ms.Sneha Prajapati',      additionalRole: '—',                 designation: 'Assistant Professor', email: 'sneha.prajapati@mccmulund.ac.in',    education: 'M.Com., B.Ed., SET, NET',          teachingExp: '8 yrs' },
-  { srNo: 8, name: 'Ms.Swapna Acharya',       additionalRole: '—',                 designation: 'Assistant Professor', email: 'swapna.acharya@mccmulund.ac.in',     education: 'M.Com., LLB, SET',                 teachingExp: '8 yrs' },
+  { srNo: 1, name: 'Ms.Alpa Katira', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,B.Ed., SET', email: 'alpa.katira@mccmulund.ac.in', teachingExp: '20 yrs', image: '/Degree College Teachers/Alpa Katira.png' },
+  { srNo: 2, name: 'Mr.Nitin Pawar', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,M.Phil., MBA., SET', email: 'nitin.pawar@mccmulund.ac.in', teachingExp: '16 yrs', image: '/Degree College Teachers/Nitin Pawar.png' },
+  { srNo: 3, name: 'Ms.Swapna Acharya', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,LLB, SET', email: 'swapna.acharya@mccmulund.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Swapana Acharya.png' },
+  { srNo: 4, name: 'Dr.Sneha Prajapati', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,B.Ed., SET,NET', email: 'sneha.prajapati@mccmulund.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Sneha Prajapati.png' },
 ];
 
 export default function BAFPageClient() {
@@ -26,8 +22,8 @@ export default function BAFPageClient() {
 
   return (
     <CourseTemplate 
-      festivals="Manthan (Col)"
-      publication="Pratibimb (Col.)"
+      festivals="Manthan"
+      publication="Pratibimb"
       introductionContent={
         <>
           <p className="mb-4">The Bachelor of Commerce (Accounting & Finance) degree program is a three-year undergraduate course divided into six semesters. This course offers in-depth knowledge in accounting & financial subjects by adopting both traditional as well as innovative pedagogy of classroom teaching, seminars, projects practical training, industrial visits, conferences, expert talks, etc.</p>
@@ -52,6 +48,7 @@ export default function BAFPageClient() {
       syllabusContent={<SyllabusRenderer programKey="BAF" />}
       quickActionsData={quickActions}
       courseKey="BAF"
+      shortInfo="A specialized commerce programme that trains students in financial accounting, auditing, taxation, and cost management — ideal for careers in CA, finance consulting, and corporate accounting."
       facultyData={bafFaculty}
     />
   );

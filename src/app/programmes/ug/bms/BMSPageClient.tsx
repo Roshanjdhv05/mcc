@@ -5,12 +5,11 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bmsFaculty = [
-  { srNo: 1, name: 'Dr. Viji Kannan',      additionalRole: 'Head of Dept',      designation: 'Associate Professor', email: 'viji.kannan@mccmulund.ac.in',      education: 'BCS, MBA, NET, PhD',                              teachingExp: '24 yrs' },
-  { srNo: 2, name: 'Dr. Kanchana Sattur',  additionalRole: '—',                designation: 'Assistant Professor',  email: 'kanchana.sattur@mccmulund.ac.in',  education: 'MCom, M.B.A, NET(Comm & Mgmt), PhD.',             teachingExp: '15 yrs' },
-  { srNo: 3, name: 'Dr. Soumya George',    additionalRole: '—',                designation: 'Assistant Professor',  email: 'soumya.george@mccmulund.ac.in',    education: 'MA (Economics), MBA, MCOM, MJMC, PhD (Economics)', teachingExp: '14 yrs' },
-  { srNo: 4, name: 'Dr. Shilpi Jawake',    additionalRole: '—',                designation: 'Assistant Professor',  email: 'shilpi.jawake@mccmulund.ac.in',    education: 'MBA, MCOM, NET, SET, Pursuing PhD',               teachingExp: '12 yrs' },
-  { srNo: 5, name: 'Dr. Abilasha N',       additionalRole: '—',                designation: 'Assistant Professor',  email: 'abhilasha.n@mccmulund.ac.in',      education: 'M. Com, MPhil, NET, PhD',                         teachingExp: '12 yrs' },
-  { srNo: 6, name: 'Mr.Felix Anthonysamy', additionalRole: '—',                designation: 'Assistant Professor',  email: 'felix@mccmulund.ac.in',            education: 'M.Com., B.Ed., MBA., MA NET., SET.',              teachingExp: '10 yrs' },
+  { srNo: 1, name: 'Dr. Kanchana Sattur', additionalRole: 'HOD', designation: 'Assistant Professor', department: 'Bachelor of Commerce (Management Studies)', education: 'MCom, M.B.A, NET(Comm& Mgmt), PhD.,', email: 'kanchana.sattur@mccmulund.ac.in', teachingExp: '15 yrs', image: '/Degree College Teachers/Kanchana Sattur.png' },
+  { srNo: 2, name: 'Dr. Soumya George', additionalRole: '—', designation: 'Assistant Professor', department: 'Bachelor of Commerce (Management Studies)', education: 'MA (Economics), MBA, MCOM, MJMC, PhD (Economics)', email: 'soumya.george@mccmulund.ac.in', teachingExp: '14 yrs', image: '/Degree College Teachers/Soumya George.png' },
+  { srNo: 3, name: 'Dr. Shilpi Jawake', additionalRole: '—', designation: 'Assistant Professor', department: 'Bachelor of Commerce (Management Studies)', education: 'MBA, MCOM, NET, SET, Pursuing PhD', email: 'shilpi.jawake@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Shilpi Juwake.png' },
+  { srNo: 4, name: 'Dr. Abilasha N', additionalRole: '—', designation: 'Assistant Professor', department: 'Bachelor of Commerce (Management Studies)', education: 'M. Com, MPhil, NET, PhD', email: 'abhilasha.n@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Abilasha N.png' },
+  { srNo: 5, name: 'Mr.Felix Anthonysamy', additionalRole: '—', designation: 'Assistant Professor', department: 'Bachelor of Commerce (Management Studies)', education: 'M.Com., B.Ed., MBA ., MA NET., SET.,', email: 'felix@mccmulund.ac.in', teachingExp: '10 yrs', image: '/Degree College Teachers/Felix Anthonysamy.png' },
 ];
 
 export default function BMSPageClient() {
@@ -23,7 +22,7 @@ export default function BMSPageClient() {
 
   return (
     <CourseTemplate 
-      festivals="Inspira (Col)"
+      festivals="Inspira"
       publication="Inspira"
       introductionContent={
         <>
@@ -59,6 +58,7 @@ export default function BMSPageClient() {
       syllabusContent={<SyllabusRenderer programKey="BMS" />}
       quickActionsData={quickActions}
       courseKey="BMS"
+      shortInfo="A holistic management programme developing future business leaders with skills in marketing, finance, HR, and strategic management."
       facultyData={bmsFaculty}
     />
   );

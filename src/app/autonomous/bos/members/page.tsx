@@ -61,7 +61,7 @@ const bosData: BOSSection[] = [
       { numMembers: '',          nature: '',                                                                               name: 'Dr. Rajashree Deshpande' },
       { numMembers: '',          nature: '',                                                                               name: 'Dr. Shilipi Jawake' },
       { numMembers: '',          nature: '',                                                                               name: 'Dr. Soumya George' },
-      { numMembers: '',          nature: '',                                                                               name: 'Ms. Sipra Routaray' },
+      { numMembers: '',          nature: '',                                                                               name: 'Dr. Sipra Routaray' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Siddhi Kambli' },
       { numMembers: '2 MEMBERS', nature: 'Subject expert from outside Parent University (nominated by Academic Council)', name: 'Dr. Anil Chougule' },
       { numMembers: '',          nature: '',                                                                               name: 'Dr. Mansi Gore' },
@@ -138,7 +138,7 @@ const bosData: BOSSection[] = [
     id: 'it',
     label: 'Information Technology',
     parentSection: 'BOS - IT',
-    subtitle: 'Composition for IT',
+    subtitle: 'Information Technology',
     members: [
       { numMembers: '1 MEMBER',  nature: 'Head of Department / Chairperson',                                              name: 'Dr. Jyotika D. Chheda' },
       { numMembers: '5 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Dr. Hiren Dand' },
@@ -157,7 +157,7 @@ const bosData: BOSSection[] = [
     id: 'ds',
     label: 'Data Science',
     parentSection: 'BOS - IT/DS/CA',
-    subtitle: 'Composition for DS',
+    subtitle: 'Data Science',
     members: [
       { numMembers: '1 MEMBER',  nature: 'Head of Department / Chairperson',                                              name: 'Dr. Priti Pathak' },
       { numMembers: '5 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Dr. Jyotika D. Chheda' },
@@ -176,7 +176,7 @@ const bosData: BOSSection[] = [
     id: 'ca',
     label: 'Computer Applications',
     parentSection: 'BOS - IT/DS/CA',
-    subtitle: 'Composition for CA',
+    subtitle: 'Computer Applications',
     members: [
       { numMembers: '1 MEMBER',  nature: 'Head of Department / Chairperson',                                              name: 'Dr. Vishal D. Borude' },
       { numMembers: '5 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Dr. Jyotika D. Chheda' },
@@ -213,11 +213,9 @@ const bosData: BOSSection[] = [
     label: 'Management Studies',
     members: [
       { numMembers: '1 MEMBER',  nature: 'Head of Department / Chairperson',                                              name: 'Dr. Kanchana Sattur' },
-      { numMembers: '7 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Dr. Viji Kannan' },
-      { numMembers: '',          nature: '',                                                                               name: 'Ms. Seema Ashar' },
-      { numMembers: '',          nature: '',                                                                               name: 'Dr. Soumya George' },
+      { numMembers: '5 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Dr. Soumya George' },
       { numMembers: '',          nature: '',                                                                               name: 'Dr. Abilasha N' },
-      { numMembers: '',          nature: '',                                                                               name: 'Ms. Shilpi Jawake' },
+      { numMembers: '',          nature: '',                                                                               name: 'Dr. Shilpi Jawake' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Shilpa Kulkarni' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Shrusti Desai' },
       { numMembers: '2 MEMBERS', nature: 'Subject expert from outside Parent University (nominated by Academic Council)', name: 'Dr. Jarna Kalra' },
@@ -292,9 +290,9 @@ const bosData: BOSSection[] = [
       { numMembers: '',           nature: '',                                                                               name: 'CA Vinaya Marathe' },
       { numMembers: '',           nature: '',                                                                               name: 'Mr. Nitin Pawar' },
       { numMembers: '',           nature: '',                                                                               name: 'Ms. Swapna Acharya' },
-      { numMembers: '',           nature: '',                                                                               name: 'Ms. Sneha Prajapati' },
+      { numMembers: '',           nature: '',                                                                               name: 'Dr. Sneha Prajapati' },
       { numMembers: '',           nature: '',                                                                               name: 'Ms. Siddhi Kambli' },
-      { numMembers: '',           nature: '',                                                                               name: 'Ms. Sipra Routaray' },
+      { numMembers: '',           nature: '',                                                                               name: 'Dr. Sipra Routaray' },
       { numMembers: '2 MEMBERS',  nature: 'Subject expert from outside Parent University (nominated by Academic Council)', name: 'Mr. Manish Malkani' },
       { numMembers: '',           nature: '',                                                                               name: 'CA (Ms.) Soumya Nichani' },
       { numMembers: '1 MEMBER',   nature: 'Nominated by VC from 6 recommended by college Principal',                      name: 'Dr. Priyanka Mohan' },
@@ -331,13 +329,13 @@ const bosData: BOSSection[] = [
     label: 'Financial Market',
     members: [
       { numMembers: '1 MEMBER',  nature: 'Head of Department / Chairperson',                                              name: 'Ms. Shilpa Thakur' },
-      { numMembers: '7 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Ms. Vinaya Marathe' },
-      { numMembers: '',          nature: '',                                                                               name: 'Ms. Siddhi Kambli' },
-      { numMembers: '',          nature: '',                                                                               name: 'Ms. Sipra Routaray' },
+      { numMembers: '7 MEMBERS', nature: 'Names of Faculty',                                                              name: 'Ms. Siddhi Kambli' },
+      { numMembers: '',          nature: '',                                                                               name: 'Dr. Sipra Routaray' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Archana Kadam' },
       { numMembers: '',          nature: '',                                                                               name: 'Mr. Nitin Pawar' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Swapna Acharya' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Sneha Prajapati' },
+      { numMembers: '',          nature: '',                                                                               name: 'Ms. Archana Patre' },
       { numMembers: '3 MEMBERS', nature: 'Invitee Members',                                                               name: 'Dr. Rajashri Deshpande' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Seema Attarde' },
       { numMembers: '',          nature: '',                                                                               name: 'Ms. Alpa Katira' },
@@ -486,7 +484,7 @@ export default function BOSMembersPage() {
                     {current.parentSection ?? `BOS – ${current.label}`}
                   </p>
                   <h2 className="text-xl md:text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">
-                    {current.subtitle ?? `Composition – ${current.label}`}
+                    {current.subtitle ?? current.label}
                   </h2>
                   <p className="text-gray-500 mt-0.5 text-sm">
                     {current.members.length} entries

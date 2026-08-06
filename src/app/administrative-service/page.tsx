@@ -317,6 +317,60 @@ export default function AdministrativeServicesPage() {
           </div>
         </div>
 
+        {/* ── OFFICE INFO ── */}
+        <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-5 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+            <Building2 size={20} className="text-[#123B6D]" />
+            <h2 className="text-lg font-bold text-[#123B6D] font-[var(--font-heading)]">Office Information</h2>
+          </div>
+          <div className="px-6 py-6 space-y-5 text-sm text-gray-700 leading-relaxed">
+
+            {/* Intro */}
+            <p>
+              The College Office provides administrative services for which they have dedicated office counters.
+              The <strong className="text-[#123B6D]">Aided</strong> (Jr. College, B.Com and M.Com – Advanced Accountancy) and the{' '}
+              <strong className="text-[#D4A017]">Self-Financing</strong> (All other programmes) Sections are separate.
+            </p>
+
+            {/* Counter breakdown */}
+            <div className="rounded-xl border border-[#E2E8F0] overflow-hidden">
+              <div className="bg-[#F8FAFC] px-5 py-3 border-b border-[#E2E8F0]">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Counter Assignments</p>
+              </div>
+              <div className="divide-y divide-[#E2E8F0]">
+                <div className="flex items-center gap-4 px-5 py-3">
+                  <span className="min-w-[160px] font-mono text-xs bg-[#123B6D]/8 text-[#123B6D] px-3 py-1 rounded-lg font-semibold">Counter no. 1 – 4</span>
+                  <span className="text-gray-700">Aided Section</span>
+                </div>
+                <div className="flex items-center gap-4 px-5 py-3">
+                  <span className="min-w-[160px] font-mono text-xs bg-[#123B6D]/8 text-[#123B6D] px-3 py-1 rounded-lg font-semibold">Counter no. 5</span>
+                  <span className="text-gray-700">Railway Concession for All</span>
+                </div>
+                <div className="flex items-center gap-4 px-5 py-3">
+                  <span className="min-w-[160px] font-mono text-xs bg-[#D4A017]/10 text-[#D4A017] px-3 py-1 rounded-lg font-semibold">Counter no. 6 – 8</span>
+                  <span className="text-gray-700">Self-Finance Section</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Timings */}
+            <p>
+              For general purposes the office timings are from <strong className="text-[#123B6D]">9 AM to 4 PM</strong>.
+            </p>
+
+            {/* Saturday note */}
+            <p>
+              On <strong>Saturdays</strong> the office operates with half the strength. Unless urgent or unavoidable, students are advised to visit the office during weekdays.
+            </p>
+
+            {/* Contact */}
+            <p>
+              For functions/purposes not specified on this page, the students/visitors are required to meet{' '}
+              <strong className="text-[#123B6D]">Mr. Devendrasing Rajput</strong> (Office In-Charge) or the Vice-Principal.
+            </p>
+          </div>
+        </div>
+
         {/* ── SERVICES ── */}
         <div>
           {/* Tab Toggle */}

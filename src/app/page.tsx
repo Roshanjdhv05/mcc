@@ -6,7 +6,6 @@ import Counter from '@/components/ui/Counter';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { supabase } from '@/lib/supabase';
 import type { Notice } from '@/lib/noticeTypes';
-import StudentsWorkSection from '@/components/ui/StudentsWorkSection';
 import StatsStrip from '@/components/ui/StatsStrip';
 import {
   Bell, Search, Download, ChevronRight, Quote,
@@ -14,7 +13,8 @@ import {
   PenLine, LibraryBig, HeadphonesIcon, FileText, ShieldCheck, Image,
   Bot, CalendarDays, ArrowRight, LayoutDashboard,
   Lightbulb, Activity, MonitorSmartphone, Target, MessagesSquare,
-  Train, ArrowRightLeft, Copy, Stamp, LogOut, Award, Shield, CheckCircle2, Globe, X
+  Train, ArrowRightLeft, Copy, Stamp, LogOut, Award, Shield, CheckCircle2, Globe, X,
+  GraduationCap, Calendar, Building2
 } from 'lucide-react';
 
 const quickLinks = [
@@ -24,8 +24,8 @@ const quickLinks = [
   { label: 'Exams', href: '/examination', icon: PenLine, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
   { label: 'Library', href: '/library', icon: LibraryBig, bg: 'bg-blue-50', iconColor: 'text-[#123B6D]' },
   { label: 'Services', href: '/services', icon: HeadphonesIcon, bg: 'bg-cyan-50', iconColor: 'text-cyan-600' },
-  { label: 'Forms', href: '/forms', icon: FileText, bg: 'bg-gray-100', iconColor: 'text-gray-600' },
-  { label: 'NAAC', href: '/iqac', icon: ShieldCheck, bg: 'bg-amber-50', iconColor: 'text-amber-700' },
+  { label: 'Students Corner', href: '/students-corner', icon: Users, bg: 'bg-gray-100', iconColor: 'text-gray-600' },
+  { label: 'Placement', href: '/placement', icon: Briefcase, bg: 'bg-amber-50', iconColor: 'text-amber-700' },
   { label: 'Gallery', href: '/gallery', icon: Image, bg: 'bg-blue-50', iconColor: 'text-[#4DA8DA]' },
 ];
 
@@ -212,6 +212,57 @@ const ALL_FILTERS = ['All', 'Academic', 'Examination', 'Holiday', 'Seminar', 'Wo
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_NAMES = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
+const wallOfFameStudents = [
+  { name: 'Rohan Sharma', rank: 'AIR 12', course: 'CA Final 2024', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80' },
+  { name: 'Priya Patel', rank: 'AIR 5', course: 'CMA Final', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80' },
+  { name: 'Amit Kumar', rank: 'AIR 18', course: 'CS Professional', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
+  { name: 'Sneha Rao', rank: 'AIR 2', course: 'CA Inter 2025', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80' },
+];
+
+const illustriousAlumni = [
+  { 
+    name: 'Alumni Name', 
+    initials: 'AN',
+    course: 'B.Com (Honours)',
+    batch: 'Class of 2018',
+    role: 'Senior Financial Analyst',
+    company: 'Deloitte India',
+    linkedin: '#',
+    description: 'Leading cross-functional finance teams and driving strategic insights across global markets with over 6 years...',
+  },
+  { 
+    name: 'Priya Patel', 
+    initials: 'PP',
+    course: 'B.Sc. IT',
+    batch: 'Class of 2019',
+    role: 'Software Engineer',
+    company: 'Microsoft',
+    linkedin: '#',
+    description: 'Developing scalable cloud solutions and mentoring junior developers in the Azure team.',
+  },
+  { 
+    name: 'Amit Kumar', 
+    initials: 'AK',
+    course: 'BMS',
+    batch: 'Class of 2020',
+    role: 'Marketing Manager',
+    company: 'Unilever',
+    linkedin: '#',
+    description: 'Spearheading national marketing campaigns and driving brand growth in the FMCG sector.',
+  },
+  { 
+    name: 'Sneha Rao', 
+    initials: 'SR',
+    course: 'B.Com (Accounting)',
+    batch: 'Class of 2021',
+    role: 'Audit Associate',
+    company: 'KPMG',
+    linkedin: '#',
+    description: 'Conducting comprehensive financial audits and ensuring compliance for Fortune 500 clients.',
+  },
+];
+
+
 function HomepageCalendar() {
   const today = new Date();
   const [year, setYear]   = useState(today.getFullYear());
@@ -220,23 +271,40 @@ function HomepageCalendar() {
   const [selectedDayEvents, setSelectedDayEvents] = useState<{ day: number; events: any[] } | null>(null);
   const [liveCalEvents, setLiveCalEvents] = useState<{ date: string; title: string; type: string }[]>([]);
 
-  // Fetch calendar events from Supabase
+  // Fetch calendar events from Supabase (events table)
   useEffect(() => {
-    supabase
-      .from('events')
-      .select('title, calendar_date, calendar_type')
-      .eq('publish_calendar', true)
-      .eq('status', 'published')
-      .not('calendar_date', 'is', null)
-      .then(({ data }) => {
-        if (data) {
-          setLiveCalEvents(data.map((e: any) => ({
-            date: e.calendar_date,
-            title: e.title,
-            type: e.calendar_type || 'Event',
-          })));
-        }
-      });
+    const fetchAll = async () => {
+      // 1. From events table
+      const { data: evData } = await supabase
+        .from('events')
+        .select('title, calendar_date, calendar_type')
+        .eq('publish_calendar', true)
+        .eq('status', 'published')
+        .not('calendar_date', 'is', null);
+
+      // 2. From notices table (calendar-tagged notices)
+      const { data: noticeData } = await supabase
+        .from('notices')
+        .select('calendar_title, calendar_date, calendar_category, calendar_venue, calendar_time')
+        .eq('publish_calendar', true)
+        .not('calendar_date', 'is', null);
+
+      const merged: { date: string; title: string; type: string; venue?: string; time?: string }[] = [];
+      if (evData) {
+        evData.forEach((e: any) => merged.push({ date: e.calendar_date, title: e.title, type: e.calendar_type || 'Event' }));
+      }
+      if (noticeData) {
+        noticeData.forEach((n: any) => merged.push({
+          date: n.calendar_date,
+          title: n.calendar_title,
+          type: n.calendar_category || 'Event',
+          venue: n.calendar_venue,
+          time: n.calendar_time,
+        }));
+      }
+      setLiveCalEvents(merged);
+    };
+    fetchAll();
   }, []);
 
   const allCalendarEvents = useMemo(
@@ -470,6 +538,7 @@ function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x') {
 
     let animationFrameId: number;
     let lastTime = performance.now();
+    let currentScroll = direction === 'x' ? el.scrollLeft : el.scrollTop;
 
     const scroll = (time: number) => {
       const delta = time - lastTime;
@@ -477,21 +546,26 @@ function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x') {
 
       if (!isHovered.current && !isInteracting.current) {
         if (direction === 'x') {
-          el.scrollLeft += speed * (delta / 16);
+          currentScroll += speed * (delta / 16);
           // Loop logic for duplicated content
-          if (speed > 0 && el.scrollLeft >= el.scrollWidth / 2) {
-            el.scrollLeft -= el.scrollWidth / 2;
-          } else if (speed < 0 && el.scrollLeft <= 0) {
-            el.scrollLeft += el.scrollWidth / 2;
+          if (speed > 0 && currentScroll >= el.scrollWidth / 2) {
+            currentScroll -= el.scrollWidth / 2;
+          } else if (speed < 0 && currentScroll <= 0) {
+            currentScroll += el.scrollWidth / 2;
           }
+          el.scrollLeft = currentScroll;
         } else {
-          el.scrollTop += speed * (delta / 16);
-          if (speed > 0 && el.scrollTop >= el.scrollHeight / 2) {
-            el.scrollTop -= el.scrollHeight / 2;
-          } else if (speed < 0 && el.scrollTop <= 0) {
-            el.scrollTop += el.scrollHeight / 2;
+          currentScroll += speed * (delta / 16);
+          if (speed > 0 && currentScroll >= el.scrollHeight / 2) {
+            currentScroll -= el.scrollHeight / 2;
+          } else if (speed < 0 && currentScroll <= 0) {
+            currentScroll += el.scrollHeight / 2;
           }
+          el.scrollTop = currentScroll;
         }
+      } else {
+        // Sync our internal counter if user manually scrolls
+        currentScroll = direction === 'x' ? el.scrollLeft : el.scrollTop;
       }
       animationFrameId = requestAnimationFrame(scroll);
     };
@@ -533,11 +607,13 @@ function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x') {
 export default function HomePage() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [notices, setNotices] = useState<Notice[]>([]);
+  const [liveEvents, setLiveEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
+  const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
 
   const latestEventsRef = useMarqueeScroll(1);
   const latestNoticesRef = useMarqueeScroll(0.8, 'y');
-  const programmesRef = useMarqueeScroll(1.2);
+  const programmesRef = useMarqueeScroll(-1.2);
   const adminServicesRef = useMarqueeScroll(-1);
   const culturalRef = useMarqueeScroll(1);
 
@@ -558,6 +634,80 @@ export default function HomePage() {
     }
     fetchNotices();
   }, []);
+
+  useEffect(() => {
+    async function fetchLiveEvents() {
+      // Only show events published in the last 90 days on homepage
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const { data } = await supabase
+        .from('events')
+        .select('title, description, category, images, published_at')
+        .eq('publish_home', true)
+        .eq('status', 'published')
+        .gte('published_at', ninetyDaysAgo.toISOString())
+        .order('published_at', { ascending: false })
+        .limit(12);
+      if (data && data.length > 0) {
+        const formatted = data.map((e: { title: string; description: string; category: string; images: string[]; published_at: string }) => ({
+          title: e.title,
+          tag: e.category || 'Event',
+          desc: e.description || '',
+          img: (e.images && e.images[0]) || '/2025 - 2026/Friendship Day (1).jpg',
+        }));
+        setLiveEvents(formatted);
+      }
+    }
+    fetchLiveEvents();
+  }, []);
+
+  // ── Fetch live Cultural Committee events (last 90 days, auto-vanish after)
+  // Matches: publish_home=true AND (category contains 'cultural' OR department = 'Cultural Forum')
+  useEffect(() => {
+    async function fetchLiveCulturalEvents() {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const { data } = await supabase
+        .from('events')
+        .select('title, description, category, department, images, published_at')
+        .eq('publish_gallery', true)
+        .eq('status', 'published')
+        .gte('published_at', ninetyDaysAgo.toISOString())
+        .order('published_at', { ascending: false })
+        .limit(12);
+      if (data && data.length > 0) {
+        const formatted = data.map((e: { title: string; description: string; category: string; department: string; images: string[]; published_at: string }) => ({
+          title: e.title,
+          tag: e.category || 'Cultural',
+          desc: e.description || '',
+          img: (e.images && e.images[0]) || '/2025 - 2026/Friendship Day (1).jpg',
+        }));
+        setLiveCulturalEvents(formatted);
+      }
+    }
+    fetchLiveCulturalEvents();
+  }, []);
+
+  // Merge: new live events (front) + permanent hardcoded (back), dedup by title
+  const mergedCulturalEvents = [
+    ...liveCulturalEvents,
+    ...culturalEvents.filter(
+      (ce) => !liveCulturalEvents.some((le) => le.title.toLowerCase() === ce.title.toLowerCase())
+    ),
+  ];
+
+  // Use live events if available, else fall back to hardcoded
+  const displayEvents = liveEvents.length > 0 ? liveEvents : culturalEvents;
+  const hasEnoughEvents = displayEvents.length >= 3;
+
+  const demoNotices = [
+    { id: 1, title: 'Semester Start — July 2026', description: 'All UG and PG programmes commence from 1st July 2026.', categories: ['Academics'], is_general: false, schedule_time: new Date().toISOString(), expiry_time: '' },
+    { id: 2, title: 'Internal Test Schedule Released', description: 'Refer to the notice board for subject-wise internal test dates.', categories: ['Examinations'], is_general: true, schedule_time: new Date(Date.now() - 86400000).toISOString(), expiry_time: '' },
+    { id: 3, title: 'Sports Day Registration Open', description: 'Students can register for Sports Day events at the college office.', categories: ['Sports'], is_general: false, schedule_time: new Date(Date.now() - 2 * 86400000).toISOString(), expiry_time: '' },
+    { id: 4, title: 'Scholarship Applications Invited', description: 'EBC and government scholarships — apply before 31st July.', categories: ['Scholarships'], is_general: true, schedule_time: new Date(Date.now() - 3 * 86400000).toISOString(), expiry_time: '' },
+  ];
+  const displayNotices = notices.length > 0 ? notices : demoNotices;
+  const hasEnoughNotices = displayNotices.length >= 4;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -692,17 +842,17 @@ export default function HomePage() {
             <div className="flex-1 bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-5 pt-5 pb-3">
                 <h3 className="text-base font-bold text-[#123B6D] font-[var(--font-heading)]">Latest Events</h3>
-                <Link href="/students-corner/cultural-forum" className="text-xs font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
+                <Link href="/students-corner/gallery" className="text-xs font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
                   View All <ArrowRight size={12} />
                 </Link>
               </div>
 
               <div className="overflow-hidden w-full group pb-5 px-2">
-                <div ref={latestEventsRef} className="flex gap-4 overflow-x-auto no-scrollbar w-full cursor-grab active:cursor-grabbing">
-                  {[...culturalEvents, ...culturalEvents].map((ev, i) => (
+                <div ref={hasEnoughEvents ? latestEventsRef : null} className={`flex gap-4 overflow-x-auto no-scrollbar w-full ${hasEnoughEvents ? 'cursor-grab active:cursor-grabbing' : ''}`}>
+                  {(hasEnoughEvents ? [...displayEvents, ...displayEvents] : displayEvents).map((ev, i) => (
                     <Link
                       key={i}
-                      href="/students-corner/cultural-forum"
+                      href="/students-corner/gallery"
                       className="flex-shrink-0 w-[260px] sm:w-[300px] md:w-[340px] xl:w-[360px] group/card rounded-2xl overflow-hidden border border-[#E2E8F0] bg-[#F8FAFC] hover:shadow-[0_12px_30px_rgba(18,59,109,0.12)] hover:-translate-y-1.5 transition-all duration-300"
                     >
                       <div className="relative h-[180px] sm:h-[200px] md:h-[220px] overflow-hidden">
@@ -734,37 +884,43 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              {/* Fixed height scroll-up container */}
+              {/* Infinite upward scroll container */}
               <div className="h-[300px] relative overflow-hidden group">
-                <div ref={latestNoticesRef} className="overflow-y-auto no-scrollbar h-full px-4 pb-4 cursor-grab active:cursor-grabbing">
-                  <div className="flex flex-col gap-3">
-                    {(notices.length > 0 ? [...notices, ...notices] : [
-                      { id: 1, title: 'Semester Start — July 2026', description: 'All UG and PG programmes commence from 1st July 2026.', categories: ['Academics'], is_general: false, schedule_time: new Date().toISOString(), expiry_time: '' },
-                      { id: 2, title: 'Internal Test Schedule Released', description: 'Refer to the notice board for subject-wise internal test dates.', categories: ['Examinations'], is_general: true, schedule_time: new Date(Date.now() - 86400000).toISOString(), expiry_time: '' },
-                      { id: 3, title: 'Sports Day Registration Open', description: 'Students can register for Sports Day events at the college office.', categories: ['Sports'], is_general: false, schedule_time: new Date(Date.now() - 2 * 86400000).toISOString(), expiry_time: '' },
-                      { id: 4, title: 'Scholarship Applications Invited', description: 'EBC and government scholarships — apply before 31st July.', categories: ['Scholarships'], is_general: true, schedule_time: new Date(Date.now() - 3 * 86400000).toISOString(), expiry_time: '' },
-                    ] as any[]).map((n: any, i: number) => {
-                      const primaryCat = n.categories?.[0] || 'Administration';
-                      const colorClass = CATEGORY_COLORS[primaryCat] || 'bg-gray-100 text-gray-700';
-                      return (
-                        <Link
-                          key={`${n.id || i}-${i}`}
-                          href="/notices"
-                          className="flex-shrink-0 p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] hover:bg-white hover:shadow-md hover:border-[#123B6D]/20 transition-all duration-200 group/card"
-                        >
-                          <div className="flex items-center gap-2 mb-2">
-                            {n.is_general && (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#123B6D] text-white">General</span>
-                            )}
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorClass}`}>{primaryCat}</span>
-                            <span className="text-[#94A3B8] text-[10px] ml-auto">{timeAgo(n.schedule_time)}</span>
-                          </div>
-                          <h4 className="font-semibold text-[#1E293B] text-sm leading-snug line-clamp-2 font-[var(--font-heading)] group-hover/card:text-[#123B6D] transition-colors">{n.title}</h4>
-                          <p className="text-xs text-[#64748B] mt-1 line-clamp-1">{n.description}</p>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                <style>{`
+                  @keyframes noticesScrollUp {
+                    0%   { transform: translateY(0); }
+                    100% { transform: translateY(-50%); }
+                  }
+                  .notices-marquee {
+                    animation: noticesScrollUp 18s linear infinite;
+                  }
+                  .notices-marquee:hover {
+                    animation-play-state: paused;
+                  }
+                `}</style>
+                <div className={`${hasEnoughNotices ? 'notices-marquee' : ''} flex flex-col gap-3 px-4 pb-4`}>
+                  {/* Render items twice for seamless loop if there are enough notices */}
+                  {(hasEnoughNotices ? [...displayNotices, ...displayNotices] : displayNotices).map((n: any, i: number) => {
+                    const primaryCat = n.categories?.[0] || 'Administration';
+                    const colorClass = CATEGORY_COLORS[primaryCat] || 'bg-gray-100 text-gray-700';
+                    return (
+                      <Link
+                        key={`${n.id || i}-${i}`}
+                        href="/notices"
+                        className="flex-shrink-0 p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] hover:bg-white hover:shadow-md hover:border-[#123B6D]/20 transition-all duration-200 group/card"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          {n.is_general && (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#123B6D] text-white">General</span>
+                          )}
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${colorClass}`}>{primaryCat}</span>
+                          <span className="text-[#94A3B8] text-[10px] ml-auto">{timeAgo(n.schedule_time)}</span>
+                        </div>
+                        <h4 className="font-semibold text-[#1E293B] text-sm leading-snug line-clamp-2 font-[var(--font-heading)] group-hover/card:text-[#123B6D] transition-colors">{n.title}</h4>
+                        <p className="text-xs text-[#64748B] mt-1 line-clamp-1">{n.description}</p>
+                      </Link>
+                    );
+                  })}
                 </div>
                 {/* Fade mask top & bottom */}
                 <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent pointer-events-none z-10" />
@@ -775,41 +931,6 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-
-        {/* ── AI ASSISTANT ── */}
-        <ScrollReveal>
-          <div className="relative bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-8 overflow-hidden min-h-[280px] flex flex-col justify-between">
-            <div className="absolute -right-10 -top-10 w-64 h-64 bg-[#D4A017]/10 rounded-full blur-3xl" />
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#123B6D] text-white flex items-center justify-center">
-                  <Bot size={24} />
-                </div>
-                <h2 className="text-3xl font-bold text-[#123B6D] font-[var(--font-heading)]">Welcome to Mulund College of Commerce</h2>
-              </div>
-              <p className="text-[#64748B] max-w-3xl mb-8 leading-relaxed">
-                Mulund College of Commerce (MCC), established in 1970, is a prominent institution located in the Mulund suburb of Mumbai, India. Managed by the Parle Tilak Vidyalay Association, the college offers a range of undergraduate and postgraduate programs across disciplines such as commerce, science, management, and media studies.
-              </p>
-            </div>
-            <div className="flex gap-4 flex-wrap">
-              <motion.button
-                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                className="px-7 py-3 bg-[#123B6D] text-white rounded-full font-semibold text-sm hover:bg-[#0d2d54] transition-all shadow-lg shadow-[#123B6D]/20"
-              >
-                Chat Now
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                className="px-7 py-3 border border-[#123B6D] text-[#123B6D] rounded-full font-semibold text-sm hover:bg-[#123B6D]/5 transition-all"
-              >
-                Learn More
-              </motion.button>
-            </div>
-          </div>
-        </ScrollReveal>        {/* ── ACADEMIC CALENDAR ── */}
-        <ScrollReveal>
-          <HomepageCalendar />
-        </ScrollReveal>
 
         {/* ── PRINCIPAL'S MESSAGE ── */}
         <div className="w-full">
@@ -845,6 +966,56 @@ export default function HomePage() {
           </ScrollReveal>
         </div>
 
+
+        {/* ── ACADEMIC CALENDAR ── */}
+        <ScrollReveal>
+          <HomepageCalendar />
+        </ScrollReveal>
+
+        {/* ── CULTURAL COMMITTEE ── */}
+        <ScrollReveal>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Cultural Committee</h2>
+              <p className="text-sm text-[#64748B] mt-1">Celebrating creativity & talent at MCC — 2025–26 Academic Year</p>
+            </div>
+            <Link href="/students-corner/gallery?department=Cultural+Forum" className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:underline">
+              View All <ArrowRight size={15} />
+            </Link>
+          </div>
+          <div className="overflow-hidden w-full group relative">
+            <div ref={culturalRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2 cursor-grab active:cursor-grabbing">
+              {[...mergedCulturalEvents, ...mergedCulturalEvents].map((n, i) => (
+                <Link
+                  key={i}
+                  href="/students-corner/gallery?department=Cultural+Forum"
+                  className="w-[280px] sm:w-[320px] flex-shrink-0 group/card flex flex-col rounded-2xl overflow-hidden border border-[#E2E8F0] bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={n.img}
+                      alt={n.title}
+                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute bottom-4 left-4">
+                      <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
+                        {n.tag}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">{n.title}</h4>
+                    <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 mb-4">{n.desc}</p>
+                    <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
+                      View Details <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
 
         {/* ── FEATURED PROGRAMMES ── */}
         <ScrollReveal>
@@ -882,6 +1053,29 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center justify-between mt-12 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
+                <p className="text-sm text-[#64748B] mt-1">Celebrating our outstanding achievers in CA, CMA, CS, and beyond</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full pb-8">
+              {wallOfFameStudents.map((student, i) => (
+                <div key={i} className="group relative bg-white rounded-3xl border border-[#E2E8F0] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col items-center text-center p-6">
+                  <div className="w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-[#F8FAFC] shadow-inner group-hover:border-[#D4A017]/30 transition-colors">
+                    <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
+                  </div>
+                  <h3 className="text-lg font-bold text-[#123B6D] font-[var(--font-heading)] mb-1">{student.name}</h3>
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <span className="px-2.5 py-1 bg-[#D4A017]/10 text-[#D4A017] text-xs font-bold rounded-lg">{student.rank}</span>
+                    <span className="text-sm font-semibold text-[#64748B]">{student.course}</span>
+                  </div>
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-[#D4A017]/10 to-transparent rounded-bl-full" />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between mt-12 mb-6">
               <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Administrative Services</h2>
               <Link href="/administrative-service" className="text-sm font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
                 View All <ArrowRight size={14} />
@@ -908,58 +1102,68 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        {/* ── CULTURAL COMMITTEE ── */}
-        <ScrollReveal>
+        {/* ── ILLUSTRIOUS ALUMNI ── */}
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 py-10">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Cultural Committee</h2>
-              <p className="text-sm text-[#64748B] mt-1">Celebrating creativity & talent at MCC — 2025–26 Academic Year</p>
+              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Illustrious Alumni</h2>
+              <p className="text-sm text-[#64748B] mt-1">Celebrating our prominent alumni and their career achievements</p>
             </div>
-            <Link href="/students-corner/gallery?department=Cultural+Forum" className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:underline">
-              View All <ArrowRight size={15} />
+            <Link href="/alumni" className="text-sm font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
+              View All <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="overflow-hidden w-full group relative">
-            <div ref={culturalRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2 cursor-grab active:cursor-grabbing">
-              {[...culturalEvents, ...culturalEvents].map((n, i) => (
-                <Link
-                  key={i}
-                  href="/students-corner/gallery?department=Cultural+Forum"
-                  className="w-[280px] sm:w-[320px] flex-shrink-0 group/card flex flex-col rounded-2xl overflow-hidden border border-[#E2E8F0] bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                >
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={n.img}
-                      alt={n.title}
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
-                        {n.tag}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">{n.title}</h4>
-                    <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 mb-4">{n.desc}</p>
-                    <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
-                      View Details <ArrowRight size={16} />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </ScrollReveal>
 
-        {/* ── STUDENTS WORK ── */}
-        <StudentsWorkSection />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+            {illustriousAlumni.map((student, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col h-full hover:shadow-md transition-shadow">
+                {/* Top Section */}
+                <div className="flex gap-4 mb-5">
+                  <div className="w-24 h-24 rounded-2xl bg-[#185392] text-white flex items-center justify-center text-3xl font-bold shrink-0">
+                    {student.initials}
+                  </div>
+                  <div className="flex flex-col gap-1.5 pt-1">
+                    <h3 className="font-bold text-[#123B6D] text-lg leading-tight">{student.name}</h3>
+                    <div className="flex items-center gap-2 text-[13px] text-gray-600">
+                      <GraduationCap size={14} className="text-[#D4A017] shrink-0" />
+                      <span>{student.course}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[13px] text-gray-600">
+                      <Calendar size={14} className="text-blue-400 shrink-0" />
+                      <span>{student.batch}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[13px] font-semibold text-gray-700">
+                      <Briefcase size={14} className="text-emerald-500 shrink-0" />
+                      <span>{student.role}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[13px] text-gray-500">
+                      <Building2 size={14} className="text-gray-400 shrink-0" />
+                      <span>{student.company}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LinkedIn Button */}
+                <a href={student.linkedin} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-blue-200 bg-blue-50/50 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition-colors mb-4">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  View on LinkedIn
+                </a>
+
+                {/* Description Box */}
+                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1">
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {student.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* ── TESTIMONIALS ── */}
         <ScrollReveal>
           <div className="bg-[#123B6D] rounded-3xl p-10">
-            <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] text-center mb-10">What Our Alumni Say</h2>
+            <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] text-center mb-10">Testimonial</h2>
             <div 
               ref={alumniScrollRef}
               className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto snap-x snap-mandatory md:snap-none no-scrollbar pb-4"

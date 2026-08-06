@@ -14,6 +14,8 @@ export default function BBAPageClient() {
 
   return (
     <CourseTemplate 
+      festivals="Festivals"
+      publication="Publication"
       introductionContent={
         <>
           <p className="mb-4">
@@ -40,6 +42,7 @@ export default function BBAPageClient() {
         </>
       }
       title="B.Com (Business Administration)"
+      shortInfo="A dynamic business and entrepreneurship-driven program tailored to develop tomorrow's managerial leaders through practical case studies and simulations."
       fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BBA" />}
       quickActionsData={quickActions}

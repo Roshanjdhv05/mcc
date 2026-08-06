@@ -44,6 +44,18 @@ const iqacMinutesData = {
 export default function IQACMinutesPage() {
   const [selectedPdf, setSelectedPdf] = useState<{ name: string, url: string } | null>(null);
 
+  const handleFileClick = (file: string, fileUrl: string) => {
+    setSelectedPdf({ name: file, url: fileUrl });
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        const previewEl = document.getElementById('pdf-preview-section');
+        if (previewEl) {
+          previewEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
+    }
+  };
+
   const years = Object.keys(iqacMinutesData.data).sort((a, b) => b.localeCompare(a));
 
   const getPdfUrl = (year: string, filename: string) => {
@@ -104,7 +116,7 @@ export default function IQACMinutesPage() {
                       return (
                         <div 
                           key={i} 
-                          onClick={() => setSelectedPdf({ name: file, url: fileUrl })}
+                          onClick={() => handleFileClick(file, fileUrl)}
                           className={`px-4 py-3 flex items-center justify-between transition-colors cursor-pointer ${
                             isSelected ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-[#F8FAFC] border-l-4 border-transparent'
                           }`}
@@ -138,7 +150,7 @@ export default function IQACMinutesPage() {
           </div>
 
           {/* Right Column: Live PDF Preview */}
-          <div className="lg:col-span-7 sticky top-24">
+          <div className="lg:col-span-7 sticky top-24" id="pdf-preview-section">
             <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-md overflow-hidden flex flex-col h-[700px]">
               <div className="p-4 border-b border-[#E2E8F0] bg-[#123B6D] text-white flex items-center justify-between">
                 <div className="flex items-center gap-2 overflow-hidden">

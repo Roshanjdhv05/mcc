@@ -8,17 +8,17 @@ export const metadata: Metadata = {
 };
 
 const bcomMsFaculty = [
-  { srNo: 12, name: 'Dr. Kanchana Nikhil Sattur',    additionalRole: '—', designation: 'Assistant Professor' },
-  { srNo: 13, name: 'Dr. Soumya George Monappilly',  additionalRole: '—', designation: 'Assistant Professor' },
-  { srNo: 14, name: 'Dr. Shilpi Deepak Jawake',      additionalRole: '—', designation: 'Assistant Professor' },
-  { srNo: 15, name: 'Dr. Abhilasha N',               additionalRole: '—', designation: 'Assistant Professor' },
-  { srNo: 34, name: 'Mr. Felix Anthonysamy',         additionalRole: '—', designation: 'Assistant Professor' },
+  { srNo: 1, name: 'Dr. Kanchana Sattur', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MCom, M.B.A, NET(Comm& Mgmt), PhD.,', email: 'kanchana.sattur@mccmulund.ac.in', teachingExp: '15 yrs', image: '/Degree College Teachers/Kanchana Sattur.png' },
+  { srNo: 2, name: 'Dr. Soumya Monappilly', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MA (Economics), MBA, MCOM, MJMC, PhD (Economics)', email: 'soumya.george@mccmulund.ac.in', teachingExp: '14 yrs', image: '/Degree College Teachers/Soumya George.png' },
+  { srNo: 3, name: 'Dr. Shilpi Jawake', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MBA, MCOM, NET, SET, Pursuing PhD', email: 'shilpi.jawake@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Shilpi Juwake.png' },
+  { srNo: 4, name: 'Dr. Abhilasha N', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'M. Com, MPhil, NET, PhD', email: 'abhilasha.n@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Abilasha N.png' },
+  { srNo: 5, name: 'Mr. Felix Anthonysamy', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'M.Com., B.Ed., MBA ., MA NET., SET.,', email: 'felix@mccmulund.ac.in', teachingExp: '10 yrs', image: '/Degree College Teachers/Felix Anthonysamy.png' },
 ];
 
 export default function CoursePage() {
   return (
     <CourseTemplate 
-      festivals="Inspira (Col)"
+      festivals="Inspira"
       publication="Inspira"
       introductionContent={
         <>
@@ -30,6 +30,7 @@ export default function CoursePage() {
       }
       syllabusContent={<SyllabusRenderer programKey="BMS" />}
       title="Bachelor of Commerce (Management Studies)"
+      shortInfo="A specialized marketing degree designed to build expertise in consumer behavior, digital marketing, brand management, and sales strategies."
       fundingType="Self Financing"
       facultyData={bcomMsFaculty}
     />

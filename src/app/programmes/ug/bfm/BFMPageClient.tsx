@@ -5,10 +5,9 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bfmFaculty = [
-  { srNo: 1, name: 'Ms.Shilpa Thakur',  additionalRole: 'Co-ordinator', designation: 'Assistant Professor', email: 'shilpa.thakur@mccmulund.ac.in',  education: 'MCom., MPhil.',                                 teachingExp: '28 yrs' },
-  { srNo: 2, name: 'Ms.Siddhi Kambli',  additionalRole: '—',            designation: 'Assistant Professor', email: 'Siddhi.kambli@mccmulumd.ac.in',  education: 'M.Com., SET',                                   teachingExp: '8 yrs' },
-  { srNo: 3, name: 'Ms. Archana Patre', additionalRole: '—',            designation: 'Assistant Professor', email: 'arch.dalvi@gmail.com',           education: 'MFM, M.Com',                                    teachingExp: '9 yrs' },
-  { srNo: 4, name: 'Dr.Sipra Routaray', additionalRole: '—',            designation: 'Assistant Professor', email: 'sipra.routray@mccmulund.ac.in',  education: 'Ph.D., M.Com., MBA., NET., SET.',               teachingExp: '14 yrs' },
+  { srNo: 1, name: 'Ms.Siddhi Kambli', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'M.Com., SET', email: 'Siddhi.kambli@mccmulumd.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Siddhi Kambli.png' },
+  { srNo: 2, name: 'Dr.Sipra Routaray', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'Ph.D.,M.com., MBA., NET., SET.', email: 'sipra.routray@mccmulund.ac.in', teachingExp: '14 yrs', image: '/Degree College Teachers/Sipra Routray.png' },
+  { srNo: 3, name: 'Ms. Archana Patre', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'MFM, M.Com', email: 'arch.dalvi@gmail.com', teachingExp: '9 yrs', image: '/Degree College Teachers/Archana Patre.png' },
 ];
 
 export default function BFMPageClient() {
@@ -21,7 +20,7 @@ export default function BFMPageClient() {
 
   return (
     <CourseTemplate
-      festivals="Manthan (Col)"
+      festivals="Manthan"
       publication="Finanza"
       introductionContent={
         <>
@@ -33,6 +32,7 @@ export default function BFMPageClient() {
       }
       syllabusContent={<SyllabusRenderer programKey="BFM" />}
       courseKey="BFM"
+      shortInfo="An intensive course focused on capital markets, investment banking, portfolio management, and financial analytics for the modern financial sector."
       title="Bachelor of Commerce (Financial Markets)"
       fundingType="Self Financing"
       facultyData={bfmFaculty}

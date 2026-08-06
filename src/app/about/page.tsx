@@ -1,136 +1,141 @@
 import type { Metadata } from 'next';
-import { Target, BookOpen, Users, Award, Calendar, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import {
+  Target, BookOpen, Users, ChevronRight, Building2,
+  GraduationCap, FileText, Landmark, Star, Calendar, UserCheck, ShieldCheck
+} from 'lucide-react';
+
+// Custom LayoutGrid icon (not available in this lucide version)
+function LayoutGrid(props: { size?: number; className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
+      <rect width="7" height="7" x="3" y="3" rx="1"/>
+      <rect width="7" height="7" x="14" y="3" rx="1"/>
+      <rect width="7" height="7" x="14" y="14" rx="1"/>
+      <rect width="7" height="7" x="3" y="14" rx="1"/>
+    </svg>
+  );
+}
 
 export const metadata: Metadata = {
-  title: 'About MCC | MCC Digital Experience Platform',
-  description: 'Learn about Mulund College of Commerce — vision, mission, history, and leadership.',
+  title: 'About MCC | Mulund College of Commerce',
+  description: 'Learn about Mulund College of Commerce — vision, mission, history, leadership, committees, and more.',
 };
 
-const milestones = [
-  { year: '1970', title: 'College Founded', desc: 'Mulund College of Commerce was founded by Parle Tilak Vidyalaya Association.' },
-  { year: '1976', title: 'Junior College', desc: 'Junior College was established.' },
-  { year: '1980', title: 'PG Teaching Center', desc: 'Establishment of the Post Graduate teaching center for Masters in Commerce under the Department of Commerce, University of Mumbai.' },
-  { year: '1994', title: 'Computer Age', desc: 'MCC moved into the "Computer Age" by starting the Computrain Centre with a view to enhance the computer skills of its students.' },
-  { year: '1999', title: 'B.M.S. Introduced', desc: 'Bachelors of Management Studies (B.M.S.) was introduced.' },
-  { year: '2000', title: 'Vocational Courses', desc: "With the advent of Vocationalisation and emphasis on 'On-the-job training', MCC opted for B. Com (Vocational) in Computer Applications." },
-  { year: '2001', title: 'IT & CS Programmes', desc: 'B.Sc. Computer Science and B.Sc. Information Technology were introduced. Information Technology was introduced at Junior College.' },
-  { year: '2003', title: 'New B.Com. Specialisations', desc: 'Introduced: B.Com. (Vocational) with Tax practice and Procedures, B.Com. (Accounts and Finance), and B.Com (Banking and Insurance).' },
-  { year: '2004', title: 'NAAC A Grade & M.Sc. IT', desc: "Accredited with 'A' grade by NAAC. Introduced M.Sc. (Information Technology) affiliated to the University of Mumbai." },
-  { year: '2007', title: 'M.C.A. (I.D.E.)', desc: 'Initiated M.C.A. (I.D.E.), Personal Contact Programs affiliated to the University of Mumbai.' },
-  { year: '2008', title: 'MCCE & B.Com. FM', desc: 'Introduced B.Com. (Financial Markets). Mulund Centre for Commercial Education (MCCE) was started to groom students for better employability.' },
-  { year: '2011', title: 'Re-accredited by NAAC', desc: "Re-accredited by National Assessment and Accreditation Council with 'A' grade." },
-  { year: '2012', title: 'M.Com. (Management)', desc: 'Introduced M.Com. (Management), affiliated to the University of Mumbai.' },
-  { year: '2013', title: 'Dual Degree System', desc: 'Started Diploma and Post-graduate Diploma courses under Dual Degree System in collaboration with Garware Institute of Career Education and Development.' },
-  { year: '2014', title: 'Best College Award & Ph.D. Centre', desc: 'Received Best College Award (Urban Area) (2012-13) from University of Mumbai. Started Ph.D. Research Centre in Commerce with Specialization in Business Economics.' },
-  { year: '2016', title: 'M.Com. (B&F) & NAAC Re-accreditation', desc: "Introduced M.Com. (Banking & Finance). Re-accredited by NAAC with 'A' grade." },
-  { year: '2017', title: 'B.M.M. Introduced', desc: 'Started Bachelor of Mass Media.' },
-  { year: '2019', title: 'Golden Jubilee', desc: 'MCC celebrated its Golden Jubilee Year.' },
-  { year: '2020', title: 'PTVA Centenary', desc: 'PTVA celebrated its Centenary Year.' },
-  { year: '2021', title: 'Academic Autonomy', desc: 'The College was conferred Academic Autonomy by UGC and entered the 4th Cycle of NAAC accreditation with A Grade (3.26 score).' },
-  { year: '2022', title: 'New Science & Finance Programs', desc: 'B.Sc. (Data Science) and M.Sc. (Finance) programs were introduced. Several credits based short term courses were introduced to increase the employability of learners.' },
-  { year: '2023', title: 'NEP 2020 Implementation', desc: 'Bachelors of Computer Science (BCA) and Bachelors of Business Administration (BBA) programs were introduced. National Education Policy (NEP) 2020 implemented across all the programs.' },
-  { year: '2024', title: 'BFSI Program', desc: 'B.com Banking Financial Services and Insurance (BFSI) Program was introduced.' },
-].reverse();
+const quickLinks = [
+  { label: 'Vision & Mission', href: '/about/vision-mission', icon: Target, desc: 'Our guiding principles and long-term goals.' },
+  { label: 'PTVA Trust', href: '/about/ptva-trust', icon: Landmark, desc: 'The founding body behind MCC since 1920.' },
+  { label: 'Board of Trustees', href: '/about/board-of-trustees', icon: Users, desc: 'Meet the leadership of PTVA Trust.' },
+  { label: 'Our Milestones', href: '/about/milestones', icon: Calendar, desc: 'Key achievements across 50+ years.' },
+  { label: 'Organogram', href: '/about/organogram', icon: LayoutGrid, desc: 'Organizational hierarchy of the college.' },
+  { label: 'Code of Conduct', href: '/about/code-of-conduct', icon: ShieldCheck, desc: 'Rules and ethics for our community.' },
+  { label: 'Other Institutions', href: '/about/other-institutions', icon: Building2, desc: 'Other institutions under PTVA Trust.' },
+  { label: "Principal's Desk", href: '/principal', icon: GraduationCap, desc: 'Message from Dr. Sonali Mahajan.' },
+  { label: "Vice Principal's Desk", href: '/vice-principal', icon: UserCheck, desc: 'Message from the Vice Principal.' },
+  { label: 'CDC Members', href: '/about/cdc-members', icon: FileText, desc: 'Year-wise list of CDC members.' },
+  { label: 'CDC Minutes', href: '/about/cdc-minutes', icon: FileText, desc: 'Minutes of CDC meetings.' },
+  { label: 'Tilak Smruti Vyakhyan', href: '/about/tilak-lecture', icon: Star, desc: 'Annual memorial lecture series.' },
+  { label: 'B.G. Bapat Memorial Lecture', href: '/about/bg-bapat-lecture', icon: Star, desc: 'Esteemed lecture in memory of B.G. Bapat.' },
+];
+
+
+
+const recentMilestones = [
+  { year: '2024', event: 'B.Com BFSI Program Introduced' },
+  { year: '2023', event: 'NEP 2020 Implemented, BCA & BBA Launched' },
+  { year: '2022', event: 'B.Sc. Data Science & M.Sc. Finance Added' },
+  { year: '2021', event: 'Conferred Academic Autonomy by UGC; NAAC Grade A' },
+  { year: '2019', event: 'Golden Jubilee Celebrations' },
+  { year: '2016', event: 'NAAC Re-accredited with A Grade' },
+];
 
 export default function AboutPage() {
   return (
     <div className="bg-[#F8FAFC] min-h-screen">
-      {/* Hero */}
-      <div className="relative bg-[#123B6D] pt-10 pb-24 overflow-hidden">
+
+      {/* ── Hero ── */}
+      <div className="relative bg-[#123B6D] pt-14 pb-32">
         <div className="absolute inset-0 opacity-20">
-          <img src="https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=1600&q=80" alt="" className="w-full h-full object-cover" />
+          <img src="/college_campus_hero.png" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-[var(--font-heading)] mb-4">About MCC</h1>
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-5 uppercase tracking-widest">
+            <Users size={13} /> About MCC
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white font-[var(--font-heading)] mb-4 leading-tight">
+            About Mulund<br className="hidden md:block" /> College of Commerce
+          </h1>
           <p className="text-white/75 text-lg max-w-2xl">
-            Mulund College of Commerce (Autonomous) has been a beacon of academic excellence in Mumbai for over 60 years.
+            Established in 1970 by Parle Tilak Vidyalaya Association, MCC (Autonomous) has been a beacon of academic excellence in Mumbai for over 55 years.
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-12 -mt-10 pb-16 space-y-14">
-        {/* Vision & Mission */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              icon: Target, title: 'Our Vision', color: 'bg-blue-50 text-[#123B6D]',
-              text: 'To be a premier educational institution recognized for academic excellence, ethical values, and social responsibility, producing graduates who contribute meaningfully to society and the global economy.'
-            },
-            {
-              icon: BookOpen, title: 'Our Mission', color: 'bg-amber-50 text-amber-700',
-              text: 'To provide quality higher education through innovative teaching methods, research, and co-curricular activities that develop intellectual curiosity, critical thinking, and professional competence in students.'
-            },
-          ].map(({ icon: Icon, title, color, text }) => (
-            <div key={title} className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-8">
-              <div className={`w-12 h-12 rounded-2xl ${color} flex items-center justify-center mb-4`}>
-                <Icon size={24} />
-              </div>
-              <h2 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3">{title}</h2>
-              <p className="text-[#64748B] leading-relaxed">{text}</p>
-            </div>
-          ))}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-12 -mt-20 pb-20 space-y-16">
+
+        {/* ── About MCC ── */}
+        <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-2xl p-8 lg:p-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-10 bg-[#D4A017] rounded-full" />
+            <h2 className="text-2xl lg:text-3xl font-black text-[#123B6D] font-[var(--font-heading)] uppercase tracking-wide">
+              Welcome to Mulund College of Commerce
+            </h2>
+          </div>
+          <p className="text-[#64748B] leading-relaxed text-lg">
+            Mulund College of Commerce (MCC), established in 1970, is a prominent institution located in the Mulund suburb of Mumbai, India. Managed by the Parle Tilak Vidyalay Association, the college offers a range of undergraduate and postgraduate programs across disciplines such as commerce, science, management, and media studies.
+          </p>
         </div>
 
-        {/* Principal Message */}
-        <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col md:flex-row">
-          <div className="md:w-1/3 relative h-80 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=400&q=80" alt="Principal" className="w-full h-full object-cover" />
-          </div>
-          <div className="p-8 md:p-12 md:w-2/3 flex flex-col justify-center">
-            <div className="text-4xl text-[#D4A017] mb-4 font-serif">"</div>
-            <p className="text-[#64748B] leading-relaxed mb-6 text-lg">
-              At Mulund College of Commerce, we believe education is not merely about acquiring knowledge but about transforming lives. Our autonomous status empowers us to design a curriculum that is both academically rigorous and industry-relevant, preparing students for the challenges of tomorrow.
-            </p>
-            <div className="border-l-4 border-[#D4A017] pl-4">
-              <p className="font-bold text-[#123B6D] font-[var(--font-heading)]">Dr. Sonali Mahajan</p>
-              <p className="text-sm text-[#94A3B8]">Principal, MCC (Autonomous)</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Milestones */}
+        {/* ── Quick Links Grid ── */}
         <div>
-          <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-8 text-center">Our Milestones</h2>
-          <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-0.5 h-full w-0.5 bg-[#E2E8F0] hidden md:block" />
-            <div className="space-y-6 md:space-y-8">
-              {milestones.map((m, i) => (
-                <div key={m.year} className={`flex gap-6 md:gap-0 md:items-center ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                  <div className={`flex-1 ${i % 2 === 0 ? 'md:text-right md:pr-10' : 'md:text-left md:pl-10'}`}>
-                    <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 inline-block text-left md:text-inherit">
-                      <div className="text-[#D4A017] font-bold text-lg font-[var(--font-heading)]">{m.year}</div>
-                      <div className="font-bold text-[#1E293B] font-[var(--font-heading)]">{m.title}</div>
-                      <div className="text-sm text-[#64748B]">{m.desc}</div>
-                    </div>
-                  </div>
-                  <div className="hidden md:flex w-6 h-6 rounded-full bg-[#123B6D] border-4 border-white shadow z-10 flex-shrink-0" />
-                  <div className="flex-1 hidden md:block" />
+          <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-6">Explore All Sections</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+            {quickLinks.map(({ label, href, icon: Icon, desc }) => (
+              <Link
+                key={label}
+                href={href}
+                className="group bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 hover:border-[#123B6D]/30 transition-all flex items-start gap-4"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#123B6D]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#123B6D] transition-colors">
+                  <Icon size={18} className="text-[#123B6D] group-hover:text-white transition-colors" />
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Management */}
-        <div>
-          <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-6">Management & Leadership</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            {[
-              { name: 'Shri. R.K. Vora', role: 'President', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80' },
-              { name: 'Shri. M.D. Shah', role: 'Secretary', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80' },
-              { name: 'Dr. Sonali Mahajan', role: 'Principal', img: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=200&q=80' },
-              { name: 'Dr. A.B. Kulkarni', role: 'Vice Principal', img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80' },
-            ].map((p) => (
-              <div key={p.name} className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm p-5 text-center hover:shadow-md hover:-translate-y-1 transition-all">
-                <div className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-3 border-2 border-[#E2E8F0]">
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
+                <div>
+                  <p className="font-bold text-[#123B6D] text-sm leading-tight mb-1">{label}</p>
+                  <p className="text-gray-400 text-xs leading-snug">{desc}</p>
                 </div>
-                <p className="font-semibold text-[#1E293B] text-sm font-[var(--font-heading)]">{p.name}</p>
-                <p className="text-xs text-[#94A3B8] mt-1">{p.role}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
+
+        {/* ── Recent Milestones ── */}
+        <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+          <div className="p-8 border-b border-[#E2E8F0] flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Recent Milestones</h2>
+              <p className="text-gray-500 text-sm mt-1">A brief look at our journey of excellence.</p>
+            </div>
+            <Link href="/about/milestones" className="hidden md:inline-flex items-center gap-1 text-sm text-[#123B6D] font-semibold hover:underline">
+              View all milestones <ChevronRight size={15} />
+            </Link>
+          </div>
+          <div className="divide-y divide-[#E2E8F0]">
+            {recentMilestones.map((m) => (
+              <div key={m.year} className="flex items-center gap-5 px-8 py-4 hover:bg-[#F8FAFC] transition-colors">
+                <span className="text-[#D4A017] font-black text-lg w-12 flex-shrink-0 font-[var(--font-heading)]">{m.year}</span>
+                <span className="text-[#1E293B] text-sm">{m.event}</span>
+              </div>
+            ))}
+          </div>
+          <div className="p-5 text-center md:hidden">
+            <Link href="/about/milestones" className="text-sm text-[#123B6D] font-semibold hover:underline inline-flex items-center gap-1">
+              View all milestones <ChevronRight size={15} />
+            </Link>
+          </div>
+        </div>
+
+
+
       </div>
     </div>
   );

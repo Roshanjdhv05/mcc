@@ -106,6 +106,7 @@ export default function NoticeList() {
     const { data, error } = await supabase
       .from('notices')
       .select('*')
+      .eq('is_calendar_only', false)
       .order('schedule_time', { ascending: false });
     if (!error && data) setNotices(data as Notice[]);
     setLoading(false);

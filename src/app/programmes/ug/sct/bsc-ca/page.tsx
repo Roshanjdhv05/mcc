@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 };
 
 const bscCaFaculty = [
-  { srNo: 26, name: 'Dr. Vishal Dnyandeo Borude',  additionalRole: 'Coordinator', designation: 'Assistant Professor' },
-  { srNo: 27, name: 'Mr. Siddhesh Santosh Gotekar', additionalRole: '—',           designation: 'Assistant Professor' },
+  { srNo: 1, name: 'Dr. Vishal Borude', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'B.Sc. CA', education: 'M.Sc.(IT).,Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teachingExp: '0 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
+  { srNo: 2, name: 'Mr. Siddhesh Gotekar', additionalRole: '—', designation: 'Assistant Professor', department: 'B.Sc. CA', education: 'M.Sc.(IT)', email: 'gotekarsiddhesh@gmail.com', teachingExp: '0 yrs', image: '/Degree College Teachers/Siddhesh Gotekar.png' },
 ];
 
 const quickActions = [
@@ -23,8 +23,8 @@ const quickActions = [
 export default function CoursePage() {
   return (
     <CourseTemplate 
-      festivals="Hack-A-Thon (Col)"
-      publication="Tech Anugraha (Col)"
+      festivals="Hack-A-Thon"
+      publication="Tech Anugraha"
       introductionContent={
         <>
         <p className="mb-4">Bachelor of Science (B.Sc.) in Computer Applications is an undergraduate program that blends computer science principles with practical application development. This course is designed to provide students with a strong foundation in programming, software development, database management, networking, and system analysis.</p>
@@ -36,6 +36,7 @@ export default function CoursePage() {
       title="Bachelor of Science (Computer Applications)"
       fundingType="Self Financing"
       courseKey="BSC_CA"
+      shortInfo="An undergraduate program blending computer science principles with practical application development for the modern tech industry."
       category="science"
       facultyData={bscCaFaculty}
       syllabusContent={renderSyllabusTable('BCA')}

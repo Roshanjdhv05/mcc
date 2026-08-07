@@ -640,7 +640,7 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'View Gallery', href: '/Infrastructure-gallery' },
+              { label: 'View Gallery', href: '/infrastructure-gallery' },
               { label: 'Library', href: '/library' },
               { label: 'Auditorium', href: '#' },
               { label: 'Class-Rooms', href: '#' },
@@ -671,7 +671,7 @@ const navLinks = [
     sub: [
       {
         label: 'Infrastructure (Gallery)', href: '#', sub: [
-          { label: 'View Gallery', href: '/Infrastructure-gallery' },
+          { label: 'View Gallery', href: '/infrastructure-gallery' },
           { label: 'Library', href: '/library' },
           { label: 'Auditorium', href: '#' },
           { label: 'Class-Rooms', href: '#' },

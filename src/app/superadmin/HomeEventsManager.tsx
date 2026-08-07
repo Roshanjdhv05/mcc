@@ -41,7 +41,6 @@ function EventCard({
   isArchived,
   onRemoveFromHome,
   onRestoreToHome,
-  onDelete,
 }: {
   event: HomeEvent;
   isArchived: boolean;

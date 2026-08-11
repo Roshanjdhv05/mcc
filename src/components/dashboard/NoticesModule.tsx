@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Download, Bell, Filter, Loader2, FileText, Image as ImageIcon, FileIcon, RefreshCw } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -78,6 +79,7 @@ function timeAgo(iso: string) {
 }
 
 export default function NoticesModule({ courseCode }: { courseCode: string }) {
+  const router = useRouter();
   const [notices,       setNotices]       = useState<Notice[]>([]);
   const [loading,       setLoading]       = useState(true);
   const [refreshing,    setRefreshing]    = useState(false);
@@ -190,11 +192,18 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
             {displayed.map((notice, i) => (
               <motion.div
                 key={notice.id}
+                onClick={() => {
+                  if (notice.categories?.includes('Examinations')) {
+                    router.push('/examination#timetables');
+                  } else {
+                    router.push('/notices');
+                  }
+                }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="bg-white p-4 rounded-2xl shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow"
+                className="bg-white p-4 rounded-2xl shadow-sm border border-[#E2E8F0] hover:shadow-md transition-shadow cursor-pointer"
               >
                 {/* Top row: categories + time */}
                 <div className="flex flex-wrap items-center gap-1.5 mb-2">

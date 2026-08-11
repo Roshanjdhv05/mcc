@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Bell, Calendar, Archive, RefreshCw, ExternalLink, Trash2, Globe,
-  Filter, ChevronDown, Search, Clock, Loader2, FileText, Image, FileIcon
+  Filter, ChevronDown, Search, Clock, Loader2, FileText, Image, FileIcon, Pencil
 } from 'lucide-react';
 import { Notice, NOTICE_CATEGORIES, DEPARTMENTS } from '@/lib/noticeTypes';
 import { supabase } from '@/lib/supabase';
@@ -22,7 +22,7 @@ function AttachmentBadge({ type, name, url }: { type: string; name: string; url:
   );
 }
 
-function NoticeCard({ notice, onDelete }: { notice: Notice; onDelete: (id: string) => void }) {
+function NoticeCard({ notice, onDelete, onEdit }: { notice: Notice; onDelete: (id: string) => void; onEdit: (n: Notice) => void }) {
   const isArchived = notice.expiry_time ? new Date(notice.expiry_time) < new Date() : false;
   const isScheduled = new Date(notice.schedule_time) > new Date();
 
@@ -80,18 +80,28 @@ function NoticeCard({ notice, onDelete }: { notice: Notice; onDelete: (id: strin
             </div>
           )}
         </div>
-        <button
-          onClick={() => notice.id && onDelete(notice.id)}
-          className="flex-shrink-0 text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50"
-        >
-          <Trash2 size={16} />
-        </button>
+        <div className="flex flex-col gap-1 shrink-0">
+          <button
+            onClick={() => onEdit(notice)}
+            className="text-gray-300 hover:text-[#123B6D] transition-colors p-1.5 rounded-lg hover:bg-blue-50"
+            title="Edit notice"
+          >
+            <Pencil size={15} />
+          </button>
+          <button
+            onClick={() => notice.id && onDelete(notice.id)}
+            className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50"
+            title="Delete notice"
+          >
+            <Trash2 size={15} />
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-export default function NoticeList() {
+export default function NoticeList({ onEdit }: { onEdit?: (notice: Notice) => void }) {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'active' | 'scheduled' | 'archive'>('active');
@@ -241,7 +251,7 @@ export default function NoticeList() {
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map(n => <NoticeCard key={n.id} notice={n} onDelete={handleDelete} />)}
+          {filtered.map(n => <NoticeCard key={n.id} notice={n} onDelete={handleDelete} onEdit={onEdit || (() => {})} />)}
         </div>
       )}
     </div>

@@ -37,6 +37,7 @@ function ForumsAndClubsContent() {
   const [clubs, setClubs] = useState<ClubItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeSlug, setActiveSlug] = useState<string>('');
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchClubs = async () => {
@@ -55,6 +56,7 @@ function ForumsAndClubsContent() {
       setLoading(false);
     };
     fetchClubs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -66,6 +68,7 @@ function ForumsAndClubsContent() {
 
   const handleSelect = (slug: string) => {
     setActiveSlug(slug);
+    setMobileDropdownOpen(false);
     router.push(`/students-corner/Forums-and-Clubs?club=${slug}`, { scroll: false });
   };
 
@@ -105,9 +108,69 @@ function ForumsAndClubsContent() {
       ) : clubs.length === 0 ? (
         <div className="flex items-center justify-center py-32 text-gray-400 text-sm">No active forums or clubs found.</div>
       ) : (
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 flex flex-col md:flex-row gap-8">
-          {/* SIDEBAR */}
-          <div className="w-full md:w-1/3 lg:w-1/4 shrink-0">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 py-6 md:py-10 flex flex-col md:flex-row gap-8">
+          {/* ── MOBILE: Dropdown selector ───────────────── */}
+          <div className="md:hidden w-full relative z-30">
+            {/* Trigger */}
+            <button
+              onClick={() => setMobileDropdownOpen((p) => !p)}
+              className="w-full flex items-center justify-between bg-[#123B6D] text-white px-5 py-4 font-bold text-sm tracking-widest uppercase rounded-t-xl"
+            >
+              <span className="flex items-center gap-2 min-w-0">
+                <Users size={16} className="shrink-0 text-blue-200" />
+                <span className="truncate">{activeClub?.name ?? 'Select a Club'}</span>
+              </span>
+              <motion.span
+                animate={{ rotate: mobileDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+                className="shrink-0 ml-3"
+              >
+                <ChevronRight size={18} className="rotate-90" />
+              </motion.span>
+            </button>
+
+            {/* Dropdown panel */}
+            <AnimatePresence initial={false}>
+              {mobileDropdownOpen && (
+                <motion.div
+                  key="mobile-club-dropdown"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22, ease: 'easeInOut' }}
+                  className="overflow-hidden absolute left-0 right-0 bg-white border border-[#E2E8F0] border-t-0 rounded-b-xl shadow-xl z-50"
+                >
+                  <div className="flex flex-col divide-y divide-[#F1F5F9] max-h-[55vh] overflow-y-auto">
+                    {clubs.map((club) => (
+                      <button
+                        key={club.slug}
+                        onClick={() => handleSelect(club.slug)}
+                        className={`flex items-center gap-3 px-5 py-3.5 text-sm font-semibold transition-colors text-left ${
+                          activeSlug === club.slug
+                            ? 'bg-[#EBF3FF] text-[#123B6D]'
+                            : 'text-gray-700 hover:bg-[#F8FAFC] hover:text-[#123B6D]'
+                        }`}
+                      >
+                        <Users size={15} className={`shrink-0 ${activeSlug === club.slug ? 'text-[#123B6D]' : 'text-gray-400'}`} />
+                        <span className="flex-1 text-left">{club.name}</span>
+                        {activeSlug === club.slug && (
+                          <ChevronRight size={14} className="text-[#123B6D] shrink-0" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Bottom border when closed (makes it look like a card) */}
+            {!mobileDropdownOpen && (
+              <div className="h-1 bg-white border border-t-0 border-[#E2E8F0] rounded-b-xl" />
+            )}
+          </div>
+
+          {/* ── DESKTOP: Sidebar ──────────────────────── */}
+          <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 shrink-0">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
               <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm uppercase tracking-wide">
                 Forums &amp; Clubs
@@ -149,13 +212,13 @@ function ForumsAndClubsContent() {
                   )}
 
                   {/* Club Header */}
-                  <div className="p-8 md:p-10 border-b border-gray-100 flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                    <div className="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 bg-blue-100 text-blue-600 border border-blue-200">
-                      <Users size={36} strokeWidth={2} />
+                  <div className="p-6 md:p-10 border-b border-gray-100 flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center shrink-0 bg-blue-100 text-blue-600 border border-blue-200">
+                      <Users size={32} strokeWidth={2} />
                     </div>
                     <div className="flex-1 w-full">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <h2 className="text-3xl md:text-4xl font-black text-gray-900">
+                        <h2 className="text-2xl md:text-4xl font-black text-gray-900">
                           {activeClub.name}
                         </h2>
                         <Link
@@ -188,7 +251,7 @@ function ForumsAndClubsContent() {
                   </div>
 
                   {/* Club Details */}
-                  <div className="p-8 md:p-10 space-y-10">
+                  <div className="p-6 md:p-10 space-y-10">
                     {/* About */}
                     {activeClub.about && (
                       <section>

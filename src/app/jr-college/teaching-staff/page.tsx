@@ -290,10 +290,10 @@ function FlipCard({ teacher }: { teacher: any }) {
             <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
               {teacher.designation}
             </p>
-            <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight">
+            <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight mb-4">
               {teacher.education}
             </div>
-            <div className="absolute bottom-10 w-full flex justify-center z-20 animate-bounce">
+            <div className="mt-auto flex justify-center z-20 animate-bounce">
               <span className="bg-[#123B6D]/10 text-[#123B6D] text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-sm border border-[#123B6D]/20 shadow-sm">
                 Click to flip
               </span>

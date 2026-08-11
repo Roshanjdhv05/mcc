@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Bell, X, Upload, Calendar, Clock, ChevronDown, ChevronUp, CheckSquare, Square, Loader2, CalendarDays, MapPin
 } from 'lucide-react';
@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase';
 interface NoticeFormProps {
   onSuccess?: (notice: Notice) => void;
   onCancel?: () => void;
+  initialData?: Notice;
 }
 
 function MultiSelectChips({
@@ -48,7 +49,8 @@ function MultiSelectChips({
   );
 }
 
-export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
+export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeFormProps) {
+  const isEditMode = !!initialData?.id;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [isGeneral, setIsGeneral] = useState(true);
@@ -63,6 +65,31 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title || '');
+      setDescription(initialData.description || '');
+      setIsGeneral(initialData.is_general ?? true);
+      setSelectedCategories(initialData.categories || []);
+      setSelectedDepts(initialData.departments || []);
+      setSelectedCourses(initialData.courses || []);
+      setSelectedSemesters(initialData.semesters || []);
+      // Convert ISO strings to datetime-local format
+      if (initialData.schedule_time) {
+        const d = new Date(initialData.schedule_time);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        setScheduleTime(d.toISOString().slice(0, 16));
+      }
+      if (initialData.expiry_time) {
+        const d = new Date(initialData.expiry_time);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        setExpiryTime(d.toISOString().slice(0, 16));
+      }
+      setAttachments(initialData.attachments || []);
+    }
+  }, [initialData]);
+
   // Calendar fields
   const [publishCalendar, setPublishCalendar] = useState(false);
   const [calTitleSameAsNotice, setCalTitleSameAsNotice] = useState(true);
@@ -71,6 +98,48 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
   const [calDate, setCalDate] = useState('');
   const [calVenue, setCalVenue] = useState('');
   const [calTime, setCalTime] = useState('');
+
+  // Examination Hub fields
+  const [publishExam, setPublishExam] = useState(false);
+  const [examCategory, setExamCategory] = useState('Time Table Regular Exam');
+  const [examPublishMode, setExamPublishMode] = useState<'all' | 'separate'>('all');
+  const [examCourses, setExamCourses] = useState<string[]>([]);
+  // Per-course upload state (only used in 'separate' mode)
+  const [examCourseUploads, setExamCourseUploads] = useState<Record<string, { file: File | null; displayName: string }>>({});
+  // Single file for 'all' mode
+  const [examFile, setExamFile] = useState<File | null>(null);
+  const [examExpiryTime, setExamExpiryTime] = useState('');
+
+  const EXAM_CATEGORIES = [
+    'Time Table Regular Exam',
+    'Time Table ATKT Exam',
+    'Examination Notice',
+    'Results',
+  ];
+
+  const EXAM_COURSES = [
+    'BCOM', 'BAF', 'BFM', 'BBI', 'BMS', 'BAMMC',
+    'BSCCS', 'BSCIT', 'BSCDS', 'BCA', 'MCOM',
+    'MSCIT', 'MSCFINANCE', 'PhD Programme'
+  ];
+
+  const toggleExamCourse = (course: string) => {
+    setExamCourses(prev => {
+      if (prev.includes(course)) {
+        // Remove from selected and clean up its upload
+        setExamCourseUploads(u => { const next = { ...u }; delete next[course]; return next; });
+        return prev.filter(c => c !== course);
+      } else {
+        // Add and initialise its upload slot
+        setExamCourseUploads(u => ({ ...u, [course]: { file: null, displayName: title.trim() || '' } }));
+        return [...prev, course];
+      }
+    });
+  };
+
+  const updateCourseUpload = (course: string, patch: Partial<{ file: File | null; displayName: string }>) => {
+    setExamCourseUploads(prev => ({ ...prev, [course]: { ...prev[course], ...patch } }));
+  };
 
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,11 +194,9 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
       departments: selectedDepts,
       courses: selectedCourses,
       semesters: selectedSemesters,
-      // If no schedule set, publish immediately (use current time)
       schedule_time: scheduleTime ? new Date(scheduleTime).toISOString() : new Date().toISOString(),
       expiry_time: new Date(expiryTime).toISOString(),
       attachments,
-      // Calendar
       publish_calendar: publishCalendar,
       calendar_title: publishCalendar ? (calTitleSameAsNotice ? title.trim() : calTitle.trim()) : null,
       calendar_category: publishCalendar ? calCategory : null,
@@ -138,6 +205,26 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
       calendar_time: publishCalendar && calTime.trim() ? calTime.trim() : null,
     };
 
+    // --- EDIT MODE: UPDATE ---
+    if (isEditMode && initialData?.id) {
+      const { data, error: dbError } = await supabase
+        .from('notices')
+        .update({ ...payload })
+        .eq('id', initialData.id)
+        .select()
+        .single();
+
+      if (dbError) {
+        setError(dbError.message);
+        setSaving(false);
+        return;
+      }
+      onSuccess?.(data as Notice);
+      setSaving(false);
+      return;
+    }
+
+    // --- CREATE MODE: INSERT ---
     const { data, error: dbError } = await supabase
       .from('notices')
       .insert([{ ...payload, expiry_time: payload.expiry_time || null }])
@@ -146,9 +233,78 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
 
     if (dbError) {
       setError(dbError.message);
-    } else {
-      onSuccess?.(data as Notice);
+      setSaving(false);
+      return;
     }
+
+    // Also publish to Examination Hub if requested
+    if (publishExam) {
+      if (examPublishMode === 'all') {
+        // Single document for all courses
+        let fileUrl = '';
+        if (examFile) {
+          const fileExt = examFile.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+          const { error: uploadErr } = await supabase.storage
+            .from('notice-attachments')
+            .upload(`examination/${fileName}`, examFile);
+          if (uploadErr) {
+            setError(`Failed to upload exam document: ${uploadErr.message}`);
+            setSaving(false);
+            return;
+          }
+          const { data: urlData } = supabase.storage
+            .from('notice-attachments')
+            .getPublicUrl(`examination/${fileName}`);
+          fileUrl = urlData.publicUrl;
+        }
+        await supabase.from('examination_documents').insert({
+          title: title.trim(),
+          category: examCategory,
+          courses: EXAM_COURSES,
+          file_url: fileUrl,
+          file_type: examFile?.type || 'application/pdf',
+          schedule_time: payload.schedule_time,
+          publish_to_notice_board: false,
+          notice_expiry_time: examExpiryTime ? new Date(examExpiryTime).toISOString() : null,
+        });
+      } else {
+        // Separate document per selected course
+        for (const course of examCourses) {
+          const upload = examCourseUploads[course];
+          let fileUrl = '';
+          if (upload?.file) {
+            const fileExt = upload.file.name.split('.').pop();
+            const fileName = `${Date.now()}_${course}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+            const { error: uploadErr } = await supabase.storage
+              .from('notice-attachments')
+              .upload(`examination/${fileName}`, upload.file);
+            if (uploadErr) {
+              setError(`Failed to upload exam document for ${course}: ${uploadErr.message}`);
+              setSaving(false);
+              return;
+            }
+            const { data: urlData } = supabase.storage
+              .from('notice-attachments')
+              .getPublicUrl(`examination/${fileName}`);
+            fileUrl = urlData.publicUrl;
+          }
+          const displayTitle = upload?.displayName?.trim() || title.trim();
+          await supabase.from('examination_documents').insert({
+            title: displayTitle,
+            category: examCategory,
+            courses: [course],
+            file_url: fileUrl,
+            file_type: upload?.file?.type || 'application/pdf',
+            schedule_time: payload.schedule_time,
+            publish_to_notice_board: false,
+            notice_expiry_time: examExpiryTime ? new Date(examExpiryTime).toISOString() : null,
+          });
+        }
+      }
+    }
+
+    onSuccess?.(data as Notice);
     setSaving(false);
   };
 
@@ -156,7 +312,7 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-3xl p-8 border border-[#E2E8F0] shadow-sm">
       <div className="flex items-center justify-between border-b pb-4">
         <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-          <Bell size={20} className="text-[#123B6D]" /> Create New Notice
+          <Bell size={20} className="text-[#123B6D]" /> {isEditMode ? 'Edit Notice' : 'Create New Notice'}
         </h3>
         {onCancel && (
           <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-600">
@@ -442,6 +598,175 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
         </label>
       </div>
 
+      {/* ── Publish to Examination Hub ── */}
+      <div className={`rounded-2xl border-2 transition-all ${
+        publishExam ? 'border-blue-400 bg-blue-50' : 'border-gray-100 bg-white'
+      }`}>
+        <label className="flex items-start gap-3 p-4 cursor-pointer">
+          <button type="button" onClick={() => setPublishExam(v => !v)} className="mt-0.5 flex-shrink-0">
+            {publishExam
+              ? <CheckSquare size={22} className="text-blue-600" />
+              : <Square size={22} className="text-gray-400" />}
+          </button>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 font-bold text-sm text-gray-800">
+              <Upload size={16} className="text-blue-600" /> Also Publish to Examination Hub
+            </div>
+            <p className="text-xs text-gray-500 mt-0.5">
+              This notice will also appear in the Examination Timetables &amp; Documents section under the selected course(s). Upload a PDF file for direct download.
+            </p>
+
+            {publishExam && (
+              <div className="mt-4 space-y-4" onClick={e => e.stopPropagation()}>
+
+                {/* Exam Category */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-2">
+                    Examination Category <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {EXAM_CATEGORIES.map(cat => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setExamCategory(cat)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                          examCategory === cat
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Course Target */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-2">
+                    Course Target <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex gap-4 mb-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" checked={examPublishMode === 'all'} onChange={() => setExamPublishMode('all')} className="w-4 h-4 text-blue-600" />
+                      <span className="text-xs font-medium">All Programmes</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" checked={examPublishMode === 'separate'} onChange={() => setExamPublishMode('separate')} className="w-4 h-4 text-blue-600" />
+                      <span className="text-xs font-medium">Select Specific</span>
+                    </label>
+                  </div>
+                  {examPublishMode === 'separate' && (
+                    <div className="space-y-3">
+                      {/* Course selector grid */}
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 p-3 bg-white border border-gray-200 rounded-xl">
+                        {EXAM_COURSES.map(course => {
+                          const isSelected = examCourses.includes(course);
+                          return (
+                            <button
+                              key={course}
+                              type="button"
+                              onClick={() => toggleExamCourse(course)}
+                              className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
+                                isSelected ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-600 border border-gray-100 hover:bg-gray-100'
+                              }`}
+                            >
+                              {isSelected ? <CheckSquare size={12} /> : <Square size={12} />}
+                              {course}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Per-course upload cards — appear after selection */}
+                      {examCourses.length > 0 && (
+                        <div className="space-y-3 mt-2">
+                          {examCourses.map(course => {
+                            const upload = examCourseUploads[course] || { file: null, displayName: title.trim() };
+                            return (
+                              <div key={course} className="bg-white border border-blue-100 rounded-2xl p-4 space-y-3">
+                                {/* Course header */}
+                                <div className="flex items-center gap-2">
+                                  <span className="inline-flex items-center gap-1.5 text-xs font-black text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
+                                    {course}
+                                  </span>
+                                  <span className="text-[11px] text-gray-400">Upload PDF &amp; set display name</span>
+                                </div>
+
+                                {/* File upload */}
+                                <label className="flex items-center gap-3 border-2 border-dashed border-blue-200 rounded-xl px-4 py-2.5 cursor-pointer hover:border-blue-400 transition-colors bg-blue-50/30">
+                                  <Upload size={15} className="text-blue-500 shrink-0" />
+                                  <span className="text-xs font-medium text-blue-600 truncate">
+                                    {upload.file ? upload.file.name : 'Click to upload PDF'}
+                                  </span>
+                                  <input
+                                    type="file"
+                                    accept="application/pdf"
+                                    className="hidden"
+                                    onChange={e => updateCourseUpload(course, { file: e.target.files?.[0] || null })}
+                                  />
+                                </label>
+
+                                {/* Display name rename */}
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-500 mb-1">Display name in Examination Hub</label>
+                                  <input
+                                    type="text"
+                                    value={upload.displayName}
+                                    onChange={e => updateCourseUpload(course, { displayName: e.target.value })}
+                                    placeholder={`e.g. ${course} Sem 1 Regular Timetable`}
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* PDF Upload — only shown in 'all' mode */}
+                {examPublishMode === 'all' && (
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-2">PDF File (optional)</label>
+                  <label className="flex items-center gap-3 border-2 border-dashed border-blue-200 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-400 transition-colors bg-white">
+                    <Upload size={16} className="text-blue-600" />
+                    <div>
+                      <span className="text-sm font-medium text-blue-600">
+                        {examFile ? examFile.name : 'Click to upload PDF'}
+                      </span>
+                      <span className="text-xs text-gray-400 ml-2">PDF only</span>
+                    </div>
+                    <input type="file" accept="application/pdf" className="hidden"
+                      onChange={e => setExamFile(e.target.files?.[0] || null)} />
+                  </label>
+                </div>
+                )}
+
+                {/* Exam Hub Expiry */}
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-700 mb-1.5">
+                    <Clock size={12} /> Exam Hub Expiry
+                    <span className="font-normal text-gray-400">(optional – independent of notice expiry)</span>
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={examExpiryTime}
+                    onChange={e => setExamExpiryTime(e.target.value)}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Leave blank to keep it in the Examination Hub permanently.</p>
+                </div>
+
+              </div>
+            )}
+          </div>
+        </label>
+      </div>
+
       {/* Attachments */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">Attachments (PDF, DOC, Images)</label>
@@ -484,7 +809,10 @@ export default function NoticeForm({ onSuccess, onCancel }: NoticeFormProps) {
           disabled={saving}
           className="flex-1 py-3 bg-[#123B6D] text-white rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
         >
-          {saving ? <><Loader2 size={16} className="animate-spin" /> Publishing...</> : <><Bell size={16} /> Publish Notice</>}
+          {saving
+            ? <><Loader2 size={16} className="animate-spin" /> {isEditMode ? 'Saving...' : 'Publishing...'}</>
+            : <><Bell size={16} /> {isEditMode ? 'Save Changes' : 'Publish Notice'}</>
+          }
         </button>
       </div>
     </form>

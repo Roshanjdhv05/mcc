@@ -172,6 +172,11 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
   const [activitiesIntros, setActivitiesIntros] = useState<{title: string; intro: string}[]>([]);
   const [openIntroIndex, setOpenIntroIndex] = useState<number | null>(0);
 
+  // Department filters (BCOM only)
+  const BCOM_DEPT_ORDER = ['All', 'IKS', 'Economics', 'Commerce', 'Accountancy', 'Department of English and Indian Languages', 'Business Law', 'Environmental Studies', 'Mathematics'];
+  const [facultyDeptFilter, setFacultyDeptFilter] = useState('All');
+  const [eventsDeptFilter, setEventsDeptFilter] = useState('All');
+
   const slugMap: Record<string, string> = {
     'BCOM': 'bcom', 'BAF': 'baf', 'BBI': 'bbi', 'BFM': 'bfm', 'BMS': 'bcom-ms', 'BBA': 'bcom-ba', 
     'BAMMC': 'bammc', 'BSC_IT': 'bsc-it', 'BCA': 'bca', 'BSC_DS': 'bsc-ds', 'BSC_CS': 'bsc-cs', 
@@ -271,6 +276,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     'Structure',
     'Syllabus',
     'Faculty',
+    ...(courseKey === 'BCOM' ? ['Departments'] : []),
     'Illustrious Alumni',
     'Events & Activities',
     ...(festivalTabName ? [festivalTabName] : []),
@@ -393,13 +399,19 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-row gap-3 pt-4 w-full">
-                <a href="https://enrollonline.co.in/Registration/Apply/MCC" target="_blank" rel="noopener noreferrer" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-[#123B6D] hover:bg-[#0f3059] text-white px-4 md:px-8 py-3 rounded-full text-sm md:text-base font-bold transition-all shadow-md">
+              <div className="flex flex-row gap-3 pt-4 w-full flex-wrap">
+                <a href="https://enrollonline.co.in/Registration/Apply/MCC" target="_blank" rel="noopener noreferrer" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-[#123B6D] hover:bg-[#0f3059] text-white px-4 md:px-6 py-3 rounded-full text-sm md:text-base font-bold transition-all shadow-md">
                   <Send size={16} /> Apply Now
                 </a>
-                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border border-[#E2E8F0] hover:border-[#123B6D] text-[#1E293B] px-4 md:px-8 py-3 rounded-full text-sm md:text-base font-bold transition-colors">
-                  <Download size={16} /> <span className="hidden xs:inline">Download</span> Brochure
+                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border border-[#E2E8F0] hover:border-[#123B6D] text-[#1E293B] px-4 md:px-6 py-3 rounded-full text-sm md:text-base font-bold transition-colors">
+                  <Download size={16} /> <span className="hidden xs:inline">Brochure</span>
                 </button>
+                <Link 
+                  href={`/dashboard?course=${encodeURIComponent(courseKey || title.split(' ')[0])}`} 
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#d97706] text-white px-4 md:px-6 py-3 rounded-full text-sm md:text-base font-bold transition-all shadow-md"
+                >
+                  <Activity size={16} /> Go to Dashboard
+                </Link>
               </div>
             </div>
 
@@ -419,7 +431,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                 <div className="absolute z-20 w-[220px] h-[220px] bg-white rounded-full shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center border-4 border-gray-50/50">
                   <GraduationCap size={40} className="text-[#123B6D] mb-2" strokeWidth={1.5} />
                   <h2 className="text-4xl font-bold text-[#123B6D] text-center px-4 leading-none font-[var(--font-heading)]">
-                    {title.split(' ')[0]}
+                    {courseKey ? courseKey.replace('_', '.') : title.split(' ')[0]}
                   </h2>
                   <div className="w-8 h-0.5 bg-[#F59E0B] mt-3"></div>
                 </div>
@@ -530,12 +542,16 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
               <div className="prose prose-lg max-w-none text-gray-600 prose-headings:text-[#123B6D] prose-a:text-[#3B82F6]">
                 {progData?.overview?.long_description ? (
                   progData.overview.long_description.split('\n').map((p: string, i: number) => p.trim() ? <p key={i} className="mb-4">{p}</p> : null)
+                ) : progData?.overview?.description ? (
+                  <p className="mb-4">{progData.overview.description}</p>
                 ) : dbProgramme?.overview_content && dbProgramme.overview_content.length > 0 ? (
                   dbProgramme.overview_content.map((p: string, i: number) => (
                     <p key={i} className="mb-4">{p}</p>
                   ))
-                ) : (
+                ) : introductionContent ? (
                   introductionContent
+                ) : (
+                  <p>Programme details will be updated here shortly.</p>
                 )}
               </div>
 
@@ -594,12 +610,11 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
             </div>
             ) : activeTab === 'Faculty' ? (
             <div className="bg-white rounded-3xl p-6 md:p-10 border border-[#E2E8F0] shadow-sm">
-              <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] mb-8 flex items-center gap-3">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] mb-4 flex items-center gap-3">
                 <Users size={28} className="text-[#3B82F6]" />
                 Faculty Members
               </h2>
               {(() => {
-                // Prefer Supabase data, fallback to hardcoded props
                 const dynamicFaculty = progData?.faculty && progData.faculty.length > 0
                   ? progData.faculty.map((f: any) => ({
                       srNo: f.sr_no, name: f.name, designation: f.designation,
@@ -608,19 +623,111 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                       email: f.email, image: f.image
                     }))
                   : null;
-                const finalFacultyData = dynamicFaculty || (dbProgramme?.faculty_data?.length > 0 ? dbProgramme.faculty_data : facultyData);
+                const allFaculty = dynamicFaculty || (dbProgramme?.faculty_data?.length > 0 ? dbProgramme.faculty_data : facultyData) || [];
 
-                if (!finalFacultyData || finalFacultyData.length === 0) return (
+                if (allFaculty.length === 0) return (
                   <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                     <Users size={40} className="text-gray-300 mb-3" />
                     <p className="text-gray-500 font-medium">Faculty details are being updated.</p>
                   </div>
                 );
 
+                // Department filter chips (BCOM only)
+                const isBcom = courseKey === 'BCOM';
+                const depts = isBcom ? BCOM_DEPT_ORDER : [];
+                let filtered = isBcom && facultyDeptFilter !== 'All'
+                  ? allFaculty.filter((m: any) => {
+                      const dept = (m.department || '').toLowerCase();
+                      return dept.includes(facultyDeptFilter.toLowerCase()) || facultyDeptFilter.toLowerCase().includes(dept);
+                    })
+                  : allFaculty;
+
+                if (isBcom) {
+                  filtered = [...filtered].sort((a: any, b: any) => {
+                    const deptA = (a.department || '').toLowerCase();
+                    const deptB = (b.department || '').toLowerCase();
+                    
+                    const getOrder = (dept: string) => {
+                      if (!dept) return 999;
+                      const idx = BCOM_DEPT_ORDER.findIndex(d => d !== 'All' && (dept.includes(d.toLowerCase()) || d.toLowerCase().includes(dept)));
+                      return idx === -1 ? 999 : idx;
+                    };
+                    
+                    return getOrder(deptA) - getOrder(deptB);
+                  });
+                }
+
                 return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {finalFacultyData.map((member: any, index: number) => (
-                       <FacultyFlipCard key={member.id || `faculty-${index}`} member={member} programmeName={title} />
+                  <>
+                    {isBcom && (
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {depts.map(d => (
+                          <button
+                            key={d}
+                            onClick={() => setFacultyDeptFilter(d)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border ${
+                              facultyDeptFilter === d
+                                ? 'bg-[#123B6D] text-white border-[#123B6D] shadow-md'
+                                : 'bg-white text-[#64748B] border-[#E2E8F0] hover:border-[#123B6D]/40 hover:text-[#123B6D]'
+                            }`}
+                          >
+                            {d}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {filtered.length === 0 ? (
+                      <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <Users size={40} className="text-gray-300 mb-3" />
+                        <p className="text-gray-500 font-medium">No faculty found for this department.</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {filtered.map((member: any, index: number) => (
+                          <FacultyFlipCard key={member.id || `faculty-${index}`} member={member} programmeName={title} />
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          ) : activeTab === 'Departments' ? (
+            <div className="bg-white rounded-3xl p-6 md:p-10 border border-[#E2E8F0] shadow-sm">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-[#EBF3FF] flex items-center justify-center">
+                  <Building2 className="text-[#123B6D]" size={20} />
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#123B6D]">Departments</h2>
+                  <p className="text-sm text-[#64748B]">Academic departments within the B.Com programme</p>
+                </div>
+              </div>
+              <div className="w-16 h-1 bg-gradient-to-r from-[#123B6D] to-[#3B82F6] rounded-full mb-8" />
+              {(() => {
+                const deptList = progData?.departments && progData.departments.length > 0 ? progData.departments : [];
+                if (deptList.length === 0) return (
+                  <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                    <Building2 size={48} className="text-gray-300 mx-auto mb-3" />
+                    <p className="text-gray-500 font-semibold">Department details are being updated.</p>
+                  </div>
+                );
+                return (
+                  <div className="space-y-4">
+                    {deptList.map((dept: any, idx: number) => (
+                      <div key={dept.id || idx} className="group rounded-2xl border border-[#E2E8F0] hover:border-[#123B6D]/30 hover:shadow-md transition-all duration-300 overflow-hidden">
+                        <div className="flex items-center gap-4 bg-[#F8FAFC] px-6 py-4 border-b border-[#E2E8F0] group-hover:bg-[#EBF3FF]/50 transition-colors">
+                          <div className="w-8 h-8 rounded-lg bg-[#123B6D] flex items-center justify-center shrink-0">
+                            <span className="text-white font-bold text-xs">{idx + 1}</span>
+                          </div>
+                          <h3 className="font-bold text-[#123B6D] text-base">{dept.department_name}</h3>
+                        </div>
+                        {dept.intro_content && (
+                          <div className="px-6 py-4">
+                            <p className="text-gray-600 text-sm leading-relaxed">{dept.intro_content}</p>
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
                 );
@@ -716,28 +823,70 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
           ) : activeTab === 'Events & Activities' ? (
             <div className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-sm">
               {(() => {
-                // Match by category OR programme_section for broader compatibility
                 const allActivities = programmeEvents.filter(
                   ev => ev.category === 'Events & Activities' ||
                         ev.programme_section === 'Events & Activities'
                 );
-                
-                // Legacy fallback if no intro blocks are available
                 const introEvent = allActivities.find(ev => ev.category === 'Events & Activities' && ev.title === 'Activities Intro');
                 const legacyIntroText = introEvent ? introEvent.description : `Events, workshops and activities from ${title}`;
-                
                 const eventsActivities = allActivities.filter(ev => !(ev.category === 'Events & Activities' && ev.title === 'Activities Intro'));
-                // Use directly-fetched activitiesIntros (most reliable), then fall back to progData / dbProgramme
                 const intros = activitiesIntros.length > 0
                   ? activitiesIntros
                   : (progData?.overview?.activities_intros || dbProgramme?.overview?.activities_intros || []);
 
+                // Department filter for BCOM
+                const isBcom = courseKey === 'BCOM';
+                let filteredEvents = isBcom && eventsDeptFilter !== 'All'
+                  ? eventsActivities.filter((ev: any) => {
+                      const dept = (ev.department || ev.programme_section || '').toLowerCase();
+                      return dept.includes(eventsDeptFilter.toLowerCase()) || eventsDeptFilter.toLowerCase().includes(dept);
+                    })
+                  : eventsActivities;
+
+                if (isBcom) {
+                  filteredEvents = [...filteredEvents].sort((a: any, b: any) => {
+                    const deptA = (a.department || a.programme_section || '').toLowerCase();
+                    const deptB = (b.department || b.programme_section || '').toLowerCase();
+                    
+                    const getOrder = (dept: string) => {
+                      if (!dept) return 999;
+                      const idx = BCOM_DEPT_ORDER.findIndex(d => d !== 'All' && (dept.includes(d.toLowerCase()) || d.toLowerCase().includes(dept)));
+                      return idx === -1 ? 999 : idx;
+                    };
+                    
+                    // Sort by department first, then fallback to original sort (by date) if same department
+                    const orderDiff = getOrder(deptA) - getOrder(deptB);
+                    if (orderDiff !== 0) return orderDiff;
+                    
+                    // Fallback to date sort descending
+                    return new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
+                  });
+                }
+
                 return (
                   <>
                     <div className="mb-8">
-                      <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] mb-6">Events &amp; Activities</h2>
-                      {intros.length > 0 ? (
-                        <div className="space-y-3">
+                      <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] mb-4">Events &amp; Activities</h2>
+                      {/* Department filter chips (BCOM only) */}
+                      {isBcom && (
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {BCOM_DEPT_ORDER.map(d => (
+                            <button
+                              key={d}
+                              onClick={() => setEventsDeptFilter(d)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 border ${
+                                eventsDeptFilter === d
+                                  ? 'bg-[#123B6D] text-white border-[#123B6D] shadow-md'
+                                  : 'bg-white text-[#64748B] border-[#E2E8F0] hover:border-[#123B6D]/40 hover:text-[#123B6D]'
+                              }`}
+                            >
+                              {d}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {!isBcom && intros.length > 0 ? (
+                        <div className="space-y-3 mb-6">
                           {intros.map((introBlock: any, i: number) => {
                             const isOpen = openIntroIndex === i;
                             return (
@@ -749,7 +898,6 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                                     : 'border-[#E2E8F0] bg-[#F8FAFC] hover:border-[#123B6D]/20 hover:bg-white'
                                 }`}
                               >
-                                {/* Accordion Header */}
                                 <button
                                   className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left group"
                                   onClick={() => setOpenIntroIndex(isOpen ? null : i)}
@@ -767,26 +915,17 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                                     </span>
                                   </div>
                                   <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 ${
-                                    isOpen
-                                      ? 'bg-[#123B6D] border-[#123B6D] rotate-180'
-                                      : 'bg-white border-[#E2E8F0] rotate-0 group-hover:border-[#123B6D]/40'
+                                    isOpen ? 'bg-[#123B6D] border-[#123B6D] rotate-180' : 'bg-white border-[#E2E8F0] rotate-0 group-hover:border-[#123B6D]/40'
                                   }`}>
                                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                       <path d="M2 4L6 8L10 4" stroke={isOpen ? '#fff' : '#123B6D'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                   </div>
                                 </button>
-
-                                {/* Accordion Body */}
-                                <div
-                                  className="overflow-hidden transition-all duration-500 ease-in-out"
-                                  style={{ maxHeight: isOpen ? '600px' : '0px', opacity: isOpen ? 1 : 0 }}
-                                >
+                                <div className="overflow-hidden transition-all duration-500 ease-in-out" style={{ maxHeight: isOpen ? '600px' : '0px', opacity: isOpen ? 1 : 0 }}>
                                   <div className="px-5 pb-5">
                                     <div className="border-t border-[#E2E8F0] pt-4">
-                                      <p className="text-gray-600 text-base leading-relaxed whitespace-pre-line">
-                                        {introBlock.intro}
-                                      </p>
+                                      <p className="text-gray-600 text-base leading-relaxed whitespace-pre-line">{introBlock.intro}</p>
                                     </div>
                                   </div>
                                 </div>
@@ -794,52 +933,52 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                             );
                           })}
                         </div>
-                      ) : (
-                        <p className="text-gray-600 text-base leading-relaxed max-w-4xl">{legacyIntroText}</p>
-                      )}
+                      ) : !isBcom ? (
+                        <p className="text-gray-600 text-base leading-relaxed max-w-4xl mb-6">{legacyIntroText}</p>
+                      ) : null}
                     </div>
-                    {eventsActivities.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {eventsActivities.map(ev => (
-                      <div
-                        key={ev.id}
-                        onClick={() => { setSelectedEvent(ev); setCurrentImageIndex(0); }}
-                        className="group/card flex flex-col rounded-2xl overflow-hidden border border-[#E2E8F0] bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                      >
-                        <div className="relative h-56 overflow-hidden">
-                          {ev.images && ev.images[0] ? (
-                            <img src={ev.images[0]} alt={ev.title} className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500" />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-[#123B6D]/10 to-[#D4A017]/10 flex items-center justify-center">
-                              <Award className="text-[#D4A017]" size={48} />
+                    {filteredEvents.length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredEvents.map((ev: any) => (
+                          <div
+                            key={ev.id}
+                            onClick={() => { setSelectedEvent(ev); setCurrentImageIndex(0); }}
+                            className="group/card flex flex-col rounded-2xl overflow-hidden border border-[#E2E8F0] bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                          >
+                            <div className="relative h-56 overflow-hidden">
+                              {ev.images && ev.images[0] ? (
+                                <img src={ev.images[0]} alt={ev.title} className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500" />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-[#123B6D]/10 to-[#D4A017]/10 flex items-center justify-center">
+                                  <Award className="text-[#D4A017]" size={48} />
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                              <div className="absolute bottom-4 left-4">
+                                <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
+                                  {new Date(ev.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()}
+                                </span>
+                              </div>
                             </div>
-                          )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                          <div className="absolute bottom-4 left-4">
-                            <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
-                              {new Date(ev.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()}
-                            </span>
+                            <div className="p-5 flex flex-col flex-1">
+                              <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">{ev.title}</h4>
+                              <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 flex-1 mb-4">{ev.description}</p>
+                              <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
+                                View Details <ArrowRight size={16} />
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="p-5 flex flex-col flex-1">
-                          <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">{ev.title}</h4>
-                          <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 flex-1 mb-4">{ev.description}</p>
-                          <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
-                            View Details <ArrowRight size={16} />
-                          </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <Award className="text-[#D4A017] mb-4" size={48} />
-                    <h3 className="text-lg font-bold text-[#123B6D] mb-1">Events &amp; Activities</h3>
-                    <p className="text-gray-500 text-sm">Event photos &amp; highlights will appear here once published by admin.</p>
-                  </div>
-                )}
-                </>
-              );
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <Award className="text-[#D4A017] mb-4" size={48} />
+                        <h3 className="text-lg font-bold text-[#123B6D] mb-1">Events &amp; Activities</h3>
+                        <p className="text-gray-500 text-sm">{isBcom && eventsDeptFilter !== 'All' ? `No events found for ${eventsDeptFilter}.` : 'Event photos & highlights will appear here once published by admin.'}</p>
+                      </div>
+                    )}
+                  </>
+                );
               })()}
 
               {/* Modal */}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,87 +28,118 @@ export interface CategoryItem {
 interface Props {
   title: string;
   subtitle: string;
-  heroImage: string;
+  heroImage?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  HeroIcon: React.ElementType<any>;
-  heroLabel: string;
+  HeroIcon?: React.ElementType<any>;
+  heroLabel?: string;
   categories: CategoryItem[];
   data: Record<string, DataItem[]>;
 }
 
+/* ─── Card grid ─────────────────────────────────────────────── */
 function CardGrid({ items }: { items: DataItem[] }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      {items.map((item, idx) => (
-        <div
-          key={idx}
-          className="bg-white rounded-3xl p-5 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-shadow relative group"
-        >
-          <div className="flex items-start gap-4">
-            <div className="bg-[#EBF3FF] p-3 rounded-full text-[#123B6D] shrink-0">
-              <item.icon size={22} />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-[#1E293B] text-sm leading-snug">{item.title}</h3>
-              {item.description && (
-                <p className="text-xs text-gray-500 mt-1 leading-tight">{item.description}</p>
-              )}
-              {item.links.length > 0 && (
-                <ul className="mt-3 space-y-1.5">
-                  {item.links.map((link, lidx) => (
-                    <li
-                      key={lidx}
-                      className="text-xs font-semibold text-gray-600 hover:text-[#123B6D] cursor-pointer flex items-center gap-1.5 before:content-['•'] before:text-[#D4A017] before:mr-0.5"
-                    >
-                      {link.href ? <Link href={link.href}>{link.label}</Link> : link.label}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {items.map((item, idx) => {
+        const firstLink = item.links[0];
+        return (
           <Link
-            href="#"
-            className="absolute bottom-4 right-4 text-[#123B6D] bg-[#EBF3FF] p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            key={idx}
+            href={firstLink?.href ?? '#'}
+            className="group bg-white border border-[#E8EFF8] rounded-2xl p-4 flex items-center gap-3.5 hover:shadow-md hover:border-[#123B6D]/20 transition-all duration-200"
           >
-            <ChevronRight size={14} />
+            {/* Icon circle */}
+            <div className="w-10 h-10 rounded-xl bg-[#EBF3FF] flex items-center justify-center shrink-0 group-hover:bg-[#123B6D] transition-colors duration-200">
+              <item.icon size={18} className="text-[#123B6D] group-hover:text-white transition-colors duration-200" />
+            </div>
+            {/* Text */}
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-[#1E293B] text-sm leading-snug line-clamp-2 group-hover:text-[#123B6D] transition-colors">
+                {item.title}
+              </p>
+              {item.links.length > 0 && (
+                <p className="text-[11px] text-[#D4A017] font-semibold mt-0.5 flex items-center gap-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] inline-block" />
+                  {firstLink?.label ?? 'View Details'}
+                </p>
+              )}
+            </div>
+            <ChevronRight size={14} className="text-gray-300 group-hover:text-[#123B6D] transition-colors shrink-0" />
           </Link>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
+/* ─── Section header ────────────────────────────────────────── */
+function SectionHeader({
+  cat,
+  viewAllHref,
+}: {
+  cat: CategoryItem;
+  viewAllHref?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-2.5">
+        <div className="bg-[#EBF3FF] p-1.5 rounded-lg text-[#123B6D]">
+          <cat.icon size={16} />
+        </div>
+        <h2 className="text-sm font-black text-[#123B6D] uppercase tracking-widest">
+          {cat.label}
+        </h2>
+      </div>
+      {viewAllHref && (
+        <Link
+          href={viewAllHref}
+          className="flex items-center gap-1 text-xs font-semibold text-[#123B6D] hover:text-[#D4A017] transition-colors"
+        >
+          View All <ChevronRight size={13} />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+/* ─── Main layout ───────────────────────────────────────────── */
 export default function CornerPageLayout({
   title,
   subtitle,
-  heroImage,
-  HeroIcon,
-  heroLabel,
   categories,
   data,
+  HeroIcon,
 }: Props) {
   const [activeDesktop, setActiveDesktop] = useState(categories[0].id);
   const [activeMobile, setActiveMobile] = useState<string | null>('__open__');
   const [showSticky, setShowSticky] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
 
+  /* Observe which section is in view for sidebar highlight */
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+    categories.forEach((cat) => {
+      const el = document.getElementById(cat.id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveDesktop(cat.id); },
+        { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach((o) => o.disconnect());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* Scroll to show sticky bar */
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // 400 is roughly past the hero section
-      if (currentScrollY > 400) {
-        if (currentScrollY < lastScrollY) {
-          setShowSticky(true); // scrolling up
-        } else {
-          setShowSticky(false); // scrolling down
-        }
-      } else {
-        setShowSticky(false); // at top
-      }
-      setLastScrollY(currentScrollY);
+      const y = window.scrollY;
+      setShowSticky(y > 200 && y < lastScrollY);
+      setLastScrollY(y);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
@@ -116,22 +147,25 @@ export default function CornerPageLayout({
   const scrollToCategory = (id: string) => {
     setActiveDesktop(id);
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   };
 
+  /* Mobile dropdown */
   const renderMobileDropdown = (isSticky = false) => (
     <div className={`relative ${isSticky ? '' : 'z-30'}`}>
       <button
         onClick={() => setActiveMobile(activeMobile === '__open__' ? null : '__open__')}
-        className={`w-full flex items-center justify-between bg-[#123B6D] text-white px-5 py-4 font-bold text-sm tracking-widest uppercase ${isSticky ? 'shadow-md' : 'rounded-t-2xl'}`}
+        className={`w-full flex items-center justify-between bg-[#123B6D] text-white px-5 py-3.5 font-bold text-xs tracking-widest uppercase ${isSticky ? 'shadow-md' : 'rounded-t-xl'}`}
       >
         <span>CATEGORIES</span>
         <ChevronDown
-          size={20}
+          size={18}
           className={`transition-transform duration-300 ${activeMobile === '__open__' ? 'rotate-180' : ''}`}
         />
       </button>
-
       <AnimatePresence initial={false}>
         {activeMobile === '__open__' && (
           <motion.div
@@ -139,10 +173,12 @@ export default function CornerPageLayout({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className={`overflow-hidden absolute w-full bg-white border border-[#E2E8F0] shadow-xl ${isSticky ? 'border-t-0 rounded-b-xl' : 'border-t-0 rounded-b-2xl'} z-50`}
+            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            className={`overflow-hidden absolute w-full bg-white border border-[#E2E8F0] shadow-xl ${
+              isSticky ? 'border-t-0 rounded-b-xl' : 'border-t-0 rounded-b-xl'
+            } z-50`}
           >
-            <div className="flex flex-col divide-y divide-[#E2E8F0] max-h-[60vh] overflow-y-auto">
+            <div className="flex flex-col divide-y divide-[#E2E8F0]">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
@@ -151,17 +187,16 @@ export default function CornerPageLayout({
                     setTimeout(() => {
                       const el = document.getElementById(`mob-${cat.id}`);
                       if (el) {
-                        // Custom offset calculation for scrolling
-                        const y = el.getBoundingClientRect().top + window.scrollY - 140; // 80(navbar) + 60(sticky bar)
+                        const y = el.getBoundingClientRect().top + window.scrollY - 140;
                         window.scrollTo({ top: y, behavior: 'smooth' });
                       }
                     }, 300);
                   }}
-                  className="flex items-center gap-3 px-5 py-3.5 text-sm font-semibold text-gray-700 hover:bg-[#EBF3FF] hover:text-[#123B6D] transition-colors text-left"
+                  className="flex items-center gap-3 px-5 py-3 text-sm font-semibold text-gray-700 hover:bg-[#EBF3FF] hover:text-[#123B6D] transition-colors text-left"
                 >
-                  <cat.icon size={17} className="shrink-0 text-[#123B6D]" />
+                  <cat.icon size={16} className="shrink-0 text-[#123B6D]" />
                   <span className="flex-1">{cat.label}</span>
-                  <ChevronRight size={15} className="text-gray-300" />
+                  <ChevronRight size={14} className="text-gray-300" />
                 </button>
               ))}
             </div>
@@ -171,144 +206,94 @@ export default function CornerPageLayout({
     </div>
   );
 
-  const toggleMobile = (id: string) => {
-    setActiveMobile((prev) => (prev === id ? null : id));
-  };
-
   return (
-    <div className="bg-[#F8FAFC] min-h-screen font-sans">
-      {/* ── Hero ── */}
-      <div className="bg-gradient-to-br from-[#F4F8FF] to-white pb-8 md:pb-24 relative overflow-hidden">
-        <div
-          className="absolute top-[-20%] left-[-10%] w-[50%] h-[150%] bg-[#EBF3FF] rounded-full blur-3xl opacity-60 -z-10 transform -rotate-12"
-        />
-        <div
-          className="absolute top-[10%] right-[-5%] w-[40%] h-[120%] bg-[#E8F0FE] rounded-[100px] blur-3xl opacity-60 -z-10 transform rotate-45"
-        />
-        <div
-          className="absolute top-12 left-12 w-32 h-32 opacity-20"
-          style={{ backgroundImage: 'radial-gradient(#123B6D 2px, transparent 2px)', backgroundSize: '16px 16px' }}
-        />
-        <div
-          className="absolute bottom-12 right-12 w-48 h-32 opacity-20"
-          style={{ backgroundImage: 'radial-gradient(#123B6D 2px, transparent 2px)', backgroundSize: '16px 16px' }}
-        />
+    <div className="bg-[#F4F7FB] min-h-screen font-sans">
 
-        <div className="max-w-7xl mx-auto px-4 md:px-12 pt-24 md:pt-32 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-[54px] font-bold text-[#123B6D] leading-tight mb-4 font-[var(--font-heading)]">
-              {title}
-            </h1>
-            <div className="w-16 h-1 bg-[#D4A017] mb-6" />
-            <p className="text-gray-600 text-lg leading-relaxed">{subtitle}</p>
-          </div>
-
-          {/* Desktop Hero Image */}
-          <div className="hidden md:flex relative w-full justify-end items-center h-[380px]">
-            <div className="relative w-[340px] h-[340px] lg:w-[380px] lg:h-[380px] ml-auto">
-              <div
-                className="absolute inset-[-15px] bg-[#D4A017] -z-10 transition-transform duration-700 hover:scale-105"
-                style={{ borderRadius: '35% 65% 55% 45% / 45% 45% 65% 65%' }}
-              />
-              <div
-                className="absolute inset-0 bg-[#123B6D] overflow-hidden"
-                style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }}
-              >
-                <img
-                  src={heroImage}
-                  alt={title}
-                  className="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-700"
-                />
-              </div>
-              <div className="absolute top-[20%] -left-8 bg-white rounded-full p-4 shadow-2xl flex flex-col items-center justify-center w-[100px] h-[100px] border-4 border-[#F8FAFC]">
-                <HeroIcon size={34} className="text-[#123B6D]" />
-                <span className="text-[#1E293B] font-extrabold text-[10px] text-center leading-tight mt-1">
-                  {heroLabel}
-                </span>
-              </div>
+      {/* ── Compact header bar ─────────────────────────────── */}
+      <div className="bg-white border-b border-[#E2E8F0]">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-10 py-6 md:py-8 flex flex-col items-center text-center gap-2">
+          {HeroIcon && (
+            <div className="w-11 h-11 rounded-xl bg-[#EBF3FF] flex items-center justify-center mb-1">
+              <HeroIcon size={22} className="text-[#123B6D]" />
             </div>
-          </div>
+          )}
+          <h1 className="text-2xl md:text-3xl font-black text-[#123B6D] tracking-tight">
+            {title}
+          </h1>
+          <div className="w-10 h-0.5 bg-[#D4A017] rounded-full" />
+          <p className="text-gray-500 text-sm max-w-xl leading-relaxed mt-1">{subtitle}</p>
         </div>
       </div>
 
-      {/* ── Body ── */}
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-10 pb-24 relative">
+      {/* ── Body ─────────────────────────────────────────────── */}
+      <div className="max-w-[1400px] mx-auto px-4 md:px-10 py-8 pb-24">
 
-        {/* ── MOBILE: Categories dropdown bar + full content ── */}
+        {/* Mobile sticky nav */}
+        <AnimatePresence>
+          {showSticky && (
+            <motion.div
+              initial={{ y: '-100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '-100%' }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="fixed top-16 left-0 w-full z-40 px-4 lg:hidden"
+            >
+              {renderMobileDropdown(true)}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── MOBILE layout ──────────────────────────────────── */}
         <div className="lg:hidden mb-8">
-          
-          {/* Fixed Sticky Categories Bar (Only shows on scroll up) */}
-          <AnimatePresence>
-            {showSticky && (
-              <motion.div
-                initial={{ y: '-100%' }}
-                animate={{ y: 0 }}
-                exit={{ y: '-100%' }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="fixed top-20 left-0 w-full z-40 px-4"
-              >
-                {renderMobileDropdown(true)}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Normal In-Flow Categories Bar */}
           {renderMobileDropdown(false)}
-
-          {/* Full content sections - always visible */}
           <div className="mt-6 space-y-10">
             {categories.map((cat) => (
               <div key={cat.id} id={`mob-${cat.id}`} className="scroll-mt-28">
-                <div className="flex items-center gap-3 mb-4 pb-2 border-b border-gray-200">
-                  <div className="bg-[#EBF3FF] p-2 rounded-lg text-[#123B6D]">
-                    <cat.icon size={18} />
-                  </div>
-                  <h2 className="text-base font-bold text-[#123B6D] uppercase">{cat.label}</h2>
-                </div>
+                <SectionHeader cat={cat} />
                 <CardGrid items={data[cat.id] ?? []} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── DESKTOP: Sidebar + scrollable content ── */}
-        <div className="hidden lg:flex gap-8">
+        {/* ── DESKTOP layout: Sidebar + Content ──────────────── */}
+        <div className="hidden lg:flex gap-7" ref={contentRef}>
+
           {/* Sidebar */}
-          <div className="w-[260px] shrink-0 sticky top-24 self-start z-20">
-            <div className="bg-[#123B6D] text-white rounded-t-xl py-4 text-center font-bold text-sm tracking-widest uppercase">
+          <div className="w-[220px] shrink-0 sticky top-24 self-start h-fit">
+            <div className="bg-[#123B6D] text-white rounded-t-xl py-3 text-center font-bold text-[11px] tracking-widest uppercase">
               CATEGORIES
             </div>
-            <div className="bg-white rounded-b-xl border border-t-0 border-[#E2E8F0] shadow-sm flex flex-col p-2">
+            <div className="bg-white rounded-b-xl border border-t-0 border-[#E2E8F0] shadow-sm flex flex-col overflow-hidden">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => scrollToCategory(cat.id)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-colors text-left ${
+                  className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold transition-all duration-150 text-left border-b border-[#F1F5F9] last:border-b-0 ${
                     activeDesktop === cat.id
                       ? 'bg-[#EBF3FF] text-[#123B6D]'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      : 'text-gray-600 hover:bg-[#F8FAFC] hover:text-[#123B6D]'
                   }`}
                 >
-                  <cat.icon size={18} />
-                  <span className="flex-1">{cat.label}</span>
-                  <ChevronRight size={16} className="opacity-40 shrink-0" />
+                  <cat.icon size={16} className="shrink-0" />
+                  <span className="flex-1 text-xs">{cat.label}</span>
+                  <ChevronRight size={14} className={`shrink-0 transition-opacity ${activeDesktop === cat.id ? 'opacity-100 text-[#123B6D]' : 'opacity-30'}`} />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 space-y-12 pb-24">
+          {/* Content sections */}
+          <div className="flex-1 space-y-10 pb-16 min-w-0">
             {categories.map((cat) => (
-              <div key={cat.id} id={cat.id} className="scroll-mt-32">
-                <div className="flex items-center gap-3 mb-6 pb-2 border-b border-gray-200">
-                  <div className="bg-[#EBF3FF] p-2 rounded-lg text-[#123B6D]">
-                    <cat.icon size={20} />
-                  </div>
-                  <h2 className="text-xl font-bold text-[#123B6D] uppercase">{cat.label}</h2>
+              <section key={cat.id} id={cat.id} className="scroll-mt-28">
+                {/* Divider line */}
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="h-px flex-1 bg-[#E2E8F0]" />
                 </div>
+                <SectionHeader cat={cat} />
                 <CardGrid items={data[cat.id] ?? []} />
-              </div>
+              </section>
             ))}
           </div>
         </div>

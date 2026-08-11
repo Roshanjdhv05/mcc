@@ -9,6 +9,7 @@ import type { Notice } from '@/lib/noticeTypes';
 const CATEGORY_COLORS: Record<string, string> = {
   Admissions:     'bg-blue-100 text-blue-700',
   Examinations:   'bg-purple-100 text-purple-700',
+  Examination:    'bg-purple-100 text-purple-700',
   Academics:      'bg-indigo-100 text-indigo-700',
   Scholarships:   'bg-green-100 text-green-700',
   Events:         'bg-amber-100 text-amber-700',
@@ -55,14 +56,43 @@ export default function NoticesPage() {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     const now = new Date().toISOString();
-    const { data } = await supabase
+
+    // Fetch regular notices
+    const { data: regularNotices } = await supabase
       .from('notices')
       .select('*')
       .eq('is_calendar_only', false)
       .lte('schedule_time', now)
       .or(`expiry_time.is.null,expiry_time.gt.${now}`)
       .order('schedule_time', { ascending: false });
-    if (data) setNotices(data as Notice[]);
+
+    // Fetch examination documents cross-published to the notice board
+    const { data: examDocs } = await supabase
+      .from('examination_documents')
+      .select('*')
+      .eq('publish_to_notice_board', true)
+      .lte('schedule_time', now)
+      .or(`notice_expiry_time.is.null,notice_expiry_time.gt.${now}`)
+      .order('schedule_time', { ascending: false });
+
+    // Map examination docs into notice shape
+    const examNotices: Notice[] = (examDocs || []).map((doc: any) => ({
+      id: `exam-${doc.id}`,
+      title: doc.title,
+      description: `Category: ${doc.category}. This document is part of the Examination Hub.`,
+      categories: ['Examination'],
+      courses: doc.courses,
+      is_general: doc.courses.length > 10,
+      schedule_time: doc.schedule_time,
+      expiry_time: doc.notice_expiry_time,
+      attachments: [{ name: doc.title, url: doc.file_url, type: 'pdf' }],
+      is_calendar_only: false,
+    }));
+
+    const combined = [...(regularNotices as Notice[] || []), ...examNotices]
+      .sort((a, b) => new Date(b.schedule_time).getTime() - new Date(a.schedule_time).getTime());
+
+    setNotices(combined);
     if (isRefresh) setRefreshing(false);
     else setLoading(false);
   }, []);

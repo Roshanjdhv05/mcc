@@ -1,24 +1,28 @@
-'use client';
+'use client'; 
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays, Home, FileText, GraduationCap } from 'lucide-react';
+import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays, Home, FileText, GraduationCap, Image as ImageIcon } from 'lucide-react';
+import { Notice } from '@/lib/noticeTypes';
 import NoticeForm from './NoticeForm';
 import NoticeList from './NoticeList';
 import EventPublishForm from '@/app/admin/events/EventPublishForm';
 import EventsList from '@/app/admin/events/EventsList';
 import HomeEventsManager from './HomeEventsManager';
+import HomeBannerManager from './HomeBannerManager';
 import ProgrammesManagerV2 from './ProgrammesManagerV2';
 import CalendarManager from './CalendarManager';
 import StudentsCornerManager from './StudentsCornerManager';
 import StatutoryBodiesManager from './StatutoryBodiesManager';
+import JrCollegeManager from './JrCollegeManager';
+import ExaminationManager from './ExaminationManager';
 
 const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
 
 function SuperAdminContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const tabParam = searchParams.get('tab') as 'overview' | 'notice';
+  const tabParam = searchParams.get('tab') || 'overview';
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -28,9 +32,10 @@ function SuperAdminContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
-  const [activeTab, setActiveTab] = useState<'overview' | 'notice' | 'events' | 'home-events' | 'calendar-management' | 'degree-programmes' | 'programme-management' | 'students-corner' | 'statutory-bodies'>('overview');
+  const [activeTab, setActiveTab] = useState<string>('overview');
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
+  const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
   const [eventsRefreshKey, setEventsRefreshKey] = useState(0);
 
   // Check auth state on mount
@@ -43,15 +48,16 @@ function SuperAdminContent() {
 
   // Sync activeTab with URL param
   useEffect(() => {
-    if (tabParam && (tabParam === 'overview' || tabParam === 'notice')) {
+    if (tabParam) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
 
-  const handleTabChange = (tab: 'overview' | 'notice' | 'events' | 'home-events' | 'calendar-management' | 'degree-programmes' | 'programme-management' | 'students-corner' | 'statutory-bodies') => {
+  const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     setShowNoticeForm(false);
     setShowEventForm(false);
+    setEditingNotice(null);
     router.push(`/superadmin?tab=${tab}`);
   };
 
@@ -114,12 +120,15 @@ function SuperAdminContent() {
               { key: 'overview',            label: 'Overview',             icon: <LayoutDashboard size={18} /> },
               { key: 'notice',              label: 'Notice System',        icon: <Bell size={18} /> },
               { key: 'events',              label: 'Events Publication',   icon: <CalendarDays size={18} /> },
+              { key: 'home-banners',        label: 'Homepage Banners',     icon: <ImageIcon size={18} /> },
               { key: 'home-events',         label: 'Homepage Events',      icon: <Home size={18} /> },
               { key: 'calendar-management', label: 'Calendar Management',  icon: <CalendarDays size={18} /> },
+              { key: 'examination',         label: 'Examination Manager',  icon: <FileText size={18} /> },
               { key: 'programme-management', label: 'Programme Management', icon: <GraduationCap size={18} /> },
               { key: 'students-corner',     label: 'Students Corner',      icon: <LayoutDashboard size={18} /> },
               { key: 'statutory-bodies',    label: 'Statutory Bodies',     icon: <FileText size={18} /> },
               { key: 'degree-programmes',   label: 'Degree Programmes',    icon: <FileText size={18} /> },
+              { key: 'jr-college',          label: 'Jr College',           icon: <GraduationCap size={18} /> },
             ] as const).map(item => (
               <button
                 key={item.key}
@@ -165,6 +174,16 @@ function SuperAdminContent() {
               </div>
             )}
 
+            {/* ── Jr College ── */}
+            {activeTab.startsWith('jr-college') && (
+              <JrCollegeManager />
+            )}
+
+            {/* ── Examination Manager ── */}
+            {activeTab === 'examination' && (
+              <ExaminationManager />
+            )}
+
             {/* ── Notice System ── */}
             {activeTab === 'notice' && (
               <div>
@@ -173,7 +192,7 @@ function SuperAdminContent() {
                     <h2 className="text-xl font-bold text-gray-800">Notice Management</h2>
                     <p className="text-sm text-gray-500">Create, schedule, and manage all notices</p>
                   </div>
-                  {!showNoticeForm ? (
+                  {!showNoticeForm && !editingNotice ? (
                     <button
                       onClick={() => setShowNoticeForm(true)}
                       className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm"
@@ -182,15 +201,16 @@ function SuperAdminContent() {
                     </button>
                   ) : (
                     <button
-                      onClick={() => setShowNoticeForm(false)}
+                      onClick={() => { setShowNoticeForm(false); setEditingNotice(null); }}
                       className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
                     >
-                      <X size={16} /> Close Form
+                      <X size={16} /> {editingNotice ? 'Cancel Edit' : 'Close Form'}
                     </button>
                   )}
                 </div>
 
-                {showNoticeForm && (
+                {/* Create Form */}
+                {showNoticeForm && !editingNotice && (
                   <div className="mb-6">
                     <NoticeForm
                       onSuccess={() => { setShowNoticeForm(false); }}
@@ -199,7 +219,18 @@ function SuperAdminContent() {
                   </div>
                 )}
 
-                <NoticeList />
+                {/* Edit Form */}
+                {editingNotice && (
+                  <div className="mb-6">
+                    <NoticeForm
+                      initialData={editingNotice}
+                      onSuccess={() => { setEditingNotice(null); }}
+                      onCancel={() => setEditingNotice(null)}
+                    />
+                  </div>
+                )}
+
+                <NoticeList onEdit={(notice) => { setShowNoticeForm(false); setEditingNotice(notice); }} />
               </div>
             )}
 
@@ -244,6 +275,11 @@ function SuperAdminContent() {
                   <EventsList refreshKey={eventsRefreshKey} />
                 </div>
               </div>
+            )}
+
+            {/* ── Homepage Banners ── */}
+            {activeTab === 'home-banners' && (
+              <HomeBannerManager />
             )}
 
             {/* ── Homepage Events Manager ── */}

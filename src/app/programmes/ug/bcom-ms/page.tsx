@@ -32,6 +32,7 @@ export default function CoursePage() {
       title="Bachelor of Commerce (Management Studies)"
       shortInfo="A specialized marketing degree designed to build expertise in consumer behavior, digital marketing, brand management, and sales strategies."
       fundingType="Self Financing"
+      courseKey="BMS"
       facultyData={bcomMsFaculty}
     />
   );

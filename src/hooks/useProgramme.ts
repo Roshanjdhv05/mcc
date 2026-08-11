@@ -38,6 +38,9 @@ export interface FullProgrammeData {
     id: string; company_name: string; visit_date?: string;
     description?: string; image?: string; display_order: number;
   }[];
+  departments: {
+    id: string; department_name: string; intro_content: string; display_order: number;
+  }[];
 }
 
 export function useProgramme(slug: string) {
@@ -70,7 +73,7 @@ export function useProgramme(slug: string) {
         // 2. Fetch all related data in parallel
         const [
           { data: ov }, { data: sn }, { data: sm },
-          { data: fc }, { data: al }, { data: iv }
+          { data: fc }, { data: al }, { data: iv }, { data: depts }
         ] = await Promise.all([
           supabase.from('program_overview').select('*').eq('programme_id', pid).single(),
           supabase.from('program_snapshot').select('*').eq('programme_id', pid).single(),
@@ -78,6 +81,7 @@ export function useProgramme(slug: string) {
           supabase.from('program_faculty').select('*').eq('programme_id', pid).order('display_order'),
           supabase.from('program_alumni').select('*').eq('programme_id', pid).order('display_order'),
           supabase.from('program_industrial_visits').select('*').eq('programme_id', pid).order('display_order'),
+          supabase.from('program_departments').select('*').eq('programme_id', pid).order('display_order'),
         ]);
 
         if (!cancelled) {
@@ -92,6 +96,7 @@ export function useProgramme(slug: string) {
             faculty: fc || [],
             alumni: al || [],
             industrial_visits: iv || [],
+            departments: depts || [],
           });
         }
       } catch (e: any) {

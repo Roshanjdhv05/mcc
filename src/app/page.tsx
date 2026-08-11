@@ -606,6 +606,16 @@ function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x') {
 
 export default function HomePage() {
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [liveBanners, setLiveBanners] = useState<{
+    image: string;
+    fit: 'object-cover';
+    badge: string;
+    title: React.ReactNode;
+    desc: string;
+    keepOverlay?: boolean;
+    buttonText?: string;
+    buttonLink?: string;
+  }[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [liveEvents, setLiveEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
   const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
@@ -616,6 +626,30 @@ export default function HomePage() {
   const programmesRef = useMarqueeScroll(-1.2);
   const adminServicesRef = useMarqueeScroll(-1);
   const culturalRef = useMarqueeScroll(1);
+
+  useEffect(() => {
+    async function fetchBanners() {
+      const now = new Date().toISOString();
+      const { data } = await supabase
+        .from('home_banners')
+        .select('*')
+        .or(`expiry_date.is.null,expiry_date.gte.${now}`)
+        .order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        setLiveBanners(data.map((b: any) => ({
+          image: b.image_url,
+          fit: 'object-cover' as const,
+          badge: b.title,
+          title: b.title,
+          desc: b.short_info || '',
+          keepOverlay: b.keep_black_overlay,
+          buttonText: b.button_text || null,
+          buttonLink: b.button_link || null,
+        })));
+      }
+    }
+    fetchBanners();
+  }, []);
 
   useEffect(() => {
     async function fetchNotices() {
@@ -709,12 +743,21 @@ export default function HomePage() {
   const displayNotices = notices.length > 0 ? notices : demoNotices;
   const hasEnoughNotices = displayNotices.length >= 4;
 
+  // Always show the default welcome banner first, then append live DB banners after it
+  const defaultBanner = {
+    ...heroBanners[0],
+    keepOverlay: true,
+    buttonText: null as string | null,
+    buttonLink: null as string | null,
+  };
+  const displayBanners = [defaultBanner, ...liveBanners];
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % heroBanners.length);
+      setCurrentBanner((prev) => (prev + 1) % displayBanners.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [displayBanners.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -738,16 +781,18 @@ export default function HomePage() {
           <AnimatePresence>
             <motion.img
               key={currentBanner}
-              src={heroBanners[currentBanner].image}
+              src={displayBanners[currentBanner % displayBanners.length]?.image}
               alt="MCC Campus"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.5 }}
-              className={`absolute inset-0 w-full h-full ${heroBanners[currentBanner].fit}`}
+              className={`absolute inset-0 w-full h-full ${displayBanners[currentBanner % displayBanners.length]?.fit}`}
             />
           </AnimatePresence>
-          <div className="absolute inset-0 bg-black/40 z-10" />
+          {displayBanners[currentBanner % displayBanners.length]?.keepOverlay !== false && (
+            <div className="absolute inset-0 bg-black/40 z-10" />
+          )}
         </div>
         {/* Floating background shapes */}
         <motion.div
@@ -773,31 +818,45 @@ export default function HomePage() {
             >
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium mb-6 border border-white/30">
                 <span className="w-2 h-2 bg-[#D4A017] rounded-full animate-pulse" />
-                {heroBanners[currentBanner].badge}
+                {displayBanners[currentBanner % displayBanners.length]?.badge}
               </span>
               <h1 className="text-4xl md:text-6xl font-bold text-white mb-5 leading-tight font-[var(--font-heading)]">
-                {heroBanners[currentBanner].title}
+                {displayBanners[currentBanner % displayBanners.length]?.title}
               </h1>
               <p className="text-white/85 text-lg md:text-xl mb-8 leading-relaxed">
-                {heroBanners[currentBanner].desc}
+                {displayBanners[currentBanner % displayBanners.length]?.desc}
               </p>
               <div className="flex flex-wrap gap-4 justify-start">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/admissions"
-                    className="px-8 py-3.5 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg shadow-[#D4A017]/30 flex items-center gap-2"
-                  >
-                    Apply Now <ArrowRight size={18} />
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/programmes"
-                    className="px-8 py-3.5 bg-white/15 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/40 hover:bg-white/25 transition-all flex items-center gap-2"
-                  >
-                    Explore Programmes
-                  </Link>
-                </motion.div>
+                {/* Dynamic CTA button if set, else show default buttons */}
+                {displayBanners[currentBanner % displayBanners.length]?.buttonText && displayBanners[currentBanner % displayBanners.length]?.buttonLink ? (
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Link
+                      href={displayBanners[currentBanner % displayBanners.length]!.buttonLink!}
+                      className="px-8 py-3.5 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg shadow-[#D4A017]/30 flex items-center gap-2"
+                    >
+                      {displayBanners[currentBanner % displayBanners.length]!.buttonText} <ArrowRight size={18} />
+                    </Link>
+                  </motion.div>
+                ) : (
+                  <>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Link
+                        href="/admissions"
+                        className="px-8 py-3.5 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg shadow-[#D4A017]/30 flex items-center gap-2"
+                      >
+                        Apply Now <ArrowRight size={18} />
+                      </Link>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Link
+                        href="/programmes"
+                        className="px-8 py-3.5 bg-white/15 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/40 hover:bg-white/25 transition-all flex items-center gap-2"
+                      >
+                        Explore Programmes
+                      </Link>
+                    </motion.div>
+                  </>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>

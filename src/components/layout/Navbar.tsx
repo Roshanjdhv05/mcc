@@ -57,7 +57,8 @@ const navLinks = [
           {
             links: [
               { label: "Principal's Desk", href: '/principal' },
-              { label: "Vice Principal's Desk", href: '/vice-principal' },
+              { label: "Vice Principal's Desk (Degree College)", href: '/vice-principal-degree' },
+              { label: "Vice Principal's Desk (Junior College)", href: '/vice-principal-junior' },
             ]
           }
         ]
@@ -90,7 +91,8 @@ const navLinks = [
       { label: 'PTVA Trust', href: '/about/ptva-trust' },
       { label: 'Board of Trustees', href: '/about/board-of-trustees' },
       { label: "Principal's Desk", href: '/principal' },
-      { label: "Vice Principal's Desk", href: '/vice-principal' },
+      { label: "Vice Principal's Desk (Degree College)", href: '/vice-principal-degree' },
+      { label: "Vice Principal's Desk (Junior College)", href: '/vice-principal-junior' },
       { label: 'Our Milestones', href: '/about/milestones' },
       { label: 'Organogram', href: '/about/organogram' },
       { label: 'Code of Conduct', href: '/about/code-of-conduct' },
@@ -114,45 +116,61 @@ const navLinks = [
       {
         title: 'Certificates',
         sections: [
-          { links: [{ label: '2 B – Certificate', href: '/accreditation/2b-certificate' }, { label: '12 F – Certificate', href: '/accreditation/12f-certificate' }, { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' }] }
+          { links: [
+            { label: 'UGC 2(f) & 12(B)', href: '/accreditation/certificates/ugc-2f-12b' },
+            { label: 'Autonomy', href: '/accreditation/certificates/autonomy' },
+            { label: 'NAAC Certificate', href: '/accreditation/certificates/naac' },
+            { label: 'NIRF', href: '/accreditation/certificates/nirf' },
+            { label: 'AISHE', href: '/accreditation/certificates/aishe' }
+          ] }
         ]
       },
       {
         title: 'NAAC',
         sections: [
-          { links: [{ label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }] }
+          { 
+            subTitle: 'SSR',
+            links: [
+              { label: '4th NAAC Cycle', href: '/accreditation/naac' },
+              { label: '3rd NAAC Cycle', href: '/accreditation/naac' }
+            ]
+          }
         ]
       },
       {
-        title: 'NIRF',
+        title: 'AQAR',
         sections: [
-          { links: [{ label: 'Annual Submissions', href: '/accreditation/nirf/annual-submissions' }] }
-        ]
-      },
-      {
-        title: 'AISHE',
-        sections: [
-          { links: [{ label: 'Annual Submissions', href: '/accreditation/aishe/annual-submissions' }] }
+          { links: [
+            { label: '2024-2025', href: '/accreditation/aqar' },
+            { label: '2023-2024', href: '/accreditation/aqar' },
+            { label: '2022-2023', href: '/accreditation/aqar' },
+            { label: '2021-2022', href: '/accreditation/aqar' }
+          ] }
         ]
       }
     ],
     sub: [
-      { label: '2 B – Certificate', href: '/accreditation/2b-certificate' },
-      { label: '12 F – Certificate', href: '/accreditation/12f-certificate' },
-      { label: 'Conferment of Autonomy (Certificate)', href: '/autonomous/Conferment-of-Autonomy' },
       { 
-        label: 'NAAC', href: '#', sub: [
-          { label: 'Certificates of Accreditations', href: '/accreditation/naac/certificates' }
+        label: 'Certificates', href: '#', sub: [
+          { label: 'UGC 2(f) & 12(B)', href: '/accreditation/certificates/ugc-2f-12b' },
+          { label: 'Autonomy', href: '/accreditation/certificates/autonomy' },
+          { label: 'NAAC Certificate', href: '/accreditation/certificates/naac' },
+          { label: 'NIRF', href: '/accreditation/certificates/nirf' },
+          { label: 'AISHE', href: '/accreditation/certificates/aishe' }
+        ]
+      },
+      { 
+        label: 'NAAC', href: '/accreditation/naac', sub: [
+          { label: '4th NAAC Cycle', href: '/accreditation/naac' },
+          { label: '3rd NAAC Cycle', href: '/accreditation/naac' }
         ]
       },
       {
-        label: 'NIRF', href: '#', sub: [
-          { label: 'Annual Submissions', href: '/accreditation/nirf/annual-submissions' }
-        ]
-      },
-      {
-        label: 'AISHE', href: '#', sub: [
-          { label: 'Annual Submissions', href: '/accreditation/aishe/annual-submissions' }
+        label: 'AQAR', href: '/accreditation/aqar', sub: [
+          { label: '2024-2025', href: '/accreditation/aqar' },
+          { label: '2023-2024', href: '/accreditation/aqar' },
+          { label: '2022-2023', href: '/accreditation/aqar' },
+          { label: '2021-2022', href: '/accreditation/aqar' }
         ]
       }
     ]
@@ -292,7 +310,6 @@ const navLinks = [
   },
   {
     label: 'Jr. College', href: '/junior-college-corner', icon: <BookOpen size={18} />, sub: [
-      { label: "Vice Principal's Desk", href: '/jr-college/vice-principal' },
       { label: 'Teaching Staff', href: '/jr-college/teaching-staff' },
       { label: 'Result Analysis', href: '/jr-college/result-analysis' },
       { label: 'SMAF/Scholarship/Freeship', href: '/jr-college/scholarships' },
@@ -1046,9 +1063,11 @@ export default function Navbar() {
                                 const d = Math.floor(diff / 86400000);
                                 return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h} hour${h > 1 ? 's' : ''} ago` : 'Just now';
                               })();
+                              const isExam = n.categories?.includes('Examinations');
+                              const href = isExam ? '/examination#timetables' : '/notices';
                               return (
                                 <Link
-                                  href="/notices"
+                                  href={href}
                                   key={n.id}
                                   onClick={() => setNoticesOpen(false)}
                                   className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
@@ -1412,13 +1431,15 @@ export default function Navbar() {
                             const d = Math.floor(diff / 86400000);
                             return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h} hour${h > 1 ? 's' : ''} ago` : 'Just now';
                           })();
-                          return (
-                            <Link
-                              href="/notices"
-                              key={n.id}
-                              onClick={() => setNoticesOpen(false)}
-                              className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
-                            >
+                            const isExam = n.categories?.includes('Examinations');
+                            const href = isExam ? '/examination#timetables' : '/notices';
+                            return (
+                              <Link
+                                href={href}
+                                key={n.id}
+                                onClick={() => setNoticesOpen(false)}
+                                className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
+                              >
                               <div className="flex justify-between items-start gap-2">
                                 <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
                               </div>

@@ -32,6 +32,9 @@ interface ProgramFaculty {
   additional_role?: string; department?: string; education?: string;
   teaching_exp?: string; email?: string; image?: string; display_order: number;
 }
+interface ProgramDepartment {
+  id?: string; department_name: string; intro_content: string; display_order: number;
+}
 interface ProgramAlumni {
   id?: string; name: string; programme_name?: string; year?: string;
   designation?: string; organisation?: string; about?: string;
@@ -48,7 +51,7 @@ interface ProgrammeEvent {
   status: string;
 }
 
-type TabKey = 'overview' | 'snapshot' | 'structure' | 'syllabus' | 'faculty' | 'alumni' | 'visits' | 'festivals' | 'publications' | 'activities';
+type TabKey = 'overview' | 'snapshot' | 'structure' | 'syllabus' | 'faculty' | 'departments' | 'alumni' | 'visits' | 'festivals' | 'publications' | 'activities';
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
   { key: 'overview',    label: 'Overview',            icon: <LayoutDashboard size={15} /> },
@@ -56,6 +59,7 @@ const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
   { key: 'structure',  label: 'Structure',            icon: <LayoutGrid size={15} /> },
   { key: 'syllabus',   label: 'Syllabus',             icon: <BookOpen size={15} /> },
   { key: 'faculty',    label: 'Faculty',              icon: <UserCircle size={15} /> },
+  { key: 'departments',label: 'Departments',          icon: <Building2 size={15} /> },
   { key: 'alumni',       label: 'Illustrious Alumni',   icon: <Trophy size={15} /> },
   { key: 'visits',       label: 'Industrial Visits',    icon: <Building2 size={15} /> },
   { key: 'festivals',    label: 'Festivals',            icon: <Image size={15} /> },
@@ -186,6 +190,8 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
   const [expandedSem, setExpandedSem] = useState<number | null>(null);
   // Faculty
   const [faculty, setFaculty] = useState<ProgramFaculty[]>([]);
+  // Departments
+  const [departments, setDepartments] = useState<ProgramDepartment[]>([]);
   // Alumni
   const [alumni, setAlumni] = useState<ProgramAlumni[]>([]);
   // Industrial Visits
@@ -209,7 +215,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
     const load = async () => {
       const [
         { data: ov }, { data: sn },
-        { data: sm }, { data: fc },
+        { data: sm }, { data: fc }, { data: depts },
         { data: al }, { data: iv },
         { data: evData }
       ] = await Promise.all([
@@ -217,6 +223,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         supabase.from('program_snapshot').select('*').eq('programme_id', pid).single(),
         supabase.from('program_semesters').select('*, program_subjects(*)').eq('programme_id', pid).order('semester_number'),
         supabase.from('program_faculty').select('*').eq('programme_id', pid).order('display_order'),
+        supabase.from('program_departments').select('*').eq('programme_id', pid).order('display_order'),
         supabase.from('program_alumni').select('*').eq('programme_id', pid).order('display_order'),
         supabase.from('program_industrial_visits').select('*').eq('programme_id', pid).order('display_order'),
         supabase.from('events').select('*').eq('publish_programme', true).eq('status', 'published').order('published_at', { ascending: false }),
@@ -228,6 +235,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       if (sn) setSnapshot({ duration: sn.duration || '', semesters: sn.semesters || 6, timing: sn.timing || '', intake: sn.intake || 0, mode: sn.mode || 'Full Time' });
       if (sm) setSemesters(sm.map((s: any) => ({ ...s, subjects: (s.program_subjects || []).sort((a: any, b: any) => a.display_order - b.display_order) })));
       if (fc) setFaculty(fc);
+      if (depts) setDepartments(depts);
       if (al) setAlumni(al);
       if (iv) setVisits(iv);
       if (evData) {
@@ -270,10 +278,12 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       }
 
       // 2. Upsert overview
-      await supabase.from('program_overview').upsert({ programme_id: pid, ...overview, activities_intros: activitiesIntros }, { onConflict: 'programme_id' });
+      const { error: ovErr } = await supabase.from('program_overview').upsert({ programme_id: pid, ...overview, activities_intros: activitiesIntros }, { onConflict: 'programme_id' });
+      if (ovErr) throw new Error(`Overview Save Error: ${ovErr.message}`);
 
       // 3. Upsert snapshot
-      await supabase.from('program_snapshot').upsert({ programme_id: pid, ...snapshot }, { onConflict: 'programme_id' });
+      const { error: snapErr } = await supabase.from('program_snapshot').upsert({ programme_id: pid, ...snapshot }, { onConflict: 'programme_id' });
+      if (snapErr) throw new Error(`Snapshot Save Error: ${snapErr.message}`);
 
       // 4. Curriculum – delete + re-insert semesters and subjects
       await supabase.from('program_semesters').delete().eq('programme_id', pid);
@@ -297,6 +307,15 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       if (faculty.length > 0) {
         await supabase.from('program_faculty').insert(faculty.map((f, i) => {
           const { id, programme_id, ...rest } = f as any;
+          return { ...rest, programme_id: pid, display_order: i };
+        }));
+      }
+
+      // 5.5. Departments – delete + re-insert
+      await supabase.from('program_departments').delete().eq('programme_id', pid);
+      if (departments.length > 0) {
+        await supabase.from('program_departments').insert(departments.map((d, i) => {
+          const { id, programme_id, ...rest } = d as any;
           return { ...rest, programme_id: pid, display_order: i };
         }));
       }
@@ -387,6 +406,11 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
   const addFaculty = () => setFaculty(prev => [...prev, { name: '', designation: '', additional_role: '', department: '', education: '', teaching_exp: '', email: '', image: '', display_order: prev.length }]);
   const removeFaculty = (i: number) => setFaculty(prev => prev.filter((_, idx) => idx !== i));
   const updateFaculty = (i: number, field: keyof ProgramFaculty, val: string) => setFaculty(prev => { const c = [...prev]; c[i] = { ...c[i], [field]: val }; return c; });
+
+  // ─── Department helpers ─────────────────────────────────────────────────────
+  const addDepartment = () => setDepartments(prev => [...prev, { department_name: '', intro_content: '', display_order: prev.length }]);
+  const removeDepartment = (i: number) => setDepartments(prev => prev.filter((_, idx) => idx !== i));
+  const updateDepartment = (i: number, field: keyof ProgramDepartment, val: string) => setDepartments(prev => { const c = [...prev]; c[i] = { ...c[i], [field]: val }; return c; });
 
   // ─── Alumni helpers ──────────────────────────────────────────────────────
   const addAlumni = () => setAlumni(prev => [...prev, { name: '', programme_name: '', year: '', designation: '', organisation: '', about: '', linkedin: '', image: '', initials: '', display_order: prev.length }]);
@@ -505,23 +529,26 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       <div className="flex flex-1 min-h-0">
         {/* ── Sidebar Tabs ── */}
         <div className="w-56 bg-white border-r border-gray-200 py-4 flex flex-col gap-1 flex-shrink-0 overflow-y-auto">
-          {TABS.map((tab, idx) => (
-            <React.Fragment key={tab.key}>
-              {idx === 7 && <div className="mx-3 my-1 border-t border-gray-100" />}
-              <button onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-2.5 mx-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left ${
-                  activeTab === tab.key
-                    ? tab.key === 'festivals'
-                      ? 'bg-amber-50 text-amber-700'
-                      : tab.key === 'publications'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'bg-[#123B6D]/10 text-[#123B6D]'
-                    : 'text-gray-600 hover:bg-gray-50'
-                }`}>
-                {tab.icon} {tab.label}
-              </button>
-            </React.Fragment>
-          ))}
+          {TABS.map((tab, idx) => {
+            if (tab.key === 'departments' && adminCode !== 'B.COM' && adminCode !== 'BCOM') return null;
+            return (
+              <React.Fragment key={tab.key}>
+                {tab.key === 'festivals' && <div className="mx-3 my-1 border-t border-gray-100" />}
+                <button onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-2.5 mx-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left ${
+                    activeTab === tab.key
+                      ? tab.key === 'festivals'
+                        ? 'bg-amber-50 text-amber-700'
+                        : tab.key === 'publications'
+                          ? 'bg-blue-50 text-blue-700'
+                          : 'bg-[#123B6D]/10 text-[#123B6D]'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}>
+                  {tab.icon} {tab.label}
+                </button>
+              </React.Fragment>
+            );
+          })}
         </div>
 
         {/* ── Main Panel ── */}
@@ -740,6 +767,48 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                     <div><Label>Teaching Experience</Label><Input value={f.teaching_exp || ''} onChange={v => updateFaculty(i, 'teaching_exp', v)} placeholder="e.g. 12 Years" /></div>
                     <div><Label>Email</Label><Input value={f.email || ''} onChange={v => updateFaculty(i, 'email', v)} placeholder="faculty@mcc.edu.in" type="email" /></div>
                     <div className="col-span-2"><ImageUpload label="Faculty Photo" value={f.image || ''} onChange={v => updateFaculty(i, 'image', v)} folder="faculty" shape="square" /></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ═══════════════════════════════════════════ DEPARTMENTS (B.COM ONLY) ═══ */}
+          {activeTab === 'departments' && (
+            <div className="space-y-4 max-w-4xl">
+              <div className="flex items-center justify-between border-b pb-3">
+                <h3 className="font-bold text-[#123B6D] text-lg">Departments</h3>
+                <div className="flex gap-2">
+                  <button onClick={() => {
+                    const defaultDepts = ["IKS", "Economics", "Commerce", "Accountancy", "Department of English and Indian Languages", "Business Law", "Environmental Studies", "Mathematics"];
+                    const existingNames = departments.map(d => d.department_name);
+                    const newDepts = defaultDepts.filter(name => !existingNames.includes(name)).map((name, idx) => ({
+                      department_name: name, intro_content: '', display_order: departments.length + idx
+                    }));
+                    if (newDepts.length > 0) setDepartments(prev => [...prev, ...newDepts]);
+                  }} className="flex items-center gap-2 bg-gray-200 text-gray-700 text-sm font-bold px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors">
+                    <Sparkles size={14} /> Add Defaults
+                  </button>
+                  <button onClick={addDepartment} className="flex items-center gap-2 bg-[#123B6D] text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-[#0f2f5a] transition-colors">
+                    <Plus size={14} /> Add Department
+                  </button>
+                </div>
+              </div>
+              {departments.length === 0 && (
+                <div className="text-center py-16 text-gray-400">
+                  <Building2 size={48} className="mx-auto mb-3 opacity-30" />
+                  <p className="font-medium">No departments added yet.</p>
+                </div>
+              )}
+              {departments.map((d, i) => (
+                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-bold text-gray-700 text-sm">{d.department_name || `Department ${i + 1}`}</span>
+                    <button onClick={() => removeDepartment(i)} className="text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"><Trash2 size={14} /></button>
+                  </div>
+                  <div className="space-y-4">
+                    <div><Label>Department Name</Label><Input value={d.department_name} onChange={v => updateDepartment(i, 'department_name', v)} placeholder="e.g. Economics" /></div>
+                    <div><Label>Introduction Content</Label><Textarea value={d.intro_content || ''} onChange={v => updateDepartment(i, 'intro_content', v)} rows={4} placeholder="Department Introduction..." /></div>
                   </div>
                 </div>
               ))}

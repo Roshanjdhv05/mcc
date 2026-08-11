@@ -1,54 +1,15 @@
 "use client";
 
 import PGCourseTemplate from '@/components/layout/PGCourseTemplate';
-import { CheckCircle2 } from 'lucide-react';
+import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-interface Props {
-  syllabusContent: React.ReactNode;
-}
-
-const coordinators = [
-  {
-    name: 'Dr. Shivaji Pawar',
-    designation: 'Vice-Principal & Co-ordinator, M.Com (BM)',
-    education: 'M.A., B.Ed., M.Phil., Ph.D., NET',
-    email: 'shivaji.pawar@mccmulund.ac.in',
-  },
-];
-
-export default function MComBMPageClient({ syllabusContent }: Props) {
-
-
+export default function MComBMPageClient() {
   return (
     <PGCourseTemplate
-      title="M.Com (Business Management)"
+      title="Master of Commerce (Business Management)"
       fundingType="Self Financing"
-      seats="60"
-      timing="05:30 PM – 08:30 PM"
-      coordinators={coordinators}
-
-      syllabusContent={syllabusContent}
-      introductionContent={
-        <>
-          <p className="mb-4">
-            Mulund College of Commerce (MCC) started <strong>M.Com (Business Management)</strong> as a specialisation in the academic year 2012–13 to enable students to select the course of their choice. It is a Self-Finance Course (SFC) offered as an evening programme.
-          </p>
-          <p className="mb-4">
-            The post-graduate centre provides all essential facilities. The library is fully computerised and well-equipped with text books, reference books, journals and books on various competitive examinations. The teaching staff is well-experienced and qualified, helping the college achieve excellent results, consistently topping the university merit list.
-          </p>
-          <p className="mb-4">
-            Faculties also mentor students about career planning, placement guidance, and competitive examinations. A professional counsellor is appointed to support students regarding academic and personal problems. Being an evening course, it provides opportunities for working students to pursue further education.
-          </p>
-          <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
-          <ul className="space-y-3 mb-6">
-            <li className="flex items-start gap-2 text-sm font-medium text-gray-700">
-              <CheckCircle2 className="text-[#3B82F6] shrink-0 mt-0.5 fill-[#EBF3FF]" size={16} />
-              <span className="leading-snug">Must have passed the <strong>Bachelor of Commerce</strong> examination conducted by any University in Maharashtra.</span>
-            </li>
-          </ul>
-        </>
-      }
+      courseKey="mcom-bm"
+      syllabusContent={<SyllabusRenderer programKey="MCOM_BM" />}
     />
   );
 }
-

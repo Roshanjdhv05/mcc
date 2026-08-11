@@ -206,5 +206,70 @@
     "alumni_data": [],
     "festivals_tab_name": "",
     "publication_tab_name": ""
+  },
+  {
+    "course_key": "MCOM_AA",
+    "title": "Master of Commerce (Advanced Accountancy)",
+    "short_info": "Advanced studies in accountancy, taxation, and auditing, preparing students for high-level roles in finance and accounting.",
+    "category": "Postgraduate",
+    "funding_type": "Self Financing",
+    "overview_content": [],
+    "programme_snapshot": [],
+    "faculty_data": [],
+    "alumni_data": [],
+    "festivals_tab_name": "",
+    "publication_tab_name": ""
+  },
+  {
+    "course_key": "MCOM_BM",
+    "title": "Master of Commerce (Business Management)",
+    "short_info": "Focuses on strategic management, organizational behavior, and leadership skills for future business leaders and entrepreneurs.",
+    "category": "Postgraduate",
+    "funding_type": "Self Financing",
+    "overview_content": [],
+    "programme_snapshot": [],
+    "faculty_data": [],
+    "alumni_data": [],
+    "festivals_tab_name": "",
+    "publication_tab_name": ""
+  },
+  {
+    "course_key": "MCOM_BF",
+    "title": "Master of Commerce (Banking & Finance)",
+    "short_info": "Specialized postgraduate programme covering advanced concepts in banking, financial markets, and investment management.",
+    "category": "Postgraduate",
+    "funding_type": "Self Financing",
+    "overview_content": [],
+    "programme_snapshot": [],
+    "faculty_data": [],
+    "alumni_data": [],
+    "festivals_tab_name": "",
+    "publication_tab_name": ""
+  },
+  {
+    "course_key": "MSF",
+    "title": "Master of Science in Finance",
+    "short_info": "An advanced programme offering deep insights into financial analytics, corporate finance, and global financial systems.",
+    "category": "Postgraduate",
+    "funding_type": "Self Financing",
+    "overview_content": [],
+    "programme_snapshot": [],
+    "faculty_data": [],
+    "alumni_data": [],
+    "festivals_tab_name": "",
+    "publication_tab_name": ""
+  },
+  {
+    "course_key": "MSC_IT",
+    "title": "Master of Science (Information Technology)",
+    "short_info": "Advanced studies in software development, data science, networking, and modern IT infrastructure to build tech experts.",
+    "category": "Postgraduate",
+    "funding_type": "Self Financing",
+    "overview_content": [],
+    "programme_snapshot": [],
+    "faculty_data": [],
+    "alumni_data": [],
+    "festivals_tab_name": "",
+    "publication_tab_name": ""
   }
 ]

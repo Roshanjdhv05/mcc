@@ -398,7 +398,8 @@ const ALL_DEPARTMENTS = [
   "Sports and Gymkhana", "Natyakarmi (Theatre Group)", "Marathi Vangmay Mandal",
   "Aaroh (Music Club)", "Nature Club", "Women Development Cell",
   "Entrepreneurship Development Cell", "Students' Research",
-  "Spectrum", "Inspira", "Hack-A-Thon", "Emporio", "Quantomania", "Manthan"
+  "Spectrum", "Inspira", "Hack-A-Thon", "Emporio", "Quantomania", "Manthan",
+  "Hindi", "Mathematics", "Marathi", "Commerce", "French", "Viksit Bharat Buildathon", "Tarang"
 ];
 
 const ALL_YEARS = ["2025-2026", "2024-2025", "2023-2024"];
@@ -442,20 +443,31 @@ export default function GalleryPage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [liveEvents, setLiveEvents] = useState<Event[]>([]);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Fetch live events from Supabase (gallery-published)
   useEffect(() => {
     const fetchLiveEvents = async () => {
-      const { data, error } = await supabase
+      // 1. Fetch Degree College events
+      const { data: degreeData, error: degreeError } = await supabase
         .from('events')
         .select('id, title, description, category, department, images, published_at, calendar_date')
         .eq('publish_gallery', true)
         .eq('status', 'published')
         .order('published_at', { ascending: false });
 
-      if (!error && data) {
-        const mapped: Event[] = data.map((e: any) => ({
-          id: `live-${e.id}`,
+      // 2. Fetch Junior College events
+      const { data: jrData, error: jrError } = await supabase
+        .from('jr_college_events')
+        .select('id, title, description, category, department, images, event_date')
+        .eq('show_in_students_corner', true)
+        .order('event_date', { ascending: false });
+
+      let mapped: Event[] = [];
+
+      if (!degreeError && degreeData) {
+        mapped = [...mapped, ...degreeData.map((e: any) => ({
+          id: `live-deg-${e.id}`,
           tag: e.published_at
             ? new Date(e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
             : 'LIVE',
@@ -468,9 +480,30 @@ export default function GalleryPage() {
           department: e.department || 'General',
           category: e.category || 'Events & Activities',
           academicYear: '2025-2026',
-        }));
-        setLiveEvents(mapped);
+        }))];
       }
+
+      if (!jrError && jrData) {
+        mapped = [...mapped, ...jrData.map((e: any) => ({
+          id: `live-jr-${e.id}`,
+          tag: e.event_date
+            ? new Date(e.event_date).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
+            : 'LIVE',
+          dateObj: new Date(e.event_date || Date.now()),
+          title: e.title,
+          desc: e.description || '',
+          fullDescription: e.description || '',
+          img: e.images?.[0] || '',
+          images: e.images || [],
+          department: e.department || 'General',
+          category: e.category || 'Events & Activities',
+          academicYear: '2025-2026',
+        }))];
+      }
+      
+      // Sort all fetched events by date
+      mapped.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+      setLiveEvents(mapped);
     };
     fetchLiveEvents();
   }, []);
@@ -547,6 +580,93 @@ export default function GalleryPage() {
     }
   }, []);
 
+  const renderFilters = () => (
+    <>
+      {/* Years */}
+      <div className="mb-5">
+        <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Academic Year</h3>
+        <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
+          <span className="text-xs">All Years</span><ChevronDown size={14} />
+        </div>
+        <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1">
+          <label className="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked={selectedYears.length === 0} onChange={() => setSelectedYears([])}
+              className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
+            <span className="text-xs text-gray-700 font-semibold">All Years</span>
+          </label>
+          {ALL_YEARS.map(year => (
+            <label key={year} className="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" checked={selectedYears.includes(year)} onChange={() => handleYearToggle(year)}
+                className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
+              <span className="text-xs text-gray-600 truncate">{year}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Department */}
+      <div className="mb-5">
+        <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Department / Club</h3>
+        <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
+          <span className="text-xs">All Departments</span><ChevronDown size={14} />
+        </div>
+        <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+          <label className="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked={selectedDepts.length === 0} onChange={() => setSelectedDepts([])}
+              className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
+            <span className="text-xs text-gray-700 font-semibold">All Departments</span>
+          </label>
+          {ALL_DEPARTMENTS.map(dept => (
+            <label key={dept} className="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" checked={selectedDepts.includes(dept)} onChange={() => handleDeptToggle(dept)}
+                className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
+              <span className="text-xs text-gray-600 truncate" title={dept}>{dept}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="mb-5">
+        <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Category</h3>
+        <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
+          <span className="text-xs">All Categories</span><ChevronDown size={14} />
+        </div>
+        <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+          <label className="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked={selectedCats.length === 0} onChange={() => setSelectedCats([])}
+              className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
+            <span className="text-xs text-gray-700 font-semibold">All Categories</span>
+          </label>
+          {ALL_CATEGORIES.map(cat => (
+            <label key={cat} className="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" checked={selectedCats.includes(cat)} onChange={() => handleCatToggle(cat)}
+                className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
+              <span className="text-xs text-gray-600">{cat}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 pt-3 border-t border-gray-100 mt-auto">
+        <button onClick={() => setIsMobileFilterOpen(false)} className="w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-2.5 text-xs font-bold flex justify-center items-center gap-1.5 transition-colors lg:hidden">
+          Apply Filters <Filter size={14} />
+        </button>
+        <button onClick={() => { resetFilters(); setIsMobileFilterOpen(false); }} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl py-2.5 text-xs font-bold flex justify-center items-center gap-1.5 transition-colors lg:hidden">
+          ↺ Reset Filters
+        </button>
+        
+        {/* Desktop buttons */}
+        <button onClick={() => setIsMobileFilterOpen(false)} className="hidden lg:flex w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-2.5 text-xs font-bold justify-center items-center gap-1.5 transition-colors">
+          Apply Filters <Filter size={14} />
+        </button>
+        <button onClick={resetFilters} className="hidden lg:flex w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl py-2.5 text-xs font-bold justify-center items-center gap-1.5 transition-colors">
+          ↺ Reset Filters
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
 
@@ -601,85 +721,11 @@ export default function GalleryPage() {
 
         {/* SIDEBAR */}
         <div className="w-full lg:w-[260px] shrink-0">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hidden lg:block sticky top-24 max-h-[85vh] overflow-y-auto no-scrollbar">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hidden lg:flex flex-col sticky top-24 max-h-[85vh] overflow-y-auto no-scrollbar">
             <h2 className="text-lg font-black text-[#0D1B3E] mb-5 flex items-center gap-2 border-b border-gray-100 pb-3">
               <Filter size={18} /> Filters
             </h2>
-
-            {/* Years */}
-            <div className="mb-5">
-              <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Academic Year</h3>
-              <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
-                <span className="text-xs">All Years</span><ChevronDown size={14} />
-              </div>
-              <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1">
-                <label className="flex items-center gap-2.5 cursor-pointer">
-                  <input type="checkbox" checked={selectedYears.length === 0} onChange={() => setSelectedYears([])}
-                    className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-                  <span className="text-xs text-gray-700 font-semibold">All Years</span>
-                </label>
-                {ALL_YEARS.map(year => (
-                  <label key={year} className="flex items-center gap-2.5 cursor-pointer">
-                    <input type="checkbox" checked={selectedYears.includes(year)} onChange={() => handleYearToggle(year)}
-                      className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-                    <span className="text-xs text-gray-600 truncate">{year}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Department */}
-            <div className="mb-5">
-              <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Department / Club</h3>
-              <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
-                <span className="text-xs">All Departments</span><ChevronDown size={14} />
-              </div>
-              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
-                <label className="flex items-center gap-2.5 cursor-pointer">
-                  <input type="checkbox" checked={selectedDepts.length === 0} onChange={() => setSelectedDepts([])}
-                    className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-                  <span className="text-xs text-gray-700 font-semibold">All Departments</span>
-                </label>
-                {ALL_DEPARTMENTS.map(dept => (
-                  <label key={dept} className="flex items-center gap-2.5 cursor-pointer">
-                    <input type="checkbox" checked={selectedDepts.includes(dept)} onChange={() => handleDeptToggle(dept)}
-                      className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-                    <span className="text-xs text-gray-600 truncate" title={dept}>{dept}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Categories */}
-            <div className="mb-5">
-              <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Category</h3>
-              <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
-                <span className="text-xs">All Categories</span><ChevronDown size={14} />
-              </div>
-              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
-                <label className="flex items-center gap-2.5 cursor-pointer">
-                  <input type="checkbox" checked={selectedCats.length === 0} onChange={() => setSelectedCats([])}
-                    className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-                  <span className="text-xs text-gray-700 font-semibold">All Categories</span>
-                </label>
-                {ALL_CATEGORIES.map(cat => (
-                  <label key={cat} className="flex items-center gap-2.5 cursor-pointer">
-                    <input type="checkbox" checked={selectedCats.includes(cat)} onChange={() => handleCatToggle(cat)}
-                      className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-                    <span className="text-xs text-gray-600">{cat}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2 pt-3 border-t border-gray-100">
-              <button className="w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-2.5 text-xs font-bold flex justify-center items-center gap-1.5 transition-colors">
-                Apply Filters <Filter size={14} />
-              </button>
-              <button onClick={resetFilters} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl py-2.5 text-xs font-bold flex justify-center items-center gap-1.5 transition-colors">
-                ↺ Reset Filters
-              </button>
-            </div>
+            {renderFilters()}
           </div>
         </div>
 
@@ -704,15 +750,27 @@ export default function GalleryPage() {
                   <option value="Oldest">Oldest</option>
                 </select>
               </div>
-              <div className="flex gap-1 border border-gray-200 rounded-xl p-1 bg-gray-50">
-                <button onClick={() => setViewMode("grid")}
-                  className={`p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
-                  <Grid size={16} />
+              <div className="flex gap-2">
+                {/* Mobile Filter Button */}
+                <button 
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  className="lg:hidden flex items-center gap-1.5 border border-gray-200 rounded-xl px-3 py-1.5 bg-gray-50 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  <Filter size={16} />
+                  <span className="hidden sm:inline">Filters</span>
                 </button>
-                <button onClick={() => setViewMode("list")}
-                  className={`p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
-                  <List size={16} />
-                </button>
+
+                {/* View Mode Toggle */}
+                <div className="flex gap-1 border border-gray-200 rounded-xl p-1 bg-gray-50">
+                  <button onClick={() => setViewMode("grid")}
+                    className={`p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
+                    <Grid size={16} />
+                  </button>
+                  <button onClick={() => setViewMode("list")}
+                    className={`p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
+                    <List size={16} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -859,6 +917,40 @@ export default function GalleryPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* ── MOBILE FILTERS SLIDE-OVER ── */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="fixed inset-0 bg-black/50 z-[60] lg:hidden backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
+              transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+              className="fixed inset-y-0 right-0 w-[280px] sm:w-[320px] bg-white z-[70] shadow-2xl flex flex-col lg:hidden"
+            >
+              <div className="flex items-center justify-between p-5 border-b border-gray-100">
+                <h2 className="text-lg font-black text-[#0D1B3E] flex items-center gap-2">
+                  <Filter size={18} /> Filters
+                </h2>
+                <button 
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="p-2 bg-gray-100 text-gray-500 hover:bg-gray-200 rounded-full transition-colors"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="p-5 flex-1 overflow-y-auto flex flex-col no-scrollbar">
+                {renderFilters()}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

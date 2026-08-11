@@ -11,6 +11,11 @@ export default function VicePrincipalDeskPage() {
         </div>
 
         <div className="text-gray-700 leading-relaxed text-[17px] space-y-6 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-100 text-justify">
+          <img 
+            src="/Jr. teaching staff/Mr. Milind W. Patil.jpg" 
+            alt="Mr. Milind W. Patil - Vice Principal of Junior College" 
+            className="w-full sm:w-1/2 md:w-[320px] h-auto object-contain rounded-xl shadow-md border border-gray-200 float-left mr-8 mb-4 mt-2"
+          />
           <p>
             Our college continues to uphold its unwavering commitment to academics. This year, students achieved impressive results, surpassing new benchmarks in board exam performance. The dedication of our teaching faculty, combined with the resilience of our students, has fostered a learning environment that balances intellectual growth with practical application. Beyond the regular curriculum, specialized workshops and guest lectures have kept students ahead of the curve, with many securing top positions in prestigious competitions and earning internships and placements in renowned organizations.
           </p>
@@ -28,11 +33,11 @@ export default function VicePrincipalDeskPage() {
           </p>
 
           <div className="pt-8 mt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
-            <div>
-              <p className="font-semibold text-gray-900 mb-1">Thank you</p>
+            <div className="clear-both">
+              <p className="font-semibold text-gray-900 mb-1">Thank you,</p>
               <p className="font-bold text-[#123B6D] text-xl mt-2">Mr. M. W. Patil</p>
-              <p className="text-gray-600 font-medium">Vice-Principal (Junior College)</p>
-              <p className="text-gray-500 text-sm">Mulund College of Commerce</p>
+              <p className="text-gray-600 font-medium text-sm">Vice-Principal (Junior College)</p>
+              <p className="text-gray-500 text-xs mt-0.5">Mulund College of Commerce</p>
             </div>
             
             <div className="bg-[#f0fdf4] border border-green-100 rounded-xl p-4 flex items-center gap-3">

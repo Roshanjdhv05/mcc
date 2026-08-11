@@ -82,6 +82,8 @@ export default function NoticesPage() {
       description: `Category: ${doc.category}. This document is part of the Examination Hub.`,
       categories: ['Examination'],
       courses: doc.courses,
+      departments: [],
+      semesters: [],
       is_general: doc.courses.length > 10,
       schedule_time: doc.schedule_time,
       expiry_time: doc.notice_expiry_time,

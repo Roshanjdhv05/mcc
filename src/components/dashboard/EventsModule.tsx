@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Calendar, MapPin, ExternalLink, Image as ImageIcon } from 'lucide-react';
+import { Calendar, MapPin, ExternalLink, Image as ImageIcon, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function EventsModule({ courseCode, sectionName, title, icon: Icon }: { courseCode: string, sectionName: string, title: string, icon: any }) {

@@ -3,13 +3,13 @@
 import PGCourseTemplate from '@/components/layout/PGCourseTemplate';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
-export default function MComBMPageClient() {
+export default function MComBMPageClient({ syllabusContent }: { syllabusContent?: React.ReactNode }) {
   return (
     <PGCourseTemplate
       title="Master of Commerce (Business Management)"
       fundingType="Self Financing"
       courseKey="mcom-bm"
-      syllabusContent={<SyllabusRenderer programKey="MCOM_BM" />}
+      syllabusContent={syllabusContent || <SyllabusRenderer programKey="MCOM_BM" />}
     />
   );
 }

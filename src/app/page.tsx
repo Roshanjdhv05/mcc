@@ -766,8 +766,8 @@ export default function HomePage() {
     buttonLink?: string;
   }[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [liveEvents, setLiveEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
-  const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
+  const [liveEvents, setLiveEvents] = useState<{title: string; tag: string; desc: string; img: string; date?: string | null}[]>([]);
+  const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string; date?: string | null}[]>([]);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
   const illustriousScrollRef = useRef<HTMLDivElement>(null);
   const adminServicesAutoRef = useRef<HTMLDivElement>(null);

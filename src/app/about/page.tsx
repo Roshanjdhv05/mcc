@@ -137,6 +137,75 @@ export default function AboutPage() {
 
 
 
+        {/* ── Our Other Institutions ── */}
+        <div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-10 bg-[#D4A017] rounded-full" />
+            <h2 className="text-2xl lg:text-3xl font-black text-[#123B6D] font-[var(--font-heading)] uppercase tracking-wide">
+              Our Other Institutions
+            </h2>
+          </div>
+          <p className="text-gray-500 text-sm mb-6">Explore the other schools and colleges run by the Parle Tilak Vidyalaya Association.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            {/* Schools */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+              <div className="bg-[#123B6D] px-6 py-4 flex items-center gap-3">
+                <BookOpen size={18} className="text-white/80" />
+                <h3 className="font-bold text-white text-sm tracking-widest uppercase">Schools</h3>
+              </div>
+              <div className="flex flex-col divide-y divide-[#E2E8F0]">
+                {[
+                  { label: 'Parle Tilak ICSE School', href: 'https://www.parletilakicse.com/' },
+                  { label: 'PTV English Medium Primary', href: 'https://www.ptvenglishmediumprimary.com/' },
+                  { label: 'PTV English Medium Secondary', href: 'https://www.ptvenglishmediumsecondary.com/' },
+                  { label: 'Parle Tilak Vidyalaya (Marathi Medium)', href: 'https://www.parletilakvidyalayamm.com/' },
+                  { label: 'PTVA English Medium Andheri', href: 'https://www.ptvaenglishmediumandheri.com/' },
+                ].map(({ label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors"
+                  >
+                    <span className="text-sm font-semibold text-[#1E293B] group-hover:text-[#123B6D] transition-colors">{label}</span>
+                    <ChevronRight size={15} className="text-gray-300 group-hover:text-[#123B6D] transition-colors flex-shrink-0" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Colleges */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+              <div className="bg-[#008e59] px-6 py-4 flex items-center gap-3">
+                <GraduationCap size={18} className="text-white/80" />
+                <h3 className="font-bold text-white text-sm tracking-widest uppercase">Colleges</h3>
+              </div>
+              <div className="flex flex-col divide-y divide-[#E2E8F0]">
+                {[
+                  { label: 'MLDCC – Mulund Law, Degree & Commerce College', href: 'https://mldcc.com/mldcc/' },
+                  { label: 'Sathaye College', href: 'https://sathayecollege.edu.in/' },
+                  { label: 'PTVA Institute of Management', href: 'https://ptvaim.ac.in/' },
+                ].map(({ label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors"
+                  >
+                    <span className="text-sm font-semibold text-[#1E293B] group-hover:text-[#008e59] transition-colors">{label}</span>
+                    <ChevronRight size={15} className="text-gray-300 group-hover:text-[#008e59] transition-colors flex-shrink-0" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </div>
   );

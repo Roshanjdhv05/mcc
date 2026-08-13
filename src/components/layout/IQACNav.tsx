@@ -5,21 +5,19 @@ import Link from 'next/link';
 
 export const iqacNav = [
   { label: 'HOME', href: '/iqac' },
-  { label: 'ABOUT THE IQAC', href: '/iqac#about' },
-  { label: 'QUALITY POLICY', href: '/iqac/quality-policy' },
-  { label: 'MEMBERS (YEAR WISE)', href: '/iqac#members' },
-  { label: 'MINUTES OF THE MEETING', href: '/iqac/minutes' },
-  { label: 'BEST PRACTICES', href: '/iqac#best-practices' },
-  { label: 'INSTITUTIONAL DISTINCTIVENESS', href: '/iqac#distinctiveness' },
-  { label: 'ANNUAL REPORTS', href: '/iqac#annual-reports' },
-  { label: 'AQAR', href: '/iqac#aqar' },
-  { label: 'SSR SUPPORTING DOCUMENTS', href: '/iqac/ssr-supporting-documents' },
-  { label: 'ACADEMIC CALENDAR', href: '/iqac#academic-calendar' },
+  { label: 'ABOUT THE IQAC', href: '/iqac/information-and-policies?tab=about' },
+  { label: 'QUALITY POLICY', href: '/iqac/information-and-policies?tab=quality-policy' },
+  { label: 'MEMBERS (YEAR WISE)', href: '/iqac/information-and-policies?tab=members' },
+  { label: 'MINUTES OF THE MEETING', href: '/iqac/information-and-policies?tab=minutes' },
+  { label: 'BEST PRACTICES', href: '/iqac/information-and-policies?tab=best-practices' },
+  { label: 'INSTITUTIONAL DISTINCTIVENESS', href: '/iqac/information-and-policies?tab=distinctiveness' },
+  { label: 'ANNUAL REPORTS', href: '/iqac/reports-and-initiatives?tab=annual-reports' },
+  { label: 'ACADEMIC CALENDAR', href: '/iqac/reports-and-initiatives?tab=academic-calendar' },
   { label: 'TILAK SMRUTI VYAKHYAN', href: '/about/tilak-lecture' },
   { label: 'BAPAT MEMORIAL LECTURE', href: '/about/bg-bapat-lecture' },
-  { label: 'DEEKSHARAMBH', href: '/iqac#deeksharambh' },
-  { label: 'DISABILITY SENSITISATION', href: '/iqac#disability' },
-  { label: 'ENVIRONMENTAL COMMITMENTS', href: '/iqac#environment' },
+  { label: 'DEEKSHARAMBH', href: '/iqac/reports-and-initiatives?tab=deeksharambh' },
+  { label: 'DISABILITY SENSITISATION', href: '/iqac/reports-and-initiatives?tab=disability' },
+  { label: 'ENVIRONMENTAL COMMITMENTS', href: '/iqac/reports-and-initiatives?tab=environment' },
 ];
 
 export default function IQACNav() {

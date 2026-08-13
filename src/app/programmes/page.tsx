@@ -8,100 +8,114 @@ export const metadata: Metadata = {
 };
 
 const allProgrammes = [
-  // --- UNDERGRADUATE (matches nav dropdown order) ---
+  // --- UNDERGRADUATE ---
+
+  // 1] Commerce: Amber/Gold family
   {
-    code: 'B.Com', name: 'Bachelor of Commerce', category: 'Undergraduate', duration: '3 Years', seats: 600, time: '7:15 am to 10:40 am',
+    code: 'B.Com', name: 'Bachelor of Commerce', category: 'Undergraduate', duration: '3 Years', seats: 600, time: '7:15 AM – 10:40 AM',
     highlights: ['Accounting', 'Finance', 'Economics', 'Business Law'],
-    color: 'from-[#D4A017] to-[#f59e0b]', href: '/programmes/ug/bcom',
+    color: 'from-[#B45309] to-[#D97706]', href: '/programmes/ug/bcom',
   },
   {
-    code: 'BAF', name: 'Bachelor of Commerce (Accounting & Finance)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '7:15 am to 11:40 am',
+    code: 'BAF', name: 'Bachelor of Commerce (Accounting & Finance)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '7:15 AM – 11:40 AM',
     highlights: ['Accounting', 'Taxation', 'Auditing', 'Finance'],
-    color: 'from-[#dc2626] to-[#ef4444]', href: '/programmes/ug/baf',
+    color: 'from-[#D97706] to-[#F59E0B]', href: '/programmes/ug/baf',
   },
   {
-    code: 'BBI', name: 'Bachelor of Commerce (Banking & Insurance)', category: 'Undergraduate', duration: '3 Years', seats: 160, time: '7:15 am to 11:40 am',
+    code: 'BBI', name: 'Bachelor of Commerce (Banking & Insurance)', category: 'Undergraduate', duration: '3 Years', seats: 160, time: '7:15 AM – 11:40 AM',
     highlights: ['Banking', 'Insurance', 'Finance', 'Risk Management'],
-    color: 'from-[#0e7490] to-[#06b6d4]', href: '/programmes/ug/bbi',
+    color: 'from-[#F59E0B] to-[#FCD34D]', href: '/programmes/ug/bbi',
   },
   {
-    code: 'BFM', name: 'Bachelor of Commerce (Financial Markets)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 pm to 4:30 pm',
+    code: 'BFM', name: 'Bachelor of Commerce (Financial Markets)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
     highlights: ['Stock Market', 'Investment', 'Securities', 'Capital Markets'],
-    color: 'from-[#d97706] to-[#f59e0b]', href: '/programmes/ug/bfm',
+    color: 'from-[#92400E] to-[#B45309]', href: '/programmes/ug/bfm',
   },
+
+  // 2] Business & Management: Navy/Blue family
   {
-    code: 'BMS', name: 'Bachelor of Commerce (Management Studies)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '12:00 pm to 4:30 pm',
+    code: 'BMS', name: 'Bachelor of Commerce (Management Studies)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '12:00 PM – 4:30 PM',
     highlights: ['Management', 'Commerce', 'Leadership', 'Business Strategy'],
-    color: 'from-[#123B6D] to-[#1a5294]', href: '/programmes/ug/bcom-ms',
+    color: 'from-[#0D2A4F] to-[#123B6D]', href: '/programmes/ug/bcom-ms',
   },
   {
-    code: 'BBA', name: 'Bachelor of Commerce (Business Administration)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 pm to 4:30 pm',
+    code: 'BBA', name: 'Bachelor of Commerce (Business Administration)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
     highlights: ['Business Admin', 'Commerce', 'Entrepreneurship'],
-    color: 'from-[#7c3aed] to-[#9d5cf4]', href: '/programmes/ug/bba',
+    color: 'from-[#123B6D] to-[#1D4E96]', href: '/programmes/ug/bba',
   },
+
+  // 3] Science: Emerald/Green family
   {
-    code: 'BA-MMC', name: 'Bachelor of Arts (Multimedia and Mass Communication)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 pm to 4:30 pm',
-    highlights: ['Media', 'Journalism', 'Digital Content', 'Communication'],
-    color: 'from-[#0891b2] to-[#0ea5e9]', href: '/programmes/ug/bammc',
-  },
-  {
-    code: 'B.Sc (CS)', name: 'Bachelor of Science (Computer Science)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '7:15 am to 11:40 am',
+    code: 'B.Sc (CS)', name: 'Bachelor of Science (Computer Science)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '7:15 AM – 11:40 AM',
     highlights: ['Computer Science', 'Programming', 'Software', 'Algorithms'],
-    color: 'from-[#059669] to-[#10b981]', href: '/programmes/ug/sct/bsc-cs',
+    color: 'from-[#065F46] to-[#047857]', href: '/programmes/ug/sct/bsc-cs',
   },
   {
-    code: 'B.Sc (IT)', name: 'Bachelor of Science (Information Technology)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '10:40 am to 4:15 pm',
+    code: 'B.Sc (IT)', name: 'Bachelor of Science (Information Technology)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '10:40 AM – 4:15 PM',
     highlights: ['IT', 'Networks', 'Databases', 'Web Technologies'],
-    color: 'from-[#047857] to-[#34d399]', href: '/programmes/ug/sct/bsc-it',
+    color: 'from-[#047857] to-[#059669]', href: '/programmes/ug/sct/bsc-it',
   },
   {
-    code: 'B.Sc (CA)', name: 'Bachelor of Science (Computer Applications)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '2:05 pm to 8:10 pm',
+    code: 'B.Sc (CA)', name: 'Bachelor of Science (Computer Applications)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '2:05 PM – 8:10 PM',
     highlights: ['Computer Applications', 'Software Engineering', 'Systems'],
-    color: 'from-[#059669] to-[#047857]', href: '/programmes/ug/sct/bsc-ca',
+    color: 'from-[#059669] to-[#10B981]', href: '/programmes/ug/sct/bsc-ca',
   },
   {
-    code: 'B.Sc (DS)', name: 'Bachelor of Science (Data Science)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '2:05 pm to 8:10 pm',
+    code: 'B.Sc (DS)', name: 'Bachelor of Science (Data Science)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '2:05 PM – 8:10 PM',
     highlights: ['Data Science', 'Machine Learning', 'Analytics', 'Statistics'],
-    color: 'from-[#10b981] to-[#6ee7b7]', href: '/programmes/ug/sct/bsc-ds',
+    color: 'from-[#10B981] to-[#34D399]', href: '/programmes/ug/sct/bsc-ds',
   },
+
+  // 4] Arts: Cyan/Teal family
+  {
+    code: 'BA-MMC', name: 'Bachelor of Arts (Multimedia and Mass Communication)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
+    highlights: ['Media', 'Journalism', 'Digital Content', 'Communication'],
+    color: 'from-[#0E7490] to-[#0891B2]', href: '/programmes/ug/bammc',
+  },
+
+  // 5] Apprenticeship: Indigo/Violet family
   {
     code: 'B.Com BFSI', name: 'Bachelor of Commerce (Banking, Financial Services & Insurance)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '',
     highlights: ['Apprenticeship', 'BFSI', 'Banking', 'Financial Services'],
-    color: 'from-[#4f46e5] to-[#7c3aed]', href: '/programmes/ug/bfsi',
+    color: 'from-[#3730A3] to-[#4F46E5]', href: '/programmes/ug/bfsi',
   },
 
-  // --- POSTGRADUATE (matches nav dropdown order) ---
+  // --- POSTGRADUATE ---
+
+  // 6a] PG Commerce: Rose/Red family
   {
-    code: 'M.Com (AA)', name: 'Master of Commerce (Advanced Accountancy)', category: 'Postgraduate', duration: '2 Years', seats: 80, time: '5:30 pm to 8:30 pm',
+    code: 'M.Com (AA)', name: 'Master of Commerce (Advanced Accountancy)', category: 'Postgraduate', duration: '2 Years', seats: 80, time: '5:30 PM – 8:30 PM',
     highlights: ['Accountancy', 'Taxation', 'Auditing'],
-    color: 'from-[#dc2626] to-[#ef4444]', href: '/programmes/pg/mcom-aa',
+    color: 'from-[#9F1239] to-[#BE123C]', href: '/programmes/pg/mcom-aa',
   },
   {
-    code: 'M.Com (BM)', name: 'Master of Commerce (Business Management)', category: 'Postgraduate', duration: '2 Years', seats: 60, time: '5:30 pm to 8:30 pm',
+    code: 'M.Com (BM)', name: 'Master of Commerce (Business Management)', category: 'Postgraduate', duration: '2 Years', seats: 60, time: '5:30 PM – 8:30 PM',
     highlights: ['Business Management', 'Leadership', 'Strategy'],
-    color: 'from-[#7c3aed] to-[#9d5cf4]', href: '/programmes/pg/mcom-bm',
+    color: 'from-[#BE123C] to-[#E11D48]', href: '/programmes/pg/mcom-bm',
   },
   {
-    code: 'M.Com (BF)', name: 'Master of Commerce (Banking & Finance)', category: 'Postgraduate', duration: '2 Years', seats: 60, time: '5:30 pm to 8:30 pm',
+    code: 'M.Com (BF)', name: 'Master of Commerce (Banking & Finance)', category: 'Postgraduate', duration: '2 Years', seats: 60, time: '5:30 PM – 8:30 PM',
     highlights: ['Banking', 'Finance', 'Financial Markets'],
-    color: 'from-[#0e7490] to-[#06b6d4]', href: '/programmes/pg/mcom-bf',
+    color: 'from-[#E11D48] to-[#F43F5E]', href: '/programmes/pg/mcom-bf',
   },
+
+  // 6b] PG Science: Purple/Violet family
   {
     code: 'M.Sc (IT)', name: 'Master of Science (Information Technology)', category: 'Postgraduate', duration: '2 Years', seats: 60, time: '',
     highlights: ['Software Development', 'Data Science', 'Cloud Computing', 'Cybersecurity'],
-    color: 'from-purple-600 to-purple-800', href: '/programmes/pg/mscit',
+    color: 'from-[#5B21B6] to-[#7C3AED]', href: '/programmes/pg/mscit',
   },
   {
     code: 'M.Sc (Finance)', name: 'Master of Science in Finance', category: 'Postgraduate', duration: '2 Years', seats: 30, time: '',
     highlights: ['Finance', 'Analytics', 'Corporate Finance', 'Econometrics'],
-    color: 'from-[#d97706] to-[#f59e0b]', href: '/programmes/pg/msf',
+    color: 'from-[#7C3AED] to-[#8B5CF6]', href: '/programmes/pg/msf',
   },
 
   // --- PhD ---
   {
     code: 'Ph.D', name: 'Ph.D in Business Economics', category: 'Doctoral', duration: '3–5 Years', seats: 20, time: '',
     highlights: ['Original Research', 'Publications', 'Conferences', 'Expert Guidance'],
-    color: 'from-amber-600 to-amber-800', href: '/programmes/phd/be',
+    color: 'from-[#78350F] to-[#92400E]', href: '/programmes/phd/be',
   },
 ];
 

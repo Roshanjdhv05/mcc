@@ -10,46 +10,176 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-const wallOfFameStudents = [
+const illustriousAlumni = [
   { 
-    name: 'Alumni Name', 
-    initials: 'AN',
-    course: 'B.Com (Honours)',
+    name: 'Mandar Phadke',
+    course: 'BCOM',
+    batch: 'Class of 2008',
+    role: 'CFO - Copper',
+    company: 'Hinduja Indus, Mumbai',
+    linkedin: '#',
+    description: 'AIR 1 - CA Final (All India Rank 1)',
+    image: '/illustrate alumini/Mandar Dixit.png',
+  },
+  { 
+    name: 'Amit Gupta',
+    course: 'BCOM',
+    batch: 'Class of 2022',
+    role: 'Actuarial',
+    company: 'SBI Life Insurance, Mumbai',
+    linkedin: '#',
+    description: 'Cleared 10/13 Actuarial Exams',
+    image: '/illustrate alumini/Amit Gupta.jpg',
+  },
+  { 
+    name: 'Aastha V Doshi',
+    course: 'BCOM',
+    batch: 'Class of 2022',
+    role: 'CA / CS',
+    company: 'Alpha Alternates, Mumbai',
+    linkedin: '#',
+    description: 'AIR 3 - CS (All India Rank 3 in CS)',
+    image: '/illustrate alumini/Aastha Dedhiya.png',
+  },
+  { 
+    name: 'Sreejesh Pillai',
+    course: 'BCOM',
     batch: 'Class of 2018',
-    role: 'Senior Financial Analyst',
-    company: 'Deloitte India',
+    role: 'Senior Analyst',
+    company: 'Citigroup Global, BKC - Mumbai',
     linkedin: '#',
-    description: 'Leading cross-functional finance teams and driving strategic insights across global markets with over 6 years...',
+    description: 'AIR 37 - CA (Final)',
+    image: '/illustrate alumini/Sreejesh Pillai.jpg',
   },
   { 
-    name: 'Priya Patel', 
-    initials: 'PP',
-    course: 'B.Sc. IT',
-    batch: 'Class of 2019',
-    role: 'Software Engineer',
-    company: 'Microsoft',
+    name: 'Kriti Singhi',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Associate',
+    company: 'ENK Capital, Mumbai',
     linkedin: '#',
-    description: 'Developing scalable cloud solutions and mentoring junior developers in the Azure team.',
+    description: 'AIR 37 - CA (Final)',
+    image: '/illustrate alumini/Kriti Singhvi.jpeg',
   },
   { 
-    name: 'Amit Kumar', 
-    initials: 'AK',
-    course: 'BMS',
-    batch: 'Class of 2020',
-    role: 'Marketing Manager',
-    company: 'Unilever',
-    linkedin: '#',
-    description: 'Spearheading national marketing campaigns and driving brand growth in the FMCG sector.',
-  },
-  { 
-    name: 'Sneha Rao', 
-    initials: 'SR',
-    course: 'B.Com (Accounting)',
+    name: 'Parth Gupta',
+    course: 'BCOM',
     batch: 'Class of 2021',
-    role: 'Audit Associate',
-    company: 'KPMG',
+    role: 'Junior Associate',
+    company: 'McKinsey and Company, Mumbai',
     linkedin: '#',
-    description: 'Conducting comprehensive financial audits and ensuring compliance for Fortune 500 clients.',
+    description: 'AIR 8 - CA (Final)',
+    image: '/illustrate alumini/Parth Gupta.jpg',
+  },
+  { 
+    name: 'Sohan Manjrekar',
+    course: 'BCOM',
+    batch: 'Class of 2025',
+    role: 'Professional',
+    company: 'CA Finalist',
+    linkedin: '#',
+    description: 'AIR 3 - CA (Final)',
+    image: '/illustrate alumini/Sohan Manjrekar.jpg',
+  },
+  { 
+    name: 'Shweta S Marathe',
+    course: 'BCOM',
+    batch: 'Class of 2017',
+    role: 'Judicial Trainee',
+    company: 'High Court',
+    linkedin: '#',
+    description: 'AIR 17 - CS',
+    image: '/illustrate alumini/SHWETA MARATHE.jpeg',
+  },
+  { 
+    name: 'Rutuja Satam',
+    course: 'BCOM',
+    batch: 'Class of 2017',
+    role: 'Manager',
+    company: 'Sec Restaurant',
+    linkedin: '#',
+    description: 'AIR 5 - CS',
+    image: '/illustrate alumini/Rutuja Satam.JPG',
+  },
+  { 
+    name: 'Ameya Joshi',
+    course: 'BCOM',
+    batch: 'Class of 2017',
+    role: 'Program Manager',
+    company: 'Williamsburg, VA',
+    linkedin: '#',
+    description: 'MBA, International Professional',
+    image: '/illustrate alumini/Ameya Joshi.jpeg',
+  },
+  { 
+    name: 'Anurag Dhage',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Management Consultant',
+    company: 'Mumbai, India',
+    linkedin: '#',
+    description: 'IIM Kozhikode',
+    image: '/illustrate alumini/Anurag Dhage.jpg',
+  },
+  { 
+    name: 'Aishwarya Rajaraman',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Deputy Manager Trust',
+    company: 'Mumbai, India',
+    linkedin: '#',
+    description: 'IIM Ahmedabad',
+    image: '/illustrate alumini/Aishwarya Rajaraman.png',
+  },
+  { 
+    name: 'Hariharan Ram',
+    course: 'BCOM',
+    batch: 'Class of 2008',
+    role: 'Assistant Professor',
+    company: 'Frankfurt',
+    linkedin: '#',
+    description: 'US CMA',
+    image: '/illustrate alumini/Hariharan R..png',
+  },
+  { 
+    name: 'Rahul Yogesh Pai',
+    course: 'BCOM',
+    batch: 'Class of 2024',
+    role: 'Credit Analyst',
+    company: 'Kotak Mahindra, Mumbai',
+    linkedin: '#',
+    description: 'AIR 40 - CA',
+    image: '/illustrate alumini/Rahul Pai.jpg',
+  },
+  { 
+    name: 'Supriya Patil',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Associate Vice President',
+    company: 'Tata Capital, Mumbai',
+    linkedin: '#',
+    description: 'CFA Level 3',
+    image: '/illustrate alumini/Supriya Patil.jpeg',
+  },
+  { 
+    name: 'Preethi Shekar',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Director',
+    company: 'Deloitte Haskins, Mumbai',
+    linkedin: '#',
+    description: 'Outstanding Professional Achievement',
+    image: '/illustrate alumini/preethi shekar.jpeg',
+  },
+  { 
+    name: 'Nidhi Savla',
+    course: 'BCOM',
+    batch: 'Class of 2025',
+    role: 'Associate',
+    company: 'EY, Mumbai',
+    linkedin: '#',
+    description: 'AIR 40 - CA',
+    image: '/illustrate alumini/NIDHI SAVLA.png',
   },
 ];
 
@@ -142,18 +272,18 @@ export default function AlumniPage() {
               <div className="mt-16">
                 <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
+                    <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Illustrious Alumni</h2>
                     <p className="text-sm text-[#64748B] mt-1">Celebrating our outstanding achievers and prominent alumni</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full pb-8">
-                  {wallOfFameStudents.map((student, i) => (
+                  {illustriousAlumni.map((student, i) => (
                     <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col h-full hover:shadow-md transition-shadow">
                       {/* Top Section */}
                       <div className="flex gap-4 mb-5">
-                        <div className="w-24 h-24 rounded-2xl bg-[#185392] text-white flex items-center justify-center text-3xl font-bold shrink-0">
-                          {student.initials}
+                        <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0 border border-gray-100 shadow-sm bg-gray-50">
+                          <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col gap-1.5 pt-1">
                           <h3 className="font-bold text-[#123B6D] text-lg leading-tight">{student.name}</h3>

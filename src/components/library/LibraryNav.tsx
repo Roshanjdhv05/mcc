@@ -7,10 +7,10 @@ import { usePathname } from 'next/navigation';
 export const libraryNavLinks = [
   { label: 'HOME', href: '/library' },
   { label: 'ABOUT US', href: '/library/about-us' },
-  { label: 'WEB OPAC', href: '#' },
+  { label: 'WEB OPAC', href: 'http://103.14.233.221:9000' },
   { label: 'E-RESOURCES', href: '/library/e-resources' },
   { label: 'STAFF PROFILE', href: '/library/staff-profile' },
-  { label: 'DOWNLOAD', href: '#' },
+  { label: 'DOWNLOAD', href: '/library/download' },
   { label: 'RESEARCH - KIT', href: '/library/research-kit' },
   { label: 'I. R.', href: 'https://drive.google.com/drive/folders/1bes4sOXN9ePGCVSgdTQ2ZtPg-pYQWyju?usp=drive_link' },
   { label: 'IMPORTANT LINKS', href: '/library/important-links' },

@@ -263,13 +263,12 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'About the IQAC', href: '/iqac#about' },
-              { label: 'Quality Policy', href: '/iqac/quality-policy' },
-              { label: 'IQAC composition -Committee Members', href: '/iqac#members' },
-              { label: 'Minutes of the Meeting', href: '/iqac/minutes' },
-              { label: 'Best Practices', href: '/iqac#best-practices' },
-              { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
-              { label: 'Annual Reports', href: '/iqac#annual-reports' },
+              { label: 'About the IQAC', href: '/iqac/information-and-policies?tab=about' },
+              { label: 'Quality Policy', href: '/iqac/information-and-policies?tab=quality-policy' },
+              { label: 'IQAC composition -Committee Members', href: '/iqac/information-and-policies?tab=members' },
+              { label: 'Minutes of the Meeting', href: '/iqac/information-and-policies?tab=minutes' },
+              { label: 'Best Practices', href: '/iqac/information-and-policies?tab=best-practices' },
+              { label: 'Institutional Distinctiveness', href: '/iqac/information-and-policies?tab=distinctiveness' },
             ]
           }
         ]
@@ -279,33 +278,30 @@ const navLinks = [
         sections: [
           {
             links: [
-              { label: 'AQAR', href: '/iqac#aqar' },
-              { label: 'SSR Supporting Documents', href: '/iqac/ssr-supporting-documents' },
-              { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
-              { label: 'Perspective plan', href: '/iqac#perspective-plan' },
-              { label: 'Deeksharambh', href: '/iqac#deeksharambh' },
-              { label: 'Disability Sensitisation', href: '/iqac#disability' },
-              { label: 'Environmental Commitments', href: '/iqac#environment' },
+              { label: 'Annual Reports', href: '/iqac/reports-and-initiatives?tab=annual-reports' },
+              { label: 'Academic Calendar', href: '/iqac/reports-and-initiatives?tab=academic-calendar' },
+              { label: 'Perspective plan', href: '/iqac/reports-and-initiatives?tab=perspective-plan' },
+              { label: 'Deeksharambh', href: '/iqac/reports-and-initiatives?tab=deeksharambh' },
+              { label: 'Disability Sensitisation', href: '/iqac/reports-and-initiatives?tab=disability' },
+              { label: 'Environmental Commitments', href: '/iqac/reports-and-initiatives?tab=environment' },
             ]
           }
         ]
       }
     ],
     sub: [
-      { label: 'About the IQAC', href: '/iqac#about' },
-      { label: 'Quality Policy', href: '/iqac/quality-policy' },
-      { label: 'IQAC composition -Committee Members', href: '/iqac#members' },
-      { label: 'Minutes of the Meeting', href: '/iqac/minutes' },
-      { label: 'Best Practices', href: '/iqac#best-practices' },
-      { label: 'Institutional Distinctiveness', href: '/iqac#distinctiveness' },
-      { label: 'Annual Reports', href: '/iqac#annual-reports' },
-      { label: 'AQAR', href: '/iqac#aqar' },
-      { label: 'SSR Supporting Documents', href: '/iqac/ssr-supporting-documents' },
-      { label: 'Academic Calendar', href: '/iqac#academic-calendar' },
-      { label: 'Perspective plan', href: '/iqac#perspective-plan' },
-      { label: 'Deeksharambh', href: '/iqac#deeksharambh' },
-      { label: 'Disability Sensitisation', href: '/iqac#disability' },
-      { label: 'Environmental Commitments', href: '/iqac#environment' },
+      { label: 'About the IQAC', href: '/iqac/information-and-policies?tab=about' },
+      { label: 'Quality Policy', href: '/iqac/information-and-policies?tab=quality-policy' },
+      { label: 'IQAC composition -Committee Members', href: '/iqac/information-and-policies?tab=members' },
+      { label: 'Minutes of the Meeting', href: '/iqac/information-and-policies?tab=minutes' },
+      { label: 'Best Practices', href: '/iqac/information-and-policies?tab=best-practices' },
+      { label: 'Institutional Distinctiveness', href: '/iqac/information-and-policies?tab=distinctiveness' },
+      { label: 'Annual Reports', href: '/iqac/reports-and-initiatives?tab=annual-reports' },
+      { label: 'Academic Calendar', href: '/iqac/reports-and-initiatives?tab=academic-calendar' },
+      { label: 'Perspective plan', href: '/iqac/reports-and-initiatives?tab=perspective-plan' },
+      { label: 'Deeksharambh', href: '/iqac/reports-and-initiatives?tab=deeksharambh' },
+      { label: 'Disability Sensitisation', href: '/iqac/reports-and-initiatives?tab=disability' },
+      { label: 'Environmental Commitments', href: '/iqac/reports-and-initiatives?tab=environment' },
     ]
   },
   {

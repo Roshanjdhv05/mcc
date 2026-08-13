@@ -11,7 +11,7 @@ const stats = [
 
 export default function StatsStrip() {
   return (
-    <section className="bg-[#123B6D] py-6 md:py-10 overflow-hidden border-y border-[#1E4A84]">
+    <section className="bg-[#123B6D] py-3 md:py-5 overflow-hidden border-y border-[#1E4A84]">
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }

@@ -114,13 +114,32 @@ const culturalEvents = [
 ];
 
 const programmes = [
-  { code: 'BCom', name: 'Bachelor of Commerce', desc: 'Comprehensive commerce education with specializations', seats: 360, duration: '3 Years', type: 'UG' },
-  { code: 'BMS', name: 'Bachelor of Management Studies', desc: 'Leadership & management principles', seats: 120, duration: '3 Years', type: 'UG' },
-  { code: 'BSc IT', name: 'B.Sc. Information Technology', desc: 'IT and software development focus', seats: 120, duration: '3 Years', type: 'UG' },
-  { code: 'BAF', name: 'B.Com. (Accounting & Finance)', desc: 'Advanced accounting & finance', seats: 120, duration: '3 Years', type: 'UG' },
-  { code: 'MCom', name: 'Master of Commerce', desc: 'Advanced commerce & business research', seats: 60, duration: '2 Years', type: 'PG' },
-  { code: 'MSc IT', name: 'M.Sc. Information Technology', desc: 'Advanced tech and software eng', seats: 60, duration: '2 Years', type: 'PG' },
-  { code: 'PhD', name: 'Ph.D. in Commerce', desc: 'Doctoral research in commerce & management', seats: 10, duration: '3-5 Years', type: 'PHD' },
+  // Commerce
+  { code: 'B.Com', name: 'Bachelor of Commerce', desc: 'Comprehensive commerce education with specializations', seats: 600, duration: '3 Years', type: 'UG', time: '7:15 AM – 10:40 AM', color: 'from-[#B45309] to-[#D97706]', href: '/programmes/ug/bcom' },
+  { code: 'BAF', name: 'B.Com. (Accounting & Finance)', desc: 'Advanced accounting, taxation & auditing skills', seats: 120, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#D97706] to-[#F59E0B]', href: '/programmes/ug/baf' },
+  { code: 'BBI', name: 'B.Com. (Banking & Insurance)', desc: 'Banking, insurance & risk management', seats: 160, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#F59E0B] to-[#FCD34D]', href: '/programmes/ug/bbi' },
+  { code: 'BFM', name: 'B.Com. (Financial Markets)', desc: 'Stock markets, investment & capital markets', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#92400E] to-[#B45309]', href: '/programmes/ug/bfm' },
+  // Business & Management
+  { code: 'BMS', name: 'B.Com. (Management Studies)', desc: 'Leadership, management & business strategy', seats: 120, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#0D2A4F] to-[#123B6D]', href: '/programmes/ug/bcom-ms' },
+  { code: 'BBA', name: 'B.Com. (Business Administration)', desc: 'Business admin, commerce & entrepreneurship', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#123B6D] to-[#1D4E96]', href: '/programmes/ug/bba' },
+  // Science
+  { code: 'B.Sc (CS)', name: 'B.Sc. (Computer Science)', desc: 'Programming, algorithms & software development', seats: 120, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#065F46] to-[#047857]', href: '/programmes/ug/sct/bsc-cs' },
+  { code: 'B.Sc (IT)', name: 'B.Sc. (Information Technology)', desc: 'Networks, databases & web technologies', seats: 120, duration: '3 Years', type: 'UG', time: '10:40 AM – 4:15 PM', color: 'from-[#047857] to-[#059669]', href: '/programmes/ug/sct/bsc-it' },
+  { code: 'B.Sc (CA)', name: 'B.Sc. (Computer Applications)', desc: 'Computer applications & software engineering', seats: 60, duration: '3 Years', type: 'UG', time: '2:05 PM – 8:10 PM', color: 'from-[#059669] to-[#10B981]', href: '/programmes/ug/sct/bsc-ca' },
+  { code: 'B.Sc (DS)', name: 'B.Sc. (Data Science)', desc: 'Data science, ML, analytics & statistics', seats: 60, duration: '3 Years', type: 'UG', time: '2:05 PM – 8:10 PM', color: 'from-[#10B981] to-[#34D399]', href: '/programmes/ug/sct/bsc-ds' },
+  // Arts
+  { code: 'BA-MMC', name: 'BA (Multimedia & Mass Communication)', desc: 'Media, journalism, digital content & communication', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#0E7490] to-[#0891B2]', href: '/programmes/ug/bammc' },
+  // Apprenticeship
+  { code: 'BFSI', name: 'B.Com. BFSI', desc: 'Banking, financial services & insurance apprenticeship', seats: 60, duration: '3 Years', type: 'UG', time: '', color: 'from-[#3730A3] to-[#4F46E5]', href: '/programmes/ug/bfsi' },
+  // PG Commerce
+  { code: 'M.Com (AA)', name: 'M.Com. (Advanced Accountancy)', desc: 'Advanced accountancy, taxation & auditing', seats: 80, duration: '2 Years', type: 'PG', time: '5:30 PM – 8:30 PM', color: 'from-[#9F1239] to-[#BE123C]', href: '/programmes/pg/mcom-aa' },
+  { code: 'M.Com (BM)', name: 'M.Com. (Business Management)', desc: 'Business management, leadership & strategy', seats: 60, duration: '2 Years', type: 'PG', time: '5:30 PM – 8:30 PM', color: 'from-[#BE123C] to-[#E11D48]', href: '/programmes/pg/mcom-bm' },
+  { code: 'M.Com (BF)', name: 'M.Com. (Banking & Finance)', desc: 'Banking, finance & financial markets', seats: 60, duration: '2 Years', type: 'PG', time: '5:30 PM – 8:30 PM', color: 'from-[#E11D48] to-[#F43F5E]', href: '/programmes/pg/mcom-bf' },
+  // PG Science
+  { code: 'M.Sc (IT)', name: 'M.Sc. (Information Technology)', desc: 'Advanced software dev, data science & cloud', seats: 60, duration: '2 Years', type: 'PG', time: '', color: 'from-[#5B21B6] to-[#7C3AED]', href: '/programmes/pg/mscit' },
+  { code: 'M.Sc (Finance)', name: 'M.Sc. (Finance)', desc: 'Finance, analytics & corporate finance', seats: 30, duration: '2 Years', type: 'PG', time: '', color: 'from-[#7C3AED] to-[#8B5CF6]', href: '/programmes/pg/msf' },
+  // PhD
+  { code: 'Ph.D', name: 'Ph.D. in Business Economics', desc: 'Doctoral research in commerce & management', seats: 20, duration: '3–5 Years', type: 'PHD', time: '', color: 'from-[#78350F] to-[#92400E]', href: '/programmes/phd/be' },
 ];
 
 const testimonials = [
@@ -221,44 +240,174 @@ const wallOfFameStudents = [
 
 const illustriousAlumni = [
   { 
-    name: 'Alumni Name', 
-    initials: 'AN',
-    course: 'B.Com (Honours)',
+    name: 'Mandar Phadke',
+    course: 'BCOM',
+    batch: 'Class of 2008',
+    role: 'CFO - Copper',
+    company: 'Hinduja Indus, Mumbai',
+    linkedin: '#',
+    description: 'AIR 1 - CA Final (All India Rank 1)',
+    image: '/illustrate alumini/Mandar Dixit.png',
+  },
+  { 
+    name: 'Amit Gupta',
+    course: 'BCOM',
+    batch: 'Class of 2022',
+    role: 'Actuarial',
+    company: 'SBI Life Insurance, Mumbai',
+    linkedin: '#',
+    description: 'Cleared 10/13 Actuarial Exams',
+    image: '/illustrate alumini/Amit Gupta.jpg',
+  },
+  { 
+    name: 'Aastha V Doshi',
+    course: 'BCOM',
+    batch: 'Class of 2022',
+    role: 'CA / CS',
+    company: 'Alpha Alternates, Mumbai',
+    linkedin: '#',
+    description: 'AIR 3 - CS (All India Rank 3 in CS)',
+    image: '/illustrate alumini/Aastha Dedhiya.png',
+  },
+  { 
+    name: 'Sreejesh Pillai',
+    course: 'BCOM',
     batch: 'Class of 2018',
-    role: 'Senior Financial Analyst',
-    company: 'Deloitte India',
+    role: 'Senior Analyst',
+    company: 'Citigroup Global, BKC - Mumbai',
     linkedin: '#',
-    description: 'Leading cross-functional finance teams and driving strategic insights across global markets with over 6 years...',
+    description: 'AIR 37 - CA (Final)',
+    image: '/illustrate alumini/Sreejesh Pillai.jpg',
   },
   { 
-    name: 'Priya Patel', 
-    initials: 'PP',
-    course: 'B.Sc. IT',
-    batch: 'Class of 2019',
-    role: 'Software Engineer',
-    company: 'Microsoft',
+    name: 'Kriti Singhi',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Associate',
+    company: 'ENK Capital, Mumbai',
     linkedin: '#',
-    description: 'Developing scalable cloud solutions and mentoring junior developers in the Azure team.',
+    description: 'AIR 37 - CA (Final)',
+    image: '/illustrate alumini/Kriti Singhvi.jpeg',
   },
   { 
-    name: 'Amit Kumar', 
-    initials: 'AK',
-    course: 'BMS',
-    batch: 'Class of 2020',
-    role: 'Marketing Manager',
-    company: 'Unilever',
-    linkedin: '#',
-    description: 'Spearheading national marketing campaigns and driving brand growth in the FMCG sector.',
-  },
-  { 
-    name: 'Sneha Rao', 
-    initials: 'SR',
-    course: 'B.Com (Accounting)',
+    name: 'Parth Gupta',
+    course: 'BCOM',
     batch: 'Class of 2021',
-    role: 'Audit Associate',
-    company: 'KPMG',
+    role: 'Junior Associate',
+    company: 'McKinsey and Company, Mumbai',
     linkedin: '#',
-    description: 'Conducting comprehensive financial audits and ensuring compliance for Fortune 500 clients.',
+    description: 'AIR 8 - CA (Final)',
+    image: '/illustrate alumini/Parth Gupta.jpg',
+  },
+  { 
+    name: 'Sohan Manjrekar',
+    course: 'BCOM',
+    batch: 'Class of 2025',
+    role: 'Professional',
+    company: 'CA Finalist',
+    linkedin: '#',
+    description: 'AIR 3 - CA (Final)',
+    image: '/illustrate alumini/Sohan Manjrekar.jpg',
+  },
+  { 
+    name: 'Shweta S Marathe',
+    course: 'BCOM',
+    batch: 'Class of 2017',
+    role: 'Judicial Trainee',
+    company: 'High Court',
+    linkedin: '#',
+    description: 'AIR 17 - CS',
+    image: '/illustrate alumini/SHWETA MARATHE.jpeg',
+  },
+  { 
+    name: 'Rutuja Satam',
+    course: 'BCOM',
+    batch: 'Class of 2017',
+    role: 'Manager',
+    company: 'Sec Restaurant',
+    linkedin: '#',
+    description: 'AIR 5 - CS',
+    image: '/illustrate alumini/Rutuja Satam.JPG',
+  },
+  { 
+    name: 'Ameya Joshi',
+    course: 'BCOM',
+    batch: 'Class of 2017',
+    role: 'Program Manager',
+    company: 'Williamsburg, VA',
+    linkedin: '#',
+    description: 'MBA, International Professional',
+    image: '/illustrate alumini/Ameya Joshi.jpeg',
+  },
+  { 
+    name: 'Anurag Dhage',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Management Consultant',
+    company: 'Mumbai, India',
+    linkedin: '#',
+    description: 'IIM Kozhikode',
+    image: '/illustrate alumini/Anurag Dhage.jpg',
+  },
+  { 
+    name: 'Aishwarya Rajaraman',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Deputy Manager Trust',
+    company: 'Mumbai, India',
+    linkedin: '#',
+    description: 'IIM Ahmedabad',
+    image: '/illustrate alumini/Aishwarya Rajaraman.png',
+  },
+  { 
+    name: 'Hariharan Ram',
+    course: 'BCOM',
+    batch: 'Class of 2008',
+    role: 'Assistant Professor',
+    company: 'Frankfurt',
+    linkedin: '#',
+    description: 'US CMA',
+    image: '/illustrate alumini/Hariharan R..png',
+  },
+  { 
+    name: 'Rahul Yogesh Pai',
+    course: 'BCOM',
+    batch: 'Class of 2024',
+    role: 'Credit Analyst',
+    company: 'Kotak Mahindra, Mumbai',
+    linkedin: '#',
+    description: 'AIR 40 - CA',
+    image: '/illustrate alumini/Rahul Pai.jpg',
+  },
+  { 
+    name: 'Supriya Patil',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Associate Vice President',
+    company: 'Tata Capital, Mumbai',
+    linkedin: '#',
+    description: 'CFA Level 3',
+    image: '/illustrate alumini/Supriya Patil.jpeg',
+  },
+  { 
+    name: 'Preethi Shekar',
+    course: 'BCOM',
+    batch: 'Class of 2018',
+    role: 'Director',
+    company: 'Deloitte Haskins, Mumbai',
+    linkedin: '#',
+    description: 'Outstanding Professional Achievement',
+    image: '/illustrate alumini/preethi shekar.jpeg',
+  },
+  { 
+    name: 'Nidhi Savla',
+    course: 'BCOM',
+    batch: 'Class of 2025',
+    role: 'Associate',
+    company: 'EY, Mumbai',
+    linkedin: '#',
+    description: 'AIR 40 - CA',
+    image: '/illustrate alumini/NIDHI SAVLA.png',
   },
 ];
 
@@ -620,12 +769,51 @@ export default function HomePage() {
   const [liveEvents, setLiveEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
   const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string}[]>([]);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
+  const illustriousScrollRef = useRef<HTMLDivElement>(null);
+  const adminServicesAutoRef = useRef<HTMLDivElement>(null);
 
   const latestEventsRef = useMarqueeScroll(1);
   const latestNoticesRef = useMarqueeScroll(0.8, 'y');
   const programmesRef = useMarqueeScroll(-1.2);
-  const adminServicesRef = useMarqueeScroll(-1);
   const culturalRef = useMarqueeScroll(1);
+
+  // Admin Services: auto-slide right-to-left, one card every 3s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const el = adminServicesAutoRef.current;
+      if (!el) return;
+      const cardWidth = (el.firstElementChild as HTMLElement)?.offsetWidth || 320;
+      const gap = 20; // gap-5 = 1.25rem = 20px
+      const scrollAmount = cardWidth + gap;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 10) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (illustriousScrollRef.current) {
+        const { scrollLeft: aLeft, scrollWidth: aWidth, clientWidth: aClient } = illustriousScrollRef.current;
+        if (aLeft + aClient >= aWidth - 10) {
+          illustriousScrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // Scroll by the width of one card (plus gap). For simplicity, scrolling by client width / 3 on desktop works,
+          // but scrolling by client width is also fine. To scroll one card at a time smoothly:
+          // A single card is roughly clientWidth / 3 on large screens. 
+          // Let's scroll by the width of one card if possible, otherwise client width.
+          const cardWidth = illustriousScrollRef.current.firstElementChild?.clientWidth || aClient;
+          // Add gap of 24px (gap-6 is 1.5rem = 24px)
+          const scrollAmount = cardWidth + 24;
+          illustriousScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     async function fetchBanners() {
@@ -1087,50 +1275,41 @@ export default function HomePage() {
           <div className="overflow-hidden w-full group relative">
             <div ref={programmesRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2 cursor-grab active:cursor-grabbing">
               {[...programmes, ...programmes].map((p, i) => (
-                <div
+                <Link
                   key={`${p.code}-${i}`}
-                  className="w-[280px] sm:w-[320px] flex-shrink-0 bg-white rounded-2xl border border-[#E2E8F0] p-6 cursor-pointer group/card hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(18,59,109,0.12)] transition-all duration-300"
+                  href={p.href}
+                  className="w-[260px] sm:w-[300px] flex-shrink-0 bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden cursor-pointer group/card hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(18,59,109,0.15)] transition-all duration-300 flex flex-col"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#123B6D]/10 text-[#123B6D] font-bold text-lg font-[var(--font-heading)] flex items-center justify-center group-hover/card:bg-[#123B6D] group-hover/card:text-white transition-all">
-                      {p.type}
+                  {/* Coloured Header */}
+                  <div className={`bg-gradient-to-br ${p.color} px-5 pt-5 pb-6 text-white relative overflow-hidden`}>
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-white/70 text-[10px] font-bold uppercase tracking-widest">{p.type}</span>
+                      <span className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-bold">{p.duration}</span>
+                    </div>
+                    <h3 className="font-black text-xl leading-tight font-[var(--font-heading)]">{p.code}</h3>
+                    <p className="text-white/85 text-xs font-medium mt-1 leading-snug line-clamp-2">{p.name}</p>
+                  </div>
+                  {/* Card Body */}
+                  <div className="p-5 flex flex-col flex-1">
+                    <p className="text-xs text-[#64748B] mb-4 line-clamp-2 flex-1">{p.desc}</p>
+                    <div className="flex flex-col gap-1.5 text-xs text-[#94A3B8] border-t border-[#F1F5F9] pt-3">
+                      <div className="flex items-center gap-1.5">
+                        <Users size={11} className="shrink-0" />
+                        <span className="font-semibold text-[#64748B]">{p.seats} seats</span>
+                      </div>
+                      {p.time && (
+                        <div className="flex items-center gap-1.5">
+                          <BookOpen size={11} className="shrink-0" />
+                          <span>{p.time}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-3 flex items-center gap-1 text-xs font-bold text-[#123B6D] group-hover/card:gap-2 transition-all">
+                      Learn More <ArrowRight size={11} className="group-hover/card:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
-                  <h3 className="font-bold text-[#1E293B] mb-1 font-[var(--font-heading)] truncate">{p.name}</h3>
-                  <p className="text-sm font-medium text-[#123B6D] mb-2">{p.code}</p>
-                  <p className="text-xs text-[#64748B] mb-4 h-8 line-clamp-2">{p.desc}</p>
-                  <div className="flex gap-3 text-xs text-[#94A3B8]">
-                    <span>{p.duration}</span>
-                    <span>•</span>
-                    <span>{p.seats} seats</span>
-                  </div>
-                  <Link href="/programmes" className="mt-4 flex items-center gap-1 text-xs font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
-                    Learn More <ArrowRight size={12} />
-                  </Link>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between mt-12 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
-                <p className="text-sm text-[#64748B] mt-1">Celebrating our outstanding achievers in CA, CMA, CS, and beyond</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full pb-8">
-              {wallOfFameStudents.map((student, i) => (
-                <div key={i} className="group relative bg-white rounded-3xl border border-[#E2E8F0] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col items-center text-center p-6">
-                  <div className="w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-[#F8FAFC] shadow-inner group-hover:border-[#D4A017]/30 transition-colors">
-                    <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
-                  </div>
-                  <h3 className="text-lg font-bold text-[#123B6D] font-[var(--font-heading)] mb-1">{student.name}</h3>
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <span className="px-2.5 py-1 bg-[#D4A017]/10 text-[#D4A017] text-xs font-bold rounded-lg">{student.rank}</span>
-                    <span className="text-sm font-semibold text-[#64748B]">{student.course}</span>
-                  </div>
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-[#D4A017]/10 to-transparent rounded-bl-full" />
-                </div>
+                </Link>
               ))}
             </div>
 
@@ -1141,7 +1320,7 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div ref={adminServicesRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2 cursor-grab active:cursor-grabbing">
+            <div ref={adminServicesAutoRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2">
               {[...adminServices, ...adminServices].map((s, i) => (
                 <div
                   key={`${s.label}-${i}`}
@@ -1173,43 +1352,43 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+          <div ref={illustriousScrollRef} className="flex gap-6 w-full overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory cursor-grab active:cursor-grabbing">
             {illustriousAlumni.map((student, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col h-full hover:shadow-md transition-shadow">
+              <div key={i} className="flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[calc(50vw-2rem)] lg:w-[calc(33.333%-1rem)] h-[440px] snap-center bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all">
                 {/* Top Section */}
-                <div className="flex gap-4 mb-5">
-                  <div className="w-24 h-24 rounded-2xl bg-[#185392] text-white flex items-center justify-center text-3xl font-bold shrink-0">
-                    {student.initials}
+                <div className="flex gap-4 sm:gap-6 mb-5">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shrink-0 border border-gray-200 shadow-sm bg-gray-50">
+                    <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
                   </div>
-                  <div className="flex flex-col gap-1.5 pt-1">
+                  <div className="flex flex-col gap-1.5 pt-1 justify-center flex-1">
                     <h3 className="font-bold text-[#123B6D] text-lg leading-tight">{student.name}</h3>
-                    <div className="flex items-center gap-2 text-[13px] text-gray-600">
-                      <GraduationCap size={14} className="text-[#D4A017] shrink-0" />
-                      <span>{student.course}</span>
+                    <div className="flex items-start gap-2 text-[13px] text-gray-600">
+                      <GraduationCap size={14} className="text-[#D4A017] shrink-0 mt-0.5" />
+                      <span className="leading-snug">{student.course}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[13px] text-gray-600">
-                      <Calendar size={14} className="text-blue-400 shrink-0" />
-                      <span>{student.batch}</span>
+                    <div className="flex items-start gap-2 text-[13px] text-gray-600">
+                      <Calendar size={14} className="text-blue-400 shrink-0 mt-0.5" />
+                      <span className="leading-snug">{student.batch}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[13px] font-semibold text-gray-700">
-                      <Briefcase size={14} className="text-emerald-500 shrink-0" />
-                      <span>{student.role}</span>
+                    <div className="flex items-start gap-2 text-[13px] font-semibold text-gray-700">
+                      <Briefcase size={14} className="text-emerald-500 shrink-0 mt-0.5" />
+                      <span className="leading-snug">{student.role}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[13px] text-gray-500">
-                      <Building2 size={14} className="text-gray-400 shrink-0" />
-                      <span>{student.company}</span>
+                    <div className="flex items-start gap-2 text-[13px] text-gray-500">
+                      <Building2 size={14} className="text-gray-400 shrink-0 mt-0.5" />
+                      <span className="leading-snug">{student.company}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* LinkedIn Button */}
-                <a href={student.linkedin} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-blue-200 bg-blue-50/50 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition-colors mb-4">
+                <a href={student.linkedin} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-blue-200 bg-blue-50/50 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition-colors mb-4 shrink-0">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                   View on LinkedIn
                 </a>
 
                 {/* Description Box */}
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1">
+                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1 overflow-y-auto no-scrollbar">
                   <p className="text-sm text-gray-600 leading-relaxed">
                     {student.description}
                   </p>

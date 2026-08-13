@@ -12,25 +12,28 @@ import LibraryNav from '@/components/library/LibraryNav';
 
 
 const eResources = [
-  { title: 'N-LIST', desc: 'National Library and Information Services Infrastructure for Scholarly Content', icon: <University className="w-8 h-8 text-blue-800" /> },
   { title: 'Shodhganga', desc: 'A reservoir of Indian theses', icon: <Layers className="w-8 h-8 text-orange-500" /> },
   { title: 'eShodhSindhu', desc: 'Consortium for HE e-Resources', icon: <BookOpen className="w-8 h-8 text-green-600" /> },
   { title: 'National Digital Library of India', desc: 'One Library All of India', icon: <BookMarked className="w-8 h-8 text-green-800" /> },
   { title: 'NDLI Club', desc: 'Learning & Sharing Together', icon: <Users className="w-8 h-8 text-green-700" /> },
-  { title: 'JSTOR', desc: 'Digital Library of Academic Journals', icon: <FileText className="w-8 h-8 text-red-700" /> },
 ];
 
 const featuredBooks = [
-  { title: 'INDIAN ECONOMY', sub: 'For Civil Services and Other Competitive Exams', author: 'Ramesh Singh', bg: 'bg-[#1e4066]', text: 'text-white' },
-  { title: 'FUNDAMENTALS OF MANAGEMENT', sub: '', author: 'P. C. Tripathi\nP. N. Reddy', bg: 'bg-[#f4f1ea]', text: 'text-gray-900' },
-  { title: 'FINANCIAL ACCOUNTING', sub: 'A Managerial Perspective', author: 'R. Narayanaswamy\nV. Balachandran', bg: 'bg-[#2b5a75]', text: 'text-white' },
-  { title: 'BUSINESS COMMUNICATION', sub: '', author: 'K. K. Sinha', bg: 'bg-[#e8e4db]', text: 'text-gray-900' },
-  { title: 'RESEARCH METHODOLOGY', sub: 'Methods and Techniques', author: 'C. R. Kothari', bg: 'bg-[#a3aa46]', text: 'text-white' },
-  { title: 'MARKETING MANAGEMENT', sub: '', author: 'Philip Kotler', bg: 'bg-[#213547]', text: 'text-white' },
-  { title: 'HUMAN RESOURCE MANAGEMENT', sub: 'Text and Cases', author: 'K. Aswathappa', bg: 'bg-[#e2e8f0]', text: 'text-gray-900' },
-  { title: 'BUSINESS LAW', sub: '', author: 'N. D. Kapoor', bg: 'bg-[#4a362a]', text: 'text-white' },
-  { title: 'STATISTICS FOR MANAGEMENT', sub: '', author: 'S. C. Gupta', bg: 'bg-[#3b6b61]', text: 'text-white' },
-  { title: 'DIGITAL MARKETING', sub: '', author: 'Seema Gupta', bg: 'bg-[#1c3a59]', text: 'text-white' },
+  { title: 'Book 1',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.27 PM.jpeg' },
+  { title: 'Book 2',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.46 PM.jpeg' },
+  { title: 'Book 3',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.48 PM.jpeg' },
+  { title: 'Book 4',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.49 PM.jpeg' },
+  { title: 'Book 5',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.51 PM.jpeg' },
+  { title: 'Book 6',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.52 PM.jpeg' },
+  { title: 'Book 7',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.53 PM.jpeg' },
+  { title: 'Book 8',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.55 PM.jpeg' },
+  { title: 'Book 9',  imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.56 PM.jpeg' },
+  { title: 'Book 10', imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.58 PM.jpeg' },
+  { title: 'Book 11', imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.38.59 PM.jpeg' },
+  { title: 'Book 12', imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.39.00 PM.jpeg' },
+  { title: 'Book 13', imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.39.02 PM.jpeg' },
+  { title: 'Book 14', imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.39.03 PM.jpeg' },
+  { title: 'Book 15', imageSrc: '/book cover/WhatsApp Image 2026-08-12 at 11.39.05 PM.jpeg' },
 ];
 
 const notices = [

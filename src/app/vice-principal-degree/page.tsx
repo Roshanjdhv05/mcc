@@ -21,12 +21,15 @@ export default function VicePrincipalPage() {
           {/* ── Aided Section (Dr. Shivaji Pawar) ── */}
           <div className="text-gray-700 leading-relaxed text-[13.5px] xl:text-sm space-y-4 text-justify">
             
-            {/* Image Placeholder - Aided */}
-            <div className="w-[140px] xl:w-[180px] h-[180px] xl:h-[220px] bg-gray-200 rounded-xl shadow-md border border-gray-200 float-left mr-5 mb-3 mt-1 flex flex-col items-center justify-center text-gray-500 overflow-hidden relative">
-              <span className="text-3xl mb-1">📷</span>
-              <span className="text-[10px] font-semibold">Photo</span>
+            {/* Image - Aided (Dr. Shivaji Pawar) */}
+            <div className="w-[140px] xl:w-[180px] rounded-xl shadow-md border border-gray-200 float-left mr-5 mb-3 mt-1 overflow-hidden relative bg-white pb-10">
+              <img
+                src="/Degree College Teachers/Shivaji Pawar.png"
+                alt="Dr. Shivaji Pawar"
+                className="w-full h-auto object-cover object-top"
+              />
               <div className="absolute bottom-0 w-full flex flex-col">
-                <div className="bg-white text-gray-800 text-[10px] font-bold text-center py-1 truncate px-1">
+                <div className="bg-white text-gray-800 text-[10px] font-bold text-center py-1 truncate px-1 border-t border-gray-100">
                   Dr. Shivaji Pawar
                 </div>
                 <div className="bg-[#123B6D] text-white text-[10px] font-bold text-center py-1 tracking-widest uppercase">

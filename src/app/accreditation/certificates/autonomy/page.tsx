@@ -11,7 +11,7 @@ export default function AutonCertPage() {
       title="Autonomy Certificate"
       subtitle="Certificate of autonomous status conferred by UGC and University of Mumbai."
       pdfs={[
-        { label: 'Conferment of Autonomy', url: '/accreditation/Conferment of Autonomy (Grant of Autonomy).pdf' },
+        { label: 'Conferment of Autonomy', url: '/Conferment of Autonomy (Grant of Autonomy).pdf' },
       ]}
     />
   );

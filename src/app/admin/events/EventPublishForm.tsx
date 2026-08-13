@@ -118,6 +118,7 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
   // ── Core fields
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [eventDate, setEventDate] = useState('');
   const [category, setCategory] = useState('');
   const [department, setDepartment] = useState('');
 
@@ -139,6 +140,8 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
   const imageRef = useRef<HTMLInputElement>(null);
   const docRef   = useRef<HTMLInputElement>(null);
 
+  const MAX_IMAGES = 5;
+
   // ── Upload
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -146,6 +149,29 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
   ) => {
     const files = e.target.files;
     if (!files?.length) return;
+
+    if (type === 'image') {
+      const currentImageCount = uploads.filter(u => u.type === 'image').length;
+      const remaining = MAX_IMAGES - currentImageCount;
+      if (remaining <= 0) {
+        setError(`Maximum ${MAX_IMAGES} images allowed.`);
+        e.target.value = '';
+        return;
+      }
+      const filesToUpload = Array.from(files).slice(0, remaining);
+      if (filesToUpload.length < files.length) {
+        setError(`Only ${remaining} more image(s) can be added (limit: ${MAX_IMAGES}).`);
+      }
+      setUploading(true);
+      for (const file of filesToUpload) {
+        const url = await uploadFile(file, bucket, folder);
+        if (url) setUploads(prev => [...prev, { name: file.name, url, type }]);
+        else setError(`Failed to upload ${file.name}`);
+      }
+      setUploading(false); e.target.value = '';
+      return;
+    }
+
     setUploading(true); setError(null);
     for (const file of Array.from(files)) {
       const url = await uploadFile(file, bucket, folder);
@@ -195,7 +221,7 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
       publish_home:       toHome,
       publish_calendar:   false,
       publish_programme:  toProgramme,
-      calendar_date:      null,
+      calendar_date:      eventDate || null,
       calendar_type:      null,
       status:             'published',
       published_at:       new Date().toISOString(),
@@ -205,7 +231,7 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
     if (dbError) { setError(dbError.message); setSaving(false); return; }
 
     setSuccess(true); setSaving(false);
-    setTitle(''); setDescription(''); setCategory(''); setDepartment('');
+    setTitle(''); setDescription(''); setCategory(''); setDepartment(''); setEventDate('');
     setSelectedProgrammes([]); setSelectedSections({});
     setToGallery(true); setToHome(false); setToProgramme(false);
     setUploads([]);
@@ -246,6 +272,19 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
           value={description} onChange={e => setDescription(e.target.value)}
           rows={4} placeholder="Describe the event in detail..."
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D]"
+        />
+      </div>
+
+      {/* ── Event Date ── */}
+      <div>
+        <label className="block text-sm font-bold text-gray-700 mb-1.5">
+          Event Date (When it happened)
+        </label>
+        <input
+          type="date"
+          value={eventDate}
+          onChange={e => setEventDate(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D]"
         />
       </div>
 
@@ -408,13 +447,26 @@ export default function EventPublishForm({ onSuccess }: { onSuccess?: () => void
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-3">Media & Attachments</label>
         <div className="grid grid-cols-2 gap-3 max-w-lg">
-          <label className="flex flex-col items-center gap-2 border-2 border-dashed border-blue-200 rounded-xl p-4 cursor-pointer hover:bg-blue-50 transition-colors text-center">
-            <Image size={22} className="text-blue-500" />
-            <span className="text-xs font-semibold text-blue-700">Images</span>
-            <span className="text-[10px] text-gray-400">JPG, PNG, WEBP</span>
-            <input ref={imageRef} type="file" multiple accept="image/*" className="hidden"
-              onChange={e => handleUpload(e, 'event-images', 'events', 'image')} />
-          </label>
+          {/* Images upload */}
+          {(() => {
+            const imgCount = uploads.filter(u => u.type === 'image').length;
+            const limitReached = imgCount >= MAX_IMAGES;
+            return (
+              <label className={`flex flex-col items-center gap-2 border-2 border-dashed rounded-xl p-4 text-center transition-colors ${
+                limitReached ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60' : 'border-blue-200 cursor-pointer hover:bg-blue-50'
+              }`}>
+                <Image size={22} className={limitReached ? 'text-gray-400' : 'text-blue-500'} />
+                <span className={`text-xs font-semibold ${limitReached ? 'text-gray-400' : 'text-blue-700'}`}>Images</span>
+                <span className="text-[10px] text-gray-400">JPG, PNG, WEBP</span>
+                <span className={`text-[10px] font-bold ${limitReached ? 'text-red-500' : 'text-gray-400'}`}>
+                  {imgCount}/{MAX_IMAGES} uploaded
+                </span>
+                <input ref={imageRef} type="file" multiple accept="image/*" className="hidden"
+                  disabled={limitReached}
+                  onChange={e => handleUpload(e, 'event-images', 'events', 'image')} />
+              </label>
+            );
+          })()}
           <label className="flex flex-col items-center gap-2 border-2 border-dashed border-amber-200 rounded-xl p-4 cursor-pointer hover:bg-amber-50 transition-colors text-center">
             <FileText size={22} className="text-amber-500" />
             <span className="text-xs font-semibold text-amber-700">Documents</span>

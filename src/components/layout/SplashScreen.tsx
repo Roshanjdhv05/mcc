@@ -135,6 +135,18 @@ export default function SplashScreen() {
             className="flex flex-col items-center"
             style={{ gap: '2px' }}
           >
+            <p
+              style={{
+                fontSize: '11px',
+                fontWeight: '700',
+                letterSpacing: '0.2em',
+                color: '#1a2e52',
+                textTransform: 'uppercase',
+                margin: '0 0 2px 0',
+              }}
+            >
+              Since 1970
+            </p>
             <h1
               style={{
                 fontFamily: 'Georgia, "Times New Roman", serif',
@@ -143,6 +155,7 @@ export default function SplashScreen() {
                 color: '#1a2e52',
                 lineHeight: '1.15',
                 margin: 0,
+                textTransform: 'uppercase',
               }}
             >
               Mulund College
@@ -152,9 +165,10 @@ export default function SplashScreen() {
                 fontFamily: 'Georgia, "Times New Roman", serif',
                 fontSize: 'clamp(26px, 5vw, 40px)',
                 fontWeight: '700',
-                color: '#b8821a',
+                color: '#1a2e52',
                 lineHeight: '1.15',
                 margin: 0,
+                textTransform: 'uppercase',
               }}
             >
               of Commerce
@@ -167,15 +181,15 @@ export default function SplashScreen() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55, duration: 0.5 }}
             style={{
-              fontSize: '11px',
-              fontWeight: '600',
-              letterSpacing: '0.18em',
-              color: '#2c4a7a',
+              fontSize: 'clamp(18px, 4vw, 24px)',
+              fontWeight: '800',
+              letterSpacing: '0.05em',
+              color: '#D4A017',
               textTransform: 'uppercase',
-              margin: 0,
+              margin: '4px 0 0 0',
             }}
           >
-            Autonomous&nbsp;•&nbsp;Est. 1970
+            (AUTONOMOUS) 1970
           </motion.p>
 
         </div>

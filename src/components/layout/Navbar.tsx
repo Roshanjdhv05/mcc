@@ -731,7 +731,6 @@ export default function Navbar() {
     const { data } = await supabase
       .from('notices')
       .select('id, title, schedule_time, courses, categories, is_general, attachments')
-      .eq('is_general', true)
       .lte('schedule_time', now)
       .or(`expiry_time.is.null,expiry_time.gt.${now}`)
       .order('schedule_time', { ascending: false })

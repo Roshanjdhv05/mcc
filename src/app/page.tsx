@@ -20,13 +20,13 @@ import {
 const quickLinks = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, bg: 'bg-indigo-50', iconColor: 'text-indigo-600', hiddenMobile: true },
   { label: 'Notices', href: '/notices', icon: Megaphone, bg: 'bg-blue-50', iconColor: 'text-[#123B6D]' },
-  { label: 'Admissions', href: '/admissions', icon: ClipboardCheck, bg: 'bg-teal-50', iconColor: 'text-teal-600' },
+  { label: 'Admissions', href: '/admission', icon: ClipboardCheck, bg: 'bg-teal-50', iconColor: 'text-teal-600' },
   { label: 'Exams', href: '/examination', icon: PenLine, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
   { label: 'Library', href: '/library', icon: LibraryBig, bg: 'bg-blue-50', iconColor: 'text-[#123B6D]' },
   { label: 'Services', href: '/services', icon: HeadphonesIcon, bg: 'bg-cyan-50', iconColor: 'text-cyan-600' },
   { label: 'Students Corner', href: '/students-corner', icon: Users, bg: 'bg-gray-100', iconColor: 'text-gray-600' },
   { label: 'Placement', href: '/placement', icon: Briefcase, bg: 'bg-amber-50', iconColor: 'text-amber-700' },
-  { label: 'Gallery', href: '/gallery', icon: Image, bg: 'bg-blue-50', iconColor: 'text-[#4DA8DA]' },
+  { label: 'Gallery', href: '/students-corner/gallery', icon: Image, bg: 'bg-blue-50', iconColor: 'text-[#4DA8DA]' },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -55,7 +55,7 @@ const events = [
   { month: 'OCT', day: '18', title: 'Alumni Networking Brunch', time: '11:00 AM • College Lawns', accent: 'bg-cyan-50 text-cyan-700' },
 ];
 
-const culturalEvents = [
+const culturalEvents: Array<{ tag: string; title: string; desc: string; img: string; date?: string | null }> = [
   {
     tag: 'AUG 2025', title: 'Friendship Day',
     desc: 'A celebration of friendship, unity, and memories shared across the campus with games and t-shirt signing.',
@@ -153,7 +153,7 @@ const heroBanners = [
     image: "/banner1.png",
     fit: 'object-cover' as const,
     badge: "Welcome to MCC",
-    title: <>Welcome to <span className="text-[#D4A017]">Mulund College</span> of Commerce</>,
+    title: <>Welcome to <span className="text-[#D4A017]">Mulund College of Commerce</span></>,
     desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1970."
   },
   {
@@ -864,18 +864,19 @@ export default function HomePage() {
       ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
       const { data } = await supabase
         .from('events')
-        .select('title, description, category, images, published_at')
+        .select('title, description, category, images, published_at, calendar_date')
         .eq('publish_home', true)
         .eq('status', 'published')
         .gte('published_at', ninetyDaysAgo.toISOString())
         .order('published_at', { ascending: false })
         .limit(12);
       if (data && data.length > 0) {
-        const formatted = data.map((e: { title: string; description: string; category: string; images: string[]; published_at: string }) => ({
+        const formatted = data.map((e: { title: string; description: string; category: string; images: string[]; published_at: string; calendar_date: string | null }) => ({
           title: e.title,
           tag: e.category || 'Event',
           desc: e.description || '',
           img: (e.images && e.images[0]) || '/2025 - 2026/Friendship Day (1).jpg',
+          date: e.calendar_date,
         }));
         setLiveEvents(formatted);
       }
@@ -891,18 +892,19 @@ export default function HomePage() {
       ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
       const { data } = await supabase
         .from('events')
-        .select('title, description, category, department, images, published_at')
+        .select('title, description, category, department, images, published_at, calendar_date')
         .eq('publish_gallery', true)
         .eq('status', 'published')
         .gte('published_at', ninetyDaysAgo.toISOString())
         .order('published_at', { ascending: false })
         .limit(12);
       if (data && data.length > 0) {
-        const formatted = data.map((e: { title: string; description: string; category: string; department: string; images: string[]; published_at: string }) => ({
+        const formatted = data.map((e: { title: string; description: string; category: string; department: string; images: string[]; published_at: string; calendar_date: string | null }) => ({
           title: e.title,
           tag: e.category || 'Cultural',
           desc: e.description || '',
           img: (e.images && e.images[0]) || '/2025 - 2026/Friendship Day (1).jpg',
+          date: e.calendar_date,
         }));
         setLiveCulturalEvents(formatted);
       }
@@ -1015,7 +1017,7 @@ export default function HomePage() {
                 {displayBanners[currentBanner % displayBanners.length]?.desc}
               </p>
               <div className="flex flex-wrap gap-4 justify-start">
-                {/* Dynamic CTA button if set, else show default buttons */}
+                {/* Dynamic CTA button if set, else show default buttons ONLY on the first banner */}
                 {displayBanners[currentBanner % displayBanners.length]?.buttonText && displayBanners[currentBanner % displayBanners.length]?.buttonLink ? (
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
@@ -1025,11 +1027,11 @@ export default function HomePage() {
                       {displayBanners[currentBanner % displayBanners.length]!.buttonText} <ArrowRight size={18} />
                     </Link>
                   </motion.div>
-                ) : (
+                ) : (currentBanner % displayBanners.length === 0) ? (
                   <>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Link
-                        href="/admissions"
+                        href="#"
                         className="px-8 py-3.5 bg-[#D4A017] text-white font-semibold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg shadow-[#D4A017]/30 flex items-center gap-2"
                       >
                         Apply Now <ArrowRight size={18} />
@@ -1044,7 +1046,7 @@ export default function HomePage() {
                       </Link>
                     </motion.div>
                   </>
-                )}
+                ) : null}
               </div>
             </motion.div>
           </AnimatePresence>
@@ -1113,8 +1115,14 @@ export default function HomePage() {
                           {ev.tag}
                         </span>
                       </div>
-                      <div className="p-3 sm:p-4">
+                      <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
                         <h4 className="font-bold text-[#1E293B] text-sm sm:text-base leading-snug line-clamp-2 font-[var(--font-heading)]">{ev.title}</h4>
+                        {ev.date && (
+                          <div className="text-xs font-semibold text-[#64748B] mt-2 flex items-center gap-1.5">
+                            <Calendar size={13} className="text-[#123B6D]" /> 
+                            {new Date(ev.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </div>
+                        )}
                       </div>
                     </Link>
                   ))}
@@ -1253,6 +1261,12 @@ export default function HomePage() {
                   </div>
                   <div className="p-5 flex flex-col flex-1">
                     <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">{n.title}</h4>
+                    {n.date && (
+                      <div className="text-xs font-semibold text-[#64748B] mb-2 flex items-center gap-1.5">
+                        <Calendar size={13} className="text-[#123B6D]" /> 
+                        {new Date(n.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </div>
+                    )}
                     <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 mb-4">{n.desc}</p>
                     <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
                       View Details <ArrowRight size={16} />

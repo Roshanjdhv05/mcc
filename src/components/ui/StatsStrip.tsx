@@ -3,7 +3,7 @@ import { Users, BookOpen, Briefcase, ShieldCheck } from 'lucide-react';
 import Counter from '@/components/ui/Counter';
 
 const stats = [
-  { label: 'Qualified Teachers', target: 51, suffix: '', icon: Users },
+  { label: 'Qualified Teachers', target: 90, suffix: '+', icon: Users },
   { label: 'Students', target: 6306, suffix: '', icon: BookOpen },
   { label: 'Programs', target: 18, suffix: '', icon: Briefcase },
   { label: 'Years of Excellence', target: 55, suffix: '+', icon: ShieldCheck },

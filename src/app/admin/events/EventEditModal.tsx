@@ -51,6 +51,7 @@ type EventRow = {
   programme: string | null;
   programme_section: string | null;
   status: string;
+  calendar_date?: string | null;
 };
 
 async function uploadFile(file: File, bucket: string, folder: string): Promise<string | null> {
@@ -72,6 +73,7 @@ export default function EventEditModal({
 }) {
   const [title, setTitle] = useState(event.title);
   const [description, setDescription] = useState(event.description || '');
+  const [eventDate, setEventDate] = useState(event.calendar_date || '');
   const [category, setCategory] = useState(event.category);
   const [department, setDepartment] = useState(event.department || '');
   const [images, setImages] = useState<string[]>(event.images || []);
@@ -114,10 +116,23 @@ export default function EventEditModal({
     return () => window.removeEventListener('keydown', h);
   }, [onClose]);
 
+  const MAX_IMAGES = 5;
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
+    const currentCount = images.length;
+    const remaining = MAX_IMAGES - currentCount;
+    if (remaining <= 0) {
+      setMsg({ type: 'error', text: `Maximum ${MAX_IMAGES} images allowed.` });
+      e.target.value = '';
+      return;
+    }
+    const filesToUpload = Array.from(e.target.files).slice(0, remaining);
+    if (filesToUpload.length < e.target.files.length) {
+      setMsg({ type: 'error', text: `Only ${remaining} more image(s) can be added (limit: ${MAX_IMAGES}).` });
+    }
     setUploading(true);
-    for (const file of Array.from(e.target.files)) {
+    for (const file of filesToUpload) {
       const url = await uploadFile(file, 'event-images', 'events');
       if (url) setImages(prev => [...prev, url]);
     }
@@ -165,6 +180,7 @@ export default function EventEditModal({
       publish_programme: toProgramme,
       programme: toProgramme ? selectedProgrammes.join(', ') : null,
       programme_section: toProgramme ? JSON.stringify(selectedSections) : null,
+      calendar_date: eventDate || null,
     };
 
     const { error } = await supabase.from('events').update(payload).eq('id', event.id);
@@ -221,6 +237,17 @@ export default function EventEditModal({
             <textarea
               value={description} onChange={e => setDescription(e.target.value)} rows={4}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D]"
+            />
+          </div>
+
+          {/* Event Date */}
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">Event Date (When it happened)</label>
+            <input
+              type="date"
+              value={eventDate}
+              onChange={e => setEventDate(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D]"
             />
           </div>
 
@@ -360,7 +387,12 @@ export default function EventEditModal({
 
           {/* Images */}
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Images</label>
+            <label className="block text-sm font-bold text-gray-700 mb-2">
+              Images
+              <span className={`ml-2 text-xs font-normal ${images.length >= MAX_IMAGES ? 'text-red-500' : 'text-gray-400'}`}>
+                ({images.length}/{MAX_IMAGES})
+              </span>
+            </label>
             <div className="flex flex-wrap gap-3 mb-3">
               {images.map((img, i) => (
                 <div key={i} className="relative group">
@@ -371,12 +403,19 @@ export default function EventEditModal({
                   </button>
                 </div>
               ))}
-              <button type="button" onClick={() => imageRef.current?.click()}
-                disabled={uploading}
-                className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-1 hover:border-[#123B6D] hover:bg-blue-50 transition-colors disabled:opacity-50">
-                {uploading ? <Loader2 size={20} className="animate-spin text-gray-400" /> : <UploadCloud size={20} className="text-gray-400" />}
-                <span className="text-[10px] font-semibold text-gray-400">{uploading ? 'Uploading' : 'Add'}</span>
-              </button>
+              {images.length < MAX_IMAGES && (
+                <button type="button" onClick={() => imageRef.current?.click()}
+                  disabled={uploading}
+                  className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-1 hover:border-[#123B6D] hover:bg-blue-50 transition-colors disabled:opacity-50">
+                  {uploading ? <Loader2 size={20} className="animate-spin text-gray-400" /> : <UploadCloud size={20} className="text-gray-400" />}
+                  <span className="text-[10px] font-semibold text-gray-400">{uploading ? 'Uploading' : 'Add'}</span>
+                </button>
+              )}
+              {images.length >= MAX_IMAGES && (
+                <div className="w-24 h-24 border-2 border-dashed border-red-200 rounded-xl flex flex-col items-center justify-center gap-1 bg-red-50">
+                  <span className="text-[10px] font-bold text-red-500 text-center px-1">Limit reached (5/5)</span>
+                </div>
+              )}
               <input type="file" ref={imageRef} accept="image/*" multiple className="hidden" onChange={handleImageUpload} />
             </div>
           </div>

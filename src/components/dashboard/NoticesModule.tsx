@@ -14,24 +14,24 @@ const COURSE_CODE_MAP: Record<string, string> = {
   '11th':      'jr-college',
   '12th':      'jr-college',
   // UG
-  'bcom':      'bcom',
-  'BCom':      'bcom',
-  'B.Com':     'bcom',
-  'BBA':       'bba',
-  'BMS':       'bms',
-  'BCA':       'bca',
-  'BSc IT':    'bsc-it',
-  'BSc CS':    'bsc-cs',
-  'DS':        'bsc-ds',
-  'BAF':       'baf',
-  'BFM':       'bfm',
-  'BBI':       'bbi',
-  'BAMMC':     'bammc',
+  'bcom':      'BCOM',
+  'BCom':      'BCOM',
+  'B.Com':     'BCOM',
+  'BBA':       'BCOM.BA',
+  'BMS':       'BCOM.MS',
+  'BCA':       'BSC.CA',
+  'BSc IT':    'BSC.IT',
+  'BSc CS':    'BSC.CS',
+  'DS':        'BSC.DS',
+  'BAF':       'BCOM.AF',
+  'BFM':       'BCOM.FM',
+  'BBI':       'BCOM.BI',
+  'BAMMC':     'BAMMC',
   // PG
-  'MCom':      'mcom',
-  'M.Com':     'mcom',
-  'MSc IT':    'msc-it',
-  'MSc Finance':'msc-finance',
+  'MCom':      'MCOM.AA',
+  'M.Com':     'MCOM.AA',
+  'MSc IT':    'MSC.IT',
+  'MSc Finance':'MSC.FIN',
 };
 
 function normaliseCourseCode(code: string): string {
@@ -100,7 +100,7 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
       .order('schedule_time', { ascending: false });
     if (data) {
       const filtered = (data as Notice[]).filter(n =>
-        !n.is_general && n.courses && n.courses.includes(dbCourseId)
+        n.is_general || (n.courses && n.courses.includes(dbCourseId))
       );
       setNotices(filtered);
     }

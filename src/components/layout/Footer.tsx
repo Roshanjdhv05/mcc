@@ -8,7 +8,7 @@ export default function Footer() {
   if (pathname?.startsWith('/superadmin')) return null;
 
   return (
-    <footer className="bg-[#123B6D] text-white">
+    <footer className="bg-[#123B6D] text-white pb-20 md:pb-0">
       <div className="max-w-7xl mx-auto px-4 md:px-12 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-12">
           {/* Brand */}
@@ -79,13 +79,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/50">
-          <p>© 2024 Mulund College of Commerce (Autonomous). All rights reserved.</p>
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Use</Link>
-            <Link href="/admin" className="hover:text-white transition-colors">Admin</Link>
-          </div>
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-white/50">
+          <p className="text-center">
+            © 2026 Mulund College of Commerce (Autonomous). All rights reserved. Designed and managed by{' '}
+            <span className="inline-block font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#4DA8DA] via-white to-[#4DA8DA] animate-pulse drop-shadow-md">
+              Elevi8
+            </span>
+          </p>
         </div>
       </div>
     </footer>

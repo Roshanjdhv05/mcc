@@ -111,16 +111,10 @@ const allProgrammes = [
     color: 'from-[#7C3AED] to-[#8B5CF6]', href: '/programmes/pg/msf',
   },
 
-  // --- PhD ---
-  {
-    code: 'Ph.D', name: 'Ph.D in Business Economics', category: 'Doctoral', duration: '3–5 Years', seats: 20, time: '',
-    highlights: ['Original Research', 'Publications', 'Conferences', 'Expert Guidance'],
-    color: 'from-[#78350F] to-[#92400E]', href: '/programmes/phd/be',
-  },
 ];
 
 export default function AcademicsPage() {
-  const categories = ['Undergraduate', 'Postgraduate', 'Doctoral'];
+  const categories = ['Undergraduate', 'Postgraduate'];
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen">
@@ -139,7 +133,7 @@ export default function AcademicsPage() {
           {[
             { label: 'Total Programmes', value: '18+', icon: BookOpen },
             { label: 'Total Seats', value: '2600+', icon: Users },
-            { label: 'Faculty Members', value: '120+', icon: Award },
+            { label: 'Qualified Teachers', value: '90+', icon: Award },
             { label: 'Years Established', value: '50+', icon: Clock },
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} className="bg-white rounded-2xl border border-[#E2E8F0] shadow-md p-3 sm:p-4 md:p-6 flex items-center gap-2 sm:gap-3 md:gap-5">

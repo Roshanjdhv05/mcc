@@ -199,8 +199,13 @@ export default function StaffProfilePage() {
                 <div className="flex justify-center">
                   <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8 flex flex-col items-center text-center max-w-xs w-full">
                     <div className="w-40 h-44 rounded-xl bg-gray-100 border border-gray-200 flex flex-col items-center justify-center mb-4 overflow-hidden shadow-sm">
-                      <User size={48} className="text-gray-400" />
-                      <span className="text-[10px] text-gray-400 mt-2">Librarian Photo</span>
+                      <Image
+                        src="/library photos/Mr. Amey Ranade.jpeg"
+                        alt="Mr. Amey P. Ranade"
+                        width={160}
+                        height={176}
+                        className="w-full h-full object-cover object-top"
+                      />
                     </div>
                     <h3 className="font-bold text-[#123B6D] text-lg mt-2">Mr. Amey P. Ranade</h3>
                     <p className="text-[#008e59] font-semibold text-sm mt-1">I/C Librarian</p>
@@ -296,6 +301,13 @@ export default function StaffProfilePage() {
                       category="Aided Library Staff"
                       imageSrc="/library photos/Mr. Dipak Chougule.jpg"
                     />
+                    <StaffCard
+                      name="Mrs. Suvarna Bhangre"
+                      designation="Library Attendant"
+                      qualification=""
+                      category="Aided Library Staff"
+                      imageSrc="/library photos/SUVARNA BHANGRE.jpeg"
+                    />
                   </div>
                 </div>
 
@@ -310,7 +322,7 @@ export default function StaffProfilePage() {
                       designation="Library Peon"
                       qualification="S.S.C."
                       category="Self-Finance Library Staff"
-                      imageSrc="/library photos/   MR. SANTOSH SHINDE.png"
+                      imageSrc="/library photos/MR. SANTOSH SHINDE.png"
                     />
                     <StaffCard
                       name="Mr. Nilesh Moyanak"

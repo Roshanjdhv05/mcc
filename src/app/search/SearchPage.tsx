@@ -21,7 +21,7 @@ const siteIndex = [
   { title: 'Sr. College', href: '/programmes/sr-college', category: 'Programme', icon: GraduationCap, tags: ['sr college', 'senior college', 'degree', 'ug'] },
   // Accreditation
   { title: 'IQAC – Internal Quality Assurance Cell', href: '/iqac', category: 'IQAC', icon: Award, tags: ['iqac', 'quality', 'assurance', 'internal', 'aqar', 'feedback', 'audit'] },
-  { title: 'NAAC – A+ Accreditation (CGPA 3.42)', href: '/naac', category: 'NAAC', icon: Award, tags: ['naac', 'accreditation', 'cgpa', 'grade', 'a+', 'ssr', 'criteria', 'cycle', '3.42', 'national assessment'] },
+  { title: 'NAAC – A+ Accreditation', href: '/naac', category: 'NAAC', icon: Award, tags: ['naac', 'accreditation', 'cgpa', 'grade', 'a+', 'ssr', 'criteria', 'cycle', '3.42', 'national assessment'] },
   { title: 'NIRF Ranking', href: '/nirf', category: 'NIRF', icon: BarChart2, tags: ['nirf', 'ranking', 'national', 'institutional', 'framework', 'score', 'ministry', 'rank'] },
   // About
   { title: 'Vision & Mission', href: '/about/vision-mission', category: 'About', icon: BookOpen, tags: ['vision', 'mission', 'about', 'mcc', 'values', 'goals'] },

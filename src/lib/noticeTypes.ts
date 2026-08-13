@@ -3,13 +3,16 @@ export type NoticeCategory =
   | 'Admissions'
   | 'Examinations'
   | 'Academics'
-  | 'Scholarships'
+  | 'Scholarships & Prize Distribution & DDC'
   | 'Events'
-  | 'Sports'
+  | 'Sports and Gymkhana'
   | 'Cultural'
-  | 'Placement'
   | 'Library'
-  | 'Administration';
+  | 'Research'
+  | 'Student Forums, Clubs and Committees'
+  | 'Training & Placement'
+  | 'Administration'
+  | 'Other';
 
 export type Department = 'jr_college' | 'ug_programmes' | 'pg_programmes' | 'phd';
 
@@ -17,13 +20,16 @@ export const NOTICE_CATEGORIES: NoticeCategory[] = [
   'Admissions',
   'Examinations',
   'Academics',
-  'Scholarships',
+  'Scholarships & Prize Distribution & DDC',
   'Events',
-  'Sports',
+  'Sports and Gymkhana',
   'Cultural',
-  'Placement',
   'Library',
+  'Research',
+  'Student Forums, Clubs and Committees',
+  'Training & Placement',
   'Administration',
+  'Other',
 ];
 
 export const DEPARTMENTS = [
@@ -38,25 +44,29 @@ export const DEPARTMENTS = [
     id: 'ug_programmes',
     label: 'Undergraduate (Degree)',
     courses: [
-      { id: 'bcom', label: 'B.Com' },
-      { id: 'baf', label: 'B.A.F (Accounting & Finance)' },
-      { id: 'bfm', label: 'B.F.M (Financial Markets)' },
-      { id: 'bbi', label: 'B.B.I (Banking & Insurance)' },
-      { id: 'bms', label: 'B.M.S (Management Studies)' },
-      { id: 'bammc', label: 'B.A.M.M.C (Mass Media)' },
-      { id: 'bsc-cs', label: 'B.Sc (Computer Science)' },
-      { id: 'bsc-it', label: 'B.Sc (Information Technology)' },
-      { id: 'bsc-ds', label: 'B.Sc (Data Science)' },
-      { id: 'bca', label: 'B.Sc (Computer Application)' },
+      { id: 'BCOM', label: 'BCOM' },
+      { id: 'BCOM.AF', label: 'BCOM.AF' },
+      { id: 'BCOM.BI', label: 'BCOM.BI' },
+      { id: 'BCOM.FM', label: 'BCOM.FM' },
+      { id: 'BCOM.MS', label: 'BCOM.MS' },
+      { id: 'BCOM.BA', label: 'BCOM.BA' },
+      { id: 'BSC.CS', label: 'BSC.CS' },
+      { id: 'BSC.IT', label: 'BSC.IT' },
+      { id: 'BSC.DS', label: 'BSC.DS' },
+      { id: 'BSC.CA', label: 'BSC.CA' },
+      { id: 'BAMMC', label: 'BAMMC' },
+      { id: 'BCOM.BFSI', label: 'BCOM.BFSI' },
     ],
   },
   {
     id: 'pg_programmes',
     label: 'Postgraduate (Degree)',
     courses: [
-      { id: 'mcom', label: 'M.Com' },
-      { id: 'msc-it', label: 'M.Sc (Information Technology)' },
-      { id: 'msc-finance', label: 'M.Sc (Finance)' },
+      { id: 'MCOM.AA', label: 'MCOM.AA' },
+      { id: 'MCOM.BM', label: 'MCOM.BM' },
+      { id: 'MCOM.BF', label: 'MCOM.BF' },
+      { id: 'MSC.IT', label: 'MSC.IT' },
+      { id: 'MSC.FIN', label: 'MSC.FIN' },
     ],
   },
   {
@@ -65,6 +75,10 @@ export const DEPARTMENTS = [
     courses: [{ id: 'phd', label: 'PhD Programme' }],
   },
 ];
+
+// All course IDs flattened (used for "General" notices to auto-select all)
+export const ALL_COURSE_IDS = DEPARTMENTS.flatMap(d => d.courses.map(c => c.id));
+export const ALL_DEPT_IDS = DEPARTMENTS.map(d => d.id);
 
 export const SEMESTERS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 

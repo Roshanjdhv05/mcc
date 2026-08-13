@@ -811,6 +811,12 @@ export default function GalleryPage() {
                     <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">
                       {event.title}
                     </h4>
+                    {event.dateObj && (
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-[#64748B] mb-2">
+                        <Calendar size={13} className="text-[#123B6D]" />
+                        {event.dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </div>
+                    )}
                     <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 flex-1 mb-4">{event.desc}</p>
                     <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
                       View Details <ArrowRight size={16} />

@@ -4,7 +4,7 @@ import {
   Bell, X, Upload, Calendar, Clock, ChevronDown, ChevronUp, CheckSquare, Square, Loader2, CalendarDays, MapPin
 } from 'lucide-react';
 import {
-  NOTICE_CATEGORIES, DEPARTMENTS, Notice, CALENDAR_CATEGORIES
+  NOTICE_CATEGORIES, DEPARTMENTS, ALL_COURSE_IDS, ALL_DEPT_IDS, Notice, CALENDAR_CATEGORIES
 } from '@/lib/noticeTypes';
 import { supabase } from '@/lib/supabase';
 
@@ -53,7 +53,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
   const isEditMode = !!initialData?.id;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [isGeneral, setIsGeneral] = useState(true);
+  const [isGeneral, setIsGeneral] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDepts, setSelectedDepts] = useState<string[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
@@ -70,7 +70,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     if (initialData) {
       setTitle(initialData.title || '');
       setDescription(initialData.description || '');
-      setIsGeneral(initialData.is_general ?? true);
+      setIsGeneral(initialData.is_general ?? false);
       setSelectedCategories(initialData.categories || []);
       setSelectedDepts(initialData.departments || []);
       setSelectedCourses(initialData.courses || []);
@@ -349,15 +349,38 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
         />
       </div>
 
-      {/* Scope */}
-      <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100">
-        <label className="flex items-center gap-3 cursor-pointer">
-          <button type="button" onClick={() => setIsGeneral(!isGeneral)} className="flex-shrink-0">
+      <div className={`rounded-2xl p-4 border-2 transition-all ${isGeneral ? 'border-[#123B6D] bg-blue-50' : 'border-gray-100 bg-white'}`}>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <button
+            type="button"
+            onClick={() => {
+              const next = !isGeneral;
+              setIsGeneral(next);
+              if (next) {
+                // General ON → auto-select ALL courses and depts
+                setSelectedCourses(ALL_COURSE_IDS);
+                setSelectedDepts(ALL_DEPT_IDS);
+              } else {
+                // General OFF → clear selection
+                setSelectedCourses([]);
+                setSelectedDepts([]);
+              }
+            }}
+            className="flex-shrink-0 mt-0.5"
+          >
             {isGeneral ? <CheckSquare size={22} className="text-[#123B6D]" /> : <Square size={22} className="text-gray-400" />}
           </button>
           <div>
             <p className="font-semibold text-gray-800 text-sm">General Notice (Broadcast to All)</p>
-            <p className="text-xs text-gray-500 mt-0.5">This notice will appear in the notification bell, main notice page, and quick access panel for all users.</p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Automatically selects <strong>all programmes</strong>. Notice will appear in the notification bell,
+              home page Latest Notices, the main Notice page, and <strong>every programme dashboard</strong>.
+            </p>
+            {!isGeneral && (
+              <p className="text-xs text-amber-600 mt-1 font-medium">
+                ⚠ Non-general: notice appears in bell, home latest notices & notice page — plus selected programme dashboards only.
+              </p>
+            )}
           </div>
         </label>
       </div>
@@ -381,9 +404,13 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       </div>
 
       {/* Departments & Programmes */}
-      <div className="space-y-6">
+      <div className="space-y-6 transition-opacity">
         <label className="block text-sm font-semibold text-gray-700">
-          Department / Programmes <span className="text-gray-400 font-normal">(for targeted notices)</span>
+          Department / Programmes
+          {isGeneral
+            ? <span className="ml-2 text-[#123B6D] text-xs font-normal">✓ All selected (General Notice) - You can deselect if needed</span>
+            : <span className="text-gray-400 font-normal"> (select targeted programmes)</span>
+          }
         </label>
         
         <div className="space-y-4">
@@ -401,18 +428,12 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                       type="button"
                       onClick={() => {
                         if (allSelected) {
-                          // Deselect all for this department
                           setSelectedCourses(prev => prev.filter(c => !deptCourseIds.includes(c)));
                           setSelectedDepts(prev => prev.filter(d => d !== dept.id));
                         } else {
-                          // Select all for this department
                           setSelectedCourses(prev => {
                             const next = [...prev];
-                            deptCourseIds.forEach(id => {
-                              if (!next.includes(id)) {
-                                next.push(id);
-                              }
-                            });
+                            deptCourseIds.forEach(id => { if (!next.includes(id)) next.push(id); });
                             return next;
                           });
                           setSelectedDepts(prev => prev.includes(dept.id) ? prev : [...prev, dept.id]);
@@ -426,14 +447,10 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                 </div>
                 
                 <MultiSelectChips
-                  options={dept.courses.map(c => ({
-                    id: c.id,
-                    label: c.id === 'jr-college' ? 'Junior College' : (c.id === 'phd' ? 'PhD Programme' : c.id.toUpperCase().replace('-', ''))
-                  }))}
+                  options={dept.courses.map(c => ({ id: c.id, label: c.label }))}
                   selected={selectedCourses}
                   onChange={(newCourses) => {
                     setSelectedCourses(newCourses);
-                    // Sync selectedDepts dynamically based on course selections
                     const depts = newCourses
                       .map(cId => DEPARTMENTS.find(d => d.courses.some(c => c.id === cId))?.id)
                       .filter((dId): dId is string => !!dId);
@@ -768,15 +785,18 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       </div>
 
       {/* Attachments */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Attachments (PDF, DOC, Images)</label>
+      <div className={`transition-opacity ${publishExam ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Attachments (PDF, DOC, Images)
+          {publishExam && <span className="ml-2 text-blue-600 text-xs font-normal">⚠ Disabled (Use Exam Hub upload instead)</span>}
+        </label>
         <label className="flex items-center gap-3 border-2 border-dashed border-gray-200 rounded-xl px-4 py-4 cursor-pointer hover:border-[#123B6D]/40 transition-colors">
           <Upload size={18} className="text-[#123B6D]" />
           <div>
             <span className="text-sm font-medium text-[#123B6D]">Click to upload</span>
             <span className="text-xs text-gray-400 ml-1">PDF, DOC, PNG, JPG supported</span>
           </div>
-          <input type="file" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" className="hidden" onChange={handleFileUpload} />
+          <input type="file" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" className="hidden" onChange={handleFileUpload} disabled={publishExam} />
         </label>
         {uploading && (
           <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">

@@ -15,6 +15,7 @@ import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 import ProgramStructureNEP from '@/components/ui/ProgramStructureNEP';
 import { supabase } from '@/lib/supabase';
 import { useProgramme } from '@/hooks/useProgramme';
+import facultyProfilesData from '@/lib/facultyProfilesData.json';
 
 interface CourseTemplateProps {
   title: string;
@@ -32,6 +33,20 @@ interface CourseTemplateProps {
 
 function FacultyFlipCard({ member, programmeName }: { member: any, programmeName?: string }) {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  // Look up rich data from JSON based on exact email match (fallback)
+  const richData = member.email
+    ? facultyProfilesData.find(f => f.email?.toLowerCase().trim() === member.email?.toLowerCase().trim())
+    : null;
+
+  // Combine data (preferring DB data over JSON fallback)
+  const displayEdu = member.education || richData?.qualification;
+  const displayExp = member.teaching_exp || (richData?.teaching_experience_years ? `${richData.teaching_experience_years} yrs` : member.teachingExp);
+  const displayInterest = member.areas_of_interest || richData?.areas_of_interest;
+  const displayPubs = member.publications_patents || richData?.publications_patents;
+  const displayBio = member.bio || richData?.bio;
+  const displayLinkedin = member.linkedin || richData?.linkedin;
+  const displayScholar = member.google_scholar_or_other || richData?.google_scholar_or_other;
 
   return (
     <div
@@ -84,14 +99,14 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
                 Dept: {member.department}
               </div>
             )}
-            {member.education && (
+            {displayEdu && (
               <div className="text-[10px] text-gray-600 font-medium text-center leading-tight mt-1.5 px-2 line-clamp-2">
-                {member.education}
+                {displayEdu}
               </div>
             )}
-            {member.teachingExp && (
+            {displayExp && (
               <div className="text-[10px] text-[#D4A017] font-bold text-center leading-tight mt-1 px-2">
-                Exp: {member.teachingExp}
+                Exp: {displayExp}
               </div>
             )}
             <div className="absolute bottom-10 w-full flex justify-center z-20 animate-bounce">
@@ -122,17 +137,17 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
             <p className="text-[11px] text-[#D4A017] tracking-wider uppercase font-bold">{member.designation}</p>
           </div>
           
-          <div className="space-y-3 flex-1 w-full px-2 overflow-y-auto">
+          <div className="space-y-3 flex-1 w-full px-2 overflow-y-auto pb-4 custom-scrollbar-white">
              {member.additionalRole && member.additionalRole !== '—' && (
                <div className="flex items-start gap-3">
                  <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Role</span>
                  <span className="text-[13px] text-white/85 leading-snug">{member.additionalRole}</span>
                </div>
              )}
-             {member.education && (
+             {displayEdu && (
                <div className="flex items-start gap-3">
                  <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Edu.</span>
-                 <span className="text-[13px] text-white/85 leading-snug">{member.education}</span>
+                 <span className="text-[13px] text-white/85 leading-snug">{displayEdu}</span>
                </div>
              )}
              {member.email && (
@@ -141,10 +156,58 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
                  <span className="text-[12px] text-white/75 leading-snug break-all">{member.email}</span>
                </div>
              )}
-             {member.teachingExp && (
+             {displayExp && (
                <div className="flex items-start gap-3">
                  <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Exp.</span>
-                 <span className="text-[13px] text-white/85 leading-snug">{member.teachingExp}</span>
+                 <span className="text-[13px] text-white/85 leading-snug">{displayExp}</span>
+               </div>
+             )}
+             {displayInterest && (
+               <div className="flex items-start gap-3">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Interest</span>
+                 <span className="text-[12px] text-white/85 leading-snug">{displayInterest}</span>
+               </div>
+             )}
+             {displayPubs && (
+               <div className="flex items-start gap-3">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Pubs.</span>
+                 <span className="text-[12px] text-white/85 leading-snug">{displayPubs}</span>
+               </div>
+             )}
+             {displayBio && (
+               <div className="flex items-start gap-3 mt-4 pt-3 border-t border-white/10">
+                 <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Bio</span>
+                 <span className="text-[11px] text-white/75 leading-relaxed italic">"{displayBio}"</span>
+               </div>
+             )}
+
+             {/* Links Section */}
+             {(displayLinkedin || displayScholar) && (
+               <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10 flex-wrap">
+                 {displayLinkedin && (
+                   <a 
+                     href={displayLinkedin} 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     onClick={(e) => e.stopPropagation()} // prevent flip on link click
+                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0077B5]/20 hover:bg-[#0077B5] text-white text-[11px] font-semibold transition-colors duration-200"
+                   >
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                     LinkedIn
+                   </a>
+                 )}
+                 {displayScholar && (
+                   <a 
+                     href={displayScholar} 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     onClick={(e) => e.stopPropagation()}
+                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-[11px] font-semibold transition-colors duration-200"
+                   >
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                     Scholar
+                   </a>
+                 )}
                </div>
              )}
           </div>

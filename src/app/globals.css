@@ -186,3 +186,19 @@
     transform: translate(0, 0) rotate(0deg);
   }
 }
+
+/* Custom white scrollbar for dark backgrounds */
+.custom-scrollbar-white::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar-white::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+.custom-scrollbar-white::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+.custom-scrollbar-white::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}

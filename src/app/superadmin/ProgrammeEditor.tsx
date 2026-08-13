@@ -31,6 +31,8 @@ interface ProgramFaculty {
   id?: string; sr_no?: number; name: string; designation?: string;
   additional_role?: string; department?: string; education?: string;
   teaching_exp?: string; email?: string; image?: string; display_order: number;
+  areas_of_interest?: string; publications_patents?: string; bio?: string;
+  linkedin?: string; google_scholar_or_other?: string;
 }
 interface ProgramDepartment {
   id?: string; department_name: string; intro_content: string; display_order: number;
@@ -403,7 +405,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
   });
 
   // ─── Faculty helpers ─────────────────────────────────────────────────────
-  const addFaculty = () => setFaculty(prev => [...prev, { name: '', designation: '', additional_role: '', department: '', education: '', teaching_exp: '', email: '', image: '', display_order: prev.length }]);
+  const addFaculty = () => setFaculty(prev => [...prev, { name: '', designation: '', additional_role: '', department: '', education: '', teaching_exp: '', email: '', image: '', display_order: prev.length, areas_of_interest: '', publications_patents: '', bio: '', linkedin: '', google_scholar_or_other: '' }]);
   const removeFaculty = (i: number) => setFaculty(prev => prev.filter((_, idx) => idx !== i));
   const updateFaculty = (i: number, field: keyof ProgramFaculty, val: string) => setFaculty(prev => { const c = [...prev]; c[i] = { ...c[i], [field]: val }; return c; });
 
@@ -766,6 +768,11 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                     <div><Label>Education</Label><Input value={f.education || ''} onChange={v => updateFaculty(i, 'education', v)} placeholder="e.g. M.Com, Ph.D (Finance)" /></div>
                     <div><Label>Teaching Experience</Label><Input value={f.teaching_exp || ''} onChange={v => updateFaculty(i, 'teaching_exp', v)} placeholder="e.g. 12 Years" /></div>
                     <div><Label>Email</Label><Input value={f.email || ''} onChange={v => updateFaculty(i, 'email', v)} placeholder="faculty@mcc.edu.in" type="email" /></div>
+                    <div><Label>LinkedIn URL</Label><Input value={f.linkedin || ''} onChange={v => updateFaculty(i, 'linkedin', v)} placeholder="https://linkedin.com/in/..." /></div>
+                    <div><Label>Google Scholar / Other URL</Label><Input value={f.google_scholar_or_other || ''} onChange={v => updateFaculty(i, 'google_scholar_or_other', v)} placeholder="https://scholar.google.com/..." /></div>
+                    <div className="col-span-2"><Label>Bio</Label><Textarea value={f.bio || ''} onChange={v => updateFaculty(i, 'bio', v)} rows={2} placeholder="Brief biography..." /></div>
+                    <div className="col-span-2"><Label>Areas of Interest</Label><Textarea value={f.areas_of_interest || ''} onChange={v => updateFaculty(i, 'areas_of_interest', v)} rows={2} placeholder="e.g. Finance, Marketing, Economics" /></div>
+                    <div className="col-span-2"><Label>Publications & Patents</Label><Textarea value={f.publications_patents || ''} onChange={v => updateFaculty(i, 'publications_patents', v)} rows={2} placeholder="Key publications or patents..." /></div>
                     <div className="col-span-2"><ImageUpload label="Faculty Photo" value={f.image || ''} onChange={v => updateFaculty(i, 'image', v)} folder="faculty" shape="square" /></div>
                   </div>
                 </div>

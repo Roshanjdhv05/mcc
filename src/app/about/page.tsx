@@ -35,8 +35,7 @@ const quickLinks = [
   { label: "Vice Principal's Desk (Junior College)", href: '/vice-principal-junior', icon: UserCheck, desc: 'Message from the Vice Principal (Junior).' },
   { label: 'CDC Members', href: '/about/cdc-members', icon: FileText, desc: 'Year-wise list of CDC members.' },
   { label: 'CDC Minutes', href: '/about/cdc-minutes', icon: FileText, desc: 'Minutes of CDC meetings.' },
-  { label: 'Tilak Smruti Vyakhyan', href: '/about/tilak-lecture', icon: Star, desc: 'Annual memorial lecture series.' },
-  { label: 'B.G. Bapat Memorial Lecture', href: '/about/bg-bapat-lecture', icon: Star, desc: 'Esteemed lecture in memory of B.G. Bapat.' },
+  { label: 'Special Lectures', href: '/about/special-lectures', icon: Star, desc: 'Tilak Smruti Vyakhyan & B.G. Bapat Memorial Lecture.' },
 ];
 
 

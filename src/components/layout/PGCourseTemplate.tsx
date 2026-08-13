@@ -385,9 +385,9 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                 <h1 className="text-2xl xs:text-3xl md:text-5xl lg:text-[54px] font-bold text-[#123B6D] leading-tight font-[var(--font-heading)]">
                   {progData?.name || dbProgramme?.title || title}
                 </h1>
-                {(progData?.overview?.description || dbProgramme?.short_info || shortInfo) && (
+                {(progData?.overview?.description?.trim() || dbProgramme?.short_info || shortInfo) && (
                   <p className="mt-3 text-sm md:text-base text-gray-600 font-medium leading-relaxed max-w-xl">
-                    {progData?.overview?.description || dbProgramme?.short_info || shortInfo}
+                    {progData?.overview?.description?.trim() || dbProgramme?.short_info || shortInfo}
                   </p>
                 )}
               </div>
@@ -528,9 +528,9 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                 Programme Overview
               </h2>
               <div className="prose prose-lg max-w-none text-gray-600 prose-headings:text-[#123B6D] prose-a:text-[#3B82F6]">
-                {progData?.overview?.long_description ? (
+                {progData?.overview?.long_description?.trim() ? (
                   progData.overview.long_description.split('\n').map((p: string, i: number) => p.trim() ? <p key={i} className="mb-4">{p}</p> : null)
-                ) : progData?.overview?.description ? (
+                ) : progData?.overview?.description?.trim() ? (
                   <p className="mb-4">{progData.overview.description}</p>
                 ) : dbProgramme?.overview_content && dbProgramme.overview_content.length > 0 ? (
                   dbProgramme.overview_content.map((p: string, i: number) => (

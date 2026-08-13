@@ -25,7 +25,7 @@ const quickLinks = [
   { label: 'Library', href: '/library', icon: LibraryBig, bg: 'bg-blue-50', iconColor: 'text-[#123B6D]' },
   { label: 'Services', href: '/services', icon: HeadphonesIcon, bg: 'bg-cyan-50', iconColor: 'text-cyan-600' },
   { label: 'Students Corner', href: '/students-corner', icon: Users, bg: 'bg-gray-100', iconColor: 'text-gray-600' },
-  { label: 'Placement', href: '/placement', icon: Briefcase, bg: 'bg-amber-50', iconColor: 'text-amber-700' },
+  { label: 'Placement', href: '/placement-portal', icon: Briefcase, bg: 'bg-amber-50', iconColor: 'text-amber-700' },
   { label: 'Gallery', href: '/students-corner/gallery', icon: Image, bg: 'bg-blue-50', iconColor: 'text-[#4DA8DA]' },
 ];
 

@@ -62,14 +62,8 @@ const iqacMinutesData = {
 };
 
 const iqacMembers = [
-//{ name: 'Dr. Suresh Mehta', role: 'Chairperson (Principal)', category: 'Management' },
- // { name: 'Prof. Anita Sharma', role: 'IQAC Coordinator', category: 'Faculty' },
-  //{ name: 'Dr. Rakesh Gupta', role: 'Member', category: 'Faculty' },
- // { name: 'Prof. Seema Patil', role: 'Member', category: 'Faculty' },
- // { name: 'Mr. Kiran Shah', role: 'External Expert', category: 'Industry' },
-  //{ name: 'Ms. Priya Desai', role: 'Alumni Representative', category: 'Alumni' },
+  ///
 ];
-
 function InfoPoliciesContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -436,21 +430,7 @@ function InfoPoliciesContent() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 text-[14px]">
-                          {iqacMembers.map((member, idx) => (
-                            <tr key={idx} className="hover:bg-[#F8FAFC]/50 transition-colors">
-                              <td className="px-6 py-4 font-semibold text-[#1E293B] whitespace-nowrap">
-                                {member.name}
-                              </td>
-                              <td className="px-6 py-4 text-gray-700 font-medium whitespace-nowrap">
-                                {member.role}
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-blue-100 text-blue-700">
-                                  {member.category}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
+
                         </tbody>
                       </table>
                     </div>

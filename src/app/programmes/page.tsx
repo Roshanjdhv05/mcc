@@ -131,10 +131,10 @@ export default function AcademicsPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 relative z-10">
           {[
-            { label: 'Total Programmes', value: '18+', icon: BookOpen },
-            { label: 'Total Seats', value: '2600+', icon: Users },
             { label: 'Qualified Teachers', value: '90+', icon: Award },
-            { label: 'Years Established', value: '50+', icon: Clock },
+            { label: 'Students', value: '6,306', icon: Users },
+            { label: 'Programs', value: '18', icon: BookOpen },
+            { label: 'Years of Excellence', value: '55+', icon: Clock },
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} className="bg-white rounded-2xl border border-[#E2E8F0] shadow-md p-3 sm:p-4 md:p-6 flex items-center gap-2 sm:gap-3 md:gap-5">
               <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-[#123B6D]/10 flex items-center justify-center shrink-0">

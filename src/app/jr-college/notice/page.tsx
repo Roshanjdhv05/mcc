@@ -58,9 +58,9 @@ export default function JrCollegeNoticePage() {
       .order('schedule_time', { ascending: false });
 
     if (data) {
-      // Filter client-side: keep notices for jr-college course OR general notices
+      // Filter client-side: keep only notices explicitly tagged for jr-college
       const jrNotices = (data as Notice[]).filter(n =>
-        n.is_general || n.courses.includes('jr-college')
+        n.courses.includes('jr-college')
       );
       setNotices(jrNotices);
     }

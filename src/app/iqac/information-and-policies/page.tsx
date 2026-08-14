@@ -62,12 +62,12 @@ const iqacMinutesData = {
 };
 
 const iqacMembers = [
-  { name: 'Dr. Suresh Mehta', role: 'Chairperson (Principal)', category: 'Management' },
-  { name: 'Prof. Anita Sharma', role: 'IQAC Coordinator', category: 'Faculty' },
-  { name: 'Dr. Rakesh Gupta', role: 'Member', category: 'Faculty' },
-  { name: 'Prof. Seema Patil', role: 'Member', category: 'Faculty' },
-  { name: 'Mr. Kiran Shah', role: 'External Expert', category: 'Industry' },
-  { name: 'Ms. Priya Desai', role: 'Alumni Representative', category: 'Alumni' },
+//{ name: 'Dr. Suresh Mehta', role: 'Chairperson (Principal)', category: 'Management' },
+ // { name: 'Prof. Anita Sharma', role: 'IQAC Coordinator', category: 'Faculty' },
+  //{ name: 'Dr. Rakesh Gupta', role: 'Member', category: 'Faculty' },
+ // { name: 'Prof. Seema Patil', role: 'Member', category: 'Faculty' },
+ // { name: 'Mr. Kiran Shah', role: 'External Expert', category: 'Industry' },
+  //{ name: 'Ms. Priya Desai', role: 'Alumni Representative', category: 'Alumni' },
 ];
 
 function InfoPoliciesContent() {
@@ -76,7 +76,7 @@ function InfoPoliciesContent() {
 
   const [activeTab, setActiveTab] = useState<string>("about");
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-  const [selectedPolicy, setSelectedPolicy] = useState<{title: string, file: string} | null>(null);
+  const [selectedPolicy, setSelectedPolicy] = useState<{ title: string, file: string } | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<{ name: string, url: string } | null>(null);
 
   useEffect(() => {
@@ -161,17 +161,15 @@ function InfoPoliciesContent() {
                       <button
                         key={section.id}
                         onClick={() => handleSelect(section.id)}
-                        className={`flex items-center gap-3 px-5 py-3.5 text-sm font-semibold transition-colors text-left ${
-                          activeTab === section.id
-                            ? "bg-[#EBF3FF] text-[#123B6D]"
-                            : "text-gray-700 hover:bg-[#F8FAFC] hover:text-[#123B6D]"
-                        }`}
+                        className={`flex items-center gap-3 px-5 py-3.5 text-sm font-semibold transition-colors text-left ${activeTab === section.id
+                          ? "bg-[#EBF3FF] text-[#123B6D]"
+                          : "text-gray-700 hover:bg-[#F8FAFC] hover:text-[#123B6D]"
+                          }`}
                       >
                         <SectionIcon
                           size={15}
-                          className={`shrink-0 ${
-                            activeTab === section.id ? "text-[#123B6D]" : "text-gray-400"
-                          }`}
+                          className={`shrink-0 ${activeTab === section.id ? "text-[#123B6D]" : "text-gray-400"
+                            }`}
                         />
                         <span className="flex-1 text-left">{section.title}</span>
                       </button>
@@ -196,11 +194,10 @@ function InfoPoliciesContent() {
                   <button
                     key={section.id}
                     onClick={() => handleSelect(section.id)}
-                    className={`text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 font-semibold text-sm ${
-                      activeTab === section.id
-                        ? "bg-[#123B6D] text-white shadow-md"
-                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                    }`}
+                    className={`text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 font-semibold text-sm ${activeTab === section.id
+                      ? "bg-[#123B6D] text-white shadow-md"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      }`}
                   >
                     <SectionIcon
                       size={16}
@@ -239,7 +236,7 @@ function InfoPoliciesContent() {
 
               {/* Dynamic Details based on activeTab */}
               <div className="p-6 md:p-10">
-                
+
                 {activeTab === "about" && (
                   <div className="space-y-10">
                     <p className="text-gray-700 leading-relaxed text-justify text-[15px]">
@@ -281,7 +278,7 @@ function InfoPoliciesContent() {
                           <h3 className="text-lg font-bold text-[#123B6D] mb-5 flex items-center gap-2">
                             <div className="w-6 h-6 rounded flex items-center justify-center bg-[#D4A017]/20 text-[#D4A017]">
                               <Target size={14} />
-                            </div> 
+                            </div>
                             Goal
                           </h3>
                           <ul className="space-y-4">
@@ -295,12 +292,12 @@ function InfoPoliciesContent() {
                             </li>
                           </ul>
                         </div>
-                        
+
                         <div>
                           <h3 className="text-lg font-bold text-[#123B6D] mb-5 flex items-center gap-2">
                             <div className="w-6 h-6 rounded flex items-center justify-center bg-[#D4A017]/20 text-[#D4A017]">
                               <Target size={14} />
-                            </div> 
+                            </div>
                             Purpose
                           </h3>
                           <ul className="space-y-4">
@@ -320,7 +317,7 @@ function InfoPoliciesContent() {
                         <h3 className="text-lg font-bold text-[#123B6D] mb-5 flex items-center gap-2">
                           <div className="w-6 h-6 rounded flex items-center justify-center bg-[#D4A017]/20 text-[#D4A017]">
                             <Target size={14} />
-                          </div> 
+                          </div>
                           Objectives
                         </h3>
                         <ul className="space-y-4">
@@ -333,7 +330,7 @@ function InfoPoliciesContent() {
                             "To coordinate and improve internal communication to facilitate greater policy implementation and quality assurance towards its stakeholders."
                           ].map((obj, i) => (
                             <li key={i} className="flex items-start gap-3">
-                              <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i+1}</span>
+                              <span className="w-6 h-6 rounded-full bg-[#123B6D]/10 text-[#123B6D] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
                               <span className="text-gray-700 text-sm leading-relaxed">{obj}</span>
                             </li>
                           ))}
@@ -355,12 +352,11 @@ function InfoPoliciesContent() {
                           {policies.map((policy, i) => {
                             const isSelected = selectedPolicy?.file === policy.file;
                             return (
-                              <div 
-                                key={i} 
+                              <div
+                                key={i}
                                 onClick={() => setSelectedPolicy(policy)}
-                                className={`px-4 py-3 flex items-center justify-between transition-colors cursor-pointer ${
-                                  isSelected ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-gray-50 border-l-4 border-transparent'
-                                }`}
+                                className={`px-4 py-3 flex items-center justify-between transition-colors cursor-pointer ${isSelected ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-gray-50 border-l-4 border-transparent'
+                                  }`}
                               >
                                 <div className="flex items-center gap-3 overflow-hidden pr-2">
                                   <FileText size={16} className={isSelected ? "text-blue-500 shrink-0" : "text-gray-400 shrink-0"} />
@@ -369,7 +365,7 @@ function InfoPoliciesContent() {
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
-                                  <a 
+                                  <a
                                     href={`/policies/${policy.file}`}
                                     download
                                     onClick={(e) => e.stopPropagation()}
@@ -396,9 +392,9 @@ function InfoPoliciesContent() {
                             </h3>
                           </div>
                           {selectedPolicy && (
-                            <a 
-                              href={`/policies/${selectedPolicy.file}`} 
-                              target="_blank" 
+                            <a
+                              href={`/policies/${selectedPolicy.file}`}
+                              target="_blank"
                               rel="noreferrer"
                               className="text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors shrink-0 flex items-center gap-2"
                             >
@@ -406,11 +402,11 @@ function InfoPoliciesContent() {
                             </a>
                           )}
                         </div>
-                        
+
                         <div className="flex-1 bg-gray-100 relative">
                           {selectedPolicy ? (
-                            <iframe 
-                              src={`/policies/${selectedPolicy.file}#view=FitH`} 
+                            <iframe
+                              src={`/policies/${selectedPolicy.file}#view=FitH`}
                               className="w-full h-full border-none"
                               title={selectedPolicy.title}
                             />
@@ -478,14 +474,13 @@ function InfoPoliciesContent() {
                               {iqacMinutesData.data[year as keyof typeof iqacMinutesData.data].map((file, i) => {
                                 const fileUrl = getPdfUrl(year, file);
                                 const isSelected = selectedMinute?.url === fileUrl;
-                                
+
                                 return (
-                                  <div 
-                                    key={i} 
+                                  <div
+                                    key={i}
                                     onClick={() => setSelectedMinute({ name: file, url: fileUrl })}
-                                    className={`px-4 py-3 flex items-center justify-between transition-colors cursor-pointer ${
-                                      isSelected ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-[#F8FAFC] border-l-4 border-transparent'
-                                    }`}
+                                    className={`px-4 py-3 flex items-center justify-between transition-colors cursor-pointer ${isSelected ? 'bg-blue-50 border-l-4 border-blue-500' : 'hover:bg-[#F8FAFC] border-l-4 border-transparent'
+                                      }`}
                                   >
                                     <div className="flex items-center gap-3 overflow-hidden pr-2">
                                       <FileText size={16} className={isSelected ? "text-blue-500 shrink-0" : "text-[#94A3B8] shrink-0"} />
@@ -497,7 +492,7 @@ function InfoPoliciesContent() {
                                       <button className="hidden sm:flex items-center gap-1 text-xs font-semibold text-[#123B6D] hover:text-[#D4A017] transition-colors p-1.5 rounded bg-gray-100 hover:bg-gray-200">
                                         <Eye size={14} />
                                       </button>
-                                      <a 
+                                      <a
                                         href={fileUrl}
                                         download
                                         onClick={(e) => e.stopPropagation()}
@@ -514,7 +509,7 @@ function InfoPoliciesContent() {
                         ))}
                       </div>
                     </div>
-          
+
                     {/* Right Column: Live PDF Preview */}
                     <div className="lg:col-span-7">
                       <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-md overflow-hidden flex flex-col h-[700px]">
@@ -526,9 +521,9 @@ function InfoPoliciesContent() {
                             </h3>
                           </div>
                           {selectedMinute && (
-                            <a 
-                              href={selectedMinute.url} 
-                              target="_blank" 
+                            <a
+                              href={selectedMinute.url}
+                              target="_blank"
                               rel="noreferrer"
                               className="text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors shrink-0 flex items-center gap-2"
                             >
@@ -536,11 +531,11 @@ function InfoPoliciesContent() {
                             </a>
                           )}
                         </div>
-                        
+
                         <div className="flex-1 bg-gray-100 relative">
                           {selectedMinute ? (
-                            <iframe 
-                              src={`${selectedMinute.url}#view=FitH`} 
+                            <iframe
+                              src={`${selectedMinute.url}#view=FitH`}
                               className="w-full h-full border-none"
                               title={selectedMinute.name}
                             />

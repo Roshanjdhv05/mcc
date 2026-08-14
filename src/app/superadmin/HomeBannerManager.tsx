@@ -9,8 +9,8 @@ import {
 
 interface HomeBanner {
   id: string;
-  title: string;
-  short_info: string;
+  title: string | null;
+  short_info: string | null;
   image_url: string;
   expiry_date: string | null;
   button_text: string | null;
@@ -67,7 +67,7 @@ export default function HomeBannerManager() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(''); setSuccessMsg('');
-    if (!file || !title) { setError('Please select an image and enter a title.'); return; }
+    if (!file) { setError('Please select an image to upload.'); return; }
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
@@ -79,8 +79,8 @@ export default function HomeBannerManager() {
         .from('notice-attachments').getPublicUrl(`banners/${fileName}`);
 
       const { error: dbError } = await supabase.from('home_banners').insert({
-        title: title.trim(),
-        short_info: shortInfo.trim() || null,
+        title: title.trim() || '',
+        short_info: shortInfo.trim() || '',
         image_url: urlData.publicUrl,
         expiry_date: expiryDate ? new Date(expiryDate).toISOString() : null,
         button_text: buttonText.trim() || null,
@@ -118,7 +118,7 @@ export default function HomeBannerManager() {
 
   const openEdit = (banner: HomeBanner) => {
     setEditingBanner(banner);
-    setEditTitle(banner.title);
+    setEditTitle(banner.title || '');
     setEditShortInfo(banner.short_info || '');
     setEditExpiryDate(
       banner.expiry_date
@@ -133,13 +133,12 @@ export default function HomeBannerManager() {
 
   const handleEditSave = async () => {
     if (!editingBanner) return;
-    if (!editTitle.trim()) { setEditError('Title is required.'); return; }
     setEditSaving(true); setEditError('');
     const { error } = await supabase
       .from('home_banners')
       .update({
-        title: editTitle.trim(),
-        short_info: editShortInfo.trim() || null,
+        title: editTitle.trim() || '',
+        short_info: editShortInfo.trim() || '',
         expiry_date: editExpiryDate ? new Date(editExpiryDate).toISOString() : null,
         button_text: editButtonText.trim() || null,
         button_link: editButtonLink.trim() || null,
@@ -227,13 +226,13 @@ export default function HomeBannerManager() {
               {/* Left: Content */}
               <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E293B] mb-2">Heading (Title) *</label>
-                  <input type="text" required value={title} onChange={e => setTitle(e.target.value)}
+                  <label className="block text-sm font-semibold text-[#1E293B] mb-2">Heading (Title) <span className="text-xs font-normal text-gray-500">(Optional)</span></label>
+                  <input type="text" value={title} onChange={e => setTitle(e.target.value)}
                     placeholder="e.g., Admissions Open 2026"
                     className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#123B6D] focus:ring-1 focus:ring-[#123B6D] transition-all" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E293B] mb-2">Short Information</label>
+                  <label className="block text-sm font-semibold text-[#1E293B] mb-2">Short Information <span className="text-xs font-normal text-gray-500">(Optional)</span></label>
                   <textarea rows={3} value={shortInfo} onChange={e => setShortInfo(e.target.value)}
                     placeholder="e.g., Join the leading commerce college in Mumbai..."
                     className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#123B6D] focus:ring-1 focus:ring-[#123B6D] transition-all resize-none" />
@@ -340,13 +339,13 @@ export default function HomeBannerManager() {
                   <div key={banner.id} className={`p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors group ${isExpired ? 'bg-gray-50' : 'hover:bg-gray-50'}`}>
                     <div className="flex items-start gap-4 flex-1">
                       <div className="w-24 h-16 rounded-lg overflow-hidden shrink-0 bg-gray-200 border border-gray-300 relative">
-                        <img src={banner.image_url} alt={banner.title} className="w-full h-full object-cover" />
+                        <img src={banner.image_url} alt={banner.title || 'Banner'} className="w-full h-full object-cover" />
                         {!banner.keep_black_overlay && (
                           <div className="absolute top-1 left-1 bg-white/90 text-xs px-1 rounded shadow-sm text-gray-600">No Overlay</div>
                         )}
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900 text-sm mb-1">{banner.title}</h4>
+                        <h4 className="font-bold text-gray-900 text-sm mb-1">{banner.title || <span className="text-gray-400 font-normal italic">No Title (Image Only)</span>}</h4>
                         <div className="flex flex-wrap items-center gap-2 text-xs">
                           {isExpired ? (
                             <span className="font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-100">Expired</span>
@@ -409,7 +408,7 @@ export default function HomeBannerManager() {
               <div className="relative w-full h-36 rounded-2xl overflow-hidden border border-gray-200 bg-gray-100">
                 <img src={editingBanner.image_url} alt="" className="w-full h-full object-cover" />
                 <div className={`absolute inset-0 bg-black/40 flex items-end p-4 ${editOverlay ? '' : 'opacity-0'}`}>
-                  <p className="text-white font-bold text-sm truncate">{editTitle || '—'}</p>
+                  <p className="text-white font-bold text-sm truncate">{editTitle || <span className="italic opacity-60">No Title</span>}</p>
                 </div>
               </div>
 
@@ -421,15 +420,17 @@ export default function HomeBannerManager() {
 
               {/* Title */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Heading (Title) *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Heading (Title) <span className="text-xs font-normal text-gray-500">(Optional)</span></label>
                 <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)}
+                  placeholder="e.g., Admissions Open 2026"
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D]" />
               </div>
 
               {/* Short Info */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Short Information</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Short Information <span className="text-xs font-normal text-gray-500">(Optional)</span></label>
                 <textarea rows={2} value={editShortInfo} onChange={e => setEditShortInfo(e.target.value)}
+                  placeholder="e.g., Join the leading commerce college in Mumbai..."
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] resize-none" />
               </div>
 

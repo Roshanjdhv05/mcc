@@ -247,6 +247,15 @@ const wallOfFameStudents = [
   { name: 'Sneha Rao', rank: 'AIR 2', course: 'CA Inter 2025', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80' },
 ];
 
+const wallOfFameImages = [
+  '/walloffam/walloffams (1).jpeg',
+  '/walloffam/walloffams (2).jpeg',
+  '/walloffam/walloffams (3).jpeg',
+  '/walloffam/walloffams (4).jpeg',
+  '/walloffam/walloffams (5).jpeg',
+  '/walloffam/walloffams (6).jpeg',
+];
+
 const illustriousAlumni = [
   { 
     name: 'Mandar Pramod Dixit',
@@ -779,7 +788,7 @@ const TestimonialCard = ({ t }: { t: any }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="flex-shrink-0 w-[300px] md:w-[350px] snap-center bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 flex flex-col h-full"
+      className="flex-shrink-0 w-[280px] sm:w-[300px] md:w-[350px] snap-center bg-white/10 backdrop-blur-sm rounded-2xl p-5 md:p-6 border border-white/20 flex flex-col h-full"
     >
       <Quote size={28} className="text-[#D4A017] mb-4 shrink-0" />
       <div className="flex-1 mb-5 flex flex-col">
@@ -831,6 +840,7 @@ export default function HomePage() {
   const latestNoticesRef = useMarqueeScroll(0.8, 'y');
   const programmesRef = useMarqueeScroll(-1.2);
   const culturalRef = useMarqueeScroll(1);
+  const wallOfFameRef = useMarqueeScroll(1.5, 'x');
 
   // Admin Services: auto-slide right-to-left, one card every 3s
   useEffect(() => {
@@ -1415,6 +1425,30 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
+        {/* ── WALL OF FAME ── */}
+        <ScrollReveal>
+          <div className="flex items-center justify-between mt-12 mb-6">
+            <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
+          </div>
+          <div className="overflow-hidden w-full group relative mb-12">
+            <div ref={wallOfFameRef} className="flex gap-6 overflow-x-auto no-scrollbar w-full pb-6 pt-4 cursor-grab active:cursor-grabbing">
+              {[...wallOfFameImages, ...wallOfFameImages].map((imgSrc, i) => (
+                <div
+                  key={i}
+                  className="w-[280px] sm:w-[340px] flex-shrink-0 bg-white p-3 rounded-[2rem] border-4 border-[#D4A017]/20 shadow-[0_10px_30px_rgba(18,59,109,0.1)] hover:border-[#D4A017] hover:shadow-[0_20px_40px_rgba(212,160,23,0.2)] hover:-translate-y-2 transition-all duration-300 relative"
+                >
+                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#123B6D] rounded-full flex items-center justify-center text-white shadow-lg z-10 border-4 border-white">
+                    <Award size={18} />
+                  </div>
+                  <div className="w-full h-[400px] rounded-3xl overflow-hidden relative border-2 border-gray-100">
+                    <img src={imgSrc} alt="Wall of Fame" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+
         {/* ── ILLUSTRIOUS ALUMNI ── */}
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 py-10">
           <div className="flex items-center justify-between mb-6">
@@ -1475,11 +1509,11 @@ export default function HomePage() {
 
         {/* ── TESTIMONIALS ── */}
         <ScrollReveal>
-          <div className="bg-[#123B6D] rounded-3xl p-10">
-            <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] text-center mb-10">Testimonial</h2>
+          <div className="bg-[#123B6D] rounded-3xl p-6 md:p-10">
+            <h2 className="text-2xl font-bold text-white font-[var(--font-heading)] text-center mb-8 md:mb-10">Testimonial</h2>
             <div 
               ref={alumniScrollRef}
-              className="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4"
+              className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4"
             >
               {testimonials.map((t, i) => (
                 <TestimonialCard key={i} t={t} />

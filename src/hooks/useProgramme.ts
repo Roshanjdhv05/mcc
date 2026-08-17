@@ -28,6 +28,7 @@ export interface FullProgrammeData {
   faculty: {
     id: string; sr_no?: number; name: string; designation?: string; additional_role?: string;
     department?: string; education?: string; teaching_exp?: string; email?: string; image?: string; display_order: number;
+    bio?: string; linkedin?: string; areas_of_interest?: string; publications_patents?: string; google_scholar_or_other?: string;
   }[];
   alumni: {
     id: string; name: string; programme_name?: string; year?: string;

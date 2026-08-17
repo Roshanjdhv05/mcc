@@ -186,6 +186,55 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     if (publishCalendar && !calDate) { setError('Calendar date is required when "Show in Calendar" is enabled'); return; }
     if (publishCalendar && !calCategory) { setError('Calendar category is required when "Show in Calendar" is enabled'); return; }
 
+    let finalAttachments = [...attachments];
+
+    // Also publish to Examination Hub if requested
+    let singleExamFileUrl = '';
+    const uploadedSeparateFiles: Record<string, string> = {};
+
+    if (publishExam) {
+      if (examPublishMode === 'all') {
+        if (examFile) {
+          const fileExt = examFile.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+          const { error: uploadErr } = await supabase.storage
+            .from('notice-attachments')
+            .upload(`examination/${fileName}`, examFile);
+          if (uploadErr) {
+            setError(`Failed to upload exam document: ${uploadErr.message}`);
+            setSaving(false);
+            return;
+          }
+          const { data: urlData } = supabase.storage
+            .from('notice-attachments')
+            .getPublicUrl(`examination/${fileName}`);
+          singleExamFileUrl = urlData.publicUrl;
+          finalAttachments.push({ name: examFile.name, url: singleExamFileUrl, type: fileExt || 'pdf' });
+        }
+      } else {
+        for (const course of examCourses) {
+          const upload = examCourseUploads[course];
+          if (upload?.file) {
+            const fileExt = upload.file.name.split('.').pop();
+            const fileName = `${Date.now()}_${course}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+            const { error: uploadErr } = await supabase.storage
+              .from('notice-attachments')
+              .upload(`examination/${fileName}`, upload.file);
+            if (uploadErr) {
+              setError(`Failed to upload exam document for ${course}: ${uploadErr.message}`);
+              setSaving(false);
+              return;
+            }
+            const { data: urlData } = supabase.storage
+              .from('notice-attachments')
+              .getPublicUrl(`examination/${fileName}`);
+            uploadedSeparateFiles[course] = urlData.publicUrl;
+            finalAttachments.push({ name: upload.file.name, url: urlData.publicUrl, type: fileExt || 'pdf' });
+          }
+        }
+      }
+    }
+
     const payload: Notice = {
       title: title.trim(),
       description: description.trim(),
@@ -196,7 +245,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       semesters: selectedSemesters,
       schedule_time: scheduleTime ? new Date(scheduleTime).toISOString() : new Date().toISOString(),
       expiry_time: new Date(expiryTime).toISOString(),
-      attachments,
+      attachments: finalAttachments,
       publish_calendar: publishCalendar,
       calendar_title: publishCalendar ? (calTitleSameAsNotice ? title.trim() : calTitle.trim()) : null,
       calendar_category: publishCalendar ? calCategory : null,
@@ -237,32 +286,13 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       return;
     }
 
-    // Also publish to Examination Hub if requested
     if (publishExam) {
       if (examPublishMode === 'all') {
-        // Single document for all courses
-        let fileUrl = '';
-        if (examFile) {
-          const fileExt = examFile.name.split('.').pop();
-          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-          const { error: uploadErr } = await supabase.storage
-            .from('notice-attachments')
-            .upload(`examination/${fileName}`, examFile);
-          if (uploadErr) {
-            setError(`Failed to upload exam document: ${uploadErr.message}`);
-            setSaving(false);
-            return;
-          }
-          const { data: urlData } = supabase.storage
-            .from('notice-attachments')
-            .getPublicUrl(`examination/${fileName}`);
-          fileUrl = urlData.publicUrl;
-        }
         await supabase.from('examination_documents').insert({
           title: title.trim(),
           category: examCategory,
           courses: EXAM_COURSES,
-          file_url: fileUrl,
+          file_url: singleExamFileUrl,
           file_type: examFile?.type || 'application/pdf',
           schedule_time: payload.schedule_time,
           publish_to_notice_board: false,
@@ -272,29 +302,12 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
         // Separate document per selected course
         for (const course of examCourses) {
           const upload = examCourseUploads[course];
-          let fileUrl = '';
-          if (upload?.file) {
-            const fileExt = upload.file.name.split('.').pop();
-            const fileName = `${Date.now()}_${course}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
-            const { error: uploadErr } = await supabase.storage
-              .from('notice-attachments')
-              .upload(`examination/${fileName}`, upload.file);
-            if (uploadErr) {
-              setError(`Failed to upload exam document for ${course}: ${uploadErr.message}`);
-              setSaving(false);
-              return;
-            }
-            const { data: urlData } = supabase.storage
-              .from('notice-attachments')
-              .getPublicUrl(`examination/${fileName}`);
-            fileUrl = urlData.publicUrl;
-          }
           const displayTitle = upload?.displayName?.trim() || title.trim();
           await supabase.from('examination_documents').insert({
             title: displayTitle,
             category: examCategory,
             courses: [course],
-            file_url: fileUrl,
+            file_url: uploadedSeparateFiles[course] || '',
             file_type: upload?.file?.type || 'application/pdf',
             schedule_time: payload.schedule_time,
             publish_to_notice_board: false,

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Search, Filter, Download, Bell, ChevronRight, X, Globe, Clock, Calendar, FileText, Image as ImageIcon, FileIcon, RefreshCw, Check } from 'lucide-react';
+import Link from 'next/link';
+import { Search, Filter, Download, Bell, ChevronRight, X, Globe, Clock, Calendar, FileText, Image as ImageIcon, FileIcon, RefreshCw, Check, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { NOTICE_CATEGORIES, DEPARTMENTS } from '@/lib/noticeTypes';
 import type { Notice } from '@/lib/noticeTypes';
@@ -76,20 +77,24 @@ export default function NoticesPage() {
       .order('schedule_time', { ascending: false });
 
     // Map examination docs into notice shape
-    const examNotices: Notice[] = (examDocs || []).map((doc: any) => ({
-      id: `exam-${doc.id}`,
-      title: doc.title,
-      description: `Category: ${doc.category}. This document is part of the Examination Hub.`,
-      categories: ['Examination'],
-      courses: doc.courses,
-      departments: [],
-      semesters: [],
-      is_general: doc.courses.length > 10,
-      schedule_time: doc.schedule_time,
-      expiry_time: doc.notice_expiry_time,
-      attachments: [{ name: doc.title, url: doc.file_url, type: 'pdf' }],
-      is_calendar_only: false,
-    }));
+    const examNotices: Notice[] = (examDocs || []).map((doc: any) => {
+      const isAllCourses = doc.courses && doc.courses.length >= 10;
+      const fileExt = doc.file_url?.split('.').pop()?.toLowerCase() || 'pdf';
+      return {
+        id: `exam-${doc.id}`,
+        title: doc.title,
+        description: doc.category,
+        categories: ['Examination'],
+        courses: doc.courses || [],
+        departments: [],
+        semesters: [],
+        is_general: isAllCourses,
+        schedule_time: doc.schedule_time,
+        expiry_time: doc.notice_expiry_time,
+        attachments: doc.file_url ? [{ name: doc.title, url: doc.file_url, type: fileExt }] : [],
+        is_calendar_only: false,
+      };
+    });
 
     const combined = [...(regularNotices as Notice[] || []), ...examNotices]
       .sort((a, b) => new Date(b.schedule_time).getTime() - new Date(a.schedule_time).getTime());
@@ -101,7 +106,8 @@ export default function NoticesPage() {
 
   useEffect(() => {
     fetchNotices();
-    const channel = supabase
+    // Real-time: regular notices
+    const noticeChannel = supabase
       .channel('public:notices')
       .on(
         'postgres_changes',
@@ -109,7 +115,19 @@ export default function NoticesPage() {
         () => { fetchNotices(); }
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    // Real-time: examination documents
+    const examChannel = supabase
+      .channel('public:examination_documents')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'examination_documents' },
+        () => { fetchNotices(); }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(noticeChannel);
+      supabase.removeChannel(examChannel);
+    };
   }, [fetchNotices]);
 
   // Open filter panel
@@ -242,11 +260,90 @@ export default function NoticesPage() {
               const primaryCat = n.categories[0] || 'Administration';
               const colorClass = CATEGORY_COLORS[primaryCat] || 'bg-gray-100 text-gray-700';
 
+              const isExamNotice = n.categories.some(c =>
+                c === 'Examination' || c === 'Examinations' || c === 'Examination Notice'
+              );
+
               return (
+                isExamNotice ? (
+                  <div
+                    key={n.id}
+                    className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm hover:shadow-lg hover:border-purple-200 transition-all duration-200 p-6 group"
+                  >
+                    {/* Tags row */}
+                    <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {n.is_general && (
+                          <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#123B6D] text-white">
+                            <Globe size={9} /> General
+                          </span>
+                        )}
+                        {n.categories.slice(0, 2).map(cat => (
+                          <span key={cat} className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${CATEGORY_COLORS[cat] || 'bg-purple-100 text-purple-700'}`}>
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-[#94A3B8]">
+                        <Calendar size={11} />
+                        {formatDate(n.schedule_time)}
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-bold text-[#1E293B] font-[var(--font-heading)] mb-1 leading-snug">{n.title}</h3>
+                    {n.description && (
+                      <p className="text-xs text-[#94A3B8] mb-3">{n.description}</p>
+                    )}
+
+                    {/* Courses */}
+                    {n.courses.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {n.courses.map(c => {
+                          const label = c === 'jr-general' || c === 'ug-general' || c === 'pg-general' ? 'General' : c.toUpperCase().replace('-', '');
+                          return (
+                            <span key={c} className="text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100 px-2 py-0.5 rounded-full">{label}</span>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Expiry */}
+                    {n.expiry_time && (
+                      <div className="flex items-center gap-1 text-xs text-orange-500 mb-3">
+                        <Clock size={11} />
+                        Expires: {formatDate(n.expiry_time)}
+                      </div>
+                    )}
+
+                    {/* Actions — download PDF + hub link */}
+                    <div className="flex items-center gap-3 pt-2 border-t border-gray-100 mt-2">
+                      <span className="text-xs text-gray-400 mr-auto">{timeAgo(n.schedule_time)}</span>
+                      {n.attachments.length > 0 && (
+                        <a
+                          href={n.attachments[0].url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:gap-2.5 transition-all"
+                          onClick={e => e.stopPropagation()}
+                        >
+                          <Download size={14} /> Download
+                        </a>
+                      )}
+                      <Link
+                        href="/examination"
+                        className="flex items-center gap-1.5 text-sm font-semibold text-purple-700 hover:text-purple-900 hover:gap-2.5 transition-all"
+                      >
+                        <ExternalLink size={14} /> View Hub
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
                 <div
                   key={n.id}
                   className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all p-6"
                 >
+
                   {/* Tags row */}
                   <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -317,7 +414,7 @@ export default function NoticesPage() {
                         {isExpanded ? 'Show Less' : 'Read More'} <ChevronRight size={14} className={isExpanded ? 'rotate-90' : ''} />
                       </button>
                     )}
-                    {n.attachments.length > 0 && (
+                    {!isExamNotice && n.attachments.length > 0 && (
                       <a
                          href={n.attachments[0].url}
                          target="_blank"
@@ -329,6 +426,7 @@ export default function NoticesPage() {
                     )}
                   </div>
                 </div>
+                )
               );
             })}
           </div>

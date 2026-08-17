@@ -215,44 +215,59 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
     const pid = programme.id;
 
     const load = async () => {
-      const [
-        { data: ov }, { data: sn },
-        { data: sm }, { data: fc }, { data: depts },
-        { data: al }, { data: iv },
-        { data: evData }
-      ] = await Promise.all([
-        supabase.from('program_overview').select('*').eq('programme_id', pid).single(),
-        supabase.from('program_snapshot').select('*').eq('programme_id', pid).single(),
-        supabase.from('program_semesters').select('*, program_subjects(*)').eq('programme_id', pid).order('semester_number'),
-        supabase.from('program_faculty').select('*').eq('programme_id', pid).order('display_order'),
-        supabase.from('program_departments').select('*').eq('programme_id', pid).order('display_order'),
-        supabase.from('program_alumni').select('*').eq('programme_id', pid).order('display_order'),
-        supabase.from('program_industrial_visits').select('*').eq('programme_id', pid).order('display_order'),
-        supabase.from('events').select('*').eq('publish_programme', true).eq('status', 'published').order('published_at', { ascending: false }),
-      ]);
-      if (ov) {
-        setOverview({ department: ov.department || '', degree: ov.degree || '', description: ov.description || '', long_description: ov.long_description || '', banner_image: ov.banner_image || '', title: ov.title || '', funding_type: ov.funding_type || '', festivals: ov.festivals || '', publication: ov.publication || '', course_key: ov.course_key || '', eligibility: ov.eligibility || '', activities_intros: ov.activities_intros || [] });
-        if (ov.activities_intros) setActivitiesIntros(ov.activities_intros);
-      }
-      if (sn) setSnapshot({ duration: sn.duration || '', semesters: sn.semesters || 6, timing: sn.timing || '', intake: sn.intake || 0, mode: sn.mode || 'Full Time' });
-      if (sm) setSemesters(sm.map((s: any) => ({ ...s, subjects: (s.program_subjects || []).sort((a: any, b: any) => a.display_order - b.display_order) })));
-      if (fc) setFaculty(fc);
-      if (depts) setDepartments(depts);
-      if (al) setAlumni(al);
-      if (iv) setVisits(iv);
-      if (evData) {
-        // Filter events for this programme
-        const adminCode = programme.code || programme.slug.toUpperCase();
-        const filtered = evData.filter((ev: any) => ev.programme && ev.programme.includes(adminCode));
-        const fIntro = filtered.find((e: any) => e.category === 'Festivals' && e.title === 'Festival Intro');
-        if (fIntro) { setFestivalIntro(fIntro.description); setFestivalIntroId(fIntro.id); }
-        const pIntro = filtered.find((e: any) => e.category === 'Publication' && e.title === 'Publication Intro');
-        if (pIntro) { setPublicationIntro(pIntro.description); setPublicationIntroId(pIntro.id); }
-        setEvents(filtered.filter((e: any) =>
-          !(e.category === 'Festivals' && e.title === 'Festival Intro') &&
-          !(e.category === 'Publication' && e.title === 'Publication Intro') &&
-          !(e.category === 'Events & Activities' && e.title === 'Activities Intro') // legacy filter
-        ));
+      try {
+        // Fetch faculty separately first so it always loads even if events fail
+        const { data: fc, error: fcErr } = await supabase
+          .from('program_faculty').select('*').eq('programme_id', pid).order('display_order');
+        if (fcErr) console.error('[Load] faculty error:', fcErr.message);
+        else if (fc && fc.length > 0) setFaculty(fc);
+
+        const [
+          { data: ov, error: ovErr }, { data: sn, error: snErr },
+          { data: sm, error: smErr }, { data: depts, error: deptsErr },
+          { data: al, error: alErr }, { data: iv, error: ivErr },
+          { data: evData, error: evErr }
+        ] = await Promise.all([
+          supabase.from('program_overview').select('*').eq('programme_id', pid).single(),
+          supabase.from('program_snapshot').select('*').eq('programme_id', pid).single(),
+          supabase.from('program_semesters').select('*, program_subjects(*)').eq('programme_id', pid).order('semester_number'),
+          supabase.from('program_departments').select('*').eq('programme_id', pid).order('display_order'),
+          supabase.from('program_alumni').select('*').eq('programme_id', pid).order('display_order'),
+          supabase.from('program_industrial_visits').select('*').eq('programme_id', pid).order('display_order'),
+          supabase.from('events').select('*').eq('publish_programme', true).eq('status', 'published').order('published_at', { ascending: false }).limit(200),
+        ]);
+        if (ovErr) console.error('[Load] overview error:', ovErr.message);
+        if (snErr) console.error('[Load] snapshot error:', snErr.message);
+        if (smErr) console.error('[Load] semesters error:', smErr.message);
+        if (deptsErr) console.error('[Load] departments error:', deptsErr.message);
+        if (alErr) console.error('[Load] alumni error:', alErr.message);
+        if (ivErr) console.error('[Load] visits error:', ivErr.message);
+        if (evErr) console.error('[Load] events error:', evErr.message);
+
+        if (ov) {
+          setOverview({ department: ov.department || '', degree: ov.degree || '', description: ov.description || '', long_description: ov.long_description || '', banner_image: ov.banner_image || '', title: ov.title || '', funding_type: ov.funding_type || '', festivals: ov.festivals || '', publication: ov.publication || '', course_key: ov.course_key || '', eligibility: ov.eligibility || '', activities_intros: ov.activities_intros || [] });
+          if (ov.activities_intros) setActivitiesIntros(ov.activities_intros);
+        }
+        if (sn) setSnapshot({ duration: sn.duration || '', semesters: sn.semesters || 6, timing: sn.timing || '', intake: sn.intake || 0, mode: sn.mode || 'Full Time' });
+        if (sm) setSemesters(sm.map((s: any) => ({ ...s, subjects: (s.program_subjects || []).sort((a: any, b: any) => a.display_order - b.display_order) })));
+        if (depts) setDepartments(depts);
+        if (al) setAlumni(al);
+        if (iv) setVisits(iv);
+        if (evData) {
+          const adminCode = programme.code || programme.slug.toUpperCase();
+          const filtered = evData.filter((ev: any) => ev.programme && ev.programme.includes(adminCode));
+          const fIntro = filtered.find((e: any) => e.category === 'Festivals' && e.title === 'Festival Intro');
+          if (fIntro) { setFestivalIntro(fIntro.description); setFestivalIntroId(fIntro.id); }
+          const pIntro = filtered.find((e: any) => e.category === 'Publication' && e.title === 'Publication Intro');
+          if (pIntro) { setPublicationIntro(pIntro.description); setPublicationIntroId(pIntro.id); }
+          setEvents(filtered.filter((e: any) =>
+            !(e.category === 'Festivals' && e.title === 'Festival Intro') &&
+            !(e.category === 'Publication' && e.title === 'Publication Intro') &&
+            !(e.category === 'Events & Activities' && e.title === 'Activities Intro')
+          ));
+        }
+      } catch (err: any) {
+        console.error('[Load] Unexpected error:', err.message);
       }
     };
     load();
@@ -280,6 +295,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       }
 
       // 2. Upsert overview
+      console.log('[DEBUG] Overview to upsert:', { programme_id: pid, ...overview, activities_intros: activitiesIntros });
       const { error: ovErr } = await supabase.from('program_overview').upsert({ programme_id: pid, ...overview, activities_intros: activitiesIntros }, { onConflict: 'programme_id' });
       if (ovErr) throw new Error(`Overview Save Error: ${ovErr.message}`);
 
@@ -305,12 +321,17 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       }
 
       // 5. Faculty – delete + re-insert
-      await supabase.from('program_faculty').delete().eq('programme_id', pid);
+      const { error: delFacErr } = await supabase.from('program_faculty').delete().eq('programme_id', pid);
+      if (delFacErr) throw new Error(`Faculty Delete Error: ${delFacErr.message}`);
       if (faculty.length > 0) {
-        await supabase.from('program_faculty').insert(faculty.map((f, i) => {
-          const { id, programme_id, ...rest } = f as any;
+        const facultyToInsert = faculty.map((f, i) => {
+          const { id, programme_id, created_at, updated_at, ...rest } = f as any;
           return { ...rest, programme_id: pid, display_order: i };
-        }));
+        });
+        console.log('[DEBUG] Faculty to insert:', JSON.stringify(facultyToInsert));
+        const { error: facErr, data: facData } = await supabase.from('program_faculty').insert(facultyToInsert).select();
+        console.log('[DEBUG] Faculty insert result:', { error: facErr?.message, data: facData?.length });
+        if (facErr) throw new Error(`Faculty Save Error: ${facErr.message}`);
       }
 
       // 5.5. Departments – delete + re-insert

@@ -79,133 +79,7 @@ export default function ProgrammesManagerV2() {
     }
   };
 
-  const handleSeedDefault = async () => {
-    if (!confirm('This will insert all default programmes and their curriculum structures into the database. Continue?')) return;
-    setLoading(true);
-    try {
-      // 1. Insert/Update Core Programmes
-      const { error: err } = await supabase.from('mcc_programmes').upsert(
-        DEFAULT_PROGRAMMES.map(p => ({ ...p })),
-        { onConflict: 'slug' }
-      );
-      if (err) throw err;
 
-      // 2. Fetch all programmes to get their IDs
-      const { data: progs } = await supabase.from('mcc_programmes').select('id, slug, name');
-      
-      // 3. Dynamically import syllabusData
-      const { syllabusData } = await import('@/lib/syllabusData');
-
-      // 4. Default overview + snapshot data for all programmes
-      const overviewDefaults: Record<string, { title: string; description: string; funding_type: string; course_key: string; eligibility: string }> = {
-        'bcom':    { title: 'Bachelor of Commerce (B.Com)', description: 'A foundational undergraduate programme in commerce, economics, and business principles.', funding_type: 'Aided', course_key: 'BCOM', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'baf':     { title: 'B.COM (Accounting & Finance)', description: 'Specialised undergraduate programme in accounting and finance for aspiring finance professionals.', funding_type: 'Self Financing', course_key: 'BAF', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bbi':     { title: 'B.COM (Banking & Insurance)', description: 'Undergraduate programme covering banking, insurance, and financial services sector.', funding_type: 'Self Financing', course_key: 'BBI', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bfm':     { title: 'B.COM (Financial Markets)', description: 'Programme focused on financial markets, investments, and securities.', funding_type: 'Self Financing', course_key: 'BFM', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bcom-ms': { title: 'B.COM (Management Studies)', description: 'Combines core commerce with management principles to build future business leaders.', funding_type: 'Self Financing', course_key: 'BMS', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bcom-ba': { title: 'B.COM (Business Administration)', description: 'Undergraduate programme in business administration and management.', funding_type: 'Self Financing', course_key: 'BBA', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bammc':   { title: 'BAMMC (Mass Media & Communication)', description: 'Programme in mass communication, journalism, advertising, and media studies.', funding_type: 'Self Financing', course_key: 'BAMMC', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bsc-it':  { title: 'B.SC. (Information Technology)', description: 'Undergraduate programme in software, networks, and information technology.', funding_type: 'Self Financing', course_key: 'BSC_IT', eligibility: 'Passed HSC (Std XII) with Mathematics or equivalent.' },
-        'bca':     { title: 'Bachelor of Computer Applications', description: 'Programme covering software development, databases, and computer applications.', funding_type: 'Self Financing', course_key: 'BCA', eligibility: 'Passed HSC (Std XII) or equivalent examination.' },
-        'bsc-ds':  { title: 'B.SC. (Data Science)', description: 'Undergraduate programme in data analysis, machine learning, and statistical computing.', funding_type: 'Self Financing', course_key: 'BSC_DS', eligibility: 'Passed HSC (Std XII) with Mathematics or equivalent.' },
-        'bsc-cs':  { title: 'B.SC. (Computer Science)', description: 'Programme in theoretical and applied computer science fundamentals.', funding_type: 'Self Financing', course_key: 'BSC_CS', eligibility: 'Passed HSC (Std XII) with Mathematics or equivalent.' },
-        'mcom-aa': { title: 'M.COM. (Advanced Accountancy)', description: 'Advanced studies in accountancy, taxation, and auditing, preparing students for high-level roles in finance and accounting.', funding_type: 'Self Financing', course_key: 'MCOM_AA', eligibility: 'Must have passed the Bachelor of Commerce examination conducted by any University in Maharashtra.' },
-        'mcom-bm': { title: 'M.COM. (Business Management)', description: 'Focuses on strategic management, organizational behavior, and leadership skills for future business leaders and entrepreneurs.', funding_type: 'Self Financing', course_key: 'MCOM_BM', eligibility: 'Must have passed the Bachelor of Commerce examination conducted by any University in Maharashtra.' },
-        'mcom-bf': { title: 'M.COM. (Banking & Finance)', description: 'Specialized postgraduate programme covering advanced concepts in banking, financial markets, and investment management.', funding_type: 'Self Financing', course_key: 'MCOM_BF', eligibility: 'Must have passed the Bachelor of Commerce examination conducted by any University in Maharashtra.' },
-        'msf':     { title: 'Master of Science in Finance', description: 'An advanced programme offering deep insights into financial analytics, corporate finance, and global financial systems.', funding_type: 'Self Financing', course_key: 'MSF', eligibility: "Must have passed Bachelor's degree in relevant discipline from any recognised University." },
-        'msc-it':  { title: 'Master of Science (Information Technology)', description: 'Advanced studies in software development, data science, networking, and modern IT infrastructure to build tech experts.', funding_type: 'Self Financing', course_key: 'MSC_IT', eligibility: "Must have passed Bachelor's degree in IT/CS from any recognised University." },
-      };
-
-      const snapshotDefaults: Record<string, { duration: string; semesters: number; timing: string; intake: number; mode: string }> = {
-        'bcom':    { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 120, mode: 'Full Time' },
-        'baf':     { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bbi':     { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bfm':     { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bcom-ms': { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bcom-ba': { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bammc':   { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bsc-it':  { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bca':     { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bsc-ds':  { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'bsc-cs':  { duration: '3 Years', semesters: 6, timing: 'Morning', intake: 60, mode: 'Full Time' },
-        'mcom-aa': { duration: '2 Years', semesters: 4, timing: '05:30 PM – 08:30 PM', intake: 80, mode: 'Full Time' },
-        'mcom-bm': { duration: '2 Years', semesters: 4, timing: '05:30 PM – 08:30 PM', intake: 60, mode: 'Full Time' },
-        'mcom-bf': { duration: '2 Years', semesters: 4, timing: '05:30 PM – 08:30 PM', intake: 60, mode: 'Full Time' },
-        'msf':     { duration: '2 Years', semesters: 4, timing: '05:30 PM – 08:30 PM', intake: 60, mode: 'Full Time' },
-        'msc-it':  { duration: '2 Years', semesters: 4, timing: '05:30 PM – 08:30 PM', intake: 60, mode: 'Full Time' },
-      };
-
-      if (progs && syllabusData) {
-        for (const prog of progs) {
-          // Seed program_overview
-          const ovDef = overviewDefaults[prog.slug];
-          if (ovDef) {
-            await supabase.from('program_overview').upsert({
-              programme_id: prog.id,
-              title: ovDef.title,
-              description: ovDef.description,
-              long_description: '',
-              funding_type: ovDef.funding_type,
-              course_key: ovDef.course_key,
-              eligibility: ovDef.eligibility,
-            }, { onConflict: 'programme_id' });
-          }
-
-          // Seed program_snapshot
-          const snDef = snapshotDefaults[prog.slug];
-          if (snDef) {
-            await supabase.from('program_snapshot').upsert({
-              programme_id: prog.id,
-              duration: snDef.duration,
-              semesters: snDef.semesters,
-              timing: snDef.timing,
-              intake: snDef.intake,
-              mode: snDef.mode,
-            }, { onConflict: 'programme_id' });
-          }
-
-          // Seed curriculum (semesters + subjects)
-          const title = prog.name;
-          const programKey = title.includes('Computer Science') ? 'BSC_CS' : title.includes('Information Technology') && prog.slug.startsWith('b') ? 'BSC_IT' : title.includes('B.Com') && !title.includes('(') ? 'BCOM' : title.includes('Accounting & Finance') ? 'BAF' : title.includes('Banking & Insurance') ? 'BBI' : title.includes('Financial Markets') ? 'BFM' : title.includes('Management Studies') ? 'BMS' : title.includes('Mass Media') ? 'BAMMC' : title.includes('Data Science') ? 'BSC_DS' : title.includes('Advanced Accountancy') ? 'MCOM_AA' : title.includes('Business Management') ? 'MCOM_BM' : title.includes('Banking & Finance') ? 'MCOM_BF' : title.includes('Business Administration') ? 'BBA' : 'BCOM';
-          
-          const sylData = syllabusData[programKey];
-          if (sylData && sylData.length > 0) {
-            await supabase.from('program_semesters').delete().eq('programme_id', prog.id);
-            const semMap: Record<string, any[]> = {};
-            sylData.forEach(sub => {
-              const sNum = sub.semester === 'I' ? 1 : sub.semester === 'II' ? 2 : sub.semester === 'III' ? 3 : sub.semester === 'IV' ? 4 : sub.semester === 'V' ? 5 : sub.semester === 'VI' ? 6 : sub.semester === 'VII' ? 7 : 8;
-              if (!semMap[sNum]) semMap[sNum] = [];
-              semMap[sNum].push(sub);
-            });
-            for (const semNum of Object.keys(semMap)) {
-              const { data: semRow, error: semErr } = await supabase.from('program_semesters').insert({
-                programme_id: prog.id,
-                semester_number: Number(semNum)
-              }).select('id').single();
-              if (!semErr && semRow) {
-                const subsToInsert = semMap[semNum].map((s, i) => ({
-                  semester_id: semRow.id,
-                  subject_name: s.subjectName,
-                  subject_code: s.subjectCode || null,
-                  credits: s.credit || null,
-                  is_elective: s.isElective,
-                  subject_type: s.subjectType || null,
-                  display_order: i
-                }));
-                await supabase.from('program_subjects').insert(subsToInsert);
-              }
-            }
-          }
-        }
-      }
-      alert('All programmes seeded successfully — overview, snapshot & curriculum are now populated!');
-      fetchProgrammes();
-    } catch (e: any) {
-      alert(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleEdit = (prog: Programme) => {
     setEditingProgramme(prog);
@@ -257,12 +131,7 @@ export default function ProgrammesManagerV2() {
           <p className="text-sm text-gray-500 mt-0.5">Manage all programme content — overview, curriculum, eligibility, SEO and more.</p>
         </div>
         <div className="flex gap-2">
-          {!loading && (
-            <button onClick={handleSeedDefault}
-              className="flex items-center gap-2 bg-amber-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-amber-600 transition-colors shadow-sm">
-              <Plus size={16} /> Seed Default Programmes
-            </button>
-          )}
+
           <button onClick={handleAddNew}
             className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm">
             <Plus size={16} /> Add Programme
@@ -314,9 +183,7 @@ export default function ProgrammesManagerV2() {
         <div className="py-20 text-center text-gray-400">
           <GraduationCap size={48} className="mx-auto mb-3 opacity-30" />
           <p className="font-medium">No programmes found.</p>
-          {programmes.length === 0 && (
-            <p className="text-sm mt-1">Click <strong>"Seed Default Programmes"</strong> to get started.</p>
-          )}
+
         </div>
       ) : (
         <div className="space-y-8">

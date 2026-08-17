@@ -385,17 +385,36 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     { title: 'Programme Design', icon: FileText, info: '3-year full-time undergraduate programme divided into 6 semesters.' }
   ];
 
-  if (progData?.snapshot) {
-    const sn = progData.snapshot;
-    const snItems = [
-      ...(sn.duration ? [{ title: 'Programme Design', icon: FileText, info: `${sn.duration}${sn.semesters ? `, ${sn.semesters} Semesters` : ''}` }] : []),
-      ...(sn.timing ? [{ title: 'Timing', icon: Clock, info: sn.timing }] : []),
-      ...(sn.intake ? [{ title: 'Intake Capacity', icon: Users, info: `${sn.intake} Seats` }] : []),
-      ...(sn.mode ? [{ title: 'Mode', icon: FileText, info: sn.mode }] : []),
-    ];
-    if (snItems.length > 0) {
-      finalQuickActionsData = snItems;
+  if (progData?.snapshot || progData?.overview?.eligibility) {
+    const sn = progData?.snapshot || {};
+    const baseActions = [...finalQuickActionsData];
+    
+    // Update or add Eligibility
+    if (progData?.overview?.eligibility) {
+      const idx = baseActions.findIndex(a => a.title.toLowerCase().includes('eligibility'));
+      if (idx !== -1) baseActions[idx].info = progData.overview.eligibility;
+      else baseActions.unshift({ title: 'Eligibility', icon: Users, info: progData.overview.eligibility });
     }
+
+    // Update or add snapshot items
+    if (sn.duration || sn.semesters) {
+      const info = `${sn.duration || ''}${sn.duration && sn.semesters ? ', ' : ''}${sn.semesters ? `${sn.semesters} Semesters` : ''}`;
+      const idx = baseActions.findIndex(a => a.title.toLowerCase().includes('design'));
+      if (idx !== -1) baseActions[idx].info = info;
+      else baseActions.push({ title: 'Programme Design', icon: FileText, info });
+    }
+    if (sn.timing) {
+      const idx = baseActions.findIndex(a => a.title.toLowerCase().includes('timing') || a.title.toLowerCase().includes('time'));
+      if (idx !== -1) baseActions[idx].info = sn.timing;
+      else baseActions.push({ title: 'Timing', icon: Clock, info: sn.timing });
+    }
+    if (sn.intake) {
+      const idx = baseActions.findIndex(a => a.title.toLowerCase().includes('intake') || a.title.toLowerCase().includes('seat'));
+      if (idx !== -1) baseActions[idx].info = `${sn.intake} Seats`;
+      else baseActions.push({ title: 'Intake Capacity', icon: Users, info: `${sn.intake} Seats` });
+    }
+    
+    finalQuickActionsData = baseActions;
   } else if (dbProgramme?.programme_snapshot && dbProgramme.programme_snapshot.length > 0) {
     finalQuickActionsData = dbProgramme.programme_snapshot;
   }
@@ -605,14 +624,14 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
               <div className="prose prose-lg max-w-none text-gray-600 prose-headings:text-[#123B6D] prose-a:text-[#3B82F6]">
                 {progData?.overview?.long_description?.trim() ? (
                   progData.overview.long_description.split('\n').map((p: string, i: number) => p.trim() ? <p key={i} className="mb-4">{p}</p> : null)
+                ) : introductionContent ? (
+                  introductionContent
                 ) : progData?.overview?.description?.trim() ? (
                   <p className="mb-4">{progData.overview.description}</p>
                 ) : dbProgramme?.overview_content && dbProgramme.overview_content.length > 0 ? (
                   dbProgramme.overview_content.map((p: string, i: number) => (
                     <p key={i} className="mb-4">{p}</p>
                   ))
-                ) : introductionContent ? (
-                  introductionContent
                 ) : (
                   <p>Programme details will be updated here shortly.</p>
                 )}
@@ -683,7 +702,9 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                       srNo: f.sr_no, name: f.name, designation: f.designation,
                       additionalRole: f.additional_role, department: f.department,
                       education: f.education, teachingExp: f.teaching_exp,
-                      email: f.email, image: f.image
+                      email: f.email, image: f.image, bio: f.bio,
+                      linkedin: f.linkedin, areas_of_interest: f.areas_of_interest,
+                      publications_patents: f.publications_patents, google_scholar_or_other: f.google_scholar_or_other
                     }))
                   : null;
                 const allFaculty = dynamicFaculty || (dbProgramme?.faculty_data?.length > 0 ? dbProgramme.faculty_data : facultyData) || [];

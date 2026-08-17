@@ -51,7 +51,7 @@ export default function ExaminationManager() {
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [scheduleTime, setScheduleTime] = useState('');
-  const [publishToNotice, setPublishToNotice] = useState(false);
+  const [publishToNotice, setPublishToNotice] = useState(true);
   const [noticeExpiryTime, setNoticeExpiryTime] = useState('');
   // Track whether user has manually edited the display name
   const [displayNameEdited, setDisplayNameEdited] = useState(false);
@@ -108,10 +108,7 @@ export default function ExaminationManager() {
       return;
     }
     
-    if (publishToNotice && !noticeExpiryTime) {
-      setError('Please set an expiry time for the notice board.');
-      return;
-    }
+    // Always published to notice board
 
     // Resolve final title: use the custom display name, or fall back to filename
     const finalTitle = displayName.trim() || file.name.replace(/\.[^/.]+$/, '');
@@ -146,8 +143,8 @@ export default function ExaminationManager() {
           file_url: fileUrl,
           file_type: file.type || 'application/pdf',
           schedule_time: new Date(scheduleTime).toISOString(),
-          publish_to_notice_board: publishToNotice,
-          notice_expiry_time: publishToNotice && noticeExpiryTime ? new Date(noticeExpiryTime).toISOString() : null
+          publish_to_notice_board: true,
+          notice_expiry_time: noticeExpiryTime ? new Date(noticeExpiryTime).toISOString() : null
         });
 
       if (dbError) throw dbError;
@@ -324,21 +321,21 @@ export default function ExaminationManager() {
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-[#1E293B] mb-3 cursor-pointer">
-                  <input type="checkbox" checked={publishToNotice} onChange={e => setPublishToNotice(e.target.checked)} className="w-4 h-4 rounded text-[#123B6D]" />
-                  Also publish to General Notice Board
-                </label>
-                
-                {publishToNotice && (
-                  <div className="pl-6 animate-in slide-in-from-top-2 duration-300">
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5 flex items-center gap-1.5">
-                      <Clock size={14} /> Notice Board Expiry Time *
-                    </label>
-                    <input type="datetime-local" value={noticeExpiryTime} onChange={e => setNoticeExpiryTime(e.target.value)} required={publishToNotice}
-                      className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400" />
-                    <p className="text-[11px] text-gray-500 mt-1.5">After this time, it will be removed from the Notice Board, but will remain permanently in the Examination Hub.</p>
+                <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                  <Bell size={16} className="text-emerald-600 shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-800">Always published to Notice Board</p>
+                    <p className="text-xs text-emerald-600 mt-0.5">This document will automatically appear on the public notice board.</p>
                   </div>
-                )}
+                </div>
+                <div className="mt-4">
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5 flex items-center gap-1.5">
+                    <Clock size={14} /> Notice Board Expiry Time <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
+                  <input type="datetime-local" value={noticeExpiryTime} onChange={e => setNoticeExpiryTime(e.target.value)}
+                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400" />
+                  <p className="text-[11px] text-gray-500 mt-1.5">Leave blank to keep it on the Notice Board permanently. The document will always remain in the Examination Hub.</p>
+                </div>
               </div>
             </div>
           </div>

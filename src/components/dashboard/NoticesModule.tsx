@@ -92,17 +92,50 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     const now = new Date().toISOString();
+
+    // Fetch regular notices
     const { data } = await supabase
       .from('notices')
       .select('*')
       .lte('schedule_time', now)
       .or(`expiry_time.is.null,expiry_time.gt.${now}`)
       .order('schedule_time', { ascending: false });
-    if (data) {
-      const filtered = (data as Notice[]).filter(n =>
+
+    // Fetch examination documents cross-published to the notice board
+    const { data: examDocs } = await supabase
+      .from('examination_documents')
+      .select('*')
+      .eq('publish_to_notice_board', true)
+      .lte('schedule_time', now)
+      .or(`notice_expiry_time.is.null,notice_expiry_time.gt.${now}`)
+      .order('schedule_time', { ascending: false });
+
+    // Map exam docs into notice shape
+    const examNotices: Notice[] = (examDocs || []).map((doc: any) => ({
+      id: `exam-${doc.id}`,
+      title: doc.title,
+      description: `${doc.category} — View in Examination Hub`,
+      categories: ['Examinations'],
+      courses: doc.courses,
+      departments: [],
+      semesters: [],
+      is_general: doc.courses.length >= 10,
+      schedule_time: doc.schedule_time,
+      expiry_time: doc.notice_expiry_time,
+      attachments: [{ name: doc.title, url: doc.file_url, type: 'pdf' }],
+      is_calendar_only: false,
+    }));
+
+    if (data || examNotices.length > 0) {
+      const regular = (data as Notice[] || []).filter(n =>
         n.is_general || (n.courses && n.courses.includes(dbCourseId))
       );
-      setNotices(filtered);
+      const examFiltered = examNotices.filter(n =>
+        n.is_general || (n.courses && (n.courses.includes(dbCourseId) || n.courses.some(c => c.toLowerCase() === dbCourseId.toLowerCase())))
+      );
+      const combined = [...regular, ...examFiltered]
+        .sort((a, b) => new Date(b.schedule_time).getTime() - new Date(a.schedule_time).getTime());
+      setNotices(combined);
     }
     if (isRefresh) setRefreshing(false);
     else setLoading(false);

@@ -15,6 +15,7 @@ export interface FullProgrammeData {
   overview: {
     department?: string; degree?: string; description?: string;
     long_description?: string; banner_image?: string;
+    eligibility?: string;
     activities_intros?: { title: string; intro: string }[];
   } | null;
   snapshot: {

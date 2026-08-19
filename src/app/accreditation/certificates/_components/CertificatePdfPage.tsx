@@ -5,7 +5,7 @@ import { Download, ExternalLink } from 'lucide-react';
 
 interface CertPageProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   pdfs: { label: string; url: string }[];
 }
 
@@ -30,7 +30,7 @@ export default function CertificatePdfPage({ title, subtitle, pdfs }: CertPagePr
             <span className="text-[#D4A017]">{title}</span>
           </nav>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">{title}</h1>
-          <p className="text-white/70 text-base">{subtitle}</p>
+          {subtitle && <p className="text-white/70 text-base">{subtitle}</p>}
         </div>
       </div>
 

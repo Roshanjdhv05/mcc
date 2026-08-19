@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -75,7 +75,7 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
             <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
               {member.designation}
             </p>
-            {member.additionalRole && member.additionalRole !== '—' && (
+            {member.additionalRole && member.additionalRole !== 'â€”' && (
               <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight">
                 {member.additionalRole}
               </div>
@@ -124,7 +124,7 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
           </div>
           
           <div className="space-y-3 flex-1 w-full px-2 overflow-y-auto">
-             {member.additionalRole && member.additionalRole !== '—' && (
+             {member.additionalRole && member.additionalRole !== 'â€”' && (
                <div className="flex items-start gap-3">
                  <span className="text-[#D4A017] text-[11px] font-bold uppercase tracking-wider shrink-0 mt-0.5 w-14">Role</span>
                  <span className="text-[13px] text-white/85 leading-snug">{member.additionalRole}</span>
@@ -308,7 +308,7 @@ const tabs = [
 
   let finalQuickActionsData = customQuickActionsData || [
     { title: 'Eligibility', icon: Users, info: '10+2 from a recognized board with minimum 50% aggregate marks.' },
-    { title: 'Fee Structure', icon: Award, info: '₹35,000 - ₹50,000 per year depending on the specific programme.' },
+    { title: 'Fee Structure', icon: Award, info: 'â‚¹35,000 - â‚¹50,000 per year depending on the specific programme.' },
     { title: 'Timing', icon: Clock, info: 'Morning Session: 7:00 AM to 12:00 PM. Practical slots may vary.' },
     { title: 'Number of Seats', icon: Users, info: '60 to 120 seats per division (subject to university approval).' },
     { title: 'Programme Design', icon: FileText, info: '3-year full-time undergraduate programme divided into 6 semesters.' }
@@ -335,7 +335,7 @@ const tabs = [
   const seatMatch = seatsInfoStr.match(/(\d+)/);
   const seatCount = seatMatch ? seatMatch[1] : "TBD";
 
-  const timingMatch = timingInfoStr.match(/([\d:]+)\s*(AM|PM|a\.m\.|p\.m\.)?\s*(?:to|-|–)\s*([\d:]+)\s*(AM|PM|a\.m\.|p\.m\.)?/i);
+  const timingMatch = timingInfoStr.match(/([\d:]+)\s*(AM|PM|a\.m\.|p\.m\.)?\s*(?:to|-|â€“)\s*([\d:]+)\s*(AM|PM|a\.m\.|p\.m\.)?/i);
   let startT = timingInfoStr, startP = "", endT = "", endP = "";
   if (timingMatch) {
      startT = timingMatch[1];
@@ -401,7 +401,7 @@ const tabs = [
               </div>
             </div>
 
-            {/* Right Visual — Programme Snapshot Infographic (Desktop Only) */}
+            {/* Right Visual â€” Programme Snapshot Infographic (Desktop Only) */}
             <div className="hidden lg:flex flex-1 relative w-full justify-center items-center h-[550px] -mt-16">
               {/* Title */}
               <div className="absolute top-8 w-full flex items-center justify-center gap-4 z-10">
@@ -571,9 +571,9 @@ const tabs = [
                                       {sub.subject_name}
                                       {sub.is_elective && <span className="inline-block ml-2 px-1.5 py-0.5 bg-blue-100 text-[#3B82F6] text-[10px] font-bold uppercase rounded">Elective</span>}
                                     </td>
-                                    <td className="p-3 border text-gray-500 text-xs">{sub.subject_code || '—'}</td>
-                                    <td className="p-3 border text-gray-600 text-xs">{sub.subject_type || '—'}</td>
-                                    <td className="p-3 border text-center font-semibold">{sub.credits || '—'}</td>
+                                    <td className="p-3 border text-gray-500 text-xs">{sub.subject_code || 'â€”'}</td>
+                                    <td className="p-3 border text-gray-600 text-xs">{sub.subject_type || 'â€”'}</td>
+                                    <td className="p-3 border text-center font-semibold">{sub.credits || 'â€”'}</td>
                                   </tr>
                                 ))}
                                 {(!sem.subjects || sem.subjects.length === 0) && (
@@ -861,7 +861,7 @@ const tabs = [
                 );
               })()}
 
-              {/* ── MODAL ── */}
+              {/* â”€â”€ MODAL â”€â”€ */}
               <AnimatePresence>
                 {selectedEvent && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12">
@@ -1074,4 +1074,3 @@ const tabs = [
     </div>
   );
 }
-

@@ -109,8 +109,8 @@ function EventCard({
 }: {
   event: HomeEvent;
   isArchived: boolean;
-  onRemoveFromHome: (id: string) => void;
-  onRestoreToHome: (id: string) => void;
+  onRemoveFromHome: (id: string) => void | Promise<void>;
+  onRestoreToHome: (id: string) => void | Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -347,7 +347,7 @@ export default function HomeEventsManager() {
         })
       : [];
 
-    const basePayload = {
+    const basePayload: any = {
       title: title.trim(),
       description: description.trim(),
       category,

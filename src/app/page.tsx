@@ -705,7 +705,7 @@ function HomepageCalendar() {
   );
 }
 
-function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x') {
+function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x', interactDelay: number = 1500) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isHovered = useRef(false);
   const isInteracting = useRef(false);
@@ -758,7 +758,7 @@ function useMarqueeScroll(speed: number = 1, direction: 'x' | 'y' = 'x') {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         isInteracting.current = false;
-      }, 1500); // Resume 1.5s after interaction ends
+      }, interactDelay);
     };
 
     el.addEventListener('mouseenter', pauseScroll);
@@ -830,17 +830,15 @@ export default function HomePage() {
     buttonLink?: string;
   }[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [liveEvents, setLiveEvents] = useState<{title: string; tag: string; desc: string; img: string; date?: string | null}[]>([]);
   const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string; date?: string | null}[]>([]);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
   const illustriousScrollRef = useRef<HTMLDivElement>(null);
   const adminServicesAutoRef = useRef<HTMLDivElement>(null);
 
-  const latestEventsRef = useMarqueeScroll(1);
-  const latestNoticesRef = useMarqueeScroll(0.8, 'y');
   const programmesRef = useMarqueeScroll(-1.2);
   const culturalRef = useMarqueeScroll(1);
   const wallOfFameRef = useMarqueeScroll(1.5, 'x');
+  const noticesRef = useMarqueeScroll(0.8, 'y', 5000);
 
   // Admin Services: auto-slide right-to-left, one card every 3s
   useEffect(() => {
@@ -922,45 +920,20 @@ export default function HomePage() {
     fetchNotices();
   }, []);
 
-  useEffect(() => {
-    async function fetchLiveEvents() {
-      // Only show events published in the last 90 days on homepage
-      const ninetyDaysAgo = new Date();
-      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-      const { data } = await supabase
-        .from('events')
-        .select('title, description, category, images, published_at, calendar_date')
-        .eq('publish_home', true)
-        .eq('status', 'published')
-        .gte('published_at', ninetyDaysAgo.toISOString())
-        .order('published_at', { ascending: false })
-        .limit(12);
-      if (data && data.length > 0) {
-        const formatted = data.map((e: { title: string; description: string; category: string; images: string[]; published_at: string; calendar_date: string | null }) => ({
-          title: e.title,
-          tag: e.category || 'Event',
-          desc: e.description || '',
-          img: (e.images && e.images[0]) || '/2025 - 2026/Friendship Day (1).jpg',
-          date: e.calendar_date,
-        }));
-        setLiveEvents(formatted);
-      }
-    }
-    fetchLiveEvents();
-  }, []);
+
 
   // ── Fetch live Cultural Committee events (last 90 days, auto-vanish after)
   // Matches: publish_home=true AND (category contains 'cultural' OR department = 'Cultural Forum')
   useEffect(() => {
     async function fetchLiveCulturalEvents() {
-      const ninetyDaysAgo = new Date();
-      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const oneEightyDaysAgo = new Date();
+      oneEightyDaysAgo.setDate(oneEightyDaysAgo.getDate() - 180);
       const { data } = await supabase
         .from('events')
         .select('title, description, category, department, images, published_at, calendar_date')
         .eq('publish_gallery', true)
         .eq('status', 'published')
-        .gte('published_at', ninetyDaysAgo.toISOString())
+        .gte('published_at', oneEightyDaysAgo.toISOString())
         .order('published_at', { ascending: false })
         .limit(12);
       if (data && data.length > 0) {
@@ -977,17 +950,10 @@ export default function HomePage() {
     fetchLiveCulturalEvents();
   }, []);
 
-  // Merge: new live events (front) + permanent hardcoded (back), dedup by title
-  const mergedCulturalEvents = [
-    ...liveCulturalEvents,
-    ...culturalEvents.filter(
-      (ce) => !liveCulturalEvents.some((le) => le.title.toLowerCase() === ce.title.toLowerCase())
-    ),
-  ];
+  // Only show live events published within the last 180 days on homepage Event Gallery
+  const mergedCulturalEvents = liveCulturalEvents;
 
-  // Use live events if available, else fall back to hardcoded
-  const displayEvents = liveEvents.length > 0 ? liveEvents : culturalEvents;
-  const hasEnoughEvents = displayEvents.length >= 3;
+
 
   const demoNotices = [
     { id: 1, title: 'Semester Start — July 2026', description: 'All UG and PG programmes commence from 1st July 2026.', categories: ['Academics'], is_general: false, schedule_time: new Date().toISOString(), expiry_time: '' },
@@ -1158,18 +1124,18 @@ export default function HomePage() {
 
           <div className="flex flex-col lg:flex-row gap-5 items-stretch">
 
-            {/* ── LEFT: Latest Events (horizontal scroll left) ── */}
-            <div className="flex-1 bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+            {/* ── LEFT: Event Gallery (horizontal scroll left) ── */}
+            <div className="flex-1 bg-white rounded-3xl border border-[#E2E8F0] shadow-sm overflow-hidden flex flex-col">
               <div className="flex items-center justify-between px-5 pt-5 pb-3">
-                <h3 className="text-base font-bold text-[#123B6D] font-[var(--font-heading)]">Latest Events</h3>
+                <h3 className="text-base font-bold text-[#123B6D] font-[var(--font-heading)]">Event Gallery</h3>
                 <Link href="/students-corner/gallery" className="text-xs font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
                   View All <ArrowRight size={12} />
                 </Link>
               </div>
 
-              <div className="overflow-hidden w-full group pb-5 px-2">
-                <div ref={hasEnoughEvents ? latestEventsRef : null} className={`flex gap-4 overflow-x-auto no-scrollbar w-full ${hasEnoughEvents ? 'cursor-grab active:cursor-grabbing' : ''}`}>
-                  {(hasEnoughEvents ? [...displayEvents, ...displayEvents] : displayEvents).map((ev, i) => (
+              <div className="overflow-hidden w-full group pb-5 px-2 flex-1 relative">
+                <div ref={mergedCulturalEvents.length >= 3 ? culturalRef : null} className={`flex gap-4 overflow-x-auto no-scrollbar w-full ${mergedCulturalEvents.length >= 3 ? 'cursor-grab active:cursor-grabbing' : ''}`}>
+                  {mergedCulturalEvents.map((ev, i) => (
                     <Link
                       key={i}
                       href="/students-corner/gallery"
@@ -1212,20 +1178,9 @@ export default function HomePage() {
 
               {/* Infinite upward scroll container */}
               <div className="h-[300px] relative overflow-hidden group">
-                <style>{`
-                  @keyframes noticesScrollUp {
-                    0%   { transform: translateY(0); }
-                    100% { transform: translateY(-50%); }
-                  }
-                  .notices-marquee {
-                    animation: noticesScrollUp 18s linear infinite;
-                  }
-                  .notices-marquee:hover {
-                    animation-play-state: paused;
-                  }
-                `}</style>
-                <div className={`${hasEnoughNotices ? 'notices-marquee' : ''} flex flex-col gap-3 px-4 pb-4`}>
-                  {/* Render items twice for seamless loop if there are enough notices */}
+                <div ref={hasEnoughNotices ? noticesRef : null} className={`h-full w-full overflow-y-auto no-scrollbar ${hasEnoughNotices ? 'cursor-grab active:cursor-grabbing' : ''}`}>
+                  <div className="flex flex-col gap-3 px-4 pb-4 pt-4">
+                    {/* Render items twice for seamless loop if there are enough notices */}
                   {(hasEnoughNotices ? [...displayNotices, ...displayNotices] : displayNotices).map((n: any, i: number) => {
                     const primaryCat = n.categories?.[0] || 'Administration';
                     const colorClass = CATEGORY_COLORS[primaryCat] || 'bg-gray-100 text-gray-700';
@@ -1247,6 +1202,7 @@ export default function HomePage() {
                       </Link>
                     );
                   })}
+                  </div>
                 </div>
                 {/* Fade mask top & bottom */}
                 <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent pointer-events-none z-10" />
@@ -1298,56 +1254,6 @@ export default function HomePage() {
           <HomepageCalendar />
         </ScrollReveal>
 
-        {/* ── CULTURAL COMMITTEE ── */}
-        <ScrollReveal>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Event Gallery</h2>
-              <p className="text-sm text-[#64748B] mt-1">Celebrating creativity & talent at MCC — 2025–26 Academic Year</p>
-            </div>
-            <Link href="/students-corner/gallery?department=Cultural+Forum" className="flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] hover:underline">
-              View All <ArrowRight size={15} />
-            </Link>
-          </div>
-          <div className="overflow-hidden w-full group relative">
-            <div ref={culturalRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2 cursor-grab active:cursor-grabbing">
-              {[...mergedCulturalEvents, ...mergedCulturalEvents].map((n, i) => (
-                <Link
-                  key={i}
-                  href="/students-corner/gallery?department=Cultural+Forum"
-                  className="w-[280px] sm:w-[320px] flex-shrink-0 group/card flex flex-col rounded-2xl overflow-hidden border border-[#E2E8F0] bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                >
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={n.img}
-                      alt={n.title}
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
-                        {n.tag}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <h4 className="font-bold text-[#1E293B] group-hover/card:text-[#123B6D] transition-colors mb-2 text-lg leading-tight">{n.title}</h4>
-                    {n.date && (
-                      <div className="text-xs font-semibold text-[#64748B] mb-2 flex items-center gap-1.5">
-                        <Calendar size={13} className="text-[#123B6D]" /> 
-                        {new Date(n.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </div>
-                    )}
-                    <p className="text-sm text-[#64748B] leading-relaxed line-clamp-3 mb-4">{n.desc}</p>
-                    <div className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-[#123B6D] group-hover/card:gap-2 transition-all">
-                      View Details <ArrowRight size={16} />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </ScrollReveal>
 
         {/* ── FEATURED PROGRAMMES ── */}
         <ScrollReveal>
@@ -1429,6 +1335,9 @@ export default function HomePage() {
         <ScrollReveal>
           <div className="flex items-center justify-between mt-12 mb-6">
             <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
+            <Link href="/students-corner/wall-of-fame" className="text-sm font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
+              View All <ArrowRight size={16} />
+            </Link>
           </div>
           <div className="overflow-hidden w-full group relative mb-12">
             <div ref={wallOfFameRef} className="flex gap-6 overflow-x-auto no-scrollbar w-full pb-6 pt-4 cursor-grab active:cursor-grabbing">

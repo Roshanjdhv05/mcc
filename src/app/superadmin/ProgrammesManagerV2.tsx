@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import {
   Plus, Edit2, RefreshCw, AlertCircle, GraduationCap, BookOpen, Beaker,
@@ -59,8 +60,27 @@ export default function ProgrammesManagerV2() {
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filterCategory, setFilterCategory] = useState<'ALL' | 'UG' | 'PG' | 'PhD'>('ALL');
+  const searchParams = useSearchParams();
 
   useEffect(() => { fetchProgrammes(); }, []);
+
+  useEffect(() => {
+    const editSlug = searchParams?.get('edit');
+    if (editSlug && programmes.length > 0 && !editingProgramme) {
+      const progToEdit = programmes.find(p => p.slug === editSlug || p.id === editSlug);
+      if (progToEdit) {
+        setEditingProgramme(progToEdit);
+        setIsCreatingNew(false);
+      }
+    }
+  }, [programmes, searchParams, editingProgramme]);
+
+  const updateUrlEditParam = (slug: string | null) => {
+    const params = new URLSearchParams(window.location.search);
+    if (slug) params.set('edit', slug);
+    else params.delete('edit');
+    window.history.replaceState(null, '', `?${params.toString()}`);
+  };
 
   const fetchProgrammes = async () => {
     setLoading(true);
@@ -84,6 +104,7 @@ export default function ProgrammesManagerV2() {
   const handleEdit = (prog: Programme) => {
     setEditingProgramme(prog);
     setIsCreatingNew(false);
+    updateUrlEditParam(prog.slug || prog.id);
   };
 
   const handleAddNew = () => {
@@ -96,6 +117,7 @@ export default function ProgrammesManagerV2() {
 
   const handleEditorClose = () => {
     setEditingProgramme(null);
+    updateUrlEditParam(null);
     fetchProgrammes();
   };
 

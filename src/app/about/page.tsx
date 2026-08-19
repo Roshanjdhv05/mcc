@@ -56,7 +56,7 @@ export default function AboutPage() {
       {/* ── Hero ── */}
       <div className="relative bg-[#123B6D] pt-14 pb-32">
         <div className="absolute inset-0 opacity-20">
-          <img src="/college_campus_hero.png" alt="" className="w-full h-full object-cover" />
+          <img src="/banner1.png" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-12">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-5 uppercase tracking-widest">

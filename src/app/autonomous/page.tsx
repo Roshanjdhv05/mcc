@@ -239,65 +239,6 @@ export default function AutonomousHEIPage() {
 
   return (
     <div className="bg-[#f8f9fa] min-h-screen pb-12 font-sans">
-      {/* ── Secondary Accreditation Nav ── */}
-      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
-        
-        {/* Desktop nav - normal */}
-        <div className="hidden lg:flex justify-center max-w-[1600px] mx-auto px-8 overflow-visible items-center h-12">
-          {autonomyNav.map((item, i) => {
-            const isActive = pathname === item.href || (item.href !== '#' && pathname?.startsWith(item.href || ''));
-            return (
-              <div key={i} className="relative h-full group flex">
-                <Link href={item.href}
-                  className={`flex-shrink-0 h-full flex items-center px-5 text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider ${
-                    isActive ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  {item.label}
-                  {item.sub && <ChevronDown size={14} className="ml-1" />}
-                </Link>
-                {item.sub && (
-                  <div className="absolute top-full left-0 hidden group-hover:block z-50 pt-1">
-                    <div className="bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden py-1 min-w-[200px]">
-                      {item.sub.map((subItem, j) => (
-                        <Link key={j} href={subItem.href} className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#123B6D]">
-                          {subItem.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Mobile Auto-Slider */}
-        <div 
-          ref={scrollRef}
-          onTouchStart={handleInteraction}
-          onMouseDown={handleInteraction}
-          onWheel={handleInteraction}
-          className="lg:hidden flex overflow-x-auto no-scrollbar items-center h-12 w-full"
-          style={{ scrollBehavior: 'auto' }}
-        >
-          {[...autonomyNav, ...autonomyNav].map((item, i) => {
-            const isActive = pathname === item.href || (item.href !== '#' && pathname?.startsWith(item.href || ''));
-            return (
-              <div key={i} className="flex-shrink-0 h-full relative group">
-                <Link href={item.href}
-                  className={`h-full flex items-center px-5 text-[11px] font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${
-                    isActive ? 'bg-[#D4A017] text-white' : 'text-white/90 active:text-white active:bg-white/10'
-                  }`}
-                >
-                  {item.label}
-                  {item.sub && <ChevronDown size={12} className="ml-1" />}
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
       {/* ── Main Content ── */}
       <div className="max-w-[1600px] mx-auto px-4 lg:px-8 mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8">

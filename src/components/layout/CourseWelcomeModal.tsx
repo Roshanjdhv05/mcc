@@ -403,9 +403,7 @@ export default function CourseWelcomeModal({ onSelect, forceOpen }: { onSelect?:
                                 <p className="font-bold text-[#1E293B] text-sm leading-tight mb-0.5">
                                   {course.fullName}
                                 </p>
-                                <p className="text-xs text-[#94A3B8] mb-2">
-                                  {course.duration} · {course.seats} seats
-                                </p>
+
                                 <div className="flex flex-wrap gap-1">
                                   {course.tags.map(tag => (
                                     <span

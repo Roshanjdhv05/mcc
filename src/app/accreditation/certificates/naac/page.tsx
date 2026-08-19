@@ -9,9 +9,8 @@ export default function NaacCertPage() {
   return (
     <CertificatePdfPage
       title="NAAC Accreditation Certificate"
-      subtitle="National Assessment and Accreditation Council — Grade A+ with CGPA 3.42 in the 3rd Cycle."
       pdfs={[
-        { label: 'NAAC Accreditation Certificate', url: '/accreditation/NACC ACCREDITATION CERTIFICATES.pdf' },
+        { label: 'NAAC Accreditation Certificate', url: '/NACC ACCREDITATION CERTIFICATES.pdf' },
       ]}
     />
   );

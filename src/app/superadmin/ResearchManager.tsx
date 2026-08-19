@@ -4,46 +4,54 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import {
-  Plus, Edit2, RefreshCw, AlertCircle, Users, CalendarHeart, BookOpen,
-  Search, LayoutGrid, List, Eye, EyeOff, LayoutDashboard
+  Plus, Edit2, RefreshCw, AlertCircle, Users, LayoutDashboard, FileText,
+  Search, LayoutGrid, List, Eye, EyeOff, BookOpen, Trophy, Shield
 } from 'lucide-react';
-import StudentsCornerEditor from './StudentsCornerEditor';
+import ResearchEditor from './ResearchEditor';
 
-export interface StudentsCornerItem {
+export type ResearchCategory = 'About & Committee' | 'Research Centre' | 'Policies' | 'Competitions' | 'Research Journal';
+
+export interface ResearchItem {
   id: string;
   slug: string;
   name: string;
-  category: 'Forums and Clubs' | 'Events & Festivals' | "Student's Publications";
+  category: ResearchCategory;
   status: 'Active' | 'Inactive';
   display_order: number;
 }
 
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  'Forums and Clubs': <Users size={16} />,
-  'Events & Festivals': <CalendarHeart size={16} />,
-  "Student's Publications": <BookOpen size={16} />,
+const CATEGORIES = ['About & Committee', 'Research Centre', 'Policies', 'Competitions', 'Research Journal'] as const;
+
+const CATEGORY_ICONS: Record<ResearchCategory, React.ReactNode> = {
+  'About & Committee': <Users size={16} />,
+  'Research Centre': <LayoutDashboard size={16} />,
+  'Policies': <Shield size={16} />,
+  'Competitions': <Trophy size={16} />,
+  'Research Journal': <BookOpen size={16} />,
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  'Forums and Clubs': 'bg-blue-50 text-blue-700 border-blue-200',
-  'Events & Festivals': 'bg-purple-50 text-purple-700 border-purple-200',
-  "Student's Publications": 'bg-amber-50 text-amber-700 border-amber-200',
+const CATEGORY_COLORS: Record<ResearchCategory, string> = {
+  'About & Committee': 'bg-blue-50 text-blue-700 border-blue-200',
+  'Research Centre': 'bg-purple-50 text-purple-700 border-purple-200',
+  'Policies': 'bg-red-50 text-red-700 border-red-200',
+  'Competitions': 'bg-amber-50 text-amber-700 border-amber-200',
+  'Research Journal': 'bg-emerald-50 text-emerald-700 border-emerald-200',
 };
 
-export default function StudentsCornerManager() {
-  const [items, setItems] = useState<StudentsCornerItem[]>([]);
+export default function ResearchManager() {
+  const [items, setItems] = useState<ResearchItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editingItem, setEditingItem] = useState<StudentsCornerItem | null>(null);
+  const [editingItem, setEditingItem] = useState<ResearchItem | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const searchParams = useSearchParams();
-  const [filterCategory, setFilterCategory] = useState<'ALL' | 'Forums and Clubs' | 'Events & Festivals' | "Student's Publications">('ALL');
+  const [filterCategory, setFilterCategory] = useState<'ALL' | ResearchCategory>('ALL');
 
   useEffect(() => {
     const filter = searchParams?.get('filter');
-    if (filter && ['Forums and Clubs', 'Events & Festivals', "Student's Publications"].includes(filter)) {
+    if (filter && CATEGORIES.includes(filter as any)) {
       setFilterCategory(filter as any);
     }
     fetchItems();
@@ -80,7 +88,7 @@ export default function StudentsCornerManager() {
     setError(null);
     try {
       const { data, error: err } = await supabase
-        .from('mcc_students_corner')
+        .from('mcc_research')
         .select('id, slug, name, category, status, display_order')
         .order('display_order', { ascending: true });
       if (err) throw err;
@@ -92,7 +100,7 @@ export default function StudentsCornerManager() {
     }
   };
 
-  const handleEdit = (item: StudentsCornerItem) => {
+  const handleEdit = (item: ResearchItem) => {
     setEditingItem(item);
     setIsCreatingNew(false);
     updateUrlEditParam(item.slug || item.id);
@@ -100,7 +108,7 @@ export default function StudentsCornerManager() {
 
   const handleAddNew = () => {
     setEditingItem({
-      id: '', slug: '', name: '', category: 'Forums and Clubs',
+      id: '', slug: '', name: '', category: 'About & Committee',
       status: 'Active', display_order: items.length + 1,
     });
     setIsCreatingNew(true);
@@ -114,7 +122,7 @@ export default function StudentsCornerManager() {
 
   if (editingItem) {
     return (
-      <StudentsCornerEditor
+      <ResearchEditor
         item={editingItem}
         isNew={isCreatingNew}
         onClose={handleEditorClose}
@@ -129,9 +137,11 @@ export default function StudentsCornerManager() {
   });
 
   const grouped = {
-    'Forums and Clubs': filtered.filter(p => p.category === 'Forums and Clubs'),
-    'Events & Festivals': filtered.filter(p => p.category === 'Events & Festivals'),
-    "Student's Publications": filtered.filter(p => p.category === "Student's Publications"),
+    'About & Committee': filtered.filter(p => p.category === 'About & Committee'),
+    'Research Centre': filtered.filter(p => p.category === 'Research Centre'),
+    'Policies': filtered.filter(p => p.category === 'Policies'),
+    'Competitions': filtered.filter(p => p.category === 'Competitions'),
+    'Research Journal': filtered.filter(p => p.category === 'Research Journal'),
   };
 
   return (
@@ -139,8 +149,8 @@ export default function StudentsCornerManager() {
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold text-gray-800">Students Corner Management</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Manage details for Forums, Clubs, Festivals, and Publications.</p>
+          <h2 className="text-xl font-bold text-gray-800">Research Management</h2>
+          <p className="text-sm text-gray-500 mt-0.5">Manage pages for Research sections.</p>
         </div>
         <div className="flex gap-2">
           <button onClick={handleAddNew}
@@ -160,8 +170,8 @@ export default function StudentsCornerManager() {
             className="flex-1 text-sm outline-none bg-transparent"
           />
         </div>
-        <div className="flex gap-1.5 bg-white border border-gray-200 rounded-xl p-1">
-          {(['ALL', 'Forums and Clubs', 'Events & Festivals', 'Student\'s Publications'] as const).map(cat => (
+        <div className="flex flex-wrap gap-1.5 bg-white border border-gray-200 rounded-xl p-1">
+          {(['ALL', ...CATEGORIES] as const).map(cat => (
             <button key={cat} onClick={() => updateFilter(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterCategory === cat ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
               {cat === 'ALL' ? 'All' : cat}
@@ -188,7 +198,7 @@ export default function StudentsCornerManager() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20 text-gray-400">
-          <RefreshCw className="animate-spin mr-2" size={20} /> Loading students corner data...
+          <RefreshCw className="animate-spin mr-2" size={20} /> Loading research data...
         </div>
       ) : filtered.length === 0 ? (
         <div className="py-20 text-center text-gray-400">
@@ -200,7 +210,7 @@ export default function StudentsCornerManager() {
         </div>
       ) : (
         <div className="space-y-8">
-          {(['Forums and Clubs', 'Events & Festivals', 'Student\'s Publications'] as const).map(cat => (
+          {CATEGORIES.map(cat => (
             grouped[cat] && grouped[cat].length > 0 && (
               <div key={cat}>
                 <div className="flex items-center gap-2 mb-3">
@@ -232,7 +242,7 @@ export default function StudentsCornerManager() {
   );
 }
 
-function ItemCard({ item, onEdit }: { item: StudentsCornerItem; onEdit: (p: StudentsCornerItem) => void }) {
+function ItemCard({ item, onEdit }: { item: ResearchItem; onEdit: (p: ResearchItem) => void }) {
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-[#123B6D]/30 hover:shadow-md transition-all group flex flex-col gap-3">
       <div className="flex items-start justify-between">
@@ -257,7 +267,7 @@ function ItemCard({ item, onEdit }: { item: StudentsCornerItem; onEdit: (p: Stud
   );
 }
 
-function ItemListRow({ item, onEdit }: { item: StudentsCornerItem; onEdit: (p: StudentsCornerItem) => void }) {
+function ItemListRow({ item, onEdit }: { item: ResearchItem; onEdit: (p: ResearchItem) => void }) {
   return (
     <div className="flex items-center justify-between px-5 py-3.5 hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-3">

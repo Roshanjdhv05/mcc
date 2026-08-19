@@ -509,15 +509,16 @@ export default function GalleryPage() {
   }, []);
 
   const filteredEvents = useMemo(() => {
-    // Merge static + live events (live events appear first)
-    const combined = [
-      ...liveEvents,
-      ...allEvents.map(e => {
+    // Deduplicate: live DB events take priority; skip hardcoded if title already in live set
+    const liveTitles = new Set(liveEvents.map(e => e.title.toLowerCase().trim()));
+    const staticEvents = allEvents
+      .filter(e => !liveTitles.has(e.title.toLowerCase().trim()))
+      .map(e => {
         const p = e.id.split('-')[0];
         const year = p === "2526" ? "2025-2026" : p === "2425" ? "2024-2025" : "2023-2024";
         return { ...e, academicYear: year };
-      })
-    ];
+      });
+    const combined = [...liveEvents, ...staticEvents];
     let filtered = combined;
     if (searchQuery) {
       filtered = filtered.filter(e =>

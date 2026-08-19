@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { Programme } from './ProgrammesManagerV2';
 import {
   ArrowLeft, Save, Loader2, CheckCircle, AlertCircle,
-  LayoutDashboard, Camera, LayoutGrid, BookOpen, GraduationCap, UserCircle, Trophy, Building2, UploadCloud, Plus, Trash2, ChevronDown, ChevronUp, X, Image, Sparkles
+  LayoutDashboard, LayoutGrid, BookOpen, GraduationCap, Trophy, Building2, UploadCloud, Plus, Trash2, ChevronDown, ChevronUp, X, Image, Sparkles
 } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -53,16 +53,31 @@ interface ProgrammeEvent {
   status: string;
 }
 
-type TabKey = 'overview' | 'snapshot' | 'structure' | 'syllabus' | 'faculty' | 'departments' | 'alumni' | 'visits' | 'festivals' | 'publications' | 'activities';
+// ─── Static faculty fallback for programmes whose faculty is not yet in DB ───
+const STATIC_FACULTY_FALLBACK: Record<string, Omit<ProgramFaculty, 'id' | 'display_order'>[]> = {
+  'bca': [
+    { sr_no: 1, name: 'Dr. Vishal Borude', additional_role: 'BCA Co-ordinator', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc.(IT)., Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teaching_exp: '0 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
+    { sr_no: 2, name: 'Dr. Priti Pathak', additional_role: 'DS Co-Ordinator', designation: 'Assistant Professor', department: 'Not Assigned', education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.', email: 'priti.pathak@mccmulund.ac.in', teaching_exp: '', image: '/Degree College Teachers/Priti Pathak.png' },
+    { sr_no: 3, name: 'Mr. Siddhesh Gotekar', additional_role: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.Sc.(IT)', email: 'gotekarsiddhesh@gmail.com', teaching_exp: '0 yrs', image: '/Degree College Teachers/Siddhesh Gotekar.png' },
+    { sr_no: 4, name: 'Dr. Sandhya Pandey', additional_role: '—', designation: 'Assistant Professor', department: 'Not Assigned', education: 'M.C.A., P.H.D.(Computer Science and Application), M.A.(Sociology)', email: 'sandhya.pandey@mccmulund.ac.in', teaching_exp: '17 yrs', image: '/Degree College Teachers/Sandhya Pandey.png' },
+  ],
+  'bsc-it': [
+    { sr_no: 1, name: 'Dr. Jyotika Chheda', additional_role: 'IT Co-ordinator', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'MCA., NET., Ph.D.', email: 'jyotika.chheda@mccmulund.ac.in', teaching_exp: '', image: '/Degree College Teachers/Jyotika Chheda.png' },
+    { sr_no: 2, name: 'Dr. Vishal Borude', additional_role: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'M.Sc.(IT)., Ph.D.', email: 'vishal.borude@mccmulund.ac.in', teaching_exp: '12 yrs', image: '/Degree College Teachers/Vishal Borude.png' },
+    { sr_no: 3, name: 'Dr. Priti Pathak', additional_role: 'DS Co-Ordinator', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'MSc(I.T)., MTech(I.T)., MBA(I.T)., LLB., Diploma in Cyber Law., Ph.D.', email: 'priti.pathak@mccmulund.ac.in', teaching_exp: '', image: '/Degree College Teachers/Priti Pathak.png' },
+    { sr_no: 4, name: 'Ms. Suvarna Ramesh Sawant', additional_role: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'Master in Computer Application', email: 'suvarna.sawant@mccmulund.ac.in', teaching_exp: '', image: '/Degree College Teachers/Suvarna Sawant.png' },
+    { sr_no: 5, name: 'Dr. Sandhya Pandey', additional_role: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'M.C.A., P.H.D.(Computer Science and Application), M.A.(Sociology)', email: 'sandhya.pandey@mccmulund.ac.in', teaching_exp: '17 yrs', image: '/Degree College Teachers/Sandhya Pandey.png' },
+    { sr_no: 6, name: 'Mr. Siddhesh Gotekar', additional_role: '—', designation: 'Assistant Professor', department: 'SCT (School of Computing and Technology)', education: 'M.Sc.(IT)', email: 'gotekarsiddhesh@gmail.com', teaching_exp: '3 yrs', image: '/Degree College Teachers/Siddhesh Gotekar.png' },
+  ],
+};
+
+type TabKey = 'overview' | 'structure' | 'syllabus' | 'departments' | 'visits' | 'festivals' | 'publications' | 'activities';
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
   { key: 'overview',    label: 'Overview',            icon: <LayoutDashboard size={15} /> },
-  { key: 'snapshot',   label: 'Programme Snapshot',   icon: <Camera size={15} /> },
   { key: 'structure',  label: 'Structure',            icon: <LayoutGrid size={15} /> },
   { key: 'syllabus',   label: 'Syllabus',             icon: <BookOpen size={15} /> },
-  { key: 'faculty',    label: 'Faculty',              icon: <UserCircle size={15} /> },
   { key: 'departments',label: 'Departments',          icon: <Building2 size={15} /> },
-  { key: 'alumni',       label: 'Illustrious Alumni',   icon: <Trophy size={15} /> },
   { key: 'visits',       label: 'Industrial Visits',    icon: <Building2 size={15} /> },
   { key: 'festivals',    label: 'Festivals',            icon: <Image size={15} /> },
   { key: 'publications', label: 'Publications',         icon: <BookOpen size={15} /> },
@@ -220,7 +235,37 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         const { data: fc, error: fcErr } = await supabase
           .from('program_faculty').select('*').eq('programme_id', pid).order('display_order');
         if (fcErr) console.error('[Load] faculty error:', fcErr.message);
-        else if (fc && fc.length > 0) setFaculty(fc);
+        if (fc && fc.length > 0) {
+          setFaculty(fc);
+        } else {
+          // Fallback 1: load from old faculty_data JSON column on mcc_programmes
+          const { data: progRow } = await supabase
+            .from('mcc_programmes').select('faculty_data').eq('id', pid).single();
+          if (progRow?.faculty_data && progRow.faculty_data.length > 0) {
+            const mapped = progRow.faculty_data.map((f: any, i: number) => ({
+              name: f.name || '',
+              designation: f.designation || '',
+              additional_role: f.additionalRole || f.additional_role || '',
+              department: f.department || '',
+              education: f.education || '',
+              teaching_exp: f.teachingExp || f.teaching_exp || '',
+              email: f.email || '',
+              image: f.image || '',
+              bio: f.bio || '',
+              linkedin: f.linkedin || '',
+              google_scholar_or_other: f.google_scholar_or_other || '',
+              publications_patents: f.publications_patents || '',
+              display_order: i,
+            }));
+            setFaculty(mapped);
+          } else {
+            // Fallback 2: use hardcoded static faculty for known programmes
+            const staticFaculty = STATIC_FACULTY_FALLBACK[programme.slug];
+            if (staticFaculty && staticFaculty.length > 0) {
+              setFaculty(staticFaculty.map((f, i) => ({ ...f, display_order: i })));
+            }
+          }
+        }
 
         const [
           { data: ov, error: ovErr }, { data: sn, error: snErr },
@@ -325,7 +370,11 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
       if (delFacErr) throw new Error(`Faculty Delete Error: ${delFacErr.message}`);
       if (faculty.length > 0) {
         const facultyToInsert = faculty.map((f, i) => {
-          const { id, programme_id, created_at, updated_at, ...rest } = f as any;
+          const { 
+            id, programme_id, created_at, updated_at, areas_of_interest,
+            bio, linkedin, google_scholar_or_other, publications_patents,
+            ...rest 
+          } = f as any;
           return { ...rest, programme_id: pid, display_order: i };
         });
         console.log('[DEBUG] Faculty to insert:', JSON.stringify(facultyToInsert));
@@ -628,22 +677,6 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
             </div>
           )}
 
-          {/* ═══════════════════════════════════════════ SNAPSHOT ═══ */}
-          {activeTab === 'snapshot' && (
-            <div className="space-y-6 max-w-2xl">
-              <h3 className="font-bold text-[#123B6D] text-lg border-b pb-3">Programme Snapshot</h3>
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
-                <p className="text-sm text-gray-500">These appear as the quick info tiles on the programme page hero section.</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Duration</Label><Input value={snapshot.duration || ''} onChange={v => setSnapshot(p => ({...p, duration: v}))} placeholder="e.g. 3 Years" /></div>
-                  <div><Label>No. of Semesters</Label><Input value={String(snapshot.semesters || '')} onChange={v => setSnapshot(p => ({...p, semesters: Number(v)}))} type="number" placeholder="6" /></div>
-                  <div><Label>Timing</Label><Input value={snapshot.timing || ''} onChange={v => setSnapshot(p => ({...p, timing: v}))} placeholder="e.g. 7:15 AM – 11:40 AM" /></div>
-                  <div><Label>Intake Capacity (seats)</Label><Input value={String(snapshot.intake || '')} onChange={v => setSnapshot(p => ({...p, intake: Number(v)}))} type="number" placeholder="120" /></div>
-                  <div><Label>Mode</Label><Select value={snapshot.mode || 'Full Time'} onChange={v => setSnapshot(p => ({...p, mode: v}))} options={[{value:'Full Time',label:'Full Time'},{value:'Part Time',label:'Part Time'},{value:'Distance',label:'Distance'}]} /></div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* ═══════════════════════════════════════════ STRUCTURE ═══ */}
           {activeTab === 'structure' && (
@@ -760,46 +793,6 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
             </div>
           )}
 
-          {/* ═══════════════════════════════════════════ FACULTY ═══ */}
-          {activeTab === 'faculty' && (
-            <div className="space-y-4 max-w-4xl">
-              <div className="flex items-center justify-between border-b pb-3">
-                <h3 className="font-bold text-[#123B6D] text-lg">Faculty Members</h3>
-                <button onClick={addFaculty} className="flex items-center gap-2 bg-[#123B6D] text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-[#0f2f5a] transition-colors">
-                  <Plus size={14} /> Add Faculty
-                </button>
-              </div>
-              {faculty.length === 0 && (
-                <div className="text-center py-16 text-gray-400">
-                  <UserCircle size={48} className="mx-auto mb-3 opacity-30" />
-                  <p className="font-medium">No faculty added yet.</p>
-                </div>
-              )}
-              {faculty.map((f, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-bold text-gray-700 text-sm">{f.name || `Faculty ${i + 1}`}</span>
-                    <button onClick={() => removeFaculty(i)} className="text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"><Trash2 size={14} /></button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div><Label>Full Name</Label><Input value={f.name} onChange={v => updateFaculty(i, 'name', v)} placeholder="e.g. Dr. Anjali Sharma" /></div>
-                    <div><Label>Designation</Label><Input value={f.designation || ''} onChange={v => updateFaculty(i, 'designation', v)} placeholder="e.g. Assistant Professor" /></div>
-                    <div><Label>Additional Role</Label><Input value={f.additional_role || ''} onChange={v => updateFaculty(i, 'additional_role', v)} placeholder="e.g. HOD, Coordinator" /></div>
-                    <div><Label>Department</Label><Input value={f.department || ''} onChange={v => updateFaculty(i, 'department', v)} placeholder="e.g. Commerce" /></div>
-                    <div><Label>Education</Label><Input value={f.education || ''} onChange={v => updateFaculty(i, 'education', v)} placeholder="e.g. M.Com, Ph.D (Finance)" /></div>
-                    <div><Label>Teaching Experience</Label><Input value={f.teaching_exp || ''} onChange={v => updateFaculty(i, 'teaching_exp', v)} placeholder="e.g. 12 Years" /></div>
-                    <div><Label>Email</Label><Input value={f.email || ''} onChange={v => updateFaculty(i, 'email', v)} placeholder="faculty@mcc.edu.in" type="email" /></div>
-                    <div><Label>LinkedIn URL</Label><Input value={f.linkedin || ''} onChange={v => updateFaculty(i, 'linkedin', v)} placeholder="https://linkedin.com/in/..." /></div>
-                    <div><Label>Google Scholar / Other URL</Label><Input value={f.google_scholar_or_other || ''} onChange={v => updateFaculty(i, 'google_scholar_or_other', v)} placeholder="https://scholar.google.com/..." /></div>
-                    <div className="col-span-2"><Label>Bio</Label><Textarea value={f.bio || ''} onChange={v => updateFaculty(i, 'bio', v)} rows={2} placeholder="Brief biography..." /></div>
-                    <div className="col-span-2"><Label>Areas of Interest</Label><Textarea value={f.areas_of_interest || ''} onChange={v => updateFaculty(i, 'areas_of_interest', v)} rows={2} placeholder="e.g. Finance, Marketing, Economics" /></div>
-                    <div className="col-span-2"><Label>Publications & Patents</Label><Textarea value={f.publications_patents || ''} onChange={v => updateFaculty(i, 'publications_patents', v)} rows={2} placeholder="Key publications or patents..." /></div>
-                    <div className="col-span-2"><ImageUpload label="Faculty Photo" value={f.image || ''} onChange={v => updateFaculty(i, 'image', v)} folder="faculty" shape="square" /></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
 
           {/* ═══════════════════════════════════════════ DEPARTMENTS (B.COM ONLY) ═══ */}
           {activeTab === 'departments' && (
@@ -837,43 +830,6 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                   <div className="space-y-4">
                     <div><Label>Department Name</Label><Input value={d.department_name} onChange={v => updateDepartment(i, 'department_name', v)} placeholder="e.g. Economics" /></div>
                     <div><Label>Introduction Content</Label><Textarea value={d.intro_content || ''} onChange={v => updateDepartment(i, 'intro_content', v)} rows={4} placeholder="Department Introduction..." /></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ═══════════════════════════════════════════ ALUMNI ═══ */}
-          {activeTab === 'alumni' && (
-            <div className="space-y-4 max-w-4xl">
-              <div className="flex items-center justify-between border-b pb-3">
-                <h3 className="font-bold text-[#123B6D] text-lg">Illustrious Alumni</h3>
-                <button onClick={addAlumni} className="flex items-center gap-2 bg-[#123B6D] text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-[#0f2f5a] transition-colors">
-                  <Plus size={14} /> Add Alumni
-                </button>
-              </div>
-              {alumni.length === 0 && (
-                <div className="text-center py-16 text-gray-400">
-                  <Trophy size={48} className="mx-auto mb-3 opacity-30" />
-                  <p className="font-medium">No alumni added yet.</p>
-                </div>
-              )}
-              {alumni.map((a, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-bold text-gray-700 text-sm">{a.name || `Alumni ${i + 1}`}</span>
-                    <button onClick={() => removeAlumni(i)} className="text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"><Trash2 size={14} /></button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div><Label>Full Name</Label><Input value={a.name} onChange={v => updateAlumni(i, 'name', v)} placeholder="e.g. Rahul Mehta" /></div>
-                    <div><Label>Initials (for avatar)</Label><Input value={a.initials || ''} onChange={v => updateAlumni(i, 'initials', v)} placeholder="e.g. RM" /></div>
-                    <div><Label>Programme Name</Label><Input value={a.programme_name || ''} onChange={v => updateAlumni(i, 'programme_name', v)} placeholder="e.g. B.Com (Honours)" /></div>
-                    <div><Label>Graduation Year</Label><Input value={a.year || ''} onChange={v => updateAlumni(i, 'year', v)} placeholder="e.g. 2019" /></div>
-                    <div><Label>Current Designation</Label><Input value={a.designation || ''} onChange={v => updateAlumni(i, 'designation', v)} placeholder="e.g. Senior Financial Analyst" /></div>
-                    <div><Label>Organisation</Label><Input value={a.organisation || ''} onChange={v => updateAlumni(i, 'organisation', v)} placeholder="e.g. Deloitte India" /></div>
-                    <div className="col-span-2"><Label>About (brief)</Label><Textarea value={a.about || ''} onChange={v => updateAlumni(i, 'about', v)} rows={2} placeholder="Brief description of their work and achievements..." /></div>
-                    <div><Label>LinkedIn URL</Label><Input value={a.linkedin || ''} onChange={v => updateAlumni(i, 'linkedin', v)} placeholder="https://linkedin.com/in/..." /></div>
-                    <div><ImageUpload label="Alumni Photo" value={a.image || ''} onChange={v => updateAlumni(i, 'image', v)} folder="alumni" /></div>
                   </div>
                 </div>
               ))}

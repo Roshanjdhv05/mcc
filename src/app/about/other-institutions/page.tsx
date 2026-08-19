@@ -37,7 +37,7 @@ const schools = [
 
 const colleges = [
   {
-    name: 'MLDCC – Mulund Law, Degree & Commerce College',
+    name: 'M.L.Dahanukar College',
     href: 'https://mldcc.com/mldcc/',
     desc: 'Offers undergraduate programs in law and commerce under University of Mumbai.',
   },

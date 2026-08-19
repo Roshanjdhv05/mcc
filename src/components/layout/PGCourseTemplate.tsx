@@ -15,7 +15,8 @@ import CourseFeeStructure from '@/components/ui/CourseFeeStructure';
 import ProgramStructureNEP from '@/components/ui/ProgramStructureNEP';
 import { supabase } from '@/lib/supabase';
 import { useProgramme } from '@/hooks/useProgramme';
-
+import { newFacultyData, FacultyMember } from '@/lib/newFacultyData';
+import FacultyCardNew from '@/components/ui/FacultyCardNew';
 interface PGCourseTemplateProps {
   title: string;
   shortInfo?: string;
@@ -166,6 +167,7 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
 
   const [programmeEvents, setProgrammeEvents] = useState<{id: string; title: string; description: string; images: string[]; published_at: string; programme_section: string; category: string; department: string}[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<typeof programmeEvents[0] | null>(null);
+  const [selectedVisit, setSelectedVisit] = useState<any | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [dbProgramme, setDbProgramme] = useState<any>(null);
@@ -263,15 +265,11 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
     
     fetchProgrammeEvents();
     fetchProgrammeData();
-    fetchActivitiesIntros();
-  }, [festivals, courseKey, title]);
-
-  const tabs = [
+const tabs = [
     'Overview',
-    'Structure',
-    'Syllabus',
-    'Faculty',
-    'Illustrious Alumni',
+    'Curriculum & Structure',
+    'Career & Prospects',
+    'Eligibility & Fees',
     'Events & Activities',
     ...(festivalTabName ? [festivalTabName] : []),
     ...(publicationTabName ? [publicationTabName] : []),
@@ -393,20 +391,20 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-row gap-3 pt-4 w-full">
-                <a href="https://enrollonline.co.in/Registration/Apply/MCC" target="_blank" rel="noopener noreferrer" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-[#123B6D] hover:bg-[#0f3059] text-white px-4 md:px-8 py-3 rounded-full text-sm md:text-base font-bold transition-all shadow-md">
-                  <Send size={16} /> Apply Now
-                </a>
-                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border border-[#E2E8F0] hover:border-[#123B6D] text-[#1E293B] px-4 md:px-8 py-3 rounded-full text-sm md:text-base font-bold transition-colors">
-                  <Download size={16} /> <span className="hidden xs:inline">Download</span> Brochure
-                </button>
+              <div className="flex flex-row gap-3 pt-4 w-full flex-wrap">
+                <Link 
+                  href={`/dashboard?course=${encodeURIComponent(courseKey || title.split(' ')[0])}`} 
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#d97706] text-white px-4 md:px-6 py-3 rounded-full text-sm md:text-base font-bold transition-all shadow-md"
+                >
+                  <Activity size={16} /> Go to Dashboard
+                </Link>
               </div>
             </div>
 
             {/* Right Visual — Programme Snapshot Infographic (Desktop Only) */}
-            <div className="hidden lg:flex flex-1 relative w-full justify-center items-center h-[550px]">
+            <div className="hidden lg:flex flex-1 relative w-full justify-center items-center h-[550px] -mt-16">
               {/* Title */}
-              <div className="absolute top-0 w-full flex items-center justify-center gap-4 z-10">
+              <div className="absolute top-8 w-full flex items-center justify-center gap-4 z-10">
                 <div className="h-px bg-[#D4A017] w-16" />
                 <div className="w-1.5 h-1.5 rounded-full bg-[#D4A017]" />
                 <h3 className="text-sm font-bold tracking-widest text-[#123B6D] uppercase">Programme Snapshot</h3>
@@ -414,80 +412,76 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                 <div className="h-px bg-[#D4A017] w-16" />
               </div>
 
-              <div className="relative w-[500px] h-[500px] flex items-center justify-center mt-8">
+              <div className="relative w-[400px] h-[400px] flex items-center justify-center mt-8">
                 {/* Central Circle */}
-                <div className="absolute z-20 w-[220px] h-[220px] bg-white rounded-full shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center border-4 border-gray-50/50">
-                  <GraduationCap size={40} className="text-[#123B6D] mb-2" strokeWidth={1.5} />
-                  <h2 className="text-4xl font-bold text-[#123B6D] text-center px-4 leading-none font-[var(--font-heading)]">
+                <div className="absolute z-20 w-[180px] h-[180px] bg-white rounded-full shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center border-4 border-gray-50/50">
+                  <GraduationCap size={32} className="text-[#123B6D] mb-2" strokeWidth={1.5} />
+                  <h2 className="text-3xl font-bold text-[#123B6D] text-center px-4 leading-none font-[var(--font-heading)]">
                     {courseKey ? courseKey.replace('_', '.') : title.split(' ')[0]}
                   </h2>
-                  <div className="w-8 h-0.5 bg-[#F59E0B] mt-3"></div>
+                  <div className="w-6 h-0.5 bg-[#F59E0B] mt-2"></div>
                 </div>
 
                 {/* Rotating Ring */}
                 <div className="absolute w-full h-full flex items-center justify-center [animation:spin_40s_linear_infinite]">
-                  <div className="absolute w-[360px] h-[360px] rounded-full border border-gray-200 z-0" />
-                  <div className="absolute top-[25%] left-[19%] w-2.5 h-2.5 rounded-full bg-[#3B82F6] z-10"></div>
-                  <div className="absolute top-[25%] right-[19%] w-2.5 h-2.5 rounded-full bg-[#F59E0B] z-10"></div>
-                  <div className="absolute bottom-[25%] left-[19%] w-2.5 h-2.5 rounded-full bg-[#10B981] z-10"></div>
-                  <div className="absolute bottom-[25%] right-[19%] w-2.5 h-2.5 rounded-full bg-[#8B5CF6] z-10"></div>
+                  <div className="absolute w-[280px] h-[280px] rounded-full border border-gray-200 z-0" />
+                  <div className="absolute top-[20%] left-[15%] w-2.5 h-2.5 rounded-full bg-[#3B82F6] z-10"></div>
+                  <div className="absolute top-[20%] right-[15%] w-2.5 h-2.5 rounded-full bg-[#F59E0B] z-10"></div>
+                  <div className="absolute bottom-[20%] left-[15%] w-2.5 h-2.5 rounded-full bg-[#10B981] z-10"></div>
+                  <div className="absolute bottom-[20%] right-[15%] w-2.5 h-2.5 rounded-full bg-[#8B5CF6] z-10"></div>
 
                   {/* Satellite 1: Duration */}
-                  <div className="absolute top-[5%] left-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[130px] h-[130px] bg-white rounded-full shadow-lg border border-[#3B82F6]/30 flex flex-col items-center justify-center relative">
-                      <Clock size={24} className="text-[#3B82F6] mb-1" strokeWidth={2} />
-                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
-                        {progData?.snapshot?.duration?.match(/\d+/)?.[0] || '3'}
+                  <div className="absolute top-[2%] left-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[100px] h-[100px] bg-white rounded-full shadow-lg border border-[#3B82F6]/30 flex flex-col items-center justify-center relative">
+                      <Clock size={20} className="text-[#3B82F6] mb-1" strokeWidth={2} />
+                      <span className="text-2xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
+                        2
                       </span>
-                      <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Years</span>
-                      <div className="absolute -bottom-3 bg-[#3B82F6] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">Duration</div>
+                      <span className="text-[8px] font-bold tracking-widest text-[#1E293B] uppercase">Years</span>
+                      <div className="absolute -bottom-2 bg-[#3B82F6] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Duration</div>
                     </div>
                   </div>
 
                   {/* Satellite 2: Semesters */}
-                  <div className="absolute top-[5%] right-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[130px] h-[130px] bg-white rounded-full shadow-lg border border-[#F59E0B]/30 flex flex-col items-center justify-center relative">
-                      <Building2 size={24} className="text-[#F59E0B] mb-1" strokeWidth={2} />
-                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
-                        {progData?.snapshot?.semesters || 6}
+                  <div className="absolute top-[2%] right-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[100px] h-[100px] bg-white rounded-full shadow-lg border border-[#F59E0B]/30 flex flex-col items-center justify-center relative">
+                      <Building2 size={20} className="text-[#F59E0B] mb-1" strokeWidth={2} />
+                      <span className="text-2xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
+                        4
                       </span>
-                      <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Semesters</span>
-                      <div className="absolute -bottom-3 bg-[#F59E0B] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">Structure</div>
+                      <span className="text-[8px] font-bold tracking-widest text-[#1E293B] uppercase">Semesters</span>
+                      <div className="absolute -bottom-2 bg-[#F59E0B] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Structure</div>
                     </div>
                   </div>
 
                   {/* Satellite 3: Seats */}
-                  <div className="absolute bottom-[5%] left-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#10B981]/30 flex flex-col items-center justify-center relative">
-                      <Users size={24} className="text-[#10B981] mb-1" strokeWidth={2} />
-                      <span className="text-4xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
-                        {seatCount}
+                  <div className="absolute bottom-[2%] left-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[110px] h-[110px] bg-white rounded-full shadow-lg border border-[#10B981]/30 flex flex-col items-center justify-center relative">
+                      <Users size={20} className="text-[#10B981] mb-1" strokeWidth={2} />
+                      <span className="text-2xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
+                        60
                       </span>
-                      <span className="text-[9px] font-bold tracking-widest text-[#1E293B] uppercase">Seats</span>
-                      <div className="absolute -bottom-3 bg-[#10B981] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">Capacity</div>
+                      <span className="text-[8px] font-bold tracking-widest text-[#1E293B] uppercase">Seats</span>
+                      <div className="absolute -bottom-2 bg-[#10B981] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Capacity</div>
                     </div>
                   </div>
 
                   {/* Satellite 4: Timings */}
-                  <div className="absolute bottom-[5%] right-[5%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[140px] h-[140px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative px-2">
-                      <Calendar size={24} className="text-[#8B5CF6] mb-1 shrink-0" strokeWidth={2} />
-                      {endT ? (
-                        <>
-                          <div className="flex items-baseline gap-1 mt-1">
-                            <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">{startT}</span>
-                            <span className="text-[8px] font-bold text-[#1E293B] uppercase">{startP}</span>
-                          </div>
-                          <div className="w-6 h-px bg-gray-200 my-1"></div>
-                          <div className="flex items-baseline gap-1">
-                            <span className="text-xl font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">{endT}</span>
-                            <span className="text-[8px] font-bold text-[#1E293B] uppercase">{endP}</span>
-                          </div>
-                        </>
-                      ) : (
-                        <span className="text-xl font-bold text-[#123B6D] leading-none mt-2 font-[var(--font-heading)]">{startT}</span>
-                      )}
-                      <div className="absolute -bottom-3 bg-[#8B5CF6] text-white text-[9px] font-bold tracking-wider px-4 py-1.5 rounded-full uppercase shadow-md">Timings</div>
+                  <div className="absolute bottom-[2%] right-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                    <div className="w-[110px] h-[110px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative px-2">
+                      <Calendar size={20} className="text-[#8B5CF6] mb-1 shrink-0" strokeWidth={2} />
+                      <>
+                        <div className="flex items-baseline gap-1 mt-0.5">
+                          <span className="text-base font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">7:15</span>
+                          <span className="text-[7px] font-bold text-[#1E293B] uppercase">AM</span>
+                        </div>
+                        <div className="w-4 h-px bg-gray-200 my-0.5"></div>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-base font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">12:45</span>
+                          <span className="text-[7px] font-bold text-[#1E293B] uppercase">PM</span>
+                        </div>
+                      </>
+                      <div className="absolute -bottom-2 bg-[#8B5CF6] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Timings</div>
                     </div>
                   </div>
                 </div>
@@ -603,18 +597,15 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                 Faculty Members
               </h2>
               {(() => {
-                // Prefer Supabase data, fallback to hardcoded props
-                const dynamicFaculty = progData?.faculty && progData.faculty.length > 0
-                  ? progData.faculty.map((f: any) => ({
-                      srNo: f.sr_no, name: f.name, designation: f.designation,
-                      additionalRole: f.additional_role, department: f.department,
-                      education: f.education, teachingExp: f.teaching_exp,
-                      email: f.email, image: f.image
-                    }))
-                  : null;
-                const finalFacultyData = dynamicFaculty || (dbProgramme?.faculty_data?.length > 0 ? dbProgramme.faculty_data : facultyData);
+                let frontendFaculty: FacultyMember[] = [];
+                let cKey = courseKey?.toUpperCase() || '';
+                
+                if (cKey === 'MCOM') cKey = 'MCOM'; // Map PG keys here if available in newFacultyData later
+                
+                const deptData = newFacultyData[cKey] || {};
+                frontendFaculty = Object.values(deptData).flat();
 
-                if (!finalFacultyData || finalFacultyData.length === 0) return (
+                if (frontendFaculty.length === 0) return (
                   <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                     <Users size={40} className="text-gray-300 mb-3" />
                     <p className="text-gray-500 font-medium">Faculty details are being updated.</p>
@@ -622,100 +613,13 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                 );
 
                 return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {finalFacultyData.map((member: any, index: number) => (
-                       <FacultyFlipCard key={member.id || `faculty-${index}`} member={member} programmeName={title} />
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
+                    {frontendFaculty.map((member, index) => (
+                      <FacultyCardNew key={member.id || `fac-${index}`} member={member} />
                     ))}
                   </div>
                 );
               })()}
-            </div>
-          ) : activeTab === 'Illustrious Alumni' ? (
-            <div className="bg-white rounded-3xl p-6 md:p-10 border border-[#E2E8F0] shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-[#FFF8E7] flex items-center justify-center">
-                  <Trophy className="text-[#D4A017]" size={20} />
-                </div>
-                <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-[#123B6D]">Illustrious Alumni</h2>
-                  <p className="text-sm text-[#64748B]">Proud achievers who walked these halls</p>
-                </div>
-              </div>
-              <div className="w-16 h-1 bg-gradient-to-r from-[#D4A017] to-[#123B6D] rounded-full mb-8" />
-
-              {/* Alumni Cards Grid */}
-              {(() => {
-                const alumniList = progData?.alumni && progData.alumni.length > 0 ? progData.alumni : [];
-                if (alumniList.length === 0) return (
-                  <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                    <Trophy size={48} className="text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500 font-semibold">Alumni details are being updated.</p>
-                    <p className="text-gray-400 text-sm mt-1">Check back soon or contact us at <span className="text-[#3B82F6] font-semibold">alumni@mccmulund.ac.in</span></p>
-                  </div>
-                );
-                return (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {alumniList.map((alumni: any, idx: number) => (
-                      <div key={idx} className="group relative bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#D4A017] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
-                        <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[#D4A017] to-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="flex gap-4 p-4">
-                          <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-[#123B6D] to-[#1e5ba8] flex items-center justify-center shrink-0 overflow-hidden shadow-md">
-                            {alumni.image ? (
-                              <img src={alumni.image} alt={alumni.name} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-white font-bold text-2xl">{alumni.initials || alumni.name?.charAt(0)}</span>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0 flex flex-col justify-center gap-[3px]">
-                            <h3 className="font-bold text-[#123B6D] text-sm leading-snug truncate">{alumni.name}</h3>
-                            <div className="flex items-center gap-1">
-                              <GraduationCap size={11} className="text-[#D4A017] shrink-0" />
-                              <span className="text-[11px] text-[#475569] font-medium truncate">{alumni.programme_name}</span>
-                            </div>
-                            {alumni.year && <div className="flex items-center gap-1">
-                              <Calendar size={11} className="text-[#3B82F6] shrink-0" />
-                              <span className="text-[11px] text-[#475569]">Class of {alumni.year}</span>
-                            </div>}
-                            {alumni.designation && <div className="flex items-center gap-1">
-                              <Briefcase size={11} className="text-[#10B981] shrink-0" />
-                              <span className="text-[11px] text-gray-700 font-semibold leading-tight line-clamp-1">{alumni.designation}</span>
-                            </div>}
-                            {alumni.organisation && <div className="flex items-center gap-1">
-                              <Building2 size={11} className="text-gray-400 shrink-0" />
-                              <span className="text-[11px] text-gray-500 truncate">{alumni.organisation}</span>
-                            </div>}
-                          </div>
-                        </div>
-                        {alumni.linkedin && alumni.linkedin !== '#' && (
-                          <div className="px-4 pb-3">
-                            <a href={alumni.linkedin} target="_blank" rel="noopener noreferrer"
-                              className="flex items-center justify-center gap-2 w-full py-1.5 rounded-lg bg-[#0077B5]/10 hover:bg-[#0077B5] text-[#0077B5] hover:text-white text-[11px] font-semibold transition-all duration-200 border border-[#0077B5]/30">
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                              View on LinkedIn
-                            </a>
-                          </div>
-                        )}
-                        {alumni.about && (
-                          <div className="mx-4 mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2.5">
-                            <p className="text-[11px] text-gray-600 leading-relaxed line-clamp-2">{alumni.about}</p>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-
-              {/* Bottom note */}
-              <div className="mt-8 bg-[#FFF8E7] border border-[#F59E0B]/30 rounded-2xl p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#D4A017]/10 flex items-center justify-center shrink-0">
-                  <Star className="text-[#D4A017]" size={20} />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-[#1E293B]">Are you a proud MCC alumnus?</p>
-                  <p className="text-xs text-gray-500 mt-0.5">We would love to feature your success story. Contact us at <span className="text-[#3B82F6] font-semibold">alumni@mccmulund.ac.in</span></p>
-                </div>
-              </div>
             </div>
           ) : activeTab === 'Events & Activities' ? (
             <div className="bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-sm">
@@ -1030,26 +934,66 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                   </div>
                 );
                 return (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {visitList.map((visit: any, idx: number) => (
-                      <div key={idx} className="group bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#123B6D] hover:shadow-xl transition-all duration-300 overflow-hidden">
-                        {visit.image ? (
-                          <div className="h-44 overflow-hidden">
-                            <img src={visit.image} alt={visit.company_name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {visitList.map((visit: any, idx: number) => (
+                        <div key={idx} className="group bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#123B6D] hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+                          onClick={() => setSelectedVisit(visit)}>
+                          {visit.image ? (
+                            <div className="h-44 overflow-hidden">
+                              <img src={visit.image} alt={visit.company_name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            </div>
+                          ) : (
+                            <div className="h-44 bg-gradient-to-br from-[#123B6D]/10 to-[#D4A017]/10 flex items-center justify-center">
+                              <Building2 size={48} className="text-[#123B6D]/30" />
+                            </div>
+                          )}
+                          <div className="p-4">
+                            <h3 className="font-bold text-[#123B6D] text-base mb-1">{visit.company_name}</h3>
+                            {visit.visit_date && <p className="text-xs text-[#D4A017] font-semibold mb-2">{visit.visit_date}</p>}
+                            {visit.description && <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{visit.description}</p>}
                           </div>
-                        ) : (
-                          <div className="h-44 bg-gradient-to-br from-[#123B6D]/10 to-[#D4A017]/10 flex items-center justify-center">
-                            <Building2 size={48} className="text-[#123B6D]/30" />
-                          </div>
-                        )}
-                        <div className="p-4">
-                          <h3 className="font-bold text-[#123B6D] text-base mb-1">{visit.company_name}</h3>
-                          {visit.visit_date && <p className="text-xs text-[#D4A017] font-semibold mb-2">{visit.visit_date}</p>}
-                          {visit.description && <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{visit.description}</p>}
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+
+                    <AnimatePresence>
+                      {selectedVisit && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            onClick={() => setSelectedVisit(null)} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                          <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-5xl lg:max-w-6xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+                            <button onClick={() => setSelectedVisit(null)}
+                              className="absolute top-4 right-4 z-20 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full transition-colors md:text-gray-500 md:bg-gray-100 md:hover:bg-gray-200">
+                              <X size={20} />
+                            </button>
+                            
+                            <div className="w-full md:w-1/2 lg:w-[55%] relative bg-gray-900 min-h-[260px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center overflow-hidden">
+                              {selectedVisit.image ? (
+                                  <img src={selectedVisit.image} alt={selectedVisit.company_name} className="absolute inset-0 w-full h-full object-cover opacity-90" />
+                              ) : (
+                                  <div className="absolute inset-0 bg-gradient-to-br from-[#123B6D]/20 to-[#D4A017]/20 flex items-center justify-center">
+                                    <Building2 size={80} className="text-[#123B6D]/30" />
+                                  </div>
+                              )}
+                            </div>
+                            <div className="w-full md:w-1/2 lg:w-[45%] p-6 md:p-10 lg:p-12 flex flex-col justify-center overflow-y-auto custom-scrollbar">
+                              <div className="flex flex-wrap gap-2 mb-4">
+                                <span className="px-3 py-1 rounded-full bg-[#123B6D]/10 text-xs font-bold uppercase text-[#123B6D]">Industrial Visit</span>
+                              </div>
+                              <h2 className="text-2xl lg:text-3xl font-black text-[#0D1B3E] mb-4">{selectedVisit.company_name}</h2>
+                              {selectedVisit.visit_date && <div className="flex items-center gap-2 text-gray-500 font-semibold text-sm mb-6 pb-6 border-b border-gray-100">
+                                <Calendar size={18} className="text-[#123B6D]" />
+                                {selectedVisit.visit_date}
+                              </div>}
+                              <p className="text-gray-600 text-sm lg:text-base leading-relaxed whitespace-pre-wrap">{selectedVisit.description}</p>
+                            </div>
+                          </motion.div>
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </>
                 );
               })()}
             </div>

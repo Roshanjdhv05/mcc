@@ -47,47 +47,16 @@ export default function ExaminationPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             {/* Members */}
-            <div className="bg-[#F8FAFC] p-5 rounded-xl border border-[#E2E8F0]">
+            <div className="bg-[#F8FAFC] p-5 rounded-xl border border-[#E2E8F0] md:col-span-2">
               <h3 className="font-bold text-[#1E293B] mb-3 flex items-center gap-2">
                 <Users size={18} className="text-[#123B6D]"/>
-                Members
+                Examination (Degree & SFC)
               </h3>
-              <div className="relative mb-4">
-                <select defaultValue="" className="w-full appearance-none bg-white border border-[#E2E8F0] rounded-lg px-4 py-2.5 text-sm text-[#1E293B] font-medium focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer shadow-sm">
-                  <option value="" disabled>Select Term</option>
-                  <option value="2025-2027">2025-2027</option>
-                  <option value="2023-2025">2023-2025</option>
-                  <option value="2021-2023">2021-2023</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-              </div>
-              <button className="w-full flex items-center justify-center gap-2 bg-[#123B6D] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#0d2d54] transition-colors mt-auto">
-                <Download size={16} /> Download Document
-              </button>
-            </div>
-
-            {/* Minutes */}
-            <div className="bg-[#F8FAFC] p-5 rounded-xl border border-[#E2E8F0]">
-              <h3 className="font-bold text-[#1E293B] mb-3 flex items-center gap-2">
-                <FileText size={18} className="text-[#123B6D]"/>
-                Minutes of Meetings
-              </h3>
-              <div className="relative mb-4">
-                <select defaultValue="" className="w-full appearance-none bg-white border border-[#E2E8F0] rounded-lg px-4 py-2.5 text-sm text-[#1E293B] font-medium focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer shadow-sm">
-                  <option value="" disabled>Select Academic Year</option>
-                  {['2026-27', '2025-26', '2024-25', '2023-24', '2022-23', '2021-22'].map((year) => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-              </div>
-              <button className="w-full flex items-center justify-center gap-2 bg-[#123B6D] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#0d2d54] transition-colors mt-auto">
-                <Download size={16} /> Download Minutes
-              </button>
+              <p className="text-sm text-gray-700 leading-relaxed font-medium">
+                <span className="font-bold">Dr. Sulbha Dey (C)</span><br />
+                <span className="font-bold">Dr. Reena Nagda (Co-C)</span><br /><br />
+                Mr. Nikhil Karkhanis; Ms. Seema Attarde; Ms. Riya Dhamapurkar; Dr. Rajashri Deshpande; Mr. Amit Yadav; Mr. Nitin Pawar; Ms. Komal Bhat; Dr. Shriya Shenoy; Ms. Gauri Atre
+              </p>
             </div>
 
             {/* Other Documents */}
@@ -100,14 +69,7 @@ export default function ExaminationPage() {
                 <Download size={16} className="text-gray-400 group-hover:text-blue-600" />
               </a>
 
-              <a href="#" className="flex items-center justify-between bg-white border border-[#E2E8F0] p-4 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all group">
-                <div className="flex items-center gap-3">
-                  <FileBarChart size={20} className="text-[#123B6D] group-hover:text-blue-600" />
-                  <span className="font-semibold text-sm text-[#1E293B] group-hover:text-blue-600">Grade Point & SGPA Calculation</span>
-                </div>
-                <ImageIcon size={16} className="text-gray-400 group-hover:text-blue-600" />
-              </a>
-              
+
               <a href="#" className="flex items-center justify-between bg-white border border-[#E2E8F0] p-4 rounded-xl hover:border-blue-300 hover:shadow-sm transition-all group">
                 <div className="flex items-center gap-3">
                   <FileText size={20} className="text-[#123B6D] group-hover:text-blue-600" />
@@ -124,11 +86,8 @@ export default function ExaminationPage() {
                 Unfair Means Enquiry
               </h3>
               <div className="flex flex-wrap gap-4">
-                <a href="#" className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-lg border border-[#E2E8F0] text-sm font-semibold text-gray-700 hover:border-red-300 hover:text-red-600 transition-colors">
-                  <FileText size={16} /> Policy
-                </a>
-                <a href="#" className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-lg border border-[#E2E8F0] text-sm font-semibold text-gray-700 hover:border-red-300 hover:text-red-600 transition-colors">
-                  <AlertCircle size={16} /> Notice
+                <a href="/Unfair Means Enquiry committe.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-lg border border-[#E2E8F0] text-sm font-semibold text-gray-700 hover:border-red-300 hover:text-red-600 transition-colors">
+                  <FileText size={16} /> Committee Members
                 </a>
               </div>
             </div>

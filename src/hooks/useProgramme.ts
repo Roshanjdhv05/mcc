@@ -29,7 +29,7 @@ export interface FullProgrammeData {
   faculty: {
     id: string; sr_no?: number; name: string; designation?: string; additional_role?: string;
     department?: string; education?: string; teaching_exp?: string; email?: string; image?: string; display_order: number;
-    bio?: string; linkedin?: string; areas_of_interest?: string; publications_patents?: string; google_scholar_or_other?: string;
+    linkedin_url?: string; research_interests?: string; corporate_exp?: string;
   }[];
   alumni: {
     id: string; name: string; programme_name?: string; year?: string;
@@ -72,19 +72,25 @@ export function useProgramme(slug: string) {
 
         const pid = prog.id;
 
-        // 2. Fetch all related data in parallel
+        // 2. Fetch all related data in parallel (faculty fetched separately with explicit columns to avoid schema cache issues)
         const [
           { data: ov }, { data: sn }, { data: sm },
-          { data: fc }, { data: al }, { data: iv }, { data: depts }
+          { data: al }, { data: iv }, { data: depts }
         ] = await Promise.all([
           supabase.from('program_overview').select('*').eq('programme_id', pid).single(),
           supabase.from('program_snapshot').select('*').eq('programme_id', pid).single(),
           supabase.from('program_semesters').select('*, program_subjects(*)').eq('programme_id', pid).order('semester_number'),
-          supabase.from('program_faculty').select('*').eq('programme_id', pid).order('display_order'),
           supabase.from('program_alumni').select('*').eq('programme_id', pid).order('display_order'),
           supabase.from('program_industrial_visits').select('*').eq('programme_id', pid).order('display_order'),
           supabase.from('program_departments').select('*').eq('programme_id', pid).order('display_order'),
         ]);
+
+        // Fetch faculty separately with explicit columns to avoid Supabase schema cache dropping rows with null fields
+        const { data: fc } = await supabase
+          .from('program_faculty')
+          .select('id, programme_id, sr_no, name, designation, additional_role, department, education, teaching_exp, email, image, display_order, linkedin_url, research_interests, corporate_exp')
+          .eq('programme_id', pid)
+          .order('display_order');
 
         if (!cancelled) {
           setData({

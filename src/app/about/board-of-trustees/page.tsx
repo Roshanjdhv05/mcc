@@ -29,7 +29,7 @@ export default function BoardOfTrusteesPage() {
         {/* Background Image with Overlay */}
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-30 mix-blend-luminosity"
-          style={{ backgroundImage: `url('/college_campus_hero.png')` }}
+          style={{ backgroundImage: `url('/banner1.png')` }}
         />
         <div className="absolute inset-0 z-0 bg-[#0F2040]/70" />
 

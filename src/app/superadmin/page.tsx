@@ -6,16 +6,17 @@ import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plu
 import { Notice } from '@/lib/noticeTypes';
 import NoticeForm from './NoticeForm';
 import NoticeList from './NoticeList';
-import EventPublishForm from '@/app/admin/events/EventPublishForm';
-import EventsList from '@/app/admin/events/EventsList';
+
 import HomeEventsManager from './HomeEventsManager';
 import HomeBannerManager from './HomeBannerManager';
 import ProgrammesManagerV2 from './ProgrammesManagerV2';
 import CalendarManager from './CalendarManager';
 import StudentsCornerManager from './StudentsCornerManager';
+import WallOfFameManager from './WallOfFameManager';
 import StatutoryBodiesManager from './StatutoryBodiesManager';
 import JrCollegeManager from './JrCollegeManager';
 import ExaminationManager from './ExaminationManager';
+import ResearchManager from './ResearchManager';
 
 const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
 
@@ -119,13 +120,15 @@ function SuperAdminContent() {
             {([
               { key: 'overview',            label: 'Overview',             icon: <LayoutDashboard size={18} /> },
               { key: 'notice',              label: 'Notice System',        icon: <Bell size={18} /> },
-              { key: 'events',              label: 'Events Publication',   icon: <CalendarDays size={18} /> },
+
               { key: 'home-banners',        label: 'Homepage Banners',     icon: <ImageIcon size={18} /> },
-              { key: 'home-events',         label: 'Homepage Events',      icon: <Home size={18} /> },
+              { key: 'home-events',         label: 'Events Publication',   icon: <ImageIcon size={18} /> },
               { key: 'calendar-management', label: 'Calendar Management',  icon: <CalendarDays size={18} /> },
               { key: 'examination',         label: 'Examination Manager',  icon: <FileText size={18} /> },
               { key: 'programme-management', label: 'Programme Management', icon: <GraduationCap size={18} /> },
               { key: 'students-corner',     label: 'Students Corner',      icon: <LayoutDashboard size={18} /> },
+              { key: 'research',            label: 'Research Manager',     icon: <FileText size={18} /> },
+              { key: 'wall-of-fame',        label: 'Wall of Fame',         icon: <LayoutDashboard size={18} /> },
               { key: 'statutory-bodies',    label: 'Statutory Bodies',     icon: <FileText size={18} /> },
               { key: 'degree-programmes',   label: 'Degree Programmes',    icon: <FileText size={18} /> },
               { key: 'jr-college',          label: 'Jr College',           icon: <GraduationCap size={18} /> },
@@ -234,55 +237,26 @@ function SuperAdminContent() {
               </div>
             )}
 
-            {/* ── Events Publication ── */}
-            {activeTab === 'events' && (
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-800">Events Publication</h2>
-                    <p className="text-sm text-gray-500">Publish events to gallery, homepage & programme pages</p>
-                  </div>
-                  {!showEventForm ? (
-                    <button
-                      onClick={() => setShowEventForm(true)}
-                      className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm"
-                    >
-                      <Plus size={16} /> Publish New Event
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setShowEventForm(false)}
-                      className="flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
-                    >
-                      <X size={16} /> Close Form
-                    </button>
-                  )}
-                </div>
 
-                {showEventForm && (
-                  <div className="mb-6 bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-6">
-                    <EventPublishForm onSuccess={() => {
-                      setShowEventForm(false);
-                      setEventsRefreshKey(k => k + 1);
-                    }} />
-                  </div>
-                )}
-
-                <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-100">
-                    <h3 className="font-bold text-gray-900">All Published Events</h3>
-                  </div>
-                  <EventsList refreshKey={eventsRefreshKey} />
-                </div>
-              </div>
-            )}
 
             {/* ── Homepage Banners ── */}
             {activeTab === 'home-banners' && (
               <HomeBannerManager />
             )}
 
-            {/* ── Homepage Events Manager ── */}
+            {/* ── Students Corner Management ── */}
+            {activeTab === 'students-corner' && (
+              <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
+                <StudentsCornerManager />
+              </Suspense>
+            )}
+
+            {/* ── Research Manager ── */}
+            {activeTab === 'research' && (
+              <ResearchManager />
+            )}
+
+            {/* ── Event Publication ── */}
             {activeTab === 'home-events' && (
               <HomeEventsManager />
             )}
@@ -303,6 +277,13 @@ function SuperAdminContent() {
             {activeTab === 'students-corner' && (
               <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
                 <StudentsCornerManager />
+              </Suspense>
+            )}
+
+            {/* ── Wall of Fame Management ── */}
+            {activeTab === 'wall-of-fame' && (
+              <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
+                <WallOfFameManager />
               </Suspense>
             )}
 

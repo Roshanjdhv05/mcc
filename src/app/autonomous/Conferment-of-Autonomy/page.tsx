@@ -31,23 +31,6 @@ export default function ConfermentOfAutonomyPage() {
   return (
     <div className="bg-[#F8FAFC] min-h-screen pb-12 font-sans">
 
-      {/* ── Secondary Autonomy Nav ── */}
-      <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
-        <div className="flex w-full h-12 items-center justify-center overflow-x-auto no-scrollbar">
-          <div className="flex items-center h-full whitespace-nowrap border-l border-white/10">
-            {autonomyNav.map((item, i) => (
-              <Link key={i} href={item.href}
-                className={`flex-shrink-0 h-full flex items-center px-6 md:px-8 lg:px-10 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${
-                  item.active ? 'bg-[#D4A017] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* ── Hero / Header ── */}
       <div className="relative py-10 flex flex-col items-center text-center overflow-hidden">
         <div className="absolute left-8 lg:left-16 top-8 grid grid-cols-3 gap-2 opacity-50">

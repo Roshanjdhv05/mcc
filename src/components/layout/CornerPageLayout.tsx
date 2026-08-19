@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -110,20 +111,26 @@ export default function CornerPageLayout({
   data,
   HeroIcon,
 }: Props) {
+  const searchParams = useSearchParams();
   const [activeDesktop, setActiveDesktop] = useState(categories[0].id);
   const [activeMobile, setActiveMobile] = useState<string | null>('__open__');
   const [showSticky, setShowSticky] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  /* Observe which section is in view for sidebar highlight */
+  /* Observe which section is in view for sidebar highlight and update URL */
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
     categories.forEach((cat) => {
       const el = document.getElementById(cat.id);
       if (!el) return;
       const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveDesktop(cat.id); },
+        ([entry]) => { 
+          if (entry.isIntersecting) {
+            setActiveDesktop(cat.id); 
+            window.history.replaceState(null, '', `?section=${cat.id}`);
+          }
+        },
         { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
       );
       obs.observe(el);
@@ -132,6 +139,20 @@ export default function CornerPageLayout({
     return () => observers.forEach((o) => o.disconnect());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /* Initial scroll to section from URL */
+  useEffect(() => {
+    const section = searchParams?.get('section');
+    if (section) {
+      setTimeout(() => {
+        const el = document.getElementById(section);
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.scrollY - 100;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 500); // Wait for render
+    }
+  }, [searchParams]);
 
   /* Scroll to show sticky bar */
   useEffect(() => {
@@ -146,6 +167,7 @@ export default function CornerPageLayout({
 
   const scrollToCategory = (id: string) => {
     setActiveDesktop(id);
+    window.history.replaceState(null, '', `?section=${id}`);
     const el = document.getElementById(id);
     if (el) {
       const y = el.getBoundingClientRect().top + window.scrollY - 100;
@@ -185,10 +207,11 @@ export default function CornerPageLayout({
                   onClick={() => {
                     setActiveMobile(null);
                     setTimeout(() => {
-                      const el = document.getElementById(`mob-${cat.id}`);
+                      const el = document.getElementById(`mob-${cat.id}`) || document.getElementById(cat.id);
                       if (el) {
                         const y = el.getBoundingClientRect().top + window.scrollY - 140;
                         window.scrollTo({ top: y, behavior: 'smooth' });
+                        window.history.replaceState(null, '', `?section=${cat.id}`);
                       }
                     }, 300);
                   }}

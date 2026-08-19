@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import {
   Edit2, RefreshCw, AlertCircle, Eye, EyeOff, LayoutDashboard,
@@ -54,8 +55,27 @@ export default function StatutoryBodiesManager() {
   const [error, setError] = useState<string | null>(null);
   const [editingItem, setEditingItem] = useState<StatutoryBodyItem | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const searchParams = useSearchParams();
 
   useEffect(() => { fetchItems(); }, []);
+
+  useEffect(() => {
+    const editSlug = searchParams?.get('edit');
+    if (editSlug && items.length > 0 && !editingItem) {
+      const itemToEdit = items.find(i => i.slug === editSlug || i.id === editSlug);
+      if (itemToEdit) {
+        setEditingItem(itemToEdit);
+        setIsCreatingNew(false);
+      }
+    }
+  }, [items, searchParams, editingItem]);
+
+  const updateUrlEditParam = (slug: string | null) => {
+    const params = new URLSearchParams(window.location.search);
+    if (slug) params.set('edit', slug);
+    else params.delete('edit');
+    window.history.replaceState(null, '', `?${params.toString()}`);
+  };
 
   const fetchItems = async () => {
     setLoading(true);
@@ -77,10 +97,12 @@ export default function StatutoryBodiesManager() {
   const handleEdit = (item: StatutoryBodyItem) => {
     setEditingItem(item);
     setIsCreatingNew(false);
+    updateUrlEditParam(item.slug || item.id);
   };
 
   const handleEditorClose = () => {
     setEditingItem(null);
+    updateUrlEditParam(null);
     fetchItems();
   };
 

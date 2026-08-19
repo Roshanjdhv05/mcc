@@ -14,6 +14,7 @@ const categories: CategoryItem[] = [
   { id: 'events', label: 'Events & Festivals', icon: Music },
   { id: 'publications', label: 'Student\'s Publications', icon: BookOpen },
   { id: 'gallery', label: 'Gallery', icon: ImageIcon },
+  { id: 'wall-of-fame', label: 'Wall of Fame', icon: Activity },
 ];
 
 const data: Record<string, DataItem[]> = {
@@ -47,6 +48,9 @@ const data: Record<string, DataItem[]> = {
   gallery: [
     { title: 'Events Gallery', icon: ImageIcon, links: [{ label: 'View Gallery', href: '/students-corner/gallery' }] },
     { title: 'Event Calendar', icon: Calendar, links: [{ label: 'View Calendar', href: '/students-corner/event-calendar' }] },
+  ],
+  'wall-of-fame': [
+    { title: 'Student Achievements', icon: Activity, links: [{ label: 'View Wall of Fame', href: '/students-corner/wall-of-fame' }] },
   ],
 };
 

@@ -17,6 +17,7 @@ import { supabase } from '@/lib/supabase';
 import { useProgramme } from '@/hooks/useProgramme';
 import { newFacultyData, FacultyMember } from '@/lib/newFacultyData';
 import FacultyCardNew from '@/components/ui/FacultyCardNew';
+import facultyProfilesData from '@/lib/facultyProfilesData.json';
 
 interface CourseTemplateProps {
   title: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ChevronRight, ChevronDown } from 'lucide-react';
@@ -104,7 +104,7 @@ function SectionHeader({
 }
 
 /* ─── Main layout ───────────────────────────────────────────── */
-export default function CornerPageLayout({
+function CornerPageLayoutInner({
   title,
   subtitle,
   categories,
@@ -322,5 +322,13 @@ export default function CornerPageLayout({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CornerPageLayout(props: Props) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F8FAFC]" />}>
+      <CornerPageLayoutInner {...props} />
+    </Suspense>
   );
 }

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -75,7 +75,7 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
             <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
               {member.designation}
             </p>
-            {member.additionalRole && member.additionalRole !== 'â€”' && (
+            {member.additionalRole && member.additionalRole !== '—' && (
               <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight">
                 {member.additionalRole}
               </div>
@@ -265,7 +265,10 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
     
     fetchProgrammeEvents();
     fetchProgrammeData();
-const tabs = [
+    fetchActivitiesIntros();
+  }, [courseKey, title, targetSlug]);
+
+  const tabs = [
     'Overview',
     'Curriculum & Structure',
     'Career & Prospects',

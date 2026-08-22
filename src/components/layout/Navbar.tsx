@@ -724,6 +724,21 @@ export default function Navbar() {
   const [fetchingNotices, setFetchingNotices] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
   const [topNoticeId, setTopNoticeId] = useState<string | null>(null);
+  const [visitorCount, setVisitorCount] = useState(1000);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedCount = localStorage.getItem('visitorCount');
+      if (storedCount) {
+        const newCount = parseInt(storedCount, 10) + 1;
+        setVisitorCount(newCount);
+        localStorage.setItem('visitorCount', newCount.toString());
+      } else {
+        localStorage.setItem('visitorCount', '1000');
+        setVisitorCount(1000);
+      }
+    }
+  }, []);
 
   const fetchLiveNotices = async () => {
     setFetchingNotices(true);
@@ -945,8 +960,12 @@ export default function Navbar() {
             {/* Right Side Actions */}
             <div className="flex items-center gap-1.5 md:gap-2 lg:gap-5 shrink-0 ml-auto">
               
-              {/* Quick Links */}
+              {/* Quick Links & Visitor Count */}
               <div className="hidden xl:flex flex-col items-end gap-0 w-max">
+                <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full mb-1">
+                  <Users size={12} className="text-[#123B6D]" />
+                  <span className="text-[11px] font-bold text-[#123B6D]">Visitors: {visitorCount.toLocaleString()}</span>
+                </div>
                 <span className="text-[11px] xl:text-[12px] font-semibold text-[#1E293B]">Quick Links</span>
                 <div className="flex items-center gap-1.5 xl:gap-2 flex-wrap justify-end">
                   <Link href="/notices" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">

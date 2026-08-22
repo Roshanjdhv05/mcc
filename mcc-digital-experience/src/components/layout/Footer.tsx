@@ -1,0 +1,93 @@
+'use client';
+import Link from 'next/link';
+import { Mail, Phone, MapPin, Globe, Share2, Rss, MessageSquare } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
+export default function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith('/superadmin')) return null;
+
+  return (
+    <footer className="bg-[#123B6D] text-white pb-20 md:pb-0">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 pt-16 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-12">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <img src="/mcclogo.png" alt="MCC Logo" className="w-12 h-12 object-contain bg-white rounded-full p-1" />
+              <div>
+                <div className="font-bold font-[var(--font-heading)]">MULUND COLLEGE OF COMMERCE</div>
+                <div className="text-xs text-white/70">(AUTONOMOUS)</div>
+              </div>
+            </div>
+            <p className="text-white/70 text-sm leading-relaxed mb-5">
+              An autonomous institution affiliated with the University of Mumbai, committed to academic excellence since 1970.
+            </p>
+            <div className="flex items-center gap-3">
+              {[Globe, Share2, Rss, MessageSquare].map((Icon, i) => (
+                <a key={i} href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4A017] transition-colors">
+                  <Icon size={16} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-semibold text-[#D4A017] mb-5 font-[var(--font-heading)]">Quick Links</h3>
+            <ul className="space-y-3 text-sm text-white/80">
+              {[
+                { label: 'About us', href: '/about' },
+                { label: 'Degree Programmes', href: '/programmes' },
+                { label: 'Junior College', href: '/junior-college' },
+                { label: 'Examination', href: '/examination' },
+                { label: 'Admission', href: '/admissions' },
+                { label: 'Student Corner', href: '/students-corner' },
+                { label: 'Accreditation', href: '/accreditation' },
+                { label: 'Autonomy', href: '/autonomy' },
+                { label: 'IQAC', href: '/iqac' },
+              ].map((l) => (
+                <li key={l.label}>
+                  <Link href={l.href} className="hover:text-[#D4A017] hover:pl-1 transition-all">{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="font-semibold text-[#D4A017] mb-5 font-[var(--font-heading)]">Contact Us</h3>
+            <div className="space-y-4 text-sm text-white/80">
+              <div className="flex items-start gap-3">
+                <MapPin size={16} className="mt-0.5 flex-shrink-0 text-[#4DA8DA]" />
+                <span>Mulund Vanijya Mahavidyalaya Marg Mulund West, Mumbai 400080</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <Phone size={16} className="mt-0.5 flex-shrink-0 text-[#4DA8DA]" />
+                <div className="flex flex-col gap-1">
+                  <a href="tel:+918097345311" className="hover:text-white transition-colors">+91 8097345311</a>
+                  <a href="tel:+918097876255" className="hover:text-white transition-colors">+91 8097876255</a>
+                  <a href="tel:+919082101135" className="hover:text-white transition-colors">+91 9082101135</a>
+                  <a href="tel:+919082164576" className="hover:text-white transition-colors">+91 9082164576</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={16} className="flex-shrink-0 text-[#4DA8DA]" />
+                <a href="mailto:mccmulund@gmail.com" className="hover:text-white transition-colors">mccmulund@gmail.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-white/50">
+          <p className="text-center">
+            © 2026 Mulund College of Commerce (Autonomous). All rights reserved. Designed and managed by{' '}
+            <span className="inline-block font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#4DA8DA] via-white to-[#4DA8DA] animate-pulse drop-shadow-md">
+              Elevi8
+            </span>
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}

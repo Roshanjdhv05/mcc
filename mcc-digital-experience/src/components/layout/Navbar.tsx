@@ -722,20 +722,31 @@ export default function Navbar() {
   const [fetchingNotices, setFetchingNotices] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
   const [topNoticeId, setTopNoticeId] = useState<string | null>(null);
-  const [visitorCount, setVisitorCount] = useState(1000);
+  const [visitorCount, setVisitorCount] = useState(1147);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedCount = localStorage.getItem('visitorCount');
-      if (storedCount) {
-        const newCount = parseInt(storedCount, 10) + 1;
-        setVisitorCount(newCount);
-        localStorage.setItem('visitorCount', newCount.toString());
-      } else {
-        localStorage.setItem('visitorCount', '1000');
-        setVisitorCount(1000);
+    const trackVisit = async () => {
+      try {
+        const alreadyCounted = sessionStorage.getItem('mcc_visit_counted');
+        if (alreadyCounted) {
+          // Just fetch current count without incrementing
+          const { data } = await supabase
+            .from('site_visitors')
+            .select('count')
+            .eq('id', 1)
+            .single();
+          if (data?.count) setVisitorCount(Number(data.count));
+        } else {
+          // Increment via RPC for atomic update
+          const { data } = await supabase.rpc('increment_visitor_count');
+          if (data) setVisitorCount(Number(data));
+          sessionStorage.setItem('mcc_visit_counted', '1');
+        }
+      } catch {
+        // Silently fail — keep default count shown
       }
-    }
+    };
+    trackVisit();
   }, []);
 
   const fetchLiveNotices = async () => {

@@ -130,7 +130,7 @@ export default function NoticeList({ onEdit }: { onEdit?: (notice: Notice) => vo
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this notice?')) return;
     await supabase.from('notices').delete().eq('id', id);
-    cacheLog('INVALIDATED', 'notices', 'delete action');
+    console.log('INVALIDATED', 'notices', 'delete action');
     qc.invalidateQueries({ queryKey: qk.notices() });
     qc.invalidateQueries({ queryKey: qk.jrNotices() });
     setNotices(prev => prev.filter(n => n.id !== id));

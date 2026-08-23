@@ -153,7 +153,7 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
           />
         </div>
         <button
-          onClick={() => fetchNotices(true)}
+          onClick={() => refetchNotices()}
           disabled={refreshing}
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#123B6D] text-white text-xs font-semibold hover:bg-[#0f2f5a] transition-colors disabled:opacity-60"
         >

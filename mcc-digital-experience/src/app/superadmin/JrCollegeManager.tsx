@@ -11,6 +11,7 @@ import {
   FileText, Image as Img, FileIcon, Search, LayoutGrid, List,
   AlertCircle, Plus, Eye, Edit2
 } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -476,7 +477,13 @@ function NoticeUploadForm() {
     if (!files || files.length === 0) return;
     setUploading(true);
     setMsg(null);
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
+      try {
+        file = await processFileForUpload(file);
+      } catch (err: any) {
+        setMsg({ type: 'error', text: err.message });
+        continue;
+      }
       const ext = file.name.split('.').pop() || '';
       const path = `jr-notices/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
       const { data, error } = await supabase.storage.from('notice-attachments').upload(path, file);
@@ -693,7 +700,13 @@ function GalleryUploadForm() {
     if (!files || files.length === 0) return;
     setUploading(true);
     setMsg(null);
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
+      try {
+        file = await processFileForUpload(file);
+      } catch (err: any) {
+        setMsg({ type: 'error', text: err.message });
+        continue;
+      }
       const path = `jr-gallery/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
       const { data, error } = await supabase.storage.from('event-images').upload(path, file);
       if (error) {

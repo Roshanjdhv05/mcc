@@ -9,6 +9,7 @@ import {
   Target, Phone, AlignLeft, List, ChevronDown, ChevronUp,
   FileText, ExternalLink, File,
 } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface CommitteeMember {
@@ -129,9 +130,17 @@ export default function StatutoryBodiesEditor({ item, isNew, onClose }: Statutor
 
   // ── Banner Image upload ───────────────────────────────────────────────────
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    try {
+      file = await processFileForUpload(file);
+    } catch (err: any) {
+      showMsg('error', err.message);
+      setUploading(false);
+      e.target.value = '';
+      return;
+    }
     const path = `statutory-bodies/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
     const { error } = await supabase.storage.from('event-images').upload(path, file);
     if (error) { showMsg('error', 'Image upload failed.'); }
@@ -145,9 +154,17 @@ export default function StatutoryBodiesEditor({ item, isNew, onClose }: Statutor
 
   // ── PDF upload for a specific document row ────────────────────────────────
   const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
     setUploadingPdf(index);
+    try {
+      file = await processFileForUpload(file);
+    } catch (err: any) {
+      showMsg('error', err.message);
+      setUploadingPdf(null);
+      e.target.value = '';
+      return;
+    }
     const path = `statutory-bodies/docs/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
     const { error } = await supabase.storage.from('event-images').upload(path, file, {
       contentType: 'application/pdf',

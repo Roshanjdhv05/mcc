@@ -8,6 +8,7 @@ import {
   Upload, X, FileText, CheckSquare, Square,
   Calendar, Clock, Trash2, RefreshCw, AlertCircle, Plus, Eye, GraduationCap, Bell
 } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 const CATEGORIES = [
   'Time Table Regular Exam',
@@ -87,8 +88,19 @@ export default function ExaminationManager() {
     );
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const picked = e.target.files?.[0] || null;
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    let picked = e.target.files?.[0] || null;
+    if (picked) {
+      try {
+        picked = await processFileForUpload(picked);
+        setError('');
+      } catch (err: any) {
+        setError(err.message);
+        e.target.value = '';
+        setFile(null);
+        return;
+      }
+    }
     setFile(picked);
     // Auto-fill display name with filename (no extension) only if user hasn't typed their own name
     if (picked && !displayNameEdited) {

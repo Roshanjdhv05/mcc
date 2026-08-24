@@ -8,6 +8,7 @@ import {
   CheckCircle, AlertCircle, Plus, Trash2, Link2, Users,
   Target, Phone, AlignLeft, List, ChevronDown, ChevronUp, GraduationCap, BarChart3, BookOpen
 } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface CommitteeMember {
@@ -154,9 +155,17 @@ export default function ResearchEditor({ item, isNew, onClose }: ResearchEditorP
 
   // ── Document upload ──────────────────────────────────────────────────────────
   const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    try {
+      file = await processFileForUpload(file);
+    } catch (err: any) {
+      showMsg('error', err.message);
+      setUploading(false);
+      e.target.value = '';
+      return;
+    }
     const path = `research-docs/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
     const { error } = await supabase.storage.from('event-images').upload(path, file);
     if (error) { showMsg('error', 'Document upload failed.'); }

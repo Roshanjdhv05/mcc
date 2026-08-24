@@ -7,6 +7,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk, cacheLog } from '@/lib/cache';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 type HomeEvent = {
   id: string;
@@ -315,7 +316,13 @@ export default function HomeEventsManager() {
     const files = e.target.files;
     if (!files?.length) return;
     setUploading(true);
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
+      try {
+        file = await processFileForUpload(file);
+      } catch (err: any) {
+        showMsg('error', err.message);
+        continue;
+      }
       const url = await uploadFile(file, 'event-images', 'events');
       if (url) setUploads(prev => [...prev, { name: file.name, url }]);
       else showMsg('error', `Failed to upload ${file.name}`);

@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk, cacheLog } from '@/lib/cache';
 import { X, Save, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 export interface WallOfFameItem {
   id: string;
@@ -41,14 +42,16 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
   const uploadImage = async (): Promise<string | null> => {
     if (!imageFile) return formData.image_url;
     setUploadingImage(true);
+    let file = imageFile;
     try {
-      const fileExt = imageFile.name.split('.').pop();
+      file = await processFileForUpload(file);
+      const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `wall-of-fame/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('public_assets') // assuming 'public_assets' or similar exists. Let's use 'images' if standard
-        .upload(filePath, imageFile);
+        .upload(filePath, file);
       
       // If we get an error about bucket not existing, we might need to handle it.
       // For now we assume a public_assets bucket or we just use public URL construction.

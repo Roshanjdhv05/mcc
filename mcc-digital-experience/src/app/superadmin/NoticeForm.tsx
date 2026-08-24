@@ -9,6 +9,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk, cacheLog } from '@/lib/cache';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 interface NoticeFormProps {
   onSuccess?: (notice: Notice) => void;
@@ -151,7 +152,14 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     setUploading(true);
     setError(null);
 
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
+      try {
+        file = await processFileForUpload(file);
+      } catch (err: any) {
+        setError(err.message);
+        setUploading(false);
+        return;
+      }
       const ext = file.name.split('.').pop() || '';
       const path = `notices/${Date.now()}-${file.name}`;
       const { data, error } = await supabase.storage
@@ -750,7 +758,18 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                                     type="file"
                                     accept="application/pdf"
                                     className="hidden"
-                                    onChange={e => updateCourseUpload(course, { file: e.target.files?.[0] || null })}
+                                    onChange={async e => {
+                                      if (e.target.files?.[0]) {
+                                        try {
+                                          const file = await processFileForUpload(e.target.files[0]);
+                                          updateCourseUpload(course, { file });
+                                        } catch (err: any) {
+                                          setError(err.message);
+                                        }
+                                      } else {
+                                        updateCourseUpload(course, { file: null });
+                                      }
+                                    }}
                                   />
                                 </label>
 
@@ -787,7 +806,18 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                       <span className="text-xs text-gray-400 ml-2">PDF only</span>
                     </div>
                     <input type="file" accept="application/pdf" className="hidden"
-                      onChange={e => setExamFile(e.target.files?.[0] || null)} />
+                      onChange={async e => {
+                        if (e.target.files?.[0]) {
+                          try {
+                            const file = await processFileForUpload(e.target.files[0]);
+                            setExamFile(file);
+                          } catch (err: any) {
+                            setError(err.message);
+                          }
+                        } else {
+                          setExamFile(null);
+                        }
+                      }} />
                   </label>
                 </div>
                 )}

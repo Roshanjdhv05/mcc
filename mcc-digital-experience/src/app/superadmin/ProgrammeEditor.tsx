@@ -9,6 +9,7 @@ import {
   ArrowLeft, Save, Loader2, CheckCircle, AlertCircle,
   LayoutDashboard, LayoutGrid, BookOpen, GraduationCap, Trophy, Building2, UploadCloud, Plus, Trash2, ChevronDown, ChevronUp, X, Image, Sparkles
 } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface ProgramOverview {
@@ -122,12 +123,13 @@ function ImageUpload({
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
     setError('');
     setUploading(true);
 
     try {
+      file = await processFileForUpload(file);
       const ext = file.name.split('.').pop();
       const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const { error: upErr } = await supabase.storage
@@ -573,6 +575,12 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
   };
 
   const handleEventImageUpload = async (file: File) => {
+    try {
+      file = await processFileForUpload(file);
+    } catch (err: any) {
+      alert(err.message);
+      return;
+    }
     const ext = file.name.split('.').pop();
     const fileName = `events/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
     const { error } = await supabase.storage.from('event-images').upload(fileName, file, { cacheControl: '3600', upsert: false });

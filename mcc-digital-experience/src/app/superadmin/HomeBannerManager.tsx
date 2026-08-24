@@ -6,6 +6,7 @@ import {
   Upload, X, Image as ImageIcon, Calendar, Trash2, RefreshCw,
   AlertCircle, Eye, LinkIcon, Pencil, Save, Loader2, CheckSquare, Square
 } from 'lucide-react';
+import { processFileForUpload } from '@/lib/fileUtils';
 
 interface HomeBanner {
   id: string;
@@ -60,8 +61,18 @@ export default function HomeBannerManager() {
 
   useEffect(() => { fetchBanners(); }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files?.[0] || null);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      try {
+        const processedFile = await processFileForUpload(e.target.files[0]);
+        setFile(processedFile);
+        setError('');
+      } catch (err: any) {
+        setError(err.message);
+      }
+    } else {
+      setFile(null);
+    }
   };
 
   const handleUpload = async (e: React.FormEvent) => {

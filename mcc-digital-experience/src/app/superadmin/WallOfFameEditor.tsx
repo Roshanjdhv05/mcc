@@ -51,7 +51,7 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
 
       const { error: uploadError } = await supabase.storage
         .from('public_assets') // assuming 'public_assets' or similar exists. Let's use 'images' if standard
-        .upload(filePath, file);
+        .upload(filePath, file, { cacheControl: '31536000', upsert: false });
       
       // If we get an error about bucket not existing, we might need to handle it.
       // For now we assume a public_assets bucket or we just use public URL construction.

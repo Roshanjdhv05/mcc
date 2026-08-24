@@ -136,7 +136,7 @@ export default function ExaminationManager() {
       const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('notice-attachments')
-        .upload(`examination/${fileName}`, file);
+        .upload(`examination/${fileName}`, file, { cacheControl: '31536000', upsert: false });
 
       if (uploadError) throw uploadError;
 

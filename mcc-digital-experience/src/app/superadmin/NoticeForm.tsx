@@ -164,7 +164,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       const path = `notices/${Date.now()}-${file.name}`;
       const { data, error } = await supabase.storage
         .from('notice-attachments')
-        .upload(path, file);
+        .upload(path, file, { cacheControl: '31536000', upsert: false });
 
       if (error) {
         console.error('File upload error:', error);
@@ -210,7 +210,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
           const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
           const { error: uploadErr } = await supabase.storage
             .from('notice-attachments')
-            .upload(`examination/${fileName}`, examFile);
+            .upload(`examination/${fileName}`, examFile, { cacheControl: '31536000', upsert: false });
           if (uploadErr) {
             setError(`Failed to upload exam document: ${uploadErr.message}`);
             setSaving(false);
@@ -230,7 +230,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
             const fileName = `${Date.now()}_${course}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
             const { error: uploadErr } = await supabase.storage
               .from('notice-attachments')
-              .upload(`examination/${fileName}`, upload.file);
+              .upload(`examination/${fileName}`, upload.file, { cacheControl: '31536000', upsert: false });
             if (uploadErr) {
               setError(`Failed to upload exam document for ${course}: ${uploadErr.message}`);
               setSaving(false);

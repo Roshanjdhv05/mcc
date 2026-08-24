@@ -134,7 +134,7 @@ function ImageUpload({
       const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const { error: upErr } = await supabase.storage
         .from('programme-images')
-        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+        .upload(fileName, file, { cacheControl: '31536000', upsert: false });
 
       if (upErr) throw upErr;
 
@@ -583,7 +583,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
     }
     const ext = file.name.split('.').pop();
     const fileName = `events/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from('event-images').upload(fileName, file, { cacheControl: '3600', upsert: false });
+    const { error } = await supabase.storage.from('event-images').upload(fileName, file, { cacheControl: '31536000', upsert: false });
     if (error) { alert('Image upload failed: ' + error.message); return; }
     const { data } = supabase.storage.from('event-images').getPublicUrl(fileName);
     setNewEvent(prev => ({ ...prev, images: [...(prev.images || []), data.publicUrl] }));

@@ -142,7 +142,7 @@ export default function StatutoryBodiesEditor({ item, isNew, onClose }: Statutor
       return;
     }
     const path = `statutory-bodies/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-    const { error } = await supabase.storage.from('event-images').upload(path, file);
+    const { error } = await supabase.storage.from('event-images').upload(path, file, { cacheControl: '31536000', upsert: false });
     if (error) { showMsg('error', 'Image upload failed.'); }
     else {
       const { data: urlData } = supabase.storage.from('event-images').getPublicUrl(path);
@@ -168,6 +168,7 @@ export default function StatutoryBodiesEditor({ item, isNew, onClose }: Statutor
     const path = `statutory-bodies/docs/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
     const { error } = await supabase.storage.from('event-images').upload(path, file, {
       contentType: 'application/pdf',
+      cacheControl: '31536000',
     });
     if (error) { showMsg('error', `PDF upload failed: ${error.message}`); }
     else {

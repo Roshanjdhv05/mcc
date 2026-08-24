@@ -167,7 +167,7 @@ export default function ResearchEditor({ item, isNew, onClose }: ResearchEditorP
       return;
     }
     const path = `research-docs/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-    const { error } = await supabase.storage.from('event-images').upload(path, file);
+    const { error } = await supabase.storage.from('event-images').upload(path, file, { cacheControl: '31536000', upsert: false });
     if (error) { showMsg('error', 'Document upload failed.'); }
     else {
       const { data: urlData } = supabase.storage.from('event-images').getPublicUrl(path);

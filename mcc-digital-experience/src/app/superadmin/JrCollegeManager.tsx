@@ -486,7 +486,7 @@ function NoticeUploadForm() {
       }
       const ext = file.name.split('.').pop() || '';
       const path = `jr-notices/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { data, error } = await supabase.storage.from('notice-attachments').upload(path, file);
+      const { data, error } = await supabase.storage.from('notice-attachments').upload(path, file, { cacheControl: '31536000', upsert: false });
       if (error) {
         setMsg({ type: 'error', text: `Upload failed: ${error.message}` });
       } else if (data) {
@@ -708,7 +708,7 @@ function GalleryUploadForm() {
         continue;
       }
       const path = `jr-gallery/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { data, error } = await supabase.storage.from('event-images').upload(path, file);
+      const { data, error } = await supabase.storage.from('event-images').upload(path, file, { cacheControl: '31536000', upsert: false });
       if (error) {
         setMsg({ type: 'error', text: `Image upload failed: ${error.message}` });
       } else if (data) {

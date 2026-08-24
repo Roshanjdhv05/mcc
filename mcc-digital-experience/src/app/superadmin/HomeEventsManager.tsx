@@ -98,7 +98,7 @@ function getDaysAgo(dateStr: string) {
 
 async function uploadFile(file: File, bucket: string, folder: string): Promise<string | null> {
   const path = `${folder}/${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-  const { data, error } = await supabase.storage.from(bucket).upload(path, file);
+  const { data, error } = await supabase.storage.from(bucket).upload(path, file, { cacheControl: '31536000', upsert: false });
   if (error || !data) { console.error(error); return null; }
   const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
   return urlData.publicUrl;

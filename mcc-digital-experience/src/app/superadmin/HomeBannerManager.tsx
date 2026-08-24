@@ -84,7 +84,7 @@ export default function HomeBannerManager() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
-        .from('notice-attachments').upload(`banners/${fileName}`, file);
+        .from('notice-attachments').upload(`banners/${fileName}`, file, { cacheControl: '31536000', upsert: false });
       if (uploadError) throw uploadError;
       const { data: urlData } = supabase.storage
         .from('notice-attachments').getPublicUrl(`banners/${fileName}`);

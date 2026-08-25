@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, Clock, Users, BookOpen, Award } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Academic Programmes | MCC Digital Experience Platform',
+  title: 'Degree programmes | MCC Digital Experience Platform',
   description: 'Explore all academic programmes at Mulund College of Commerce.',
 };
 
@@ -120,7 +120,7 @@ export default function AcademicsPage() {
     <div className="bg-[#F8FAFC] min-h-screen">
       <div className="bg-[#123B6D] pt-14 pb-24">
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
-          <h1 className="text-3xl md:text-5xl font-bold text-white font-[var(--font-heading)] mb-4">Academic Programmes</h1>
+          <h1 className="text-3xl md:text-5xl font-bold text-white font-[var(--font-heading)] mb-4">Degree programmes</h1>
           <p className="text-white/80 text-lg max-w-3xl">
             Explore our comprehensive range of programmes designed to foster academic excellence, industry readiness, and future leaders.
           </p>
@@ -132,7 +132,7 @@ export default function AcademicsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 relative z-10">
           {[
             { label: 'Qualified Teachers', value: '90+', icon: Award },
-            { label: 'Students', value: '6,306', icon: Users },
+            { label: 'Students', value: '6,400+', icon: Users },
             { label: 'Programs', value: '18', icon: BookOpen },
             { label: 'Years of Excellence', value: '55+', icon: Clock },
           ].map(({ label, value, icon: Icon }) => (

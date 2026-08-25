@@ -34,28 +34,22 @@ export const NOTICE_CATEGORIES: NoticeCategory[] = [
 
 export const DEPARTMENTS = [
   {
-    id: 'jr_college',
-    label: 'Junior College',
-    courses: [
-      { id: 'jr-college', label: 'Junior College' },
-    ],
-  },
-  {
     id: 'ug_programmes',
     label: 'Undergraduate (Degree)',
     courses: [
-      { id: 'BCOM', label: 'BCOM' },
-      { id: 'BCOM.AF', label: 'BCOM.AF' },
-      { id: 'BCOM.BI', label: 'BCOM.BI' },
-      { id: 'BCOM.FM', label: 'BCOM.FM' },
-      { id: 'BCOM.MS', label: 'BCOM.MS' },
-      { id: 'BCOM.BA', label: 'BCOM.BA' },
-      { id: 'BSC.CS', label: 'BSC.CS' },
-      { id: 'BSC.IT', label: 'BSC.IT' },
-      { id: 'BSC.DS', label: 'BSC.DS' },
-      { id: 'BSC.CA', label: 'BSC.CA' },
+      { id: 'B.COM', label: 'B.COM' },
+      { id: 'BAF', label: 'BAF' },
+      { id: 'BMS', label: 'BMS' },
+      { id: 'BFM', label: 'BFM' },
+      { id: 'BFSI', label: 'BFSI' },
+      { id: 'BBI', label: 'BBI' },
+      { id: 'BCOM-BA', label: 'BCOM-BA' },
+      { id: 'BCOM-MS', label: 'BCOM-MS' },
+      { id: 'BSC-IT', label: 'BSC-IT' },
+      { id: 'BCA', label: 'BCA' },
+      { id: 'BSC-DS', label: 'BSC-DS' },
+      { id: 'BBA', label: 'BBA' },
       { id: 'BAMMC', label: 'BAMMC' },
-      { id: 'BCOM.BFSI', label: 'BCOM.BFSI' },
     ],
   },
   {

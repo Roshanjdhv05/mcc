@@ -122,9 +122,8 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
   ];
 
   const EXAM_COURSES = [
-    'BCOM', 'BAF', 'BFM', 'BBI', 'BMS', 'BAMMC',
-    'BSCCS', 'BSCIT', 'BSCDS', 'BCA', 'MCOM',
-    'MSCIT', 'MSCFINANCE', 'PhD Programme'
+    'B.COM', 'BAF', 'BMS', 'BFM', 'BFSI', 'BBI', 'BCOM-BA', 'BCOM-MS',
+    'BSC-IT', 'BCA', 'BSC-DS', 'BBA', 'BAMMC'
   ];
 
   const toggleExamCourse = (course: string) => {

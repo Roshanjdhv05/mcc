@@ -13,7 +13,7 @@ interface Course {
   code: string;
   name: string;
   fullName: string;
-  level: 'Junior College' | 'Under Graduate' | 'Post Graduate';
+  level: 'Under Graduate' | 'Post Graduate';
   duration: string;
   seats: number;
   tags: string[];
@@ -23,88 +23,84 @@ interface Course {
 }
 
 const courses: Course[] = [
-  // Junior College
-  {
-    code: '11th',
-    name: '11th Std. (Arts & Commerce)',
-    fullName: '11th Standard — Arts & Commerce',
-    level: 'Junior College',
-    duration: '1 Year', seats: 480,
-    tags: ['Arts', 'Commerce', 'Class 11'],
-    href: '/programmes/jr-college',
-    accent: 'bg-cyan-50', iconAccent: 'text-cyan-700',
-  },
-  {
-    code: '12th',
-    name: '12th Std. (Arts & Commerce)',
-    fullName: '12th Standard — Arts & Commerce',
-    level: 'Junior College',
-    duration: '1 Year', seats: 480,
-    tags: ['Arts', 'Commerce', 'Class 12'],
-    href: '/programmes/jr-college',
-    accent: 'bg-blue-50', iconAccent: 'text-[#123B6D]',
-  },
-
   // Under Graduate
   {
-    code: 'BCom',
-    name: 'B.Com.',
-    fullName: 'Bachelor of Commerce',
-    level: 'Under Graduate',
-    duration: '3 Years', seats: 360,
-    tags: ['Commerce', 'Finance', 'Accounting'],
-    href: '/programmes/ug/bcom',
+    code: 'B.COM', name: 'B.Com.', fullName: 'Bachelor of Commerce',
+    level: 'Under Graduate', duration: '3 Years', seats: 360,
+    tags: ['Commerce', 'Finance', 'Accounting'], href: '/programmes/ug/bcom',
     accent: 'bg-blue-50', iconAccent: 'text-[#123B6D]',
   },
   {
-    code: 'BBA',
-    name: 'BBA',
-    fullName: 'Bachelor of Business Administration',
-    level: 'Under Graduate',
-    duration: '3 Years', seats: 120,
-    tags: ['Management', 'Leadership', 'Business'],
-    href: '/programmes/ug/bba',
-    accent: 'bg-amber-50', iconAccent: 'text-amber-700',
-  },
-  {
-    code: 'BMS',
-    name: 'BMS',
-    fullName: 'Bachelor of Management Studies',
-    level: 'Under Graduate',
-    duration: '3 Years', seats: 120,
-    tags: ['Management', 'Strategy', 'Operations'],
-    href: '/programmes/ug/bms',
-    accent: 'bg-purple-50', iconAccent: 'text-purple-700',
-  },
-  {
-    code: 'BCA',
-    name: 'BCA',
-    fullName: 'Bachelor of Computer Applications',
-    level: 'Under Graduate',
-    duration: '3 Years', seats: 60,
-    tags: ['Technology', 'Programming', 'IT'],
-    href: '/programmes/ug/bca',
+    code: 'BAF', name: 'BAF', fullName: 'B.Com. (Accounting and Finance)',
+    level: 'Under Graduate', duration: '3 Years', seats: 120,
+    tags: ['Commerce', 'Finance', 'Accounting'], href: '/programmes/ug/baf',
     accent: 'bg-emerald-50', iconAccent: 'text-emerald-700',
   },
   {
-    code: 'BSc IT',
-    name: 'B.Sc. IT',
-    fullName: 'Bachelor of Science in Information Technology',
-    level: 'Under Graduate',
-    duration: '3 Years', seats: 60,
-    tags: ['Technology', 'Science', 'Software'],
-    href: '/programmes/ug/bscit',
+    code: 'BMS', name: 'BMS', fullName: 'Bachelor of Management Studies',
+    level: 'Under Graduate', duration: '3 Years', seats: 120,
+    tags: ['Management', 'Strategy', 'Business'], href: '/programmes/ug/bms',
+    accent: 'bg-purple-50', iconAccent: 'text-purple-700',
+  },
+  {
+    code: 'BFM', name: 'BFM', fullName: 'B.Com. (Financial Markets)',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Finance', 'Markets', 'Commerce'], href: '/programmes/ug/bfm',
+    accent: 'bg-amber-50', iconAccent: 'text-amber-700',
+  },
+  {
+    code: 'BFSI', name: 'BFSI', fullName: 'B.Com. (Banking, Financial Services & Insurance)',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Banking', 'Finance', 'Insurance'], href: '/programmes/ug/bfsi',
+    accent: 'bg-cyan-50', iconAccent: 'text-cyan-700',
+  },
+  {
+    code: 'BBI', name: 'BBI', fullName: 'B.Com. (Banking and Insurance)',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Banking', 'Insurance', 'Commerce'], href: '/programmes/ug/bbi',
+    accent: 'bg-rose-50', iconAccent: 'text-rose-700',
+  },
+  {
+    code: 'BCOM-BA', name: 'BCOM-BA', fullName: 'B.Com. (Business Administration)',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Business', 'Administration', 'Management'], href: '/programmes/ug/bcom-ba',
     accent: 'bg-teal-50', iconAccent: 'text-teal-700',
   },
   {
-    code: 'DS',
-    name: 'Data Science',
-    fullName: 'B.Sc. Data Science',
-    level: 'Under Graduate',
-    duration: '3 Years', seats: 60,
-    tags: ['AI', 'Analytics', 'Machine Learning'],
-    href: '/programmes/ug/ds',
+    code: 'BCOM-MS', name: 'BCOM-MS', fullName: 'B.Com. (Management Studies)',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Management', 'Commerce', 'Studies'], href: '/programmes/ug/bcom-ms',
+    accent: 'bg-indigo-50', iconAccent: 'text-indigo-700',
+  },
+  {
+    code: 'BSC-IT', name: 'B.Sc. IT', fullName: 'Bachelor of Science in Information Technology',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Technology', 'Science', 'Software'], href: '/programmes/ug/bscit',
+    accent: 'bg-sky-50', iconAccent: 'text-sky-700',
+  },
+  {
+    code: 'BCA', name: 'BCA', fullName: 'Bachelor of Computer Applications',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Technology', 'Programming', 'IT'], href: '/programmes/ug/bca',
+    accent: 'bg-emerald-50', iconAccent: 'text-emerald-700',
+  },
+  {
+    code: 'BSC-DS', name: 'B.Sc. DS', fullName: 'B.Sc. Data Science',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['AI', 'Analytics', 'Machine Learning'], href: '/programmes/ug/ds',
     accent: 'bg-rose-50', iconAccent: 'text-rose-700',
+  },
+  {
+    code: 'BBA', name: 'BBA', fullName: 'Bachelor of Business Administration',
+    level: 'Under Graduate', duration: '3 Years', seats: 120,
+    tags: ['Management', 'Leadership', 'Business'], href: '/programmes/ug/bba',
+    accent: 'bg-amber-50', iconAccent: 'text-amber-700',
+  },
+  {
+    code: 'BAMMC', name: 'BAMMC', fullName: 'Bachelor of Arts in Multimedia and Mass Communication',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Media', 'Mass Communication', 'Arts'], href: '/programmes/ug/bammc',
+    accent: 'bg-purple-50', iconAccent: 'text-purple-700',
   },
 
   // Post Graduate
@@ -130,12 +126,11 @@ const courses: Course[] = [
   },
 ];
 
-const LEVELS = ['All', 'Junior College', 'Under Graduate', 'Post Graduate'] as const;
+const LEVELS = ['All', 'Under Graduate', 'Post Graduate'] as const;
 type Level = typeof LEVELS[number];
 
 const levelIcon: Record<Level, React.ReactNode> = {
   All:             <Sparkles  size={15} />,
-  'Junior College': <BookOpen  size={15} />,
   'Under Graduate': <GraduationCap size={15} />,
   'Post Graduate':  <Microscope size={15} />,
 };

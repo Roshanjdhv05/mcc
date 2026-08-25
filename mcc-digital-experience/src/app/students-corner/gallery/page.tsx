@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar, ChevronRight, ChevronLeft, X, Search,
@@ -8,6 +8,15 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCachedGalleryEvents } from "@/hooks/useCachedSupabase";
+import { useCachedImage } from "@/hooks/useCachedImage";
+
+const CachedImg = forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>((props, ref) => {
+  const { src: cachedSrc } = useCachedImage(props.src);
+  return <img ref={ref} {...props} src={cachedSrc || props.src || ''} />;
+});
+CachedImg.displayName = 'CachedImg';
+
+const MotionCachedImg = motion(CachedImg);
 
 type Event = {
   id: string;
@@ -698,16 +707,16 @@ export default function GalleryPage() {
             {/* Collage */}
             <div className="w-full lg:w-1/2 flex justify-center relative h-[260px] md:h-[360px]">
               <div className="absolute top-0 right-[35%] w-[45%] h-[40%] rounded-2xl overflow-hidden border-2 border-[#0D1B3E] shadow-xl z-20">
-                <img src="/2024 - 2025/Rangotsav (1).jpg" alt="" className="w-full h-full object-cover" />
+                <CachedImg src="/2024 - 2025/Rangotsav (1).jpg" alt="" className="w-full h-full object-cover" />
               </div>
               <div className="absolute top-[10%] right-0 w-[40%] h-[45%] rounded-2xl overflow-hidden border-2 border-[#0D1B3E] shadow-xl z-10">
-                <img src="/2024 - 2025/Induction Meet (1).webp" alt="" className="w-full h-full object-cover" />
+                <CachedImg src="/2024 - 2025/Induction Meet (1).webp" alt="" className="w-full h-full object-cover" />
               </div>
               <div className="absolute bottom-0 right-[40%] w-[50%] h-[55%] rounded-2xl overflow-hidden border-2 border-[#0D1B3E] shadow-xl z-30">
-                <img src="/2024 - 2025/Spectrum Day 1 (1).jpg" alt="" className="w-full h-full object-cover" />
+                <CachedImg src="/2024 - 2025/Spectrum Day 1 (1).jpg" alt="" className="w-full h-full object-cover" />
               </div>
               <div className="absolute bottom-[5%] right-0 w-[42%] h-[40%] rounded-2xl overflow-hidden border-2 border-[#0D1B3E] shadow-xl z-20">
-                <img src="/2024 - 2025/Kalakshetram (1).jpg" alt="" className="w-full h-full object-cover" />
+                <CachedImg src="/2024 - 2025/Kalakshetram (1).jpg" alt="" className="w-full h-full object-cover" />
               </div>
               <div className="absolute bottom-[22%] left-[-5%] md:left-[5%] w-16 h-16 border-2 border-yellow-500 rounded-2xl flex items-center justify-center z-40 transform -rotate-6">
                 <Calendar className="text-yellow-500 w-8 h-8" />
@@ -794,7 +803,7 @@ export default function GalleryPage() {
                 >
                   {/* Image */}
                   <div className={`relative overflow-hidden ${viewMode === "list" ? "sm:w-1/3 h-56 sm:h-auto shrink-0" : "h-56"}`}>
-                    <img
+                    <CachedImg
                       src={event.img} alt={event.title}
                       className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
                     />
@@ -860,7 +869,7 @@ export default function GalleryPage() {
           {techEvents.map((te, idx) => (
             <div key={idx} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="h-32 bg-black relative overflow-hidden flex items-center justify-center">
-                <img src={te.img} alt={te.name} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-110 transition-all duration-500" />
+                <CachedImg src={te.img} alt={te.name} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-110 transition-all duration-500" />
                 <h3 className="relative z-10 text-white font-black text-base tracking-widest uppercase drop-shadow-lg text-center px-1">{te.name}</h3>
               </div>
               <div className="p-3">
@@ -890,7 +899,7 @@ export default function GalleryPage() {
               </button>
               <div className="w-full md:w-1/2 lg:w-[55%] relative bg-gray-900 min-h-[300px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center overflow-hidden">
                 <AnimatePresence mode="wait">
-                  <motion.img key={currentImageIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
+                  <MotionCachedImg key={currentImageIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
                     src={selectedEvent.images[currentImageIndex]} alt={selectedEvent.title}
                     className="absolute inset-0 w-full h-full object-contain bg-black/50" />
                 </AnimatePresence>

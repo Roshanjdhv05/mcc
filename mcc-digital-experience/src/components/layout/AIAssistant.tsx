@@ -41,11 +41,18 @@ export default function AIAssistant() {
     const handler = () => {
       setOpen(true);
       setHasUnread(false);
-      navigate('broadcast');
+      setHistory([{ view: 'main' }, { view: 'broadcast' }]);
     };
     document.addEventListener('open-assistant', handler);
     return () => document.removeEventListener('open-assistant', handler);
   }, []);
+
+  const handleClose = () => {
+    setOpen(false);
+    setTimeout(() => {
+      setHistory([{ view: 'main' }]);
+    }, 300);
+  };
 
   const navigate = (newView: ViewState, newData?: any) => {
     setHistory(prev => [...prev, { view: newView, data: newData }]);
@@ -167,7 +174,7 @@ export default function AIAssistant() {
               </div>
               <div className="flex items-center gap-1">
                 {renderHeaderOptions()}
-                <button onClick={() => setOpen(false)} className="p-1.5 ml-1 rounded-full hover:bg-white/20 transition-colors bg-white/10">
+                <button onClick={handleClose} className="p-1.5 ml-1 rounded-full hover:bg-white/20 transition-colors bg-white/10">
                   <X size={18} />
                 </button>
               </div>

@@ -11,8 +11,9 @@ import { useCachedGalleryEvents } from "@/hooks/useCachedSupabase";
 import { useCachedImage } from "@/hooks/useCachedImage";
 
 const CachedImg = forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>((props, ref) => {
-  const { src: cachedSrc } = useCachedImage(props.src);
-  return <img ref={ref} {...props} src={cachedSrc || props.src || ''} />;
+  const { src: cachedSrc, loading, error } = useCachedImage(props.src);
+  const displaySrc = loading ? undefined : (error ? props.src : (cachedSrc || props.src));
+  return <img ref={ref} {...props} src={displaySrc as string} />;
 });
 CachedImg.displayName = 'CachedImg';
 
@@ -875,8 +876,7 @@ export default function GalleryPage() {
               <div className="p-3">
                 <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wide mb-0.5">{te.name}</div>
                 <h4 className="font-bold text-sm text-gray-900 mb-1.5 truncate">{te.title}</h4>
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-gray-500">{te.date}</div>
+                <div className="flex items-center justify-end">
                   <div className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${categoryColors[te.category] || "bg-gray-100 text-gray-600"}`}>{te.category}</div>
                 </div>
               </div>
@@ -888,7 +888,7 @@ export default function GalleryPage() {
       {/* ── MODAL ── */}
       <AnimatePresence>
         {selectedEvent && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-12">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setSelectedEvent(null)} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
             <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}

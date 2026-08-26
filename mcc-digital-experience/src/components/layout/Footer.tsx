@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Globe, Share2, Rss, MessageSquare } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -79,13 +80,80 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-white/50">
-          <p className="text-center">
-            © 2026 Mulund College of Commerce (Autonomous). All rights reserved. Designed and managed by{' '}
-            <span className="inline-block font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#4DA8DA] via-white to-[#4DA8DA] animate-pulse drop-shadow-md">
-              Elevi8
-            </span>
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-white/50 relative overflow-hidden">
+          <p className="text-center md:text-left">
+            © 2026 Mulund College of Commerce (Autonomous). All rights reserved.
           </p>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-20px" }}
+            className="flex flex-col items-center md:items-end relative z-10"
+          >
+            {/* Thin sweeping line */}
+            <motion.div
+              variants={{
+                hidden: { scaleX: 0, opacity: 0 },
+                visible: { scaleX: 1, opacity: 1, transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] } }
+              }}
+              className="absolute -top-3 md:-top-5 right-0 w-[150px] md:w-[250px] h-[1px] bg-gradient-to-r from-transparent via-[#4DA8DA]/50 to-transparent origin-right"
+            />
+
+            <div className="flex items-center gap-2">
+              <motion.span
+                variants={{
+                  hidden: { opacity: 0, filter: "blur(4px)" },
+                  visible: { opacity: 1, filter: "blur(0px)", transition: { duration: 1, delay: 0.5, ease: "easeOut" } }
+                }}
+                className="text-white/60 text-[13px] tracking-wide font-medium"
+              >
+                Designed & Managed by
+              </motion.span>
+
+              <a
+                href="https://elevi8.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex items-center p-1"
+              >
+                <div className="flex text-white font-bold text-[15px] tracking-widest relative transition-all duration-300 group-hover:-translate-y-0.5 group-hover:drop-shadow-[0_0_12px_rgba(77,168,218,0.8)]">
+                  {['E', 'l', 'e', 'v', 'i'].map((char, index) => (
+                    <motion.span
+                      key={index}
+                      variants={{
+                        hidden: { opacity: 0, y: 10 },
+                        visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 1 + index * 0.08, ease: "easeOut" } }
+                      }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                  <motion.span
+                    variants={{
+                      hidden: { opacity: 0, scale: 0, rotate: -45 },
+                      visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.6, delay: 1.6, type: "spring", bounce: 0.5 } }
+                    }}
+                    className="relative text-[#4DA8DA] ml-[1px]"
+                  >
+                    8
+                    {/* Subtle looping particle around the 8 */}
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      className="absolute -inset-[6px] rounded-full border border-dashed border-[#4DA8DA]/0 group-hover:border-[#4DA8DA]/30 transition-colors duration-500 pointer-events-none"
+                    >
+                      <motion.div 
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute -top-[1px] left-1/2 w-1 h-1 bg-white rounded-full shadow-[0_0_4px_#fff]"
+                      />
+                    </motion.div>
+                  </motion.span>
+                </div>
+              </a>
+            </div>
+          </motion.div>
         </div>
       </div>
     </footer>

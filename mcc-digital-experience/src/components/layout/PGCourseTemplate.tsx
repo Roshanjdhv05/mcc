@@ -756,7 +756,7 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
               {/* Modal */}
               <AnimatePresence>
                 {selectedEvent && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12">
+                  <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-12">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                       onClick={() => setSelectedEvent(null)} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
                     <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -867,7 +867,7 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
               {/* â”€â”€ MODAL â”€â”€ */}
               <AnimatePresence>
                 {selectedEvent && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12">
+                  <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-12">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                       onClick={() => setSelectedEvent(null)} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
                     <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}

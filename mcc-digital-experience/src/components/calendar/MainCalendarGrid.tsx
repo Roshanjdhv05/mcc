@@ -422,7 +422,7 @@ export default function MainCalendarGrid({ isAdmin = false }: { isAdmin?: boolea
       {/* ── Date Event Popup Modal ── */}
       {popup && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
           onClick={() => setPopup(null)}
         >
           {/* Backdrop */}

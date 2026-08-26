@@ -906,7 +906,7 @@ export default function Navbar() {
         initial={{ y: -80 }}
         animate={{ y: visible ? 0 : -250 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
           scrolled
             ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-white/30'
             : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]'

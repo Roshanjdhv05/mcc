@@ -11,7 +11,7 @@ export default function RailwayConcessionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-[#F8FAFC]">
           <h3 className="text-xl font-bold text-[#123B6D] font-[var(--font-heading)]">Railway & Bus Pass Concession</h3>

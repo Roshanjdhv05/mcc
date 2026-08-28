@@ -48,7 +48,8 @@ export default function WallOfFameManager() {
       description: '',
       category: 'Professional Courses',
       image_url: '',
-      expiry_date: null
+      expiry_date: null,
+      achievement_date: null
     });
     setIsCreatingNew(true);
   };

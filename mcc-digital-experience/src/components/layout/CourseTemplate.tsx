@@ -28,7 +28,7 @@ interface CourseTemplateProps {
   quickActionsData?: { title: string; icon: any; info: string }[];
   courseKey?: string;
   category?: string;
-  facultyData?: { srNo: number; name: string; additionalRole: string; designation: string; email?: string; education?: string; teachingExp?: string; image?: string; department?: string }[];
+  facultyData?: { srNo: number; name: string; additionalRole: string; designation: string; email?: string; education?: string; teachingExp?: string; image?: string; department?: string; linkedin?: string }[];
   festivals?: string;
   publication?: string;
 }
@@ -294,6 +294,11 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
       if (k === 'BSC_CA' || k === 'BCA' || t.includes('computer applications') || t.includes('bca')) return 'BCA';
       if (k === 'BBA' || t.includes('bba')) return 'BBA';
       if (k === 'BAMMC' || t.includes('mass media')) return 'BAMMC';
+      if (k === 'MCOM_AA' || k === 'MCOM-AA') return 'MCOM-AA';
+      if (k === 'MCOM_BF' || k === 'MCOM-BF') return 'MCOM-BF';
+      if (k === 'MCOM_BM' || k === 'MCOM-BM') return 'MCOM-BM';
+      if (k === 'MSC_IT' || k === 'MSCIT' || t.includes('m.sc. it')) return 'MSCIT';
+      if (k === 'MSF') return 'MSF';
       if (t.includes('commerce')) return 'B.COM';
       if (t.includes('sct')) return 'SCT';
       return title.split(' ')[0]; // fallback
@@ -572,36 +577,57 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                     </div>
                   </div>
 
-                  {/* Satellite 3: Seats */}
-                  <div className="absolute bottom-[2%] left-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[110px] h-[110px] bg-white rounded-full shadow-lg border border-[#10B981]/30 flex flex-col items-center justify-center relative">
-                      <Users size={20} className="text-[#10B981] mb-1" strokeWidth={2} />
-                      <span className="text-2xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
-                        60
-                      </span>
-                      <span className="text-[8px] font-bold tracking-widest text-[#1E293B] uppercase">Seats</span>
-                      <div className="absolute -bottom-2 bg-[#10B981] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Capacity</div>
-                    </div>
-                  </div>
+                  {/* Satellite 3: Seats — dynamic from quickActionsData */}
+                  {(() => {
+                    const intakeItem = customQuickActionsData?.find(a => a.title === 'Intake Capacity');
+                    const seatsNum = intakeItem?.info?.match(/(\d+)/)?.[1] ?? '60';
+                    return (
+                      <div className="absolute bottom-[2%] left-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                        <div className="w-[110px] h-[110px] bg-white rounded-full shadow-lg border border-[#10B981]/30 flex flex-col items-center justify-center relative">
+                          <Users size={20} className="text-[#10B981] mb-1" strokeWidth={2} />
+                          <span className="text-2xl font-bold text-[#123B6D] leading-none mb-1 font-[var(--font-heading)]">
+                            {seatsNum}
+                          </span>
+                          <span className="text-[8px] font-bold tracking-widest text-[#1E293B] uppercase">Seats</span>
+                          <div className="absolute -bottom-2 bg-[#10B981] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Capacity</div>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
-                  {/* Satellite 4: Timings */}
-                  <div className="absolute bottom-[2%] right-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
-                    <div className="w-[110px] h-[110px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative px-2">
-                      <Calendar size={20} className="text-[#8B5CF6] mb-1 shrink-0" strokeWidth={2} />
-                      <>
-                        <div className="flex items-baseline gap-1 mt-0.5">
-                          <span className="text-base font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">7:15</span>
-                          <span className="text-[7px] font-bold text-[#1E293B] uppercase">AM</span>
+                  {/* Satellite 4: Timings — dynamic from quickActionsData */}
+                  {(() => {
+                    const timingItem = customQuickActionsData?.find(a => a.title === 'Timing');
+                    const timingStr = timingItem?.info ?? '07:15 AM – 10:40 AM';
+                    const parts = timingStr.split(/[–-]/).map((s: string) => s.trim());
+                    const startRaw = parts[0] ?? '';
+                    const endRaw = parts[1] ?? '';
+                    const parsePart = (raw: string) => {
+                      const m = raw.match(/^(\d{1,2}:\d{2})\s*(AM|PM)?$/i);
+                      return { time: m?.[1] ?? raw, period: (m?.[2] ?? '').toUpperCase() };
+                    };
+                    const start = parsePart(startRaw);
+                    const end = parsePart(endRaw);
+                    return (
+                      <div className="absolute bottom-[2%] right-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
+                        <div className="w-[110px] h-[110px] bg-white rounded-full shadow-lg border border-[#8B5CF6]/30 flex flex-col items-center justify-center relative px-2">
+                          <Calendar size={20} className="text-[#8B5CF6] mb-1 shrink-0" strokeWidth={2} />
+                          <>
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                              <span className="text-base font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">{start.time}</span>
+                              {start.period && <span className="text-[7px] font-bold text-[#1E293B] uppercase">{start.period}</span>}
+                            </div>
+                            <div className="w-4 h-px bg-gray-200 my-0.5"></div>
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-base font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">{end.time}</span>
+                              {end.period && <span className="text-[7px] font-bold text-[#1E293B] uppercase">{end.period}</span>}
+                            </div>
+                          </>
+                          <div className="absolute -bottom-2 bg-[#8B5CF6] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Timings</div>
                         </div>
-                        <div className="w-4 h-px bg-gray-200 my-0.5"></div>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-base font-bold text-[#123B6D] leading-none font-[var(--font-heading)]">12:45</span>
-                          <span className="text-[7px] font-bold text-[#1E293B] uppercase">PM</span>
-                        </div>
-                      </>
-                      <div className="absolute -bottom-2 bg-[#8B5CF6] text-white text-[8px] font-bold tracking-wider px-3 py-1 rounded-full uppercase shadow-md">Timings</div>
-                    </div>
-                  </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             </div>

@@ -202,3 +202,17 @@
 .custom-scrollbar-white::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
+
+/* News & Announcements marquee — right to left, seamless loop */
+@keyframes marquee-rtl {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-25%); }
+}
+
+.animate-marquee-rtl {
+  animation: marquee-rtl 30s linear infinite;
+}
+
+.animate-marquee-rtl:hover {
+  animation-play-state: paused;
+}

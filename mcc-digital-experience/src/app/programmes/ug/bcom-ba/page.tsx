@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
+import { Users, Clock, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'B.Com (BA) | MCC Digital Experience Platform',
@@ -8,9 +9,16 @@ export const metadata: Metadata = {
 };
 
 const bcomBaFaculty = [
-  { srNo: 1, name: 'Dr. Viji Kannan', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BCOM BA', education: 'BCS, MBA, NET, PhD', email: 'viji.kannan@mccmulund.ac.in', teachingExp: '24 yrs', image: '/Degree College Teachers/Viji Kannan.png' },
+  { srNo: 1, name: 'Dr. Viji Kannan', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BCOM BA', education: 'BCS, MBA, NET, PhD', email: 'viji.kannan@mccmulund.ac.in', teachingExp: '24 yrs', image: '/Degree College Teachers/Viji Kannan.png', linkedin: 'https://www.linkedin.com/in/dr-viji-kannan-6814a230?utm_source=share_via&utm_content=profile&utm_medium=member_ios' },
   { srNo: 2, name: 'Ms. Prajakta Khamkar', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MBA', email: 'prajakta@gmail.com', teachingExp: '8 yrs', image: '/Degree College Teachers/Prajakta Khamkar.png' },
   { srNo: 3, name: 'Ms. Rutuja Birje', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MCom (Accountancy) , NET, CS (Executive), Diploma in Tax Management', email: 'rutuja.birje@mccmulund.ac.in', teachingExp: '9 yrs', image: '/Degree College Teachers/Rutuja Birje.png' },
+];
+
+const quickActions = [
+  { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC / Diploma in Engg. Admission based on merit.' },
+  { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
+  { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '12:00 PM – 04:30 PM' },
+  { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' },
 ];
 
 export default function CoursePage() {
@@ -30,6 +38,7 @@ export default function CoursePage() {
       fundingType="Self Financing"
       facultyData={bcomBaFaculty}
       courseKey="BCOM-BA"
+      quickActionsData={quickActions}
     />
   );
 }

@@ -48,6 +48,7 @@ const FORUMS_CLUBS = [
 ];
 
 const PROGRAMMES = [
+  // UG
   { code: 'B.COM', slug: 'bcom', label: 'B.COM' },
   { code: 'BAF',   slug: 'baf',  label: 'BAF' },
   { code: 'BMS',   slug: 'bms',  label: 'BMS' },
@@ -62,6 +63,12 @@ const PROGRAMMES = [
   { code: 'SCT',     slug: 'sct',     label: 'SCT' },
   { code: 'BBA',     slug: 'bba',     label: 'BBA' },
   { code: 'BAMMC',   slug: 'bammc',   label: 'BAMMC' },
+  // PG
+  { code: 'MCOM-AA', slug: 'mcom-aa', label: 'M.COM (AA)' },
+  { code: 'MCOM-BF', slug: 'mcom-bf', label: 'M.COM (BF)' },
+  { code: 'MCOM-BM', slug: 'mcom-bm', label: 'M.COM (BM)' },
+  { code: 'MSCIT',   slug: 'mscit',   label: 'M.Sc. IT' },
+  { code: 'MSF',     slug: 'msf',     label: 'MSF' },
 ];
 
 const FESTIVAL_SECTIONS: Record<string, string> = {
@@ -81,6 +88,14 @@ const PUBLICATION_SECTIONS: Record<string, string> = {
 };
 
 function getProgrammeSectionOptions(code: string) {
+  // PG programmes only have Events & Activities and Industrial Visits
+  if (code.startsWith('M')) {
+    return [
+      { value: 'Events & Activities', label: 'Events & Activities' },
+      { value: 'Industrial Visits', label: 'Industrial Visits' },
+    ];
+  }
+
   const festival = FESTIVAL_SECTIONS[code] || 'Festivals';
   const publication = PUBLICATION_SECTIONS[code] || 'Publication';
   return [

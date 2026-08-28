@@ -133,6 +133,10 @@ export default function NoticeList({ onEdit }: { onEdit?: (notice: Notice) => vo
     console.log('INVALIDATED', 'notices', 'delete action');
     qc.invalidateQueries({ queryKey: qk.notices() });
     qc.invalidateQueries({ queryKey: qk.jrNotices() });
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cache_ts_notices');
+      localStorage.removeItem('cache_ts_jr_college_notices');
+    }
     setNotices(prev => prev.filter(n => n.id !== id));
   };
 

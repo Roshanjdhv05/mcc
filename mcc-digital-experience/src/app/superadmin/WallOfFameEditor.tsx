@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk, cacheLog } from '@/lib/cache';
-import { X, Save, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { X, Save, Upload, AlertCircle, Image as ImageIcon, Crop } from 'lucide-react';
 import { processFileForUpload } from '@/lib/fileUtils';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '@/lib/cropImage';
 
 export interface WallOfFameItem {
   id: string;
@@ -14,6 +16,7 @@ export interface WallOfFameItem {
   category: 'Professional Courses' | 'Culturals' | 'Sports' | 'Research' | 'Entrepreneurship' | 'Academics';
   image_url: string;
   expiry_date: string | null;
+  achievement_date: string | null;
 }
 
 interface EditorProps {
@@ -30,12 +33,37 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [isCropping, setIsCropping] = useState(false);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0]);
-      // Show preview
-      const objectUrl = URL.createObjectURL(e.target.files[0]);
-      setFormData({ ...formData, image_url: objectUrl });
+      const file = e.target.files[0];
+      const objectUrl = URL.createObjectURL(file);
+      setCropImageSrc(objectUrl);
+    }
+  };
+
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleCropSave = async () => {
+    if (!cropImageSrc || !croppedAreaPixels) return;
+    setIsCropping(true);
+    try {
+      const croppedImageFile = await getCroppedImg(cropImageSrc, croppedAreaPixels);
+      setImageFile(croppedImageFile);
+      setFormData({ ...formData, image_url: URL.createObjectURL(croppedImageFile) });
+      setCropImageSrc(null);
+    } catch (e) {
+      console.error(e);
+      setError('Failed to crop image.');
+    } finally {
+      setIsCropping(false);
     }
   };
 
@@ -50,14 +78,11 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
       const filePath = `wall-of-fame/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('public_assets') // assuming 'public_assets' or similar exists. Let's use 'images' if standard
+        .from('event-images')
         .upload(filePath, file, { cacheControl: '31536000', upsert: false });
-      
-      // If we get an error about bucket not existing, we might need to handle it.
-      // For now we assume a public_assets bucket or we just use public URL construction.
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage.from('public_assets').getPublicUrl(filePath);
+      const { data } = supabase.storage.from('event-images').getPublicUrl(filePath);
       return data.publicUrl;
     } catch (e: any) {
       console.error('Upload error:', e);
@@ -84,7 +109,8 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
         description: formData.description,
         category: formData.category,
         image_url: imageUrl,
-        expiry_date: formData.expiry_date || null
+        expiry_date: formData.expiry_date || null,
+        achievement_date: formData.achievement_date || null
       };
 
       if (isNew) {
@@ -133,6 +159,64 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
           <X size={20} />
         </button>
       </div>
+
+      {cropImageSrc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+          <div className="bg-white rounded-2xl overflow-hidden w-full max-w-2xl shadow-2xl flex flex-col h-[80vh]">
+            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <Crop size={20} className="text-[#123B6D]" /> Crop Image
+              </h2>
+              <button onClick={() => setCropImageSrc(null)} className="text-gray-400 hover:text-gray-600">
+                <X size={24} />
+              </button>
+            </div>
+            <div className="relative flex-1 bg-gray-900">
+              <Cropper
+                image={cropImageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={3 / 4}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+              />
+            </div>
+            <div className="p-4 bg-white border-t border-gray-200">
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-sm font-bold text-gray-600">Zoom</span>
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  aria-labelledby="Zoom"
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCropImageSrc(null)}
+                  className="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCropSave}
+                  disabled={isCropping}
+                  className="px-6 py-2 bg-[#123B6D] text-white font-bold rounded-xl hover:bg-[#0d2a4f] disabled:opacity-50"
+                >
+                  {isCropping ? 'Cropping...' : 'Crop & Save'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="p-6 space-y-6">
         {error && (
@@ -187,14 +271,14 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">Expiry Date (Optional)</label>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Front Page Expiry Date (Optional)</label>
               <input
                 type="date"
                 value={formData.expiry_date || ''}
                 onChange={e => setFormData({ ...formData, expiry_date: e.target.value })}
                 className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] outline-none"
               />
-              <p className="text-xs text-gray-500 mt-1">If set, the item will automatically disappear from the Wall of Fame after this date.</p>
+              <p className="text-xs text-gray-500 mt-1">If set, the item will automatically disappear from the Home page Wall of Fame section after this date, but remain on the dedicated Wall of Fame page.</p>
             </div>
           </div>
 
@@ -211,10 +295,20 @@ export default function WallOfFameEditor({ item, isNew, onClose }: EditorProps) 
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">Description (Optional)</label>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Date (when it happened)</label>
+              <input
+                type="date"
+                value={formData.achievement_date || ''}
+                onChange={e => setFormData({ ...formData, achievement_date: e.target.value })}
+                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] outline-none"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">What Achieved (Required)</label>
               <textarea
                 rows={4}
-                placeholder="Brief description of the achievement..."
+                placeholder="Brief description of what was achieved..."
                 value={formData.description || ''}
                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                 className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] outline-none resize-none"

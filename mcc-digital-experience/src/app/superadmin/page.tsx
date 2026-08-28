@@ -17,6 +17,8 @@ import StatutoryBodiesManager from './StatutoryBodiesManager';
 import JrCollegeManager from './JrCollegeManager';
 import ExaminationManager from './ExaminationManager';
 import ResearchManager from './ResearchManager';
+import IllustriousAlumniManager from './IllustriousAlumniManager';
+import NewsAnnouncementsManager from './NewsAnnouncementsManager';
 
 const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
 
@@ -129,9 +131,11 @@ function SuperAdminContent() {
               { key: 'students-corner',     label: 'Students Corner',      icon: <LayoutDashboard size={18} /> },
               { key: 'research',            label: 'Research Manager',     icon: <FileText size={18} /> },
               { key: 'wall-of-fame',        label: 'Wall of Fame',         icon: <LayoutDashboard size={18} /> },
+              { key: 'illustrious-alumni',   label: 'Illustrious Alumni',   icon: <GraduationCap size={18} /> },
               { key: 'statutory-bodies',    label: 'Statutory Bodies',     icon: <FileText size={18} /> },
               { key: 'degree-programmes',   label: 'Degree Programmes',    icon: <FileText size={18} /> },
               { key: 'jr-college',          label: 'Jr College',           icon: <GraduationCap size={18} /> },
+              { key: 'news',                label: 'News & Announcements', icon: <Bell size={18} /> },
             ] as const).map(item => (
               <button
                 key={item.key}
@@ -287,6 +291,13 @@ function SuperAdminContent() {
               </Suspense>
             )}
 
+            {/* ── Illustrious Alumni Management ── */}
+            {activeTab === 'illustrious-alumni' && (
+              <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
+                <IllustriousAlumniManager />
+              </Suspense>
+            )}
+
             {/* ── Statutory Bodies Management ── */}
             {activeTab === 'statutory-bodies' && (
               <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]" /></div>}>
@@ -299,6 +310,11 @@ function SuperAdminContent() {
               <Suspense fallback={<div>Loading...</div>}>
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-700 font-semibold">⚠️ This is the legacy programme manager. Use <strong>Programme Management</strong> for the new normalized system.</div>
               </Suspense>
+            )}
+
+            {/* ── News & Announcements Manager ── */}
+            {activeTab === 'news' && (
+              <NewsAnnouncementsManager />
             )}
 
           </main>

@@ -12,6 +12,12 @@ export default function BBAPageClient() {
     { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' }
   ];
 
+  const bbaFaculty = [
+    { srNo: 1, name: 'Dr. Viji Kannan', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BCOM BA', education: 'BCS, MBA, NET, PhD', email: 'viji.kannan@mccmulund.ac.in', teachingExp: '24 yrs', image: '/Degree College Teachers/Viji Kannan.png', linkedin: 'https://www.linkedin.com/in/dr-viji-kannan-6814a230?utm_source=share_via&utm_content=profile&utm_medium=member_ios' },
+    { srNo: 2, name: 'Ms. Prajakta Khamkar', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MBA', email: 'prajakta@gmail.com', teachingExp: '8 yrs', image: '/Degree College Teachers/Prajakta Khamkar.png' },
+    { srNo: 3, name: 'Ms. Rutuja Birje', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MCom (Accountancy) , NET, CS (Executive), Diploma in Tax Management', email: 'rutuja.birje@mccmulund.ac.in', teachingExp: '9 yrs', image: '/Degree College Teachers/Rutuja Birje.png' },
+  ];
+
   return (
     <CourseTemplate 
       festivals="Festivals"
@@ -46,7 +52,7 @@ export default function BBAPageClient() {
       fundingType="Self Financing"
       syllabusContent={<SyllabusRenderer programKey="BBA" />}
       quickActionsData={quickActions}
+      facultyData={bbaFaculty}
     />
   );
 }
-

@@ -11,7 +11,6 @@ import {
 
 import NoticesModule from '@/components/dashboard/NoticesModule';
 import TimetableModule from '@/components/dashboard/TimetableModule';
-import SyllabusModule from '@/components/dashboard/SyllabusModule';
 import StudyMaterialModule from '@/components/dashboard/StudyMaterialModule';
 import StructureModule from '@/components/dashboard/StructureModule';
 import EventsActivitiesModule from '@/components/dashboard/EventsActivitiesModule';
@@ -25,7 +24,6 @@ const GRID_ITEMS = [
   { id: 'notices',     title: 'Notices',        icon: Bell,          desc: 'College & Dept updates',      color: 'bg-blue-50 text-[#123B6D]',    newUpdates: true  },
   { id: 'timetable',  title: 'Exam Timetable',  icon: Calendar,      desc: 'Schedules & dates',           color: 'bg-amber-50 text-amber-600',    newUpdates: false },
   { id: 'structure',  title: 'Structure',       icon: Layers,        desc: 'Curriculum structure',        color: 'bg-indigo-50 text-indigo-600',  newUpdates: false },
-  { id: 'syllabus',   title: 'Syllabus',        icon: BookOpen,      desc: 'Syllabus details',            color: 'bg-emerald-50 text-emerald-600', newUpdates: false },
   { id: 'events',     title: 'Events',          icon: Users,         desc: 'Events & Activities',         color: 'bg-rose-50 text-rose-600',      newUpdates: false },
   { id: 'festivals',  title: 'Festivals',       icon: Sparkles,      desc: 'College Festivals',           color: 'bg-yellow-50 text-yellow-600',  newUpdates: false },
   { id: 'publications',title: 'Publications',   icon: Book,          desc: 'Research & Publications',     color: 'bg-cyan-50 text-cyan-600',      newUpdates: false },
@@ -228,7 +226,6 @@ function DashboardInner() {
               <div className="h-[calc(60vh-64px)] sm:h-[calc(70vh-64px)] overflow-hidden bg-[#F8FAFC]">
                 {activeModule === 'notices'    && <NoticesModule      courseCode={course.code} />}
                 {activeModule === 'timetable'  && <TimetableModule    courseCode={course.code} />}
-                {activeModule === 'syllabus'   && <SyllabusModule     courseCode={course.code} />}
                 {activeModule === 'structure'  && <StructureModule    courseCode={course.code} />}
                 {activeModule === 'events'     && <EventsActivitiesModule courseCode={course.code} />}
                 {activeModule === 'festivals'  && <FestivalsModule    courseCode={course.code} />}
@@ -236,7 +233,7 @@ function DashboardInner() {
                 {activeModule === 'iv'         && <IVModule           courseCode={course.code} />}
                 {activeModule === 'materials'  && <StudyMaterialModule courseCode={course.code} />}
 
-                {!['notices','timetable','syllabus','materials','structure','events','festivals','publications','iv'].includes(activeModule) && (
+                {!['notices','timetable','materials','structure','events','festivals','publications','iv'].includes(activeModule) && (
                   <div className="w-full h-full p-8 flex flex-col items-center justify-center text-[#94A3B8] border-2 border-dashed border-[#E2E8F0] rounded-2xl m-4"
                     style={{ width: 'calc(100% - 2rem)', height: 'calc(100% - 2rem)' }}>
                     <p className="font-medium text-lg text-[#64748B] mb-2">

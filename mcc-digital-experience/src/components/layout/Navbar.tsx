@@ -306,9 +306,7 @@ const navLinks = [
     label: 'Jr. College', href: '/junior-college-corner', icon: <BookOpen size={18} />, sub: [
       { label: 'Teaching Staff', href: '/jr-college/teaching-staff' },
       { label: 'Result Analysis', href: '/jr-college/result-analysis' },
-      { label: 'SMAF/Scholarship/Freeship', href: '/jr-college/scholarships' },
       { label: 'Notice', href: '/jr-college/notice' },
-      { label: 'Timetable', href: '/jr-college/timetable' },
     ]
   },
   {
@@ -387,36 +385,10 @@ const navLinks = [
     ]
   },
   { 
-    label: 'Examination', href: '/examination', icon: <BookOpen size={18} />,
-    sub: [
-      { label: 'Notices', href: '/examination' },
-      { label: 'Board of Examination', href: '/examination' },
-      { label: 'Examination Ordinances', href: '/examination' },
-      { label: 'Grade Point & SGPA', href: '/examination' },
-      { label: 'Examination Manual', href: '/examination' },
-      { label: 'Unfair Means Enquiry', href: '/examination' }
-    ]
+    label: 'Examination', href: '/examination', icon: <BookOpen size={18} />
   },
   { 
-    label: 'Library', href: '/library', icon: <LibraryIcon size={18} />,
-    sub: [
-      { label: 'WEB OPAC', href: '#' },
-      { label: 'E-RESOURCES', href: '/library/e-resources' },
-      { label: 'DOWNLOAD', href: '#' },
-      { label: 'IMPORTANT LINKS', href: '/library/important-links' }
-    ],
-    mobileSub: [
-      { label: 'HOME', href: '/library' },
-      { label: 'ABOUT US', href: '/library/about-us' },
-      { label: 'WEB OPAC', href: '#' },
-      { label: 'E-RESOURCES', href: '/library/e-resources' },
-      { label: 'STAFF PROFILE', href: '/library/staff-profile' },
-      { label: 'DOWNLOAD', href: '#' },
-      { label: 'RESEARCH - KIT', href: '/library/research-kit' },
-      { label: 'I. R.', href: 'https://drive.google.com/drive/folders/1bes4sOXN9ePGCVSgdTQ2ZtPg-pYQWyju?usp=drive_link' },
-      { label: 'IMPORTANT LINKS', href: '/library/important-links' },
-      { label: 'CONTACT US', href: '/library/contact-us' }
-    ]
+    label: 'Library', href: '/library', icon: <LibraryIcon size={18} />
   },
   {
     label: 'Research', href: '/research', icon: <Star size={18} />,
@@ -1561,7 +1533,7 @@ export default function Navbar() {
                 </div>
               {navLinks.map((link) => (
                 <div key={link.label}>
-                  {(link.mobileSub || link.sub) ? (
+                  {((link as any).mobileSub || (link as any).sub) ? (
                     <div className="flex items-center w-full rounded-xl hover:bg-[#123B6D]/5 transition-colors">
                       <Link 
                         href={link.href || '#'}
@@ -1593,7 +1565,7 @@ export default function Navbar() {
                     </Link>
                   )}
                   <AnimatePresence>
-                    {(link.mobileSub || link.sub) && mobileOpenDrop === link.label && (
+                    {((link as any).mobileSub || (link as any).sub) && mobileOpenDrop === link.label && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}

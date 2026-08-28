@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
+import { Users, Clock, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'B.Com (MS) | MCC Digital Experience Platform',
@@ -8,16 +9,23 @@ export const metadata: Metadata = {
 };
 
 const bcomMsFaculty = [
-  { srNo: 1, name: 'Dr. Kanchana Sattur', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MCom, M.B.A, NET(Comm& Mgmt), PhD.,', email: 'kanchana.sattur@mccmulund.ac.in', teachingExp: '15 yrs', image: '/Degree College Teachers/Kanchana Sattur.png' },
+  { srNo: 1, name: 'Dr. Kanchana Sattur', additionalRole: 'HOD & Coordinator', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MCom, M.B.A, NET(Comm& Mgmt), PhD.,', email: 'kanchana.sattur@mccmulund.ac.in', teachingExp: '15 yrs', image: '/Degree College Teachers/Kanchana Sattur.png' },
   { srNo: 2, name: 'Dr. Soumya Monappilly', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MA (Economics), MBA, MCOM, MJMC, PhD (Economics)', email: 'soumya.george@mccmulund.ac.in', teachingExp: '14 yrs', image: '/Degree College Teachers/Soumya George.png' },
   { srNo: 3, name: 'Dr. Shilpi Jawake', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'MBA, MCOM, NET, SET, Pursuing PhD', email: 'shilpi.jawake@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Shilpi Juwake.png' },
   { srNo: 4, name: 'Dr. Abhilasha N', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'M. Com, MPhil, NET, PhD', email: 'abhilasha.n@mccmulund.ac.in', teachingExp: '12 yrs', image: '/Degree College Teachers/Abilasha N.png' },
   { srNo: 5, name: 'Mr. Felix Anthonysamy', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM MS', education: 'M.Com., B.Ed., MBA ., MA NET., SET.,', email: 'felix@mccmulund.ac.in', teachingExp: '10 yrs', image: '/Degree College Teachers/Felix Anthonysamy.png' },
 ];
 
+const quickActions = [
+  { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: 'HSC / Diploma in Engg. Admission based on merit weightage.' },
+  { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years, 6 Semesters (As Per NEP 2020).' },
+  { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '12:00 PM – 04:30 PM' },
+  { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '120 Seats' },
+];
+
 export default function CoursePage() {
   return (
-    <CourseTemplate 
+    <CourseTemplate
       festivals="Inspira"
       publication="Inspira"
       introductionContent={
@@ -34,6 +42,7 @@ export default function CoursePage() {
       fundingType="Self Financing"
       courseKey="BMS"
       facultyData={bcomMsFaculty}
+      quickActionsData={quickActions}
     />
   );
 }

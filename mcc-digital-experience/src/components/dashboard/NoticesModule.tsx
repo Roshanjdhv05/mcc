@@ -201,6 +201,8 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
                 onClick={() => {
                   if (notice.categories?.includes('Examinations')) {
                     router.push('/examination#timetables');
+                  } else if (notice.departments?.includes('junior_college')) {
+                    router.push('/jr-college/notice');
                   } else {
                     router.push('/notices');
                   }

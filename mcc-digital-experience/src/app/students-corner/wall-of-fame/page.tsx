@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { useCachedWallOfFame } from '@/hooks/useCachedSupabase';
-import { Activity, Search, Calendar, User, LayoutGrid, List } from 'lucide-react';
+import { Activity, LayoutGrid, List } from 'lucide-react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import WallOfFameCard from '@/components/ui/WallOfFameCard';
 
 type Category = 'All' | 'Professional Courses' | 'Culturals' | 'Sports' | 'Research' | 'Entrepreneurship' | 'Academics';
 
@@ -15,6 +16,7 @@ interface WallOfFameItem {
   category: Category;
   image_url: string;
   expiry_date: string | null;
+  achievement_date: string | null;
 }
 
 export default function WallOfFamePage() {
@@ -23,11 +25,11 @@ export default function WallOfFamePage() {
 
   const { data: rawItems = [], isLoading: loading } = useCachedWallOfFame();
 
-  const today = new Date().toISOString().split('T')[0];
-  const items = (rawItems as WallOfFameItem[]).filter(
-    (item) => !item.expiry_date || item.expiry_date >= today
-  ).sort((a, b) => {
-    // sort by created_at if we had it, otherwise it's pre-sorted by year in the hook
+  // Show ALL items on this page regardless of expiry_date
+  const items = (rawItems as WallOfFameItem[]).sort((a, b) => {
+    if (a.achievement_date && b.achievement_date) {
+      return new Date(b.achievement_date).getTime() - new Date(a.achievement_date).getTime();
+    }
     return 0;
   });
 
@@ -103,65 +105,16 @@ export default function WallOfFamePage() {
           <div className="bg-white rounded-3xl border border-gray-100 p-16 text-center shadow-sm">
             <Activity size={48} className="mx-auto text-gray-300 mb-4" />
             <h3 className="text-xl font-bold text-gray-800 mb-2">No achievements found</h3>
-            <p className="text-gray-500">There are currently no active achievements in this category.</p>
+            <p className="text-gray-500">There are currently no achievements in this category.</p>
           </div>
         ) : (
-          <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5' : 'flex flex-col gap-4'}>
+          <div className={
+            viewMode === 'grid'
+              ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'
+              : 'flex flex-col gap-4'
+          }>
             {filteredItems.map(item => (
-              viewMode === 'grid' ? (
-                // ── Grid card: portrait poster style ──
-                <div key={item.id} className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-200 bg-gray-100" style={{ aspectRatio: '3/4' }}>
-                  {item.image_url ? (
-                    <img src={item.image_url} alt={item.student_name || 'Achievement'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                      <Activity size={48} />
-                    </div>
-                  )}
-                  {/* Category badge */}
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-[#123B6D] shadow-sm">
-                    {item.category}
-                  </div>
-                  {/* Bottom overlay with name/description */}
-                  {(item.student_name || item.description) && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 pt-8">
-                      {item.student_name && (
-                        <p className="text-white font-bold text-sm leading-tight">{item.student_name}</p>
-                      )}
-                      {item.description && (
-                        <p className="text-white/75 text-xs mt-0.5 line-clamp-2 leading-snug">{item.description}</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                // ── List row ──
-                <div key={item.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row">
-                  <div className="relative bg-gray-100 w-full sm:w-48 flex-shrink-0" style={{ aspectRatio: '3/4' }}>
-                    {item.image_url ? (
-                      <img src={item.image_url} alt={item.student_name || 'Achievement'} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-300">
-                        <Activity size={48} />
-                      </div>
-                    )}
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-[#123B6D]">
-                      {item.category}
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col justify-center">
-                    {item.student_name && (
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">{item.student_name}</h3>
-                    )}
-                    {item.description && (
-                      <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
-                    )}
-                    {(!item.student_name && !item.description) && (
-                      <h3 className="text-lg font-bold text-gray-800 mb-2">Achievement Poster</h3>
-                    )}
-                  </div>
-                </div>
-              )
+              <WallOfFameCard key={item.id} item={item} layout={viewMode} />
             ))}
           </div>
         )}

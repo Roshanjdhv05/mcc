@@ -70,9 +70,11 @@ export default function JrCollegeNoticePage() {
     let combined: Notice[] = [];
 
     if (data) {
-      // Filter client-side: keep only notices explicitly tagged for jr-college
+      // Filter client-side: keep only notices explicitly tagged for jr-college or junior_college
       const generalJrNotices = (data as Notice[]).filter(n =>
-        n.courses.includes('jr-college')
+        n.courses?.includes('jr-college') || 
+        n.courses?.includes('junior_college') ||
+        n.departments?.includes('junior_college')
       );
       combined = [...combined, ...generalJrNotices];
     }

@@ -29,10 +29,14 @@ interface ExamDocument {
 // -----------------------------------------------------------------------
 const COURSES = [
   { id: 'BCOM',         label: 'B.Com' },
+  { id: 'BCOM-BA',      label: 'B.Com BA' },
+  { id: 'BCOM-MS',      label: 'B.Com MS' },
   { id: 'BAF',          label: 'BAF' },
   { id: 'BBI',          label: 'BBI' },
   { id: 'BFM',          label: 'BFM' },
   { id: 'BMS',          label: 'BMS' },
+  { id: 'BFSI',         label: 'BFSI' },
+  { id: 'BBA',          label: 'BBA' },
   { id: 'BAMMC',        label: 'BAMMC' },
   { id: 'BSCCS',        label: 'B.Sc CS' },
   { id: 'BSCIT',        label: 'B.Sc IT' },
@@ -102,7 +106,12 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
     }
 
     const file: ExamFile = { name: doc.title, url: doc.file_url, isExpired };
-    for (const courseId of doc.courses) {
+    for (let courseId of doc.courses) {
+      // Normalize newer NoticeForm course IDs to match the component's legacy IDs
+      if (courseId === 'B.COM') courseId = 'BCOM';
+      if (courseId === 'BSC-IT') courseId = 'BSCIT';
+      if (courseId === 'BSC-DS') courseId = 'BSCDS';
+
       if (!courseIndex[courseId]) courseIndex[courseId] = {};
       if (!courseIndex[courseId][doc.category]) courseIndex[courseId][doc.category] = [];
       if (!courseIndex[courseId][doc.category].find(f => f.url === file.url)) {

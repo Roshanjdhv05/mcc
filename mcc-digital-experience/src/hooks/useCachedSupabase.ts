@@ -291,33 +291,32 @@ export function useCachedJrNotices() {
 
 // ─── 7. Examination Documents ────────────────────────────────────────────────
 export function useCachedExamDocs() {
-  const qc = useQueryClient();
   const queryKey = qk.examDocs();
 
   return useQuery({
     queryKey,
-    staleTime: NOTICES_STALE,
+    // Short stale time so it refetches frequently
+    staleTime: 0,
     gcTime: NOTICES_GC,
-    queryFn: () =>
-      smartFetch(
-        'examination_documents',
-        queryKey,
-        async () => {
-          const now = new Date().toISOString();
-          const { data, error } = await supabase
-            .from('examination_documents')
-            .select('*')
-            .lte('schedule_time', now)
-            .or(`notice_expiry_time.is.null,notice_expiry_time.gt.${now}`)
-            .order('schedule_time', { ascending: false });
-          if (error) throw error;
-          cacheLog('MISS', 'examination_documents', 'Full fetch complete');
-          return data ?? [];
-        },
-        qc
-      ),
+    queryFn: async () => {
+      const now = new Date().toISOString();
+      const { data, error } = await supabase
+        .from('examination_documents')
+        .select('*')
+        .lte('schedule_time', now)
+        .or(`notice_expiry_time.is.null,notice_expiry_time.gt.${now}`)
+        .order('schedule_time', { ascending: false });
+      if (error) throw error;
+      // Always clear the localStorage timestamp so next load never serves stale cache
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('cache_ts_examination_documents');
+      }
+      cacheLog('MISS', 'examination_documents', 'Direct fetch (always fresh)');
+      return data ?? [];
+    },
   });
 }
+
 
 // ─── 8. Wall of Fame ─────────────────────────────────────────────────────────
 export function useCachedWallOfFame() {
@@ -336,7 +335,7 @@ export function useCachedWallOfFame() {
           const { data, error } = await supabase
             .from('mcc_wall_of_fame')
             .select('*')
-            .order('year', { ascending: false });
+            .order('created_at', { ascending: false });
           if (error) throw error;
           cacheLog('MISS', 'mcc_wall_of_fame', 'Full fetch complete');
           return data ?? [];

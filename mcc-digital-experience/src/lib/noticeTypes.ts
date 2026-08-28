@@ -68,6 +68,13 @@ export const DEPARTMENTS = [
     label: 'PhD',
     courses: [{ id: 'phd', label: 'PhD Programme' }],
   },
+  {
+    id: 'junior_college',
+    label: 'Junior College',
+    courses: [
+      { id: 'junior_college', label: 'Junior College' }
+    ],
+  },
 ];
 
 // All course IDs flattened (used for "General" notices to auto-select all)

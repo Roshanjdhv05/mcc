@@ -349,7 +349,9 @@ export default function JuniorCollegeCornerPage() {
     const fetchNotices = async () => {
       setNoticesLoading(true);
       const now = new Date().toISOString();
-      const { data } = await supabase
+      
+      // Fetch legacy jr college notices
+      const { data: jrData } = await supabase
         .from('jr_college_notices')
         .select('id,title,description,category,schedule_time,expiry_time,attachments,created_at')
         .lte('schedule_time', now)
@@ -357,7 +359,39 @@ export default function JuniorCollegeCornerPage() {
         .eq('show_on_home', true)
         .order('schedule_time', { ascending: false })
         .limit(6);
-      if (data) setNotices(data as JrNotice[]);
+        
+      // Fetch global notices
+      const { data: globalData } = await supabase
+        .from('notices')
+        .select('*')
+        .eq('is_calendar_only', false)
+        .lte('schedule_time', now)
+        .or(`expiry_time.is.null,expiry_time.gt.${now}`)
+        .order('schedule_time', { ascending: false });
+
+      let combined: any[] = [];
+      if (jrData) combined = [...jrData];
+      
+      if (globalData) {
+        const globalJrNotices = globalData.filter(n =>
+          n.courses?.includes('jr-college') || 
+          n.courses?.includes('junior_college') ||
+          n.departments?.includes('junior_college')
+        ).map(n => ({
+          id: n.id,
+          title: n.title,
+          description: n.description,
+          category: n.categories?.[0] || 'General',
+          schedule_time: n.schedule_time,
+          expiry_time: n.expiry_time,
+          attachments: n.attachments,
+          created_at: n.created_at
+        }));
+        combined = [...combined, ...globalJrNotices];
+      }
+      
+      combined.sort((a, b) => new Date(b.schedule_time).getTime() - new Date(a.schedule_time).getTime());
+      setNotices(combined.slice(0, 6));
       setNoticesLoading(false);
     };
     fetchNotices();

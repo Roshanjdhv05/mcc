@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, Globe, Building2, Calendar,
   Target, Eye, Flag, CheckCircle2, Download,
   Home, UserPlus, FileText, Trophy, BookOpen, Image as ImageIcon, MapPin, Mail,
-  ChevronRight, GraduationCap, Briefcase, Star, Quote
+  ChevronRight, GraduationCap, Briefcase, Star, Quote, ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 const linkedInIcon = (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -210,9 +211,100 @@ const illustriousAlumni = [
     highlights: 'AIR 40 – CA Intermediate, May 2023.',
   }
 ];
+const categories = [
+  'All Alumni',
+  'Business Leaders',
+  'Academics',
+  'Arts & Culture',
+  'Public Service',
+  'Science & Technology'
+];
+
+const TestimonialBox = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 100;
+  const displayText = expanded ? text : (isLong ? text.slice(0, 100) + '...' : text);
+
+  return (
+    <div className="bg-[#F8F9FB] rounded-[12px] p-4 flex-1 flex items-start gap-2.5 relative overflow-hidden">
+      <div className="shrink-0 pt-0.5 relative z-10">
+        <Quote size={18} className="text-[#123B6D] fill-[#123B6D] rotate-180" />
+        <div className="w-[2px] h-8 bg-[#D4A017] ml-2 mt-1.5 rounded-full"></div>
+      </div>
+      <div className="z-10 flex-1 pt-0.5">
+        <p className="text-[#334155] leading-relaxed italic text-[13px] font-medium">
+          {displayText}
+        </p>
+        {isLong && (
+          <button 
+            onClick={() => setExpanded(!expanded)}
+            className="text-blue-600 font-semibold text-[12px] mt-1 hover:underline focus:outline-none"
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
+      </div>
+      <Quote size={40} className="text-[#123B6D]/5 absolute bottom-2 right-2 fill-[#123B6D]" />
+    </div>
+  );
+};
 
 export default function AlumniPage() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [alumni, setAlumni] = useState<any[]>([]);
+  const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
+  const [courseFilter, setCourseFilter] = useState('All');
+
+  useEffect(() => {
+    async function fetchAlumni() {
+      const { data } = await supabase
+        .from('mcc_illustrious_alumni')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (data) {
+        setAlumni(data);
+      }
+    }
+    fetchAlumni();
+  }, []);
+
+  const COURSE_OPTIONS = [
+    'All',
+    'HSC',
+    'B.Com',
+    'B.Com (Accounting & Finance)',
+    'B.Com (Financial Markets)',
+    'B.Com (Business Administration)',
+    'B.Sc (Computer Science)',
+    'B.Sc (Information Technology)',
+    'B.Sc (Computer Applications)',
+    'B.Sc (Data Science)',
+    'BA (Multimedia & Mass Communication)',
+    'B.Com BFSI',
+    'M.Com (Advanced Accountancy)',
+    'M.Com (Business Management)',
+    'M.Com (Banking & Finance)',
+    'M.Sc (Information Technology)',
+    'M.Sc (Finance)',
+    'Ph.D',
+  ];
+
+  const filteredAlumni = alumni
+    .filter(s => {
+      if (courseFilter === 'All') return true;
+      if (courseFilter === 'HSC') return !!s.hsc;
+      // Check each course field individually — show card if ANY field matches the filter (bidirectional partial match)
+      const fields = [s.course, s.ug, s.pg, s.hsc].filter(Boolean).map(String);
+      const filterLower = courseFilter.toLowerCase();
+      return fields.some(f =>
+        f.toLowerCase().includes(filterLower) || filterLower.includes(f.toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      const yearA = parseInt(a.ug_passout_year || a.pg_passout_year || a.hsc_passout_year || a.year_passout || '0');
+      const yearB = parseInt(b.ug_passout_year || b.pg_passout_year || b.hsc_passout_year || b.year_passout || '0');
+      return sortOrder === 'latest' ? yearB - yearA : yearA - yearB;
+    });
 
   const stats = [
     { icon: Users, value: '15,000+', label: 'Alumni' },
@@ -298,50 +390,160 @@ export default function AlumniPage() {
 
               {/* Wall of Fame / Alumni Cards */}
               <div className="mt-16">
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                   <div>
                     <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Illustrious Alumni</h2>
                     <p className="text-sm text-[#64748B] mt-1">Celebrating our outstanding achievers and prominent alumni</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full pb-8">
-                  {illustriousAlumni.map((student, i) => (
-                    <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col h-full hover:shadow-md transition-shadow">
+                {/* Filter Bar */}
+                <div className="flex flex-wrap gap-3 mb-6 items-center">
+                  {/* Sort Toggle */}
+                  <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1">
+                    <button
+                      onClick={() => setSortOrder('latest')}
+                      className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
+                        sortOrder === 'latest' ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      Latest First
+                    </button>
+                    <button
+                      onClick={() => setSortOrder('oldest')}
+                      className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
+                        sortOrder === 'oldest' ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      Oldest First
+                    </button>
+                  </div>
+
+                  {/* Course Filter */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <select
+                      value={courseFilter}
+                      onChange={e => setCourseFilter(e.target.value)}
+                      className="bg-white border border-gray-200 rounded-xl px-3 py-2 text-[13px] font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 cursor-pointer"
+                    >
+                      {COURSE_OPTIONS.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Result count */}
+                  <span className="text-[13px] text-gray-400 ml-auto">
+                    {filteredAlumni.length} alumni found
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 w-full pb-12">
+                  {filteredAlumni.length === 0 ? (
+                    <div className="col-span-2 text-center py-16 text-gray-400">
+                      <GraduationCap size={40} className="mx-auto mb-3 opacity-30" />
+                      <p className="text-lg font-medium">No alumni found for this filter.</p>
+                    </div>
+                  ) : filteredAlumni.map((student, i) => (
+                    <div key={i} className="bg-white rounded-[20px] border border-gray-100 shadow-sm p-4 sm:p-5 flex flex-col h-full hover:shadow-lg transition-all min-h-[360px]">
                       {/* Top Section */}
-                      <div className="flex gap-4 mb-5">
-                        <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0 border border-gray-100 shadow-sm bg-gray-50">
-                          <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
+                      <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4">
+                        {/* Left Column */}
+                        <div className="w-full sm:w-[130px] shrink-0 flex flex-col">
+                          <div className="w-full aspect-[4/5] rounded-[16px] overflow-hidden bg-gray-50 mb-2.5">
+                            <img src={student.image_url} alt={student.name} className="w-full h-full object-cover" />
+                          </div>
+                          <h3 className="font-extrabold text-[#0a1b3f] text-[18px] leading-tight mb-1 truncate">{student.name}</h3>
+                          <p className="text-[#D4A017] font-bold text-[9px] tracking-[0.2em] uppercase">Alumni</p>
+                          <div className="w-8 h-[2px] bg-[#D4A017] mt-2"></div>
                         </div>
-                        <div className="flex flex-col gap-1.5 pt-1">
-                          <h3 className="font-bold text-[#123B6D] text-lg leading-tight">{student.name}</h3>
-                          <div className="flex items-center gap-2 text-[13px] text-gray-600">
-                            <GraduationCap size={14} className="text-[#D4A017] shrink-0" />
-                            <span>{student.education[0]}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-[13px] font-semibold text-gray-700">
-                            <Briefcase size={14} className="text-emerald-500 shrink-0" />
-                            <span>{student.role}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-[13px] text-gray-500">
-                            <Building2 size={14} className="text-gray-400 shrink-0" />
-                            <span>{student.company}</span>
-                          </div>
+
+                        {/* Right Column */}
+                        <div className="flex-1 flex flex-col gap-0 justify-start pt-1">
+                          {(student.course || student.ug || student.pg || student.hsc) && (
+                            <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                              <div className="w-8 h-8 rounded-full bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0">
+                                <GraduationCap size={14} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Education</span>
+                                <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
+                                  {[student.hsc && 'HSC', student.ug && 'UG', student.pg && 'PG', student.course].filter(Boolean).join(' • ')}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {(student.year_passout || student.hsc_passout_year || student.ug_passout_year || student.pg_passout_year) && (
+                            <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                              <div className="w-8 h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
+                                <Calendar size={14} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Batch</span>
+                                <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
+                                  {[
+                                    student.hsc_passout_year && `HSC '${student.hsc_passout_year.slice(-2)}`,
+                                    student.ug_passout_year && `UG '${student.ug_passout_year.slice(-2)}`,
+                                    student.pg_passout_year && `PG '${student.pg_passout_year.slice(-2)}`,
+                                    student.year_passout && `Class of ${student.year_passout}`
+                                  ].filter(Boolean).join(', ')}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {student.designation && (
+                            <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                              <div className="w-8 h-8 rounded-full bg-emerald-50/80 text-emerald-600 flex items-center justify-center shrink-0">
+                                <Briefcase size={14} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Profession</span>
+                                <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.designation}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {student.company_name && (
+                            <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                              <div className="w-8 h-8 rounded-full bg-purple-50/80 text-purple-600 flex items-center justify-center shrink-0">
+                                <Building2 size={14} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Company</span>
+                                <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.company_name}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {student.achieved && (
+                            <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                              <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                                <Trophy size={14} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Achievement</span>
+                                <span className="text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.achieved}</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
                       {/* LinkedIn Button */}
-                      <a href={student.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-blue-200 bg-blue-50/50 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition-colors mb-4">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
-                        View on LinkedIn
-                      </a>
+                      {student.linkedin_link && (
+                        <a href={student.linkedin_link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full px-4 py-2 rounded-[10px] border border-blue-100 bg-[#F4F8FF] text-blue-600 text-[12px] font-bold hover:bg-blue-50 transition-colors mb-4 mt-auto">
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                          <span>View on LinkedIn</span>
+                          <ArrowRight size={14} className="text-blue-500" />
+                        </a>
+                      )}
 
                       {/* Description Box */}
-                      <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1">
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                          {student.testimonial || student.highlights}
-                        </p>
-                      </div>
+                      {student.testimonial && (
+                        <TestimonialBox text={student.testimonial} />
+                      )}
                     </div>
                   ))}
                 </div>

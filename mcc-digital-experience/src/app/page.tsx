@@ -7,6 +7,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import { supabase } from '@/lib/supabase';
 import type { Notice } from '@/lib/noticeTypes';
 import StatsStrip from '@/components/ui/StatsStrip';
+import WallOfFameCard from '@/components/ui/WallOfFameCard';
 import {
   Bell, Search, Download, ChevronRight, Quote,
   Users, BookOpen, Briefcase, Megaphone, ClipboardCheck,
@@ -14,7 +15,7 @@ import {
   Bot, CalendarDays, ArrowRight, LayoutDashboard,
   Lightbulb, Activity, MonitorSmartphone, Target, MessagesSquare,
   Train, ArrowRightLeft, Copy, Stamp, LogOut, Award, Shield, CheckCircle2, Globe, X,
-  GraduationCap, Calendar, Building2
+  GraduationCap, Calendar, Building2, Trophy
 } from 'lucide-react';
 
 const quickLinks = [
@@ -240,21 +241,6 @@ const ALL_FILTERS = ['All', 'Academic', 'Examination', 'Holiday', 'Seminar', 'Wo
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_NAMES = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
-const wallOfFameStudents = [
-  { name: 'Rohan Sharma', rank: 'AIR 12', course: 'CA Final 2024', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80' },
-  { name: 'Priya Patel', rank: 'AIR 5', course: 'CMA Final', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80' },
-  { name: 'Amit Kumar', rank: 'AIR 18', course: 'CS Professional', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
-  { name: 'Sneha Rao', rank: 'AIR 2', course: 'CA Inter 2025', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80' },
-];
-
-const wallOfFameImages = [
-  '/walloffam/walloffams (1).jpeg',
-  '/walloffam/walloffams (2).jpeg',
-  '/walloffam/walloffams (3).jpeg',
-  '/walloffam/walloffams (4).jpeg',
-  '/walloffam/walloffams (5).jpeg',
-  '/walloffam/walloffams (6).jpeg',
-];
 
 const illustriousAlumni = [
   { 
@@ -442,7 +428,38 @@ const illustriousAlumni = [
 ];
 
 
+
+const TestimonialBox = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 100;
+  const displayText = expanded ? text : (isLong ? text.slice(0, 100) + '...' : text);
+
+  return (
+    <div className="bg-[#F8F9FB] rounded-[12px] p-4 flex-1 flex items-start gap-2.5 relative overflow-hidden">
+      <div className="shrink-0 pt-0.5 relative z-10">
+        <Quote size={18} className="text-[#123B6D] fill-[#123B6D] rotate-180" />
+        <div className="w-[2px] h-8 bg-[#D4A017] ml-2 mt-1.5 rounded-full"></div>
+      </div>
+      <div className="z-10 flex-1 pt-0.5">
+        <p className="text-[#334155] leading-relaxed italic text-[13px] font-medium">
+          {displayText}
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-blue-600 font-semibold text-[12px] mt-1 hover:underline focus:outline-none"
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
+      </div>
+      <Quote size={40} className="text-[#123B6D]/5 absolute bottom-2 right-2 fill-[#123B6D]" />
+    </div>
+  );
+};
+
 function HomepageCalendar() {
+
   const today = new Date();
   const [year, setYear]   = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1); // 1-based
@@ -872,6 +889,9 @@ export default function HomePage() {
   }[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [liveCulturalEvents, setLiveCulturalEvents] = useState<{title: string; tag: string; desc: string; img: string; date?: string | null}[]>([]);
+  const [homeWallOfFame, setHomeWallOfFame] = useState<any[]>([]);
+  const [homeAlumni, setHomeAlumni] = useState<any[]>([]);
+  const [newsAnnouncements, setNewsAnnouncements] = useState<{ id: string; content: string }[]>([]);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
   const illustriousScrollRef = useRef<HTMLDivElement>(null);
   const adminServicesAutoRef = useRef<HTMLDivElement>(null);
@@ -961,7 +981,50 @@ export default function HomePage() {
     fetchNotices();
   }, []);
 
+  // ── Fetch Wall of Fame items for homepage (filtered by front-page expiry)
+  useEffect(() => {
+    async function fetchWallOfFame() {
+      const today = new Date().toISOString().split('T')[0];
+      const { data } = await supabase
+        .from('mcc_wall_of_fame')
+        .select('*')
+        .or(`expiry_date.is.null,expiry_date.gte.${today}`)
+        .order('created_at', { ascending: false })
+        .limit(8);
+      if (data) setHomeWallOfFame(data);
+    }
+    fetchWallOfFame();
+  }, []);
 
+  // ── Fetch Illustrious Alumni for homepage
+  useEffect(() => {
+    async function fetchHomeAlumni() {
+      const { data } = await supabase
+        .from('mcc_illustrious_alumni')
+        .select('*')
+        .eq('show_on_home', true)
+        .order('created_at', { ascending: false });
+      if (data) {
+        setHomeAlumni(data);
+      }
+    }
+    fetchHomeAlumni();
+  }, []);
+
+  // ── Fetch active News & Announcements
+  useEffect(() => {
+    async function fetchNews() {
+      const today = new Date().toISOString().split('T')[0];
+      const { data } = await supabase
+        .from('mcc_news_announcements')
+        .select('id, content')
+        .eq('is_archived', false)
+        .gte('expiry_date', today)
+        .order('created_at', { ascending: false });
+      if (data) setNewsAnnouncements(data);
+    }
+    fetchNews();
+  }, []);
 
   // ── Fetch live Cultural Committee events (last 90 days, auto-vanish after)
   // Matches: publish_home=true AND (category contains 'cultural' OR department = 'Cultural Forum')
@@ -1274,6 +1337,42 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
+        {/* ── NEWS & ANNOUNCEMENTS MARQUEE ── */}
+        {newsAnnouncements.length > 0 && (
+          <div className="w-full">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="flex items-center gap-1.5 bg-[#123B6D] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shrink-0">
+                <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full animate-pulse" />
+                News & Announcements
+              </span>
+              <div className="h-px flex-1 bg-gradient-to-r from-[#123B6D]/20 to-transparent" />
+            </div>
+            <div className="relative overflow-hidden bg-[#123B6D]/5 border border-[#123B6D]/10 rounded-2xl py-3">
+              {/* Fade edges */}
+              <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#EBF3FF] to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#EBF3FF] to-transparent z-10 pointer-events-none" />
+              {/* Outer band = 400% wide; each of 4 lanes = exactly 100% of container */}
+              <div
+                className="flex animate-marquee-rtl"
+                style={{ width: '400%' }}
+              >
+                {[0, 1, 2, 3].map((copyIdx) => (
+                  <div key={copyIdx} className="flex items-center gap-6 px-8" style={{ width: '25%', minWidth: '25%' }}>
+                    {newsAnnouncements.map((item) => (
+                      <div
+                        key={item.id}
+                        className="inline-flex items-start gap-2 bg-white border border-[#123B6D]/10 rounded-xl px-4 py-2 shadow-sm shrink-0 max-w-[350px]"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-1.5 shrink-0" />
+                        <p className="text-[13px] text-[#1E293B] font-medium leading-snug whitespace-normal">{item.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── PRINCIPAL'S MESSAGE ── */}
         <div className="w-full">
@@ -1395,28 +1494,30 @@ export default function HomePage() {
         {/* ── WALL OF FAME ── */}
         <ScrollReveal>
           <div className="flex items-center justify-between mt-12 mb-6">
-            <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)]">Wall of Fame</h2>
+              <p className="text-sm text-[#64748B] mt-1">Celebrating outstanding student achievements</p>
+            </div>
             <Link href="/students-corner/wall-of-fame" className="text-sm font-semibold text-[#123B6D] flex items-center gap-1 hover:gap-2 transition-all">
               View All <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="overflow-hidden w-full group relative mb-12">
-            <div ref={wallOfFameRef} className="flex gap-6 overflow-x-auto no-scrollbar w-full pb-6 pt-4 cursor-grab active:cursor-grabbing">
-              {[...wallOfFameImages, ...wallOfFameImages].map((imgSrc, i) => (
-                <div
-                  key={i}
-                  className="w-[280px] sm:w-[340px] flex-shrink-0 bg-white p-3 rounded-[2rem] border-4 border-[#D4A017]/20 shadow-[0_10px_30px_rgba(18,59,109,0.1)] hover:border-[#D4A017] hover:shadow-[0_20px_40px_rgba(212,160,23,0.2)] hover:-translate-y-2 transition-all duration-300 relative"
-                >
-                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#123B6D] rounded-full flex items-center justify-center text-white shadow-lg z-10 border-4 border-white">
-                    <Award size={18} />
-                  </div>
-                  <div className="w-full h-[400px] rounded-3xl overflow-hidden relative border-2 border-gray-100">
-                    <img src={imgSrc} alt="Wall of Fame" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-                  </div>
-                </div>
+          
+          {homeWallOfFame.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-12">
+              {homeWallOfFame.map(item => (
+                <WallOfFameCard key={item.id} item={item} layout="grid" />
               ))}
             </div>
-          </div>
+          ) : (
+            <div className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-3xl p-12 text-center mb-12 flex flex-col items-center justify-center">
+              <Award size={48} className="text-[#D4A017]/40 mb-4" />
+              <h3 className="text-lg font-bold text-[#1E293B] mb-2">New Achievements Coming Soon</h3>
+              <p className="text-sm text-[#64748B] max-w-md mx-auto">
+                Watch this space as we celebrate the upcoming outstanding achievements of our talented students.
+              </p>
+            </div>
+          )}
         </ScrollReveal>
 
         {/* ── ILLUSTRIOUS ALUMNI ── */}
@@ -1432,46 +1533,106 @@ export default function HomePage() {
           </div>
 
           <div ref={illustriousScrollRef} className="flex gap-5 w-full overflow-x-auto no-scrollbar pb-6 pt-2 snap-x snap-mandatory cursor-grab active:cursor-grabbing">
-            {illustriousAlumni.map((student, i) => (
-              <div key={i} className="flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[calc(50vw-2rem)] lg:w-[calc(33.333%-1rem)] h-[440px] snap-center bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all">
+            {homeAlumni.map((student, i) => (
+              <div key={i} className="flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[calc(100vw-4rem)] lg:w-[460px] snap-center bg-white rounded-[20px] border border-gray-100 shadow-sm p-4 sm:p-5 flex flex-col hover:shadow-lg transition-all h-auto min-h-[360px]">
                 {/* Top Section */}
-                <div className="flex gap-4 sm:gap-6 mb-5">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shrink-0 border border-gray-200 shadow-sm bg-gray-50">
-                    <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4">
+                  {/* Left Column */}
+                  <div className="w-full sm:w-[130px] shrink-0 flex flex-col">
+                    <div className="w-full aspect-[4/5] rounded-[16px] overflow-hidden bg-gray-50 mb-2.5">
+                      <img src={student.image_url} alt={student.name} className="w-full h-full object-cover" />
+                    </div>
+                    <h3 className="font-extrabold text-[#0a1b3f] text-[18px] leading-tight mb-1 truncate">{student.name}</h3>
+                    <p className="text-[#D4A017] font-bold text-[9px] tracking-[0.2em] uppercase">Alumni</p>
+                    <div className="w-8 h-[2px] bg-[#D4A017] mt-2"></div>
                   </div>
-                  <div className="flex flex-col gap-1.5 pt-1 justify-center flex-1">
-                    <h3 className="font-bold text-[#123B6D] text-lg leading-tight">{student.name}</h3>
-                    <div className="flex items-start gap-2 text-[13px] text-gray-600">
-                      <GraduationCap size={14} className="text-[#D4A017] shrink-0 mt-0.5" />
-                      <span className="leading-snug">{student.course}</span>
-                    </div>
-                    <div className="flex items-start gap-2 text-[13px] text-gray-600">
-                      <Calendar size={14} className="text-blue-400 shrink-0 mt-0.5" />
-                      <span className="leading-snug">{student.batch}</span>
-                    </div>
-                    <div className="flex items-start gap-2 text-[13px] font-semibold text-gray-700">
-                      <Briefcase size={14} className="text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="leading-snug">{student.role}</span>
-                    </div>
-                    <div className="flex items-start gap-2 text-[13px] text-gray-500">
-                      <Building2 size={14} className="text-gray-400 shrink-0 mt-0.5" />
-                      <span className="leading-snug">{student.company}</span>
-                    </div>
+
+                  {/* Right Column */}
+                  <div className="flex-1 flex flex-col gap-0 justify-start pt-1">
+                    {(student.course || student.ug || student.pg || student.hsc) && (
+                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-8 h-8 rounded-full bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0">
+                          <GraduationCap size={14} strokeWidth={1.5} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Education</span>
+                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
+                            {[student.hsc && 'HSC', student.ug && 'UG', student.pg && 'PG', student.course].filter(Boolean).join(' • ')}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {(student.year_passout || student.hsc_passout_year || student.ug_passout_year || student.pg_passout_year) && (
+                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-8 h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
+                          <Calendar size={14} strokeWidth={1.5} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Batch</span>
+                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
+                            {[
+                              student.hsc_passout_year && `HSC '${student.hsc_passout_year.slice(-2)}`,
+                              student.ug_passout_year && `UG '${student.ug_passout_year.slice(-2)}`,
+                              student.pg_passout_year && `PG '${student.pg_passout_year.slice(-2)}`,
+                              student.year_passout && `Class of ${student.year_passout}`
+                            ].filter(Boolean).join(', ')}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {student.designation && (
+                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-8 h-8 rounded-full bg-emerald-50/80 text-emerald-600 flex items-center justify-center shrink-0">
+                          <Briefcase size={14} strokeWidth={1.5} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Profession</span>
+                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.designation}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {student.company_name && (
+                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-8 h-8 rounded-full bg-purple-50/80 text-purple-600 flex items-center justify-center shrink-0">
+                          <Building2 size={14} strokeWidth={1.5} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Company</span>
+                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.company_name}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {student.achieved && (
+                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                          <Trophy size={14} strokeWidth={1.5} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Achievement</span>
+                          <span className="text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.achieved}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* LinkedIn Button */}
-                <a href={student.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-blue-200 bg-blue-50/50 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition-colors mb-4 shrink-0">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                  View on LinkedIn
-                </a>
+                {student.linkedin_link && (
+                  <a href={student.linkedin_link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full px-4 py-2 rounded-[10px] border border-blue-100 bg-[#F4F8FF] text-blue-600 text-[12px] font-bold hover:bg-blue-50 transition-colors mb-4 mt-auto">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    <span>View on LinkedIn</span>
+                    <ArrowRight size={14} className="text-blue-500" />
+                  </a>
+                )}
 
                 {/* Description Box */}
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1 overflow-y-auto no-scrollbar">
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {student.description}
-                  </p>
-                </div>
+                {student.testimonial && (
+                  <TestimonialBox text={student.testimonial} />
+                )}
               </div>
             ))}
           </div>

@@ -1504,7 +1504,7 @@ export default function HomePage() {
           </div>
           
           {homeWallOfFame.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-12 max-w-sm sm:max-w-none mx-auto">
               {homeWallOfFame.map(item => (
                 <WallOfFameCard key={item.id} item={item} layout="grid" />
               ))}
@@ -1536,27 +1536,27 @@ export default function HomePage() {
             {homeAlumni.map((student, i) => (
               <div key={i} className="flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[calc(100vw-4rem)] lg:w-[460px] snap-center bg-white rounded-[20px] border border-gray-100 shadow-sm p-4 sm:p-5 flex flex-col hover:shadow-lg transition-all h-auto min-h-[360px]">
                 {/* Top Section */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4">
+                <div className="flex flex-row gap-3 sm:gap-5 mb-4">
                   {/* Left Column */}
-                  <div className="w-full sm:w-[130px] shrink-0 flex flex-col">
-                    <div className="w-full aspect-[4/5] rounded-[16px] overflow-hidden bg-gray-50 mb-2.5">
+                  <div className="w-[110px] sm:w-[130px] shrink-0 flex flex-col">
+                    <div className="w-full aspect-[4/5] rounded-[12px] sm:rounded-[16px] overflow-hidden bg-gray-50 mb-2.5">
                       <img src={student.image_url} alt={student.name} className="w-full h-full object-cover" />
                     </div>
-                    <h3 className="font-extrabold text-[#0a1b3f] text-[18px] leading-tight mb-1 truncate">{student.name}</h3>
-                    <p className="text-[#D4A017] font-bold text-[9px] tracking-[0.2em] uppercase">Alumni</p>
-                    <div className="w-8 h-[2px] bg-[#D4A017] mt-2"></div>
+                    <h3 className="font-extrabold text-[#0a1b3f] text-[15px] sm:text-[18px] leading-tight mb-1 truncate">{student.name}</h3>
+                    <p className="text-[#D4A017] font-bold text-[8px] sm:text-[9px] tracking-[0.2em] uppercase">Alumni</p>
+                    <div className="w-6 sm:w-8 h-[2px] bg-[#D4A017] mt-1 sm:mt-2"></div>
                   </div>
 
                   {/* Right Column */}
-                  <div className="flex-1 flex flex-col gap-0 justify-start pt-1">
+                  <div className="flex-1 flex flex-col gap-0 justify-start pt-0 sm:pt-1 min-w-0">
                     {(student.course || student.ug || student.pg || student.hsc) && (
-                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-8 h-8 rounded-full bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0">
-                          <GraduationCap size={14} strokeWidth={1.5} />
+                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0">
+                          <GraduationCap className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Education</span>
-                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Education</span>
+                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">
                             {[student.hsc && 'HSC', student.ug && 'UG', student.pg && 'PG', student.course].filter(Boolean).join(' • ')}
                           </span>
                         </div>
@@ -1564,13 +1564,13 @@ export default function HomePage() {
                     )}
 
                     {(student.year_passout || student.hsc_passout_year || student.ug_passout_year || student.pg_passout_year) && (
-                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-8 h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
-                          <Calendar size={14} strokeWidth={1.5} />
+                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
+                          <Calendar className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Batch</span>
-                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Batch</span>
+                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">
                             {[
                               student.hsc_passout_year && `HSC '${student.hsc_passout_year.slice(-2)}`,
                               student.ug_passout_year && `UG '${student.ug_passout_year.slice(-2)}`,
@@ -1583,37 +1583,37 @@ export default function HomePage() {
                     )}
 
                     {student.designation && (
-                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-8 h-8 rounded-full bg-emerald-50/80 text-emerald-600 flex items-center justify-center shrink-0">
-                          <Briefcase size={14} strokeWidth={1.5} />
+                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50/80 text-emerald-600 flex items-center justify-center shrink-0">
+                          <Briefcase className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Profession</span>
-                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.designation}</span>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Profession</span>
+                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.designation}</span>
                         </div>
                       </div>
                     )}
 
                     {student.company_name && (
-                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-8 h-8 rounded-full bg-purple-50/80 text-purple-600 flex items-center justify-center shrink-0">
-                          <Building2 size={14} strokeWidth={1.5} />
+                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-50/80 text-purple-600 flex items-center justify-center shrink-0">
+                          <Building2 className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Company</span>
-                          <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.company_name}</span>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Company</span>
+                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.company_name}</span>
                         </div>
                       </div>
                     )}
 
                     {student.achieved && (
-                      <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                          <Trophy size={14} strokeWidth={1.5} />
+                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                          <Trophy className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Achievement</span>
-                          <span className="text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.achieved}</span>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Achievement</span>
+                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.achieved}</span>
                         </div>
                       </div>
                     )}

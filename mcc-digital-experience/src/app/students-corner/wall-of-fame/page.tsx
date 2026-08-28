@@ -110,8 +110,8 @@ export default function WallOfFamePage() {
         ) : (
           <div className={
             viewMode === 'grid'
-              ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'
-              : 'flex flex-col gap-4'
+              ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 max-w-sm sm:max-w-none mx-auto'
+              : 'flex flex-col gap-4 max-w-2xl mx-auto'
           }>
             {filteredItems.map(item => (
               <WallOfFameCard key={item.id} item={item} layout={viewMode} />

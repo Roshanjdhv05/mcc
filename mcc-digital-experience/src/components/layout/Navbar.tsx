@@ -889,6 +889,9 @@ export default function Navbar() {
           <span className="text-sm text-black font-semibold hidden sm:block tracking-wide">
             Mulund College of Commerce (Autonomous) — Official Website
           </span>
+          <span className="text-[10px] font-bold text-[#123B6D] block sm:hidden uppercase tracking-wider">
+            Tools for Accessibility and Translator
+          </span>
           <div className="flex items-center gap-3 ml-auto">
             <AccessibilityWidget />
             <span className="text-sm text-black/70 font-medium hidden md:block">🌐 Translate page:</span>
@@ -1415,8 +1418,6 @@ export default function Navbar() {
             </div>
           </Link>
           <div className="flex items-center gap-1">
-            <AccessibilityWidget />
-            <LanguageTranslator />
             <Link href="/search" className="w-9 h-9 rounded-full flex items-center justify-center text-[#123B6D] hover:bg-[#123B6D]/10 transition-colors">
               <Search size={18} />
             </Link>

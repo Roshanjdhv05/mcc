@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -292,7 +292,7 @@ export default function AccessibilityWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-[9999] origin-top-right flex flex-col max-h-[85vh]"
+            className="fixed left-2 right-2 top-[72px] sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 sm:max-w-none bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-[9999] origin-top-right flex flex-col max-h-[82vh] sm:max-h-[85vh]"
           >
             {/* Header */}
             <div className="px-4 py-3 bg-gradient-to-r from-[#123B6D] to-[#1a4d8f] flex items-center justify-between shrink-0">

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -231,7 +231,7 @@ export default function OverviewDashboard() {
           <div className="h-[260px] bg-slate-50 rounded-xl animate-pulse" />
         ) : (
           <ResponsiveContainer width="100%" height={260}>
-            <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+            <AreaChart data={chartData as any[]} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="gV" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#123B6D" stopOpacity={0.15} />

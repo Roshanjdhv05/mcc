@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight, FileText, Image as ImageIcon, Paperclip } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import LanguageTranslator from '@/components/layout/LanguageTranslator';
+import AccessibilityWidget from '@/components/layout/AccessibilityWidget';
 
 const formatCourseLabel = (label: string) => {
   if (typeof label !== 'string') return label;
@@ -697,28 +699,19 @@ export default function Navbar() {
   const [visitorCount, setVisitorCount] = useState(1147);
 
   useEffect(() => {
-    const trackVisit = async () => {
+    const fetchTotalVisitors = async () => {
       try {
-        const alreadyCounted = sessionStorage.getItem('mcc_visit_counted');
-        if (alreadyCounted) {
-          // Just fetch current count without incrementing
-          const { data } = await supabase
-            .from('site_visitors')
-            .select('count')
-            .eq('id', 1)
-            .single();
-          if (data?.count) setVisitorCount(Number(data.count));
+        const { data, error } = await supabase.rpc('get_total_visitors');
+        if (!error && data !== null) {
+          setVisitorCount(Number(data));
         } else {
-          // Increment via RPC for atomic update
-          const { data } = await supabase.rpc('increment_visitor_count');
-          if (data) setVisitorCount(Number(data));
-          sessionStorage.setItem('mcc_visit_counted', '1');
+          setVisitorCount(3546); // fallback
         }
       } catch {
-        // Silently fail — keep default count shown
+        setVisitorCount(3546); // fallback
       }
     };
-    trackVisit();
+    fetchTotalVisitors();
   }, []);
 
   const fetchLiveNotices = async () => {
@@ -874,6 +867,13 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Suppress Google Translate's injected top banner */}
+      <style>{`
+        .goog-te-banner-frame, #goog-gt-tt, .skiptranslate iframe { display: none !important; }
+        body { top: 0 !important; }
+        .goog-te-combo { display: none !important; }
+      `}</style>
+
       <motion.header
         initial={{ y: -80 }}
         animate={{ y: visible ? 0 : -250 }}
@@ -884,6 +884,18 @@ export default function Navbar() {
             : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]'
         }`}
       >
+        {/* ── Top Utility Bar: Language Translator ── */}
+        <div className="w-full bg-white border-b border-slate-200 px-4 md:px-8 lg:px-12 py-1.5 flex items-center justify-between gap-4">
+          <span className="text-sm text-black font-semibold hidden sm:block tracking-wide">
+            Mulund College of Commerce (Autonomous) — Official Website
+          </span>
+          <div className="flex items-center gap-3 ml-auto">
+            <AccessibilityWidget />
+            <span className="text-sm text-black/70 font-medium hidden md:block">🌐 Translate page:</span>
+            <LanguageTranslator />
+          </div>
+        </div>
+
         {/* ── Desktop Header Wrapper (Row 1 & 2) ── */}
         <div className="hidden md:flex flex-col w-full relative bg-gradient-to-r from-[#F0F5FF] to-white pb-0">
           
@@ -1403,6 +1415,8 @@ export default function Navbar() {
             </div>
           </Link>
           <div className="flex items-center gap-1">
+            <AccessibilityWidget />
+            <LanguageTranslator />
             <Link href="/search" className="w-9 h-9 rounded-full flex items-center justify-center text-[#123B6D] hover:bg-[#123B6D]/10 transition-colors">
               <Search size={18} />
             </Link>

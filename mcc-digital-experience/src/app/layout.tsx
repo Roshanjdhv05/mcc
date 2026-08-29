@@ -12,6 +12,7 @@ import IOSInstallGuide from "@/components/pwa/IOSInstallGuide";
 import InstallFloatingButton from "@/components/pwa/InstallFloatingButton";
 import UpdateToast from "@/components/pwa/UpdateToast";
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
+import PageTrackerProvider from "@/components/analytics/PageTrackerProvider";
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-heading",
@@ -65,10 +66,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC]" suppressHydrationWarning>
+        <a href="#main-content" className="skip-to-main font-bold focus:ring-2 focus:ring-white rounded-br-lg">Skip to Main Content</a>
         <ReactQueryProvider>
+        <PageTrackerProvider />
         <SplashScreen />
         <Navbar />
-        <main className="flex-1 pt-[64px] md:pt-[150px] lg:pt-[185px] xl:pt-[195px]">{children}</main>
+        <main id="main-content" className="flex-1 pt-[92px] md:pt-[178px] lg:pt-[213px] xl:pt-[223px]">{children}</main>
         <Footer />
         <AIAssistant />
         <BottomNav />

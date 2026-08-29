@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,6 +19,7 @@ import ExaminationManager from './ExaminationManager';
 import ResearchManager from './ResearchManager';
 import IllustriousAlumniManager from './IllustriousAlumniManager';
 import NewsAnnouncementsManager from './NewsAnnouncementsManager';
+import OverviewDashboard from '@/components/superadmin/OverviewDashboard';
 
 const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
 
@@ -31,10 +32,10 @@ function SuperAdminContent() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  
+
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
@@ -120,31 +121,30 @@ function SuperAdminContent() {
           {/* ─── Sidebar ─── */}
           <aside className="w-56 bg-white border-r border-[#E2E8F0] flex flex-col py-4 gap-1 shadow-sm flex-shrink-0">
             {([
-              { key: 'overview',            label: 'Overview',             icon: <LayoutDashboard size={18} /> },
-              { key: 'notice',              label: 'Notice System',        icon: <Bell size={18} /> },
+              { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={18} /> },
+              { key: 'notice', label: 'Notice System', icon: <Bell size={18} /> },
 
-              { key: 'home-banners',        label: 'Homepage Banners',     icon: <ImageIcon size={18} /> },
-              { key: 'home-events',         label: 'Events Publication',   icon: <ImageIcon size={18} /> },
-              { key: 'calendar-management', label: 'Calendar Management',  icon: <CalendarDays size={18} /> },
-              { key: 'examination',         label: 'Examination Manager',  icon: <FileText size={18} /> },
+              { key: 'home-banners', label: 'Homepage Banners', icon: <ImageIcon size={18} /> },
+              { key: 'home-events', label: 'Events Publication', icon: <ImageIcon size={18} /> },
+              { key: 'calendar-management', label: 'Calendar Management', icon: <CalendarDays size={18} /> },
+              { key: 'examination', label: 'Examination Manager', icon: <FileText size={18} /> },
               { key: 'programme-management', label: 'Programme Management', icon: <GraduationCap size={18} /> },
-              { key: 'students-corner',     label: 'Students Corner',      icon: <LayoutDashboard size={18} /> },
-              { key: 'research',            label: 'Research Manager',     icon: <FileText size={18} /> },
-              { key: 'wall-of-fame',        label: 'Wall of Fame',         icon: <LayoutDashboard size={18} /> },
-              { key: 'illustrious-alumni',   label: 'Illustrious Alumni',   icon: <GraduationCap size={18} /> },
-              { key: 'statutory-bodies',    label: 'Statutory Bodies',     icon: <FileText size={18} /> },
-              { key: 'degree-programmes',   label: 'Degree Programmes',    icon: <FileText size={18} /> },
-              { key: 'jr-college',          label: 'Jr College',           icon: <GraduationCap size={18} /> },
-              { key: 'news',                label: 'News & Announcements', icon: <Bell size={18} /> },
+              { key: 'students-corner', label: 'Students Corner', icon: <LayoutDashboard size={18} /> },
+              { key: 'research', label: 'Research Manager', icon: <FileText size={18} /> },
+              { key: 'wall-of-fame', label: 'Wall of Fame', icon: <LayoutDashboard size={18} /> },
+              { key: 'illustrious-alumni', label: 'Illustrious Alumni', icon: <GraduationCap size={18} /> },
+              { key: 'statutory-bodies', label: 'Statutory Bodies', icon: <FileText size={18} /> },
+              { key: 'degree-programmes', label: 'Degree Programmes', icon: <FileText size={18} /> },
+              { key: 'jr-college', label: 'Jr College', icon: <GraduationCap size={18} /> },
+              { key: 'news', label: 'News & Announcements', icon: <Bell size={18} /> },
             ] as const).map(item => (
               <button
                 key={item.key}
                 onClick={() => handleTabChange(item.key)}
-                className={`flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left ${
-                  activeTab === item.key
+                className={`flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left ${activeTab === item.key
                     ? 'bg-[#123B6D]/10 text-[#123B6D]'
                     : 'text-gray-600 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 {item.icon}
                 {item.label}
@@ -157,28 +157,7 @@ function SuperAdminContent() {
 
             {/* ── Overview ── */}
             {activeTab === 'overview' && (
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-1">Dashboard Overview</h2>
-                <p className="text-sm text-gray-500 mb-6">Welcome back! Here's a quick summary of the Notice System.</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                  <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
-                    <p className="text-gray-500 text-sm mb-1">Total Notices</p>
-                    <p className="text-4xl font-bold text-[#123B6D]">–</p>
-                  </div>
-                  <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
-                    <p className="text-gray-500 text-sm mb-1">Active Notices</p>
-                    <p className="text-4xl font-bold text-emerald-600">–</p>
-                  </div>
-                  <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
-                    <p className="text-gray-500 text-sm mb-1">Archived Notices</p>
-                    <p className="text-4xl font-bold text-gray-400">–</p>
-                  </div>
-                </div>
-                <div className="mt-6 bg-[#123B6D]/5 border border-[#123B6D]/10 rounded-2xl p-5">
-                  <p className="text-sm text-[#123B6D] font-semibold mb-1">💡 Quick Tip</p>
-                  <p className="text-sm text-gray-600">Head to <strong>Notice System</strong> to create, schedule, and manage all college notices. Notices with expired dates are automatically moved to the Archive.</p>
-                </div>
-              </div>
+              <OverviewDashboard />
             )}
 
             {/* ── Jr College ── */}
@@ -359,7 +338,7 @@ function SuperAdminContent() {
                   id="username" name="username" type="text" autoComplete="username" required
                   value={username} onChange={e => setUsername(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] text-sm"
-                  placeholder="mccwebsite"
+                  placeholder="username"
                 />
               </div>
             </div>

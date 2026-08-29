@@ -216,3 +216,115 @@
 .animate-marquee-rtl:hover {
   animation-play-state: paused;
 }
+
+/* ── Google Translate: Suppress default UI ── */
+/* Hide injected banner frame */
+.goog-te-banner-frame { display: none !important; }
+/* Hide floating tooltip */
+#goog-gt-tt { display: none !important; }
+/* Keep body from being pushed down by Google's bar */
+body { top: 0 !important; }
+/* Visually hide the widget container but keep it in DOM (needed for JS) */
+.goog-te-gadget { height: 0; overflow: hidden; }
+/* Hide only the visual parts of the skiptranslate span/div (not select) */
+.skiptranslate > span { display: none !important; }
+/* Exception: keep the hidden translate element invisible */
+#google_translate_element { display: none !important; }
+
+/* ── Accessibility Tool Overrides ── */
+
+/* Text Scale */
+html.a11y-font-scaled {
+  font-size: calc(16px * var(--a11y-font-scale, 1)) !important;
+}
+
+/* Color & Contrast */
+html.a11y-high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --border: 0 0% 100%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+  filter: contrast(125%);
+}
+
+html.a11y-high-contrast * {
+  border-color: #000 !important;
+  color: #000 !important;
+  background-color: #fff !important;
+}
+
+html.a11y-highlight-links a {
+  background-color: #ff0 !important;
+  color: #000 !important;
+  font-weight: bold !important;
+  text-decoration: underline !important;
+}
+
+html.a11y-invert-colors {
+  filter: invert(100%) hue-rotate(180deg) !important;
+}
+
+/* Grayscale */
+html.a11y-grayscale {
+  filter: grayscale(100%) !important;
+}
+
+html.a11y-invert-colors.a11y-grayscale {
+  filter: invert(100%) hue-rotate(180deg) grayscale(100%) !important;
+}
+
+/* Text Adjustments */
+html.a11y-text-spacing * {
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+
+html.a11y-line-height * {
+  line-height: 1.5 !important;
+}
+
+/* Other Controls */
+html.a11y-hide-images img,
+html.a11y-hide-images video,
+html.a11y-hide-images iframe,
+html.a11y-hide-images svg {
+  visibility: hidden !important;
+}
+
+html.a11y-big-cursor,
+html.a11y-big-cursor * {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 3 10.42 21 13.9 14 21 14 3 3"/></svg>'), auto !important;
+}
+
+html.a11y-underline-links a {
+  text-decoration: underline !important;
+}
+
+html.a11y-reduce-motion * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.a11y-keyboard-nav *:focus,
+html.a11y-keyboard-nav *:focus-visible {
+  outline: 3px solid #123B6D !important;
+  outline-offset: 2px !important;
+}
+
+/* Skip to Main Content Link */
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: #123B6D;
+  color: white;
+  padding: 8px;
+  z-index: 100000;
+  transition: top 0.2s ease-in-out;
+}
+.skip-to-main:focus {
+  top: 0;
+}

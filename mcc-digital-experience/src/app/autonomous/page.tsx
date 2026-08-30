@@ -249,7 +249,7 @@ export default function AutonomousHEIPage() {
             {showSticky && (
               <motion.div initial={{ y: '-100%' }} animate={{ y: 0 }} exit={{ y: '-100%' }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`fixed left-0 w-full z-40 px-4 ${navVisible ? 'top-20' : 'top-4'}`}
+                className={`fixed left-0 w-full z-40 px-4 ${navVisible ? 'top-[110px]' : 'top-4'}`}
               >
                 {renderMobileDropdown(true)}
               </motion.div>
@@ -259,7 +259,7 @@ export default function AutonomousHEIPage() {
         </div>
 
         {/* Desktop Sidebar */}
-        <div className={`hidden lg:flex lg:col-span-1 flex-col gap-2 sticky self-start transition-all duration-300 ${navVisible ? 'top-[260px]' : 'top-20'}`}>
+        <div className={`hidden lg:flex lg:col-span-1 flex-col gap-2 sticky self-start transition-all duration-300 ${navVisible ? 'top-[310px]' : 'top-[110px]'}`}>
           <div className="bg-[#123B6D] text-white font-bold px-4 py-3 rounded-t-xl shadow-md flex items-center gap-2">
             <GraduationCap size={18} />
             AUTONOMOUS HEI

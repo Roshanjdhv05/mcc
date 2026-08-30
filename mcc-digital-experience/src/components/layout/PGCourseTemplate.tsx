@@ -61,18 +61,18 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
           </div>
           
           {/* Profile Image */}
-          <div className="relative mt-8 mb-4 z-10 w-[120px] h-[150px] rounded-lg shadow-md bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 border-2 border-white">
+          <div className="relative mt-5 mb-2 z-10 w-[120px] h-[150px] rounded-lg shadow-md bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 border-2 border-white">
              {/* Actual Image with fallback */}
              <img src={member.image || `/teaching staff/${member.name}.jpg`} alt={member.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
              <UserCircle size={64} className="text-slate-400 hidden absolute" />
           </div>
           
           {/* Text Details */}
-          <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pb-6">
-            <h3 className="text-[18px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)]">
+          <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pb-12">
+            <h3 className="text-[18px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)] line-clamp-2">
               {member.name}
             </h3>
-            <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
+            <p className="text-[#D4A017] text-[8px] font-bold uppercase tracking-wide mb-1.5 text-center leading-snug">
               {member.designation}
             </p>
             {member.additionalRole && member.additionalRole !== '—' && (

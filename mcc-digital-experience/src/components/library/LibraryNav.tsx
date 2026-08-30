@@ -73,7 +73,7 @@ export default function LibraryNav() {
   }, [isInteracting]);
 
   return (
-    <div className={`bg-[#014d4e] w-full shadow-md z-50 sticky transition-all duration-300 ${navVisible ? 'top-16 md:top-[160px] lg:top-[190px] xl:top-[200px]' : 'top-0'}`}>
+    <div className={`bg-[#014d4e] w-full shadow-md z-50 sticky transition-all duration-300 ${navVisible ? 'top-[110px] md:top-[210px] lg:top-[240px] xl:top-[250px]' : 'top-0'}`}>
       {/* Desktop nav - normal overflow-x-auto */}
       <div className="hidden md:flex justify-center max-w-[1600px] mx-auto px-4 lg:px-8 overflow-x-auto no-scrollbar items-center h-12">
         {libraryNavLinks.map((item, i) => {

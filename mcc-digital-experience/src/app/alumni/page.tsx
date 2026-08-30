@@ -254,6 +254,8 @@ export default function AlumniPage() {
   const [alumni, setAlumni] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
   const [courseFilter, setCourseFilter] = useState('All');
+  const [spotlightOnly, setSpotlightOnly] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     async function fetchAlumni() {
@@ -273,7 +275,9 @@ export default function AlumniPage() {
     'HSC',
     'B.Com',
     'B.Com (Accounting & Finance)',
+    'B.Com (Banking & Insurance)',
     'B.Com (Financial Markets)',
+    'B.Com (Management Studies)',
     'B.Com (Business Administration)',
     'B.Sc (Computer Science)',
     'B.Sc (Information Technology)',
@@ -290,6 +294,7 @@ export default function AlumniPage() {
   ];
 
   const filteredAlumni = alumni
+    .filter(s => spotlightOnly ? s.show_on_home : true)
     .filter(s => {
       if (courseFilter === 'All') return true;
       if (courseFilter === 'HSC') return !!s.hsc;
@@ -398,45 +403,165 @@ export default function AlumniPage() {
                 </div>
 
                 {/* Filter Bar */}
-                <div className="flex flex-wrap gap-3 mb-6 items-center">
-                  {/* Sort Toggle */}
-                  <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1">
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-3">
                     <button
-                      onClick={() => setSortOrder('latest')}
-                      className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
-                        sortOrder === 'latest' ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'
-                      }`}
+                      onClick={() => setIsFilterOpen(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
                     >
-                      Latest First
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                      </svg>
+                      Filters
+                      {(courseFilter !== 'All' || spotlightOnly || sortOrder !== 'latest') && (
+                        <div className="w-2 h-2 rounded-full bg-[#123B6D]"></div>
+                      )}
                     </button>
-                    <button
-                      onClick={() => setSortOrder('oldest')}
-                      className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
-                        sortOrder === 'oldest' ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'
-                      }`}
-                    >
-                      Oldest First
-                    </button>
-                  </div>
-
-                  {/* Course Filter */}
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <select
-                      value={courseFilter}
-                      onChange={e => setCourseFilter(e.target.value)}
-                      className="bg-white border border-gray-200 rounded-xl px-3 py-2 text-[13px] font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 cursor-pointer"
-                    >
-                      {COURSE_OPTIONS.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
+                    
+                    {/* Active Filters Preview */}
+                    <div className="hidden sm:flex items-center gap-2">
+                      {courseFilter !== 'All' && (
+                        <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-100">
+                          {courseFilter}
+                        </span>
+                      )}
+                      {spotlightOnly && (
+                        <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-100 flex items-center gap-1">
+                          <Star size={12} className="fill-amber-500" /> Spotlight
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Result count */}
-                  <span className="text-[13px] text-gray-400 ml-auto">
+                  <span className="text-[13px] font-medium text-gray-400">
                     {filteredAlumni.length} alumni found
                   </span>
                 </div>
+
+                {/* Filter Slide Window (Drawer) */}
+                <AnimatePresence>
+                  {isFilterOpen && (
+                    <>
+                      {/* Overlay */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsFilterOpen(false)}
+                        className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm"
+                      />
+                      
+                      {/* Drawer */}
+                      <motion.div
+                        initial={{ x: '100%' }}
+                        animate={{ x: 0 }}
+                        exit={{ x: '100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        className="fixed top-0 right-0 bottom-0 w-full sm:w-[400px] bg-white z-[70] shadow-2xl flex flex-col border-l border-gray-100"
+                      >
+                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                          <h3 className="text-xl font-bold text-[#123B6D] flex items-center gap-2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                            </svg>
+                            Filters & Sorting
+                          </h3>
+                          <button
+                            onClick={() => setIsFilterOpen(false)}
+                            className="p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 rounded-xl transition-colors"
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                          </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-6 space-y-8">
+                          {/* Sort */}
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Sort By</h4>
+                            <div className="flex bg-gray-50 border border-gray-200 rounded-xl p-1">
+                              <button
+                                onClick={() => setSortOrder('latest')}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                                  sortOrder === 'latest' ? 'bg-[#123B6D] text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                              >
+                                Latest First
+                              </button>
+                              <button
+                                onClick={() => setSortOrder('oldest')}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                                  sortOrder === 'oldest' ? 'bg-[#123B6D] text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                              >
+                                Oldest First
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Quick Filters */}
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Quick Filters</h4>
+                            <button
+                              onClick={() => setSpotlightOnly(!spotlightOnly)}
+                              className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
+                                spotlightOnly 
+                                  ? 'bg-amber-50 border-amber-200' 
+                                  : 'bg-white border-gray-200 hover:border-amber-200 hover:bg-amber-50/30'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-lg ${spotlightOnly ? 'bg-amber-100' : 'bg-gray-50'}`}>
+                                  <Star size={18} className={spotlightOnly ? 'fill-amber-500 text-amber-500' : 'text-gray-400'} />
+                                </div>
+                                <div className="text-left">
+                                  <div className={`font-bold text-sm ${spotlightOnly ? 'text-amber-900' : 'text-gray-700'}`}>Spotlight Alumni</div>
+                                  <div className="text-xs text-gray-500 mt-0.5">Show only home page featured alumni</div>
+                                </div>
+                              </div>
+                              <div className={`w-5 h-5 rounded flex items-center justify-center border ${spotlightOnly ? 'bg-amber-500 border-amber-500' : 'border-gray-300'}`}>
+                                {spotlightOnly && <CheckCircle2 size={14} className="text-white" />}
+                              </div>
+                            </button>
+                          </div>
+
+                          {/* Programmes */}
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Programmes</h4>
+                            <div className="flex flex-col gap-2">
+                              {COURSE_OPTIONS.map(opt => {
+                                const isActive = courseFilter === opt;
+                                return (
+                                  <button
+                                    key={opt}
+                                    onClick={() => setCourseFilter(opt)}
+                                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
+                                      isActive 
+                                        ? 'bg-[#123B6D]/5 border-[#123B6D] text-[#123B6D]' 
+                                        : 'bg-white border-gray-200 text-gray-600 hover:border-[#123B6D]/30 hover:bg-gray-50'
+                                    }`}
+                                  >
+                                    <span className="text-sm font-bold text-left">{opt}</span>
+                                    {isActive && <div className="w-2 h-2 rounded-full bg-[#123B6D]" />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-6 border-t border-gray-100 bg-white">
+                          <button
+                            onClick={() => setIsFilterOpen(false)}
+                            className="w-full py-3.5 bg-[#123B6D] text-white rounded-xl font-bold hover:bg-[#0d2a4f] transition-colors"
+                          >
+                            Show Results ({filteredAlumni.length})
+                          </button>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 w-full pb-12">
                   {filteredAlumni.length === 0 ? (
@@ -453,45 +578,59 @@ export default function AlumniPage() {
                           <div className="w-full aspect-[4/5] rounded-[16px] overflow-hidden bg-gray-50 mb-2.5">
                             <img src={student.image_url} alt={student.name} className="w-full h-full object-cover" />
                           </div>
-                          <h3 className="font-extrabold text-[#0a1b3f] text-[18px] leading-tight mb-1 truncate">{student.name}</h3>
+                          <h3 className="font-extrabold text-[#0a1b3f] text-[18px] leading-tight mb-1 line-clamp-2">{student.name}</h3>
                           <p className="text-[#D4A017] font-bold text-[9px] tracking-[0.2em] uppercase">Alumni</p>
                           <div className="w-8 h-[2px] bg-[#D4A017] mt-2"></div>
                         </div>
 
                         {/* Right Column */}
                         <div className="flex-1 flex flex-col gap-0 justify-start pt-1">
-                          {(student.course || student.ug || student.pg || student.hsc) && (
+                          {/* Qualification */}
+                          {(student.qualification || student.course) && (
                             <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
                               <div className="w-8 h-8 rounded-full bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0">
                                 <GraduationCap size={14} strokeWidth={1.5} />
                               </div>
                               <div className="flex flex-col">
-                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Education</span>
-                                <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
-                                  {[student.hsc && 'HSC', student.ug && 'UG', student.pg && 'PG', student.course].filter(Boolean).join(' • ')}
-                                </span>
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Qualification</span>
+                                <span className="text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.qualification || student.course}</span>
                               </div>
                             </div>
                           )}
 
-                          {(student.year_passout || student.hsc_passout_year || student.ug_passout_year || student.pg_passout_year) && (
-                            <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                              <div className="w-8 h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
-                                <Calendar size={14} strokeWidth={1.5} />
+                          {/* Association with MCC */}
+                          {(() => {
+                            const raw = student.mcc_association || null;
+                            let display = '';
+                            if (raw) {
+                              try {
+                                const parsed = JSON.parse(raw);
+                                if (Array.isArray(parsed)) {
+                                  display = parsed.filter((e: any) => e.programme).map((e: any) => e.batch ? `${e.programme} (${e.batch})` : e.programme).join(', ');
+                                }
+                              } catch {
+                                display = raw;
+                              }
+                            } else {
+                              const parts = [
+                                student.hsc && student.hsc_passout_year ? `HSC (${student.hsc_passout_year})` : student.hsc ? 'HSC' : null,
+                                student.ug && student.ug_passout_year ? `UG (${student.ug_passout_year})` : student.ug ? 'UG' : null,
+                                student.pg && student.pg_passout_year ? `PG (${student.pg_passout_year})` : student.pg ? 'PG' : null,
+                              ].filter(Boolean);
+                              display = parts.join(', ');
+                            }
+                            return display ? (
+                              <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                                <div className="w-8 h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
+                                  <Calendar size={14} strokeWidth={1.5} />
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Association with MCC</span>
+                                  <span className="text-[12px] text-gray-600 line-clamp-2 leading-snug">{display}</span>
+                                </div>
                               </div>
-                              <div className="flex flex-col">
-                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Batch</span>
-                                <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">
-                                  {[
-                                    student.hsc_passout_year && `HSC '${student.hsc_passout_year.slice(-2)}`,
-                                    student.ug_passout_year && `UG '${student.ug_passout_year.slice(-2)}`,
-                                    student.pg_passout_year && `PG '${student.pg_passout_year.slice(-2)}`,
-                                    student.year_passout && `Class of ${student.year_passout}`
-                                  ].filter(Boolean).join(', ')}
-                                </span>
-                              </div>
-                            </div>
-                          )}
+                            ) : null;
+                          })()}
 
                           {student.designation && (
                             <div className="flex items-center gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
@@ -499,7 +638,7 @@ export default function AlumniPage() {
                                 <Briefcase size={14} strokeWidth={1.5} />
                               </div>
                               <div className="flex flex-col">
-                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Profession</span>
+                                <span className="text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Designation</span>
                                 <span className="text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.designation}</span>
                               </div>
                             </div>

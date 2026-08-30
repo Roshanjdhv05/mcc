@@ -1,7 +1,9 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Bot, Sparkles, ChevronLeft, Home, MessageSquare, GraduationCap, FileText, BookOpen, Award, CreditCard, ChevronRight, Megaphone } from 'lucide-react';
+import { X, Bot, Sparkles, ChevronLeft, Home, MessageSquare, GraduationCap, FileText, BookOpen, Award, CreditCard, ChevronRight, Megaphone, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 type ViewState = 'main' | 'admissions' | 'scholarships' | 'examinations' | 'certificates' | 'courses' | 'forms' | 'broadcast' | 'ug_courses' | 'pg_courses' | 'course_details' | 'generic_details';
 
@@ -16,18 +18,27 @@ interface Message {
 }
 
 export default function AIAssistant() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<HistoryState[]>([{ view: 'main' }]);
   const [broadcastFilter, setBroadcastFilter] = useState<'all' | 'events' | 'activities'>('all');
   const [hasUnread, setHasUnread] = useState(true);
+  const [broadcasts, setBroadcasts] = useState<{ id: string; content: string; created_at: string }[]>([]);
+  const [broadcastsLoading, setBroadcastsLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  const broadcasts = [
-    { id: 1, type: 'events', text: 'Annual Cultural Fest AURA 2024 is starting next week! Registration is now open.', time: '10:00 AM' },
-    { id: 2, type: 'activities', text: 'NSS Blood Donation Drive organized today in the Gymkhana. All are welcome.', time: '09:00 AM' },
-    { id: 3, type: 'events', text: 'Guest lecture on Artificial Intelligence by Dr. Smith tomorrow at Seminar Hall.', time: 'Yesterday' },
-    { id: 4, type: 'activities', text: 'Yoga workshop for students and staff this weekend. Bring your own mats.', time: '2 days ago' },
-  ];
+  const fetchBroadcasts = async () => {
+    setBroadcastsLoading(true);
+    const today = new Date().toISOString().split('T')[0];
+    const { data } = await supabase
+      .from('mcc_news_announcements')
+      .select('id, content, created_at')
+      .eq('is_archived', false)
+      .gte('expiry_date', today)
+      .order('created_at', { ascending: false });
+    if (data) setBroadcasts(data);
+    setBroadcastsLoading(false);
+  };
 
   const current = history[history.length - 1];
   const view = current.view;
@@ -38,10 +49,17 @@ export default function AIAssistant() {
   }, [view]);
 
   useEffect(() => {
+    if (view === 'broadcast') {
+      fetchBroadcasts();
+    }
+  }, [view]);
+
+  useEffect(() => {
     const handler = () => {
       setOpen(true);
       setHasUnread(false);
       setHistory([{ view: 'main' }, { view: 'broadcast' }]);
+      fetchBroadcasts();
     };
     document.addEventListener('open-assistant', handler);
     return () => document.removeEventListener('open-assistant', handler);
@@ -71,13 +89,18 @@ export default function AIAssistant() {
   // ── DATA DEFINITIONS ──
 
   const ugCourses = [
-    { name: 'B.Com', desc: 'Bachelor of Commerce', duration: '3 Years', seats: 360 },
-    { name: 'BAF', desc: 'B.Com Accounting & Finance', duration: '3 Years', seats: 120 },
-    { name: 'BBI', desc: 'B.Com Banking & Insurance', duration: '3 Years', seats: 60 },
-    { name: 'BFM', desc: 'B.Com Financial Markets', duration: '3 Years', seats: 60 },
-    { name: 'BMS', desc: 'Bachelor of Management Studies', duration: '3 Years', seats: 120 },
-    { name: 'BSc IT', desc: 'B.Sc Information Technology', duration: '3 Years', seats: 60 },
-    { name: 'BSc CS', desc: 'B.Sc Computer Science', duration: '3 Years', seats: 60 },
+    { name: 'B.Com', desc: 'Bachelor of Commerce', duration: '3 Years', seats: 600, timing: '07:15 AM – 10:40 AM', href: '/programmes/ug/bcom' },
+    { name: 'B.Com (MS)', desc: 'Bachelor of Commerce (Management Studies)', duration: '3 Years', seats: 120, timing: '12:00 PM – 04:30 PM', href: '/programmes/ug/bcom-ms' },
+    { name: 'B.Com (BA)', desc: 'Bachelor of Commerce (Business Administration)', duration: '3 Years', seats: 60, timing: '12:00 PM – 04:30 PM', href: '/programmes/ug/bcom-ba' },
+    { name: 'BAF', desc: 'Bachelor of Commerce (Accounting & Finance)', duration: '3 Years', seats: 120, timing: '07:15 AM – 11:40 AM', href: '/programmes/ug/baf' },
+    { name: 'BBI', desc: 'Bachelor of Commerce (Banking & Insurance)', duration: '3 Years', seats: 60, timing: '07:15 AM – 11:40 AM', href: '/programmes/ug/bbi' },
+    { name: 'BFM', desc: 'Bachelor of Commerce (Financial Markets)', duration: '3 Years', seats: 60, timing: '12:00 PM – 04:30 PM', href: '/programmes/ug/bfm' },
+    { name: 'BFSI', desc: 'Bachelor of Commerce (Banking, Financial Services & Insurance)', duration: '3 Years', seats: 60, timing: '—', href: '/programmes/ug/bfsi' },
+    { name: 'B.Sc (CS)', desc: 'Bachelor of Science (Computer Science)', duration: '3 Years', seats: 120, timing: '07:15 AM – 11:40 AM', href: '/programmes/ug/sct/bsc-cs' },
+    { name: 'B.Sc (IT)', desc: 'Bachelor of Science (Information Technology)', duration: '3 Years', seats: 120, timing: '10:40 AM – 04:15 PM', href: '/programmes/ug/sct/bsc-it' },
+    { name: 'B.Sc (DS)', desc: 'Bachelor of Science (Data Science)', duration: '3 Years', seats: 60, timing: '02:05 PM – 08:10 PM', href: '/programmes/ug/sct/bsc-ds' },
+    { name: 'B.Sc (CA)', desc: 'Bachelor of Science (Computer Applications)', duration: '3 Years', seats: 60, timing: '02:05 PM – 08:10 PM', href: '/programmes/ug/sct/bsc-ca' },
+    { name: 'B.A (MMC)', desc: 'Bachelor of Arts (Multimedia & Mass Communication)', duration: '3 Years', seats: 60, timing: '12:00 PM – 04:30 PM', href: '/programmes/ug/bammc' },
   ];
 
   const pgCourses = [
@@ -102,7 +125,7 @@ export default function AIAssistant() {
         </button>
       )}
       {view !== 'broadcast' && (
-        <button onClick={() => { navigate('broadcast'); setHasUnread(false); }} className="relative p-1.5 rounded-full hover:bg-white/20 transition-colors" title="College Broadcasts">
+        <button onClick={() => { navigate('broadcast'); setHasUnread(false); fetchBroadcasts(); }} className="relative p-1.5 rounded-full hover:bg-white/20 transition-colors" title="College Broadcasts">
           <motion.div
             animate={hasUnread ? { rotate: [0, -20, 20, -20, 20, 0], color: ['#ffffff', '#eab308', '#ffffff'] } : {}}
             transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
@@ -205,8 +228,6 @@ export default function AIAssistant() {
                       <div className="space-y-2.5">
                         <ActionButton icon={GraduationCap} label="Admissions" onClick={() => navigate('admissions')} />
                         <ActionButton icon={CreditCard} label="Scholarships" onClick={() => navigate('scholarships')} />
-                        <ActionButton icon={FileText} label="Examinations" onClick={() => navigate('examinations')} />
-                        <ActionButton icon={Award} label="Certificates" onClick={() => navigate('certificates')} />
                         <ActionButton icon={BookOpen} label="Courses" onClick={() => navigate('courses')} />
                         <ActionButton icon={FileText} label="Forms" onClick={() => navigate('forms')} />
                         <ActionButton 
@@ -218,7 +239,7 @@ export default function AIAssistant() {
                             </div>
                           } 
                           highlight 
-                          onClick={() => { navigate('broadcast'); setHasUnread(false); }} 
+                          onClick={() => { navigate('broadcast'); setHasUnread(false); fetchBroadcasts(); }} 
                         />
                       </div>
                     </>
@@ -231,8 +252,8 @@ export default function AIAssistant() {
                         <p className="text-sm text-[#1E293B]">Choose the admission category you are looking for:</p>
                       </div>
                       <div className="space-y-2.5">
-                        <ActionButton label="Junior College" onClick={() => navigate('generic_details', { title: 'Junior College Admission', apply: true })} />
-                        <ActionButton label="Senior College" onClick={() => navigate('generic_details', { title: 'Senior College Admission', apply: true })} />
+                        <ActionButton label="Junior College" onClick={() => router.push('/admission/jr-college')} />
+                        <ActionButton label="Senior College" onClick={() => router.push('/admission/degree-college')} />
                         <ActionButton label="Undergraduate" onClick={() => navigate('ug_courses')} />
                         <ActionButton label="Postgraduate" onClick={() => navigate('pg_courses')} />
                       </div>
@@ -263,15 +284,10 @@ export default function AIAssistant() {
                       <div className="bg-white border border-[#E2E8F0] p-5 rounded-2xl shadow-sm">
                         <h3 className="font-bold text-lg text-[#123B6D] mb-1 font-[var(--font-heading)]">{data.name}</h3>
                         <p className="text-sm text-[#64748B] mb-4">{data.desc}</p>
-                        
-                        <div className="space-y-3 text-sm">
-                          <div className="flex justify-between border-b pb-2"><span className="text-[#64748B]">Duration</span><span className="font-medium text-[#1E293B]">{data.duration}</span></div>
-                          <div className="flex justify-between border-b pb-2"><span className="text-[#64748B]">Seats Available</span><span className="font-medium text-[#1E293B]">{data.seats}</span></div>
-                          <div className="flex justify-between border-b pb-2"><span className="text-[#64748B]">Eligibility</span><span className="font-medium text-[#1E293B]">Min 45% Aggregate</span></div>
-                          <div className="flex justify-between border-b pb-2"><span className="text-[#64748B]">Fee Structure</span><span className="font-medium text-[#1E293B]">Check Prospectus</span></div>
-                        </div>
                       </div>
-                      <button className="w-full py-3.5 bg-[#D4A017] text-white font-bold rounded-xl hover:bg-[#b8891a] transition-all shadow-lg">
+                      <button 
+                        onClick={() => router.push('/admission/degree-college')}
+                        className="block w-full py-3.5 bg-[#123B6D] text-white font-bold rounded-xl hover:bg-[#0d2d56] transition-all shadow-lg text-center text-sm">
                         Apply Now
                       </button>
                     </div>
@@ -338,9 +354,33 @@ export default function AIAssistant() {
 
                   {/* FORMS */}
                   {view === 'forms' && (
-                    <div className="space-y-2.5 mt-2">
-                      {['Admission Forms', 'Scholarship Forms', 'Examination Forms', 'Certificate Forms', 'Concession Forms'].map(lbl => (
-                        <ActionButton key={lbl} label={lbl} onClick={() => navigate('generic_details', { title: lbl, apply: true })} />
+                    <div className="space-y-3 mt-2">
+                      <div className="bg-white border border-[#E2E8F0] p-4 rounded-2xl rounded-tl-sm shadow-sm">
+                        <p className="text-sm text-[#1E293B]">Select the form or certificate you need:</p>
+                      </div>
+                      {[
+                        { name: 'Bonafide Certificate', desc: 'Proof of enrollment at Mulund College of Commerce for bank accounts, visa, etc.', href: '/forms/bonafide-certificate' },
+                        { name: 'Transfer Certificate', desc: 'For progression to other Higher Educational Institution (HEI) of University of Mumbai.', href: '/forms/transfer-certificate' },
+                        { name: 'Migration Certificate', desc: 'For progression to another University outside University of Mumbai.', href: '/forms/migration-certificate' },
+                        { name: 'Transcript', desc: 'Official transcript for Foreign Universities or Employment purposes.', href: '/forms/transcript-certificate' },
+                        { name: 'Character Certificate', desc: 'Certificate attesting good character and conduct. Required for Government Employments.', href: '/forms/character-certificate' },
+                        { name: 'Marksheet Verification', desc: 'Official verification of mark sheets issued by the college for employers or institutions.', href: '/forms/marksheet-verification' },
+                        { name: 'Caste Validity Verification', desc: 'Verification of caste certificate validity as required by government norms.', href: '/administrative-service/caste-validity' },
+                        { name: 'Scholarship & Free-ship', desc: 'Apply for government and institutional scholarship and free-ship schemes.', href: '/forms' },
+                        { name: 'Duplicate Marksheet', desc: 'Request a duplicate mark sheet in case of loss or damage of the original.', href: '/administrative-service/duplicate-marksheet' },
+                      ].map(f => (
+                        <div key={f.name} className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm overflow-hidden">
+                          <div className="p-4 pb-3">
+                            <p className="font-bold text-sm text-[#123B6D] mb-1">{f.name}</p>
+                            <p className="text-xs text-[#64748B] leading-snug">{f.desc}</p>
+                          </div>
+                          <button
+                            onClick={() => router.push(f.href)}
+                            className="w-full py-2.5 bg-[#123B6D] text-white text-xs font-bold hover:bg-[#0d2d56] transition-colors"
+                          >
+                            Apply →
+                          </button>
+                        </div>
                       ))}
                     </div>
                   )}
@@ -350,48 +390,45 @@ export default function AIAssistant() {
                     <div className="flex flex-col h-full space-y-4">
                       <div className="bg-white border border-[#E2E8F0] p-4 rounded-2xl rounded-tl-sm shadow-sm">
                         <p className="text-sm text-[#1E293B]">
-                          Stay updated with the latest messages, events, and activities broadcasted by MCC.
+                          Stay updated with the latest news &amp; announcements from Mulund College of Commerce.
                         </p>
                       </div>
 
-                      <div className="flex gap-2 p-1 bg-[#E2E8F0]/50 rounded-lg shrink-0">
-                        {['all', 'events', 'activities'].map(f => (
-                          <button 
-                            key={f}
-                            onClick={() => setBroadcastFilter(f as any)}
-                            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all capitalize ${
-                              broadcastFilter === f ? 'bg-white text-[#123B6D] shadow-sm' : 'text-[#64748B] hover:text-[#1E293B]'
-                            }`}
-                          >
-                            {f}
-                          </button>
-                        ))}
-                      </div>
-                      
-                      <div className="space-y-4">
-                        <AnimatePresence mode="popLayout">
-                          {broadcasts.filter(b => broadcastFilter === 'all' || b.type === broadcastFilter).map(b => (
-                            <motion.div
-                              layout
-                              key={b.id}
-                              initial={{ opacity: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.95 }}
-                              transition={{ duration: 0.2 }}
-                              className="flex justify-start"
-                            >
-                              <div className="max-w-[90%] px-4 py-3 bg-white border border-[#E2E8F0] text-[#1E293B] rounded-2xl rounded-tl-sm shadow-sm relative overflow-hidden group">
-                                <div className={`absolute top-0 left-0 w-1 h-full ${b.type === 'events' ? 'bg-[#D4A017]' : 'bg-[#4DA8DA]'}`} />
-                                <div className="flex justify-between items-start mb-1">
-                                  <span className={`text-[10px] font-bold uppercase tracking-wider ${b.type === 'events' ? 'text-[#D4A017]' : 'text-[#4DA8DA]'}`}>{b.type}</span>
+                      {broadcastsLoading ? (
+                        <div className="flex justify-center py-8">
+                          <Loader2 className="animate-spin text-[#123B6D]" size={24} />
+                        </div>
+                      ) : broadcasts.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
+                          <Megaphone size={32} className="text-[#CBD5E1]" />
+                          <p className="text-sm text-[#94A3B8] font-medium">No active announcements at the moment.</p>
+                          <p className="text-xs text-[#CBD5E1]">Check back soon for updates.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          <AnimatePresence mode="popLayout">
+                            {broadcasts.map((b, idx) => (
+                              <motion.div
+                                layout
+                                key={b.id}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.2, delay: idx * 0.04 }}
+                                className="flex justify-start"
+                              >
+                                <div className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-[#1E293B] rounded-2xl rounded-tl-sm shadow-sm relative overflow-hidden">
+                                  <div className="absolute top-0 left-0 w-1 h-full bg-[#123B6D]" />
+                                  <p className="text-sm leading-relaxed pl-1">{b.content}</p>
+                                  <p className="text-[10px] text-[#94A3B8] mt-2 text-right">
+                                    {new Date(b.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                  </p>
                                 </div>
-                                <p className="text-sm leading-relaxed">{b.text}</p>
-                                <p className="text-[10px] text-[#94A3B8] mt-2 text-right">{b.time}</p>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </AnimatePresence>
-                      </div>
+                              </motion.div>
+                            ))}
+                          </AnimatePresence>
+                        </div>
+                      )}
                       <div ref={endRef} />
                     </div>
                   )}

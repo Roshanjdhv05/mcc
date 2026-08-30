@@ -56,11 +56,10 @@ const PROGRAMMES = [
   { code: 'BFSI',  slug: 'bfsi', label: 'BFSI' },
   { code: 'BBI',   slug: 'bbi',  label: 'BBI' },
   { code: 'BCOM-BA', slug: 'bcom-ba', label: 'BCOM-BA' },
-  { code: 'BCOM-MS', slug: 'bcom-ms', label: 'BCOM-MS' },
   { code: 'BSC-IT',  slug: 'bsc-it',  label: 'BSC-IT' },
   { code: 'BCA',     slug: 'bca',     label: 'BCA' },
   { code: 'BSC-DS',  slug: 'bsc-ds',  label: 'BSC-DS' },
-  { code: 'SCT',     slug: 'sct',     label: 'SCT' },
+  { code: 'CS',      slug: 'sct',     label: 'CS' },
   { code: 'BBA',     slug: 'bba',     label: 'BBA' },
   { code: 'BAMMC',   slug: 'bammc',   label: 'BAMMC' },
   // PG
@@ -98,12 +97,20 @@ function getProgrammeSectionOptions(code: string) {
 
   const festival = FESTIVAL_SECTIONS[code] || 'Festivals';
   const publication = PUBLICATION_SECTIONS[code] || 'Publication';
-  return [
+  const all = [
     { value: 'Events & Activities', label: 'Events & Activities' },
     { value: festival, label: festival },
     { value: publication, label: publication },
     { value: 'Industrial Visits', label: 'Industrial Visits' },
   ];
+  // Deduplicate by value to avoid React duplicate-key warnings
+  // (e.g. BMS has 'Inspira' for both festival and publication)
+  const seen = new Set<string>();
+  return all.filter(opt => {
+    if (seen.has(opt.value)) return false;
+    seen.add(opt.value);
+    return true;
+  });
 }
 
 function getDaysAgo(dateStr: string) {

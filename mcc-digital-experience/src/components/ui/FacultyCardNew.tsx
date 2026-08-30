@@ -76,15 +76,15 @@ export default function FacultyCardNew({ member }: FacultyCardNewProps) {
         {/* Name & Designation */}
         <div className="text-center w-full mb-5">
           <h2 className="text-[#123B6D] text-xl font-bold leading-tight mb-2">{member.name}</h2>
-          <div className="overflow-hidden h-6 flex justify-center">
+          <div className="w-full flex justify-center mb-1">
             <motion.p
               initial={{ y: "100%", opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-[#D4A017] text-xs font-bold tracking-widest uppercase"
+              className="text-[#D4A017] text-[10px] font-bold tracking-wide uppercase text-center leading-snug"
             >
-              {member.designation}
+              {member.role === 'Coordinator' ? 'COORDINATOR' : member.designation}
             </motion.p>
           </div>
           <div className="w-12 h-[2px] bg-gradient-to-r from-transparent via-[#D4A017] to-transparent mx-auto mt-2" />

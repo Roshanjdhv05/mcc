@@ -117,12 +117,12 @@ const culturalEvents: Array<{ tag: string; title: string; desc: string; img: str
 const programmes = [
   // Commerce
   { code: 'B.Com', name: 'Bachelor of Commerce', desc: 'Comprehensive commerce education with specializations', seats: 600, duration: '3 Years', type: 'UG', time: '7:15 AM – 10:40 AM', color: 'from-[#B45309] to-[#D97706]', href: '/programmes/ug/bcom' },
-  { code: 'BAF', name: 'B.Com. (Accounting & Finance)', desc: 'Advanced accounting, taxation & auditing skills', seats: 120, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#D97706] to-[#F59E0B]', href: '/programmes/ug/baf' },
-  { code: 'BBI', name: 'B.Com. (Banking & Insurance)', desc: 'Banking, insurance & risk management', seats: 160, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#F59E0B] to-[#FCD34D]', href: '/programmes/ug/bbi' },
-  { code: 'BFM', name: 'B.Com. (Financial Markets)', desc: 'Stock markets, investment & capital markets', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#92400E] to-[#B45309]', href: '/programmes/ug/bfm' },
+  { code: 'B.Com(AF)', name: 'B.Com. (Accounting & Finance)', desc: 'Advanced accounting, taxation & auditing skills', seats: 120, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#D97706] to-[#F59E0B]', href: '/programmes/ug/baf' },
+  { code: 'B.Com(BI)', name: 'B.Com. (Banking & Insurance)', desc: 'Banking, insurance & risk management', seats: 60, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#F59E0B] to-[#FCD34D]', href: '/programmes/ug/bbi' },
+  { code: 'B.Com(FM)', name: 'B.Com. (Financial Markets)', desc: 'Stock markets, investment & capital markets', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#92400E] to-[#B45309]', href: '/programmes/ug/bfm' },
   // Business & Management
-  { code: 'BMS', name: 'B.Com. (Management Studies)', desc: 'Leadership, management & business strategy', seats: 120, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#0D2A4F] to-[#123B6D]', href: '/programmes/ug/bcom-ms' },
-  { code: 'BBA', name: 'B.Com. (Business Administration)', desc: 'Business admin, commerce & entrepreneurship', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#123B6D] to-[#1D4E96]', href: '/programmes/ug/bba' },
+  { code: 'B.Com(MS)', name: 'B.Com. (Management Studies)', desc: 'Leadership, management & business strategy', seats: 120, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#0D2A4F] to-[#123B6D]', href: '/programmes/ug/bcom-ms' },
+  { code: 'B.Com(BA)', name: 'B.Com. (Business Administration)', desc: 'Business admin, commerce & entrepreneurship', seats: 60, duration: '3 Years', type: 'UG', time: '12:00 PM – 4:30 PM', color: 'from-[#123B6D] to-[#1D4E96]', href: '/programmes/ug/bba' },
   // Science
   { code: 'B.Sc (CS)', name: 'B.Sc. (Computer Science)', desc: 'Programming, algorithms & software development', seats: 120, duration: '3 Years', type: 'UG', time: '7:15 AM – 11:40 AM', color: 'from-[#065F46] to-[#047857]', href: '/programmes/ug/sct/bsc-cs' },
   { code: 'B.Sc (IT)', name: 'B.Sc. (Information Technology)', desc: 'Networks, databases & web technologies', seats: 120, duration: '3 Years', type: 'UG', time: '10:40 AM – 4:15 PM', color: 'from-[#047857] to-[#059669]', href: '/programmes/ug/sct/bsc-it' },
@@ -892,9 +892,43 @@ export default function HomePage() {
   const [homeWallOfFame, setHomeWallOfFame] = useState<any[]>([]);
   const [homeAlumni, setHomeAlumni] = useState<any[]>([]);
   const [newsAnnouncements, setNewsAnnouncements] = useState<{ id: string; content: string }[]>([]);
+  const [isNewsMarqueePaused, setIsNewsMarqueePaused] = useState(false);
+  const newsMarqueeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleNewsMarqueeInteraction = () => {
+    setIsNewsMarqueePaused(true);
+    if (newsMarqueeTimeoutRef.current) clearTimeout(newsMarqueeTimeoutRef.current);
+    newsMarqueeTimeoutRef.current = setTimeout(() => {
+      setIsNewsMarqueePaused(false);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (newsMarqueeTimeoutRef.current) clearTimeout(newsMarqueeTimeoutRef.current);
+    };
+  }, []);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
   const illustriousScrollRef = useRef<HTMLDivElement>(null);
   const adminServicesAutoRef = useRef<HTMLDivElement>(null);
+  const wallOfFameAutoRef = useRef<HTMLDivElement>(null);
+
+  // Wall of Fame: auto-slide right-to-left, one card every 5s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const el = wallOfFameAutoRef.current;
+      if (!el) return;
+      const cardWidth = (el.firstElementChild as HTMLElement)?.offsetWidth || 320;
+      const gap = 20; // gap-5 = 1.25rem = 20px
+      const scrollAmount = cardWidth + gap;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 10) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const programmesRef = useMarqueeScroll(-1.2);
   const culturalRef = useMarqueeScroll(1, 'x', 5000);
@@ -1351,16 +1385,21 @@ export default function HomePage() {
               {/* Fade edges */}
               <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#EBF3FF] to-transparent z-10 pointer-events-none" />
               <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#EBF3FF] to-transparent z-10 pointer-events-none" />
-              {/* Outer band = 400% wide; each of 4 lanes = exactly 100% of container */}
+              {/* Outer band = 400% wide if animating, 100% if static */}
               <div
-                className="flex animate-marquee-rtl"
-                style={{ width: '400%' }}
+                className={`flex ${newsAnnouncements.length >= 3 ? 'animate-marquee-rtl cursor-pointer' : 'overflow-x-auto no-scrollbar'}`}
+                style={{ 
+                  width: newsAnnouncements.length >= 3 ? '400%' : '100%',
+                  animationPlayState: isNewsMarqueePaused ? 'paused' : 'running'
+                }}
+                onClick={newsAnnouncements.length >= 3 ? handleNewsMarqueeInteraction : undefined}
+                onTouchStart={newsAnnouncements.length >= 3 ? handleNewsMarqueeInteraction : undefined}
               >
-                {[0, 1, 2, 3].map((copyIdx) => (
-                  <div key={copyIdx} className="flex items-center gap-6 px-8" style={{ width: '25%', minWidth: '25%' }}>
+                {(newsAnnouncements.length >= 3 ? [0, 1, 2, 3] : [0]).map((copyIdx) => (
+                  <div key={copyIdx} className="flex items-center gap-6 px-8" style={{ width: newsAnnouncements.length >= 3 ? '25%' : 'auto', minWidth: newsAnnouncements.length >= 3 ? '25%' : 'auto' }}>
                     {newsAnnouncements.map((item) => (
                       <div
-                        key={item.id}
+                        key={item.id + copyIdx}
                         className="inline-flex items-start gap-2 bg-white border border-[#123B6D]/10 rounded-xl px-4 py-2 shadow-sm shrink-0 max-w-[350px]"
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-1.5 shrink-0" />
@@ -1504,9 +1543,11 @@ export default function HomePage() {
           </div>
           
           {homeWallOfFame.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-12 max-w-sm sm:max-w-none mx-auto">
-              {homeWallOfFame.map(item => (
-                <WallOfFameCard key={item.id} item={item} layout="grid" />
+            <div ref={wallOfFameAutoRef} className="flex gap-5 overflow-x-auto no-scrollbar w-full pb-4 pt-2 snap-x snap-mandatory cursor-grab active:cursor-grabbing mb-12">
+              {[...homeWallOfFame, ...homeWallOfFame].map((item, i) => (
+                <div key={`${item.id}-${i}`} className="w-[300px] sm:w-[320px] flex-shrink-0 snap-center h-full">
+                  <WallOfFameCard item={item} layout="grid" />
+                </div>
               ))}
             </div>
           ) : (
@@ -1542,45 +1583,59 @@ export default function HomePage() {
                     <div className="w-full aspect-[4/5] rounded-[12px] sm:rounded-[16px] overflow-hidden bg-gray-50 mb-2.5">
                       <img src={student.image_url} alt={student.name} className="w-full h-full object-cover" />
                     </div>
-                    <h3 className="font-extrabold text-[#0a1b3f] text-[15px] sm:text-[18px] leading-tight mb-1 truncate">{student.name}</h3>
+                    <h3 className="font-extrabold text-[#0a1b3f] text-[15px] sm:text-[18px] leading-tight mb-1 line-clamp-2">{student.name}</h3>
                     <p className="text-[#D4A017] font-bold text-[8px] sm:text-[9px] tracking-[0.2em] uppercase">Alumni</p>
                     <div className="w-6 sm:w-8 h-[2px] bg-[#D4A017] mt-1 sm:mt-2"></div>
                   </div>
 
                   {/* Right Column */}
                   <div className="flex-1 flex flex-col gap-0 justify-start pt-0 sm:pt-1 min-w-0">
-                    {(student.course || student.ug || student.pg || student.hsc) && (
+                    {/* Qualification */}
+                    {(student.qualification || student.course) && (
                       <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
                         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0">
                           <GraduationCap className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
                         <div className="flex flex-col min-w-0">
-                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Education</span>
-                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">
-                            {[student.hsc && 'HSC', student.ug && 'UG', student.pg && 'PG', student.course].filter(Boolean).join(' • ')}
-                          </span>
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Qualification</span>
+                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.qualification || student.course}</span>
                         </div>
                       </div>
                     )}
 
-                    {(student.year_passout || student.hsc_passout_year || student.ug_passout_year || student.pg_passout_year) && (
-                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
-                          <Calendar className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
+                    {/* Association with MCC */}
+                    {(() => {
+                      const raw = student.mcc_association || null;
+                      let display = '';
+                      if (raw) {
+                        try {
+                          const parsed = JSON.parse(raw);
+                          if (Array.isArray(parsed)) {
+                            display = parsed.filter((e: any) => e.programme).map((e: any) => e.batch ? `${e.programme} (${e.batch})` : e.programme).join(', ');
+                          }
+                        } catch {
+                          display = raw;
+                        }
+                      } else {
+                        const parts = [
+                          student.hsc && student.hsc_passout_year ? `HSC (${student.hsc_passout_year})` : student.hsc ? 'HSC' : null,
+                          student.ug && student.ug_passout_year ? `UG (${student.ug_passout_year})` : student.ug ? 'UG' : null,
+                          student.pg && student.pg_passout_year ? `PG (${student.pg_passout_year})` : student.pg ? 'PG' : null,
+                        ].filter(Boolean);
+                        display = parts.join(', ');
+                      }
+                      return display ? (
+                        <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0">
+                            <Calendar className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Association with MCC</span>
+                            <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-2 leading-snug">{display}</span>
+                          </div>
                         </div>
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Batch</span>
-                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">
-                            {[
-                              student.hsc_passout_year && `HSC '${student.hsc_passout_year.slice(-2)}`,
-                              student.ug_passout_year && `UG '${student.ug_passout_year.slice(-2)}`,
-                              student.pg_passout_year && `PG '${student.pg_passout_year.slice(-2)}`,
-                              student.year_passout && `Class of ${student.year_passout}`
-                            ].filter(Boolean).join(', ')}
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                      ) : null;
+                    })()}
 
                     {student.designation && (
                       <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
@@ -1588,7 +1643,7 @@ export default function HomePage() {
                           <Briefcase className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
                         </div>
                         <div className="flex flex-col min-w-0">
-                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Profession</span>
+                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Designation</span>
                           <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-1 leading-snug">{student.designation}</span>
                         </div>
                       </div>

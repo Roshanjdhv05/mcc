@@ -5,8 +5,8 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bbiFaculty = [
-  { srNo: 1, name: 'Ms.Shilpa Thakur', additionalRole: 'Vice-Principal (SFC), Coordinatore', designation: 'Assistant Professor', department: 'BBI', education: 'MCom,Mphil', email: 'shilpa.thakur@mccmulund.ac.in', teachingExp: '28 yrs', image: '/Degree College Teachers/Shilpa Thakur.png' },
-  { srNo: 2, name: 'Dr. Rajashri Deshpande', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BBI', education: 'M.Com.,MA., NET, Ph.D.', email: 'rajashri.deshpande@mccmulund.ac.in', teachingExp: '18 yrs' },
+  { srNo: 1, name: 'Dr. Rajashri Deshpande', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BBI', education: 'M.Com.,MA., NET, Ph.D.', email: 'rajashri.deshpande@mccmulund.ac.in', teachingExp: '18 yrs' },
+  { srNo: 2, name: 'Ms.Shilpa Thakur', additionalRole: 'Vice-Principal (SFC)', designation: 'Assistant Professor', department: 'BBI', education: 'MCom,Mphil', email: 'shilpa.thakur@mccmulund.ac.in', teachingExp: '28 yrs', image: '/Degree College Teachers/Shilpa Thakur.png' },
   { srNo: 3, name: 'Ms.Archana Kadam', additionalRole: '—', designation: 'Assistant Professor', department: 'BBI', education: 'M.Com.,MA., NET, PGDFM', email: 'archana.kadam@mccmulund.ac.in', teachingExp: '17 yrs', image: '/Degree College Teachers/Archana Kadam.png' },
   { srNo: 4, name: 'Ms.Seema Attarde', additionalRole: '—', designation: 'Assistant Professor', department: 'BBI', education: 'M.Sc.', email: 'seema.attarde@mccmulund.ac.in', teachingExp: '26 yrs', image: '/Degree College Teachers/Seema Attarde.png' },
 ];
@@ -16,7 +16,7 @@ export default function BBIPageClient() {
     { title: 'Eligibility', icon: <Users className="text-[#3B82F6]" size={18} />, info: '10+2 from any recognised Board.' },
     { title: 'Programme Design', icon: <FileText className="text-[#3B82F6]" size={18} />, info: '3 Years (NEP 4 Years), 6/8 Semesters.' },
     { title: 'Timing', icon: <Clock className="text-[#3B82F6]" size={18} />, info: '07:15 AM – 11:40 AM' },
-    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '160 Seats' }
+    { title: 'Intake Capacity', icon: <Users className="text-[#3B82F6]" size={18} />, info: '60 Seats' }
   ];
 
   return (

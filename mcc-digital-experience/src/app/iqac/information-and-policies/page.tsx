@@ -177,7 +177,7 @@ function InfoPoliciesContent() {
 
         {/* ── DESKTOP: Sidebar ──────────────────────── */}
         <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 shrink-0">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-32">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-[200px] lg:top-[240px] xl:top-[250px]">
             <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm uppercase tracking-wide">
               Information & Policies
             </div>

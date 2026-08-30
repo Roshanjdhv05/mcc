@@ -7,6 +7,8 @@ import {
   AlertCircle, Eye, LinkIcon, Pencil, Save, Loader2, CheckSquare, Square
 } from 'lucide-react';
 import { processFileForUpload } from '@/lib/fileUtils';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '@/lib/cropImage';
 
 interface HomeBanner {
   id: string;
@@ -48,6 +50,13 @@ export default function HomeBannerManager() {
   const [editSaving, setEditSaving] = useState(false);
   const [editError, setEditError] = useState('');
 
+  // Crop state
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [isCropping, setIsCropping] = useState(false);
+
   const fetchBanners = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -63,15 +72,28 @@ export default function HomeBannerManager() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      try {
-        const processedFile = await processFileForUpload(e.target.files[0]);
-        setFile(processedFile);
-        setError('');
-      } catch (err: any) {
-        setError(err.message);
-      }
+      setCropImageSrc(URL.createObjectURL(e.target.files[0]));
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setError('');
     } else {
       setFile(null);
+    }
+  };
+
+  const handleCropSave = async () => {
+    if (!cropImageSrc || !croppedAreaPixels) return;
+    setIsCropping(true);
+    try {
+      const croppedFile = await getCroppedImg(cropImageSrc, croppedAreaPixels);
+      const processedFile = await processFileForUpload(croppedFile);
+      setFile(processedFile);
+      setCropImageSrc(null);
+      setError('');
+    } catch {
+      setError('Failed to crop image.');
+    } finally {
+      setIsCropping(false);
     }
   };
 
@@ -168,6 +190,48 @@ export default function HomeBannerManager() {
 
   return (
     <div className="space-y-6">
+      {/* ── CROP MODAL ── */}
+      {cropImageSrc && (
+        <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-3xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="p-4 border-b flex justify-between items-center bg-white">
+              <h3 className="font-bold text-gray-800 text-lg">Crop Banner Image</h3>
+              <button onClick={() => { setCropImageSrc(null); setFile(null); }} className="p-1 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                <X size={24} />
+              </button>
+            </div>
+            <div className="relative h-[60vh] bg-gray-900 w-full">
+              <Cropper
+                image={cropImageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1920 / 1080}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={(_, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
+              />
+            </div>
+            <div className="p-5 bg-gray-50 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4 w-full sm:w-1/2">
+                <span className="text-sm font-semibold text-gray-700">Zoom</span>
+                <input
+                  type="range" value={zoom} min={1} max={3} step={0.1}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="w-full accent-[#123B6D]"
+                />
+              </div>
+              <div className="flex justify-end gap-3 w-full sm:w-auto">
+                <button onClick={() => { setCropImageSrc(null); setFile(null); }} className="px-6 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-200 rounded-xl transition-all">Cancel</button>
+                <button onClick={handleCropSave} disabled={isCropping} className="px-8 py-2.5 bg-[#123B6D] hover:bg-blue-800 text-white rounded-xl text-sm font-bold disabled:opacity-50 transition-all flex items-center gap-2">
+                  {isCropping && <Loader2 size={16} className="animate-spin" />}
+                  {isCropping ? 'Cropping...' : 'Crop & Save'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

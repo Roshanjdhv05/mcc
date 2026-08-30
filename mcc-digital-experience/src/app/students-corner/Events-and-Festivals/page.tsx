@@ -34,6 +34,7 @@ function EventsAndFestivalsContent() {
 
   const [festivals, setFestivals] = useState<FestivalItem[]>([]);
   const [activeSlug, setActiveSlug] = useState<string>('');
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   
   const { data = [], isLoading: loading } = useCachedStudentsCorner('Events & Festivals');
 
@@ -54,6 +55,7 @@ function EventsAndFestivalsContent() {
 
   const handleSelect = (slug: string) => {
     setActiveSlug(slug);
+    setMobileDropdownOpen(false);
     router.push(`/students-corner/Events-and-Festivals?event=${slug}`, { scroll: false });
   };
 
@@ -87,8 +89,70 @@ function EventsAndFestivalsContent() {
       ) : festivals.length === 0 ? (
         <div className="flex items-center justify-center py-32 text-gray-400 text-sm">No active festivals found.</div>
       ) : (
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-1/3 lg:w-1/4 shrink-0">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 py-6 md:py-10 flex flex-col md:flex-row gap-8">
+          
+          {/* ── MOBILE: Dropdown selector ───────────────── */}
+          <div className="md:hidden w-full relative z-30">
+            {/* Trigger */}
+            <button
+              onClick={() => setMobileDropdownOpen((p) => !p)}
+              className="w-full flex items-center justify-between bg-[#123B6D] text-white px-5 py-4 font-bold text-sm tracking-widest uppercase rounded-t-xl"
+            >
+              <span className="flex items-center gap-2 min-w-0">
+                <CalendarHeart size={16} className="shrink-0 text-blue-200" />
+                <span className="truncate">{active?.name ?? 'Select an Event'}</span>
+              </span>
+              <motion.span
+                animate={{ rotate: mobileDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+                className="shrink-0 ml-3"
+              >
+                <ChevronRight size={18} className="rotate-90" />
+              </motion.span>
+            </button>
+
+            {/* Dropdown panel */}
+            <AnimatePresence initial={false}>
+              {mobileDropdownOpen && (
+                <motion.div
+                  key="mobile-event-dropdown"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22, ease: 'easeInOut' }}
+                  className="overflow-hidden absolute left-0 right-0 bg-white border border-[#E2E8F0] border-t-0 rounded-b-xl shadow-xl z-50"
+                >
+                  <div className="flex flex-col divide-y divide-[#F1F5F9] max-h-[55vh] overflow-y-auto">
+                    {festivals.map((f) => (
+                      <button
+                        key={f.slug}
+                        onClick={() => handleSelect(f.slug)}
+                        className={`flex items-center gap-3 px-5 py-3.5 text-sm font-semibold transition-colors text-left ${
+                          activeSlug === f.slug
+                            ? 'bg-[#EBF3FF] text-[#123B6D]'
+                            : 'text-gray-700 hover:bg-[#F8FAFC] hover:text-[#123B6D]'
+                        }`}
+                      >
+                        <CalendarHeart size={15} className={`shrink-0 ${activeSlug === f.slug ? 'text-[#123B6D]' : 'text-gray-400'}`} />
+                        <span className="flex-1 text-left">{f.name}</span>
+                        {activeSlug === f.slug && (
+                          <ChevronRight size={14} className="text-[#123B6D] shrink-0" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Bottom border when closed (makes it look like a card) */}
+            {!mobileDropdownOpen && (
+              <div className="h-1 bg-white border border-t-0 border-[#E2E8F0] rounded-b-xl" />
+            )}
+          </div>
+
+          {/* ── DESKTOP: Sidebar ──────────────────────── */}
+          <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 shrink-0">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
               <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm uppercase tracking-wide">Events &amp; Festivals</div>
               <div className="flex flex-col p-2 max-h-[70vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

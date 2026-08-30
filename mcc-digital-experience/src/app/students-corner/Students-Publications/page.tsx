@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen, ExternalLink, Mail, Target,
-  Users2, Info, ChevronRight, Phone, Image as ImageIcon, Loader2
+  Users2, Info, ChevronRight, Phone, Image as ImageIcon, Loader2, Link as LinkIcon
 } from "lucide-react";
 import Link from "next/link";
 import { useCachedStudentsCorner } from "@/hooks/useCachedSupabase";
@@ -21,6 +21,7 @@ interface PublicationItem {
   category: string;
   status: string;
   instagram_link?: string;
+  magazine_link?: string;
   about?: string;
   banner_image?: string;
   committee?: CommitteeMember[];
@@ -32,20 +33,35 @@ function StudentsPublicationsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [publications, setPublications] = useState<PublicationItem[]>([]);
   const [activeSlug, setActiveSlug] = useState<string>('');
-  
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+
   const { data = [], isLoading: loading } = useCachedStudentsCorner("Student's Publications");
 
+  const visionPublication: PublicationItem = {
+    id: 'vision-magazine',
+    slug: 'vision',
+    name: 'College Magazine (Vision)',
+    category: "Student's Publications",
+    status: 'Active',
+    about: "Vision is the annual magazine of Mulund College of Commerce (Autonomous), bringing together a year of learning, achievement, creativity, and experiences from across the college. Beginning with the academic year 2025–26, it has been decided that Vision will be released every year on 15th August, marking the occasion with a publication that reflects the spirit and journey of the institution.\n\nThe name Vision represents the many opinions, views, and perspectives of our students, giving them a space to write, express, question, and learn. Alongside student contributions, the magazine presents a glimpse of the year's journey through reports of college events, departmental and committee activities, result analysis, and the achievements of students and teachers.\n\nMore than a record of the year, Vision is a platform that encourages young minds to find their voice, share their ideas, and see the world through different perspectives.",
+    magazine_link: "https://drive.google.com/drive/folders/15q6lsDIdoitN6yP_S0B5GDbDK_kCtRWH"
+  };
+
+  const publications: PublicationItem[] = useMemo(() => {
+    const fromDB = (data as PublicationItem[]).filter((c) => c.status === 'Active');
+    const hasVision = fromDB.some((p) => p.slug === 'vision');
+    return hasVision ? fromDB : [...fromDB, visionPublication];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   useEffect(() => {
-    if (!loading && data.length > 0) {
-      const activeData = data.filter((c: any) => c.status === 'Active');
-      setPublications(activeData as PublicationItem[]);
+    if (publications.length > 0 && !activeSlug) {
       const param = searchParams.get('publication');
-      const initial = activeData.find((c: any) => c.slug === param) ? param! : activeData[0].slug;
-      if (!activeSlug) setActiveSlug(initial);
+      const initial = publications.find((c) => c.slug === param)?.slug ?? publications[0].slug;
+      setActiveSlug(initial);
     }
-  }, [data, loading, searchParams, activeSlug]);
+  }, [publications, activeSlug, searchParams]);
 
   useEffect(() => {
     const param = searchParams.get('publication');
@@ -54,6 +70,7 @@ function StudentsPublicationsContent() {
 
   const handleSelect = (slug: string) => {
     setActiveSlug(slug);
+    setMobileDropdownOpen(false);
     router.push(`/students-corner/Students-Publications?publication=${slug}`, { scroll: false });
   };
 
@@ -87,8 +104,70 @@ function StudentsPublicationsContent() {
       ) : publications.length === 0 ? (
         <div className="flex items-center justify-center py-32 text-gray-400 text-sm">No active publications found.</div>
       ) : (
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-1/3 lg:w-1/4 shrink-0">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 py-6 md:py-10 flex flex-col md:flex-row gap-8">
+          
+          {/* ── MOBILE: Dropdown selector ───────────────── */}
+          <div className="md:hidden w-full relative z-30">
+            {/* Trigger */}
+            <button
+              onClick={() => setMobileDropdownOpen((p) => !p)}
+              className="w-full flex items-center justify-between bg-[#123B6D] text-white px-5 py-4 font-bold text-sm tracking-widest uppercase rounded-t-xl"
+            >
+              <span className="flex items-center gap-2 min-w-0">
+                <BookOpen size={16} className="shrink-0 text-blue-200" />
+                <span className="truncate">{active?.name ?? 'Select a Publication'}</span>
+              </span>
+              <motion.span
+                animate={{ rotate: mobileDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+                className="shrink-0 ml-3"
+              >
+                <ChevronRight size={18} className="rotate-90" />
+              </motion.span>
+            </button>
+
+            {/* Dropdown panel */}
+            <AnimatePresence initial={false}>
+              {mobileDropdownOpen && (
+                <motion.div
+                  key="mobile-pub-dropdown"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22, ease: 'easeInOut' }}
+                  className="overflow-hidden absolute left-0 right-0 bg-white border border-[#E2E8F0] border-t-0 rounded-b-xl shadow-xl z-50"
+                >
+                  <div className="flex flex-col divide-y divide-[#F1F5F9] max-h-[55vh] overflow-y-auto">
+                    {publications.map((p) => (
+                      <button
+                        key={p.slug}
+                        onClick={() => handleSelect(p.slug)}
+                        className={`flex items-center gap-3 px-5 py-3.5 text-sm font-semibold transition-colors text-left ${
+                          activeSlug === p.slug
+                            ? 'bg-[#EBF3FF] text-[#123B6D]'
+                            : 'text-gray-700 hover:bg-[#F8FAFC] hover:text-[#123B6D]'
+                        }`}
+                      >
+                        <BookOpen size={15} className={`shrink-0 ${activeSlug === p.slug ? 'text-[#123B6D]' : 'text-gray-400'}`} />
+                        <span className="flex-1 text-left">{p.name}</span>
+                        {activeSlug === p.slug && (
+                          <ChevronRight size={14} className="text-[#123B6D] shrink-0" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Bottom border when closed (makes it look like a card) */}
+            {!mobileDropdownOpen && (
+              <div className="h-1 bg-white border border-t-0 border-[#E2E8F0] rounded-b-xl" />
+            )}
+          </div>
+
+          {/* ── DESKTOP: Sidebar ──────────────────────── */}
+          <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 shrink-0">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
               <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm uppercase tracking-wide">Publications</div>
               <div className="flex flex-col p-2 max-h-[70vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -128,6 +207,12 @@ function StudentsPublicationsContent() {
                             <ExternalLink size={16} /> Instagram Page
                           </Link>
                         )}
+                        {active.magazine_link && (
+                          <Link href={active.magazine_link} target="_blank"
+                            className="inline-flex items-center gap-2 bg-[#123B6D]/10 hover:bg-[#123B6D]/20 text-[#123B6D] px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                            <LinkIcon size={16} /> View Our Magazine from 1970 to Up-to-date
+                          </Link>
+                        )}
                         {active.contact_us?.[0]?.email && (
                           <Link href={`mailto:${active.contact_us[0].email}`}
                             className="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
@@ -141,7 +226,7 @@ function StudentsPublicationsContent() {
                   <div className="p-8 md:p-10 space-y-10">
                     {active.about && (
                       <section>
-                        <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><Info size={20} /> About</div>
+                        <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><Info size={20} /> About Vision</div>
                         <p className="text-gray-600 leading-relaxed text-base md:text-lg whitespace-pre-line">{active.about}</p>
                       </section>
                     )}
@@ -214,3 +299,4 @@ export default function StudentsPublicationsPage() {
     </Suspense>
   );
 }
+

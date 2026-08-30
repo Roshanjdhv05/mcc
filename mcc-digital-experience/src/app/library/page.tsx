@@ -59,13 +59,7 @@ const featuredBooks = [
   { title: 'Book 20', imageSrc: '/book cover/new (5).jpeg' },
 ];
 
-const notices = [
-  { title: 'BOOK EXHIBITIONS', date: '20 May 2025', isNew: true },
-  { title: 'ID CARD AND LIBRARY CARD NOTICE', date: '19 May 2025', isNew: true },
-  { title: 'LIBRARY ADVISORY COMMITTEE MEETING NOTICE', date: '18 May 2025', isNew: true },
-  { title: 'LIBRARY RELATED OTHER NOTICES', date: '17 May 2025', isNew: true },
-  { title: 'LIBRARY ORIENTATION PROGRAMME NOTICE', date: '16 May 2025', isNew: true },
-];
+const notices: any[] = [];
 
 const features = [
   { title: '24/7 Access', desc: 'Anytime,\nAnywhere', icon: <Clock className="w-5 h-5 text-green-600" /> },
@@ -196,19 +190,7 @@ export default function LibraryPage() {
             </button>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mt-2 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Users className="text-[#014d4e]" size={24} />
-              <span className="font-bold text-sm tracking-widest text-[#123B6D]">VISITORS</span>
-            </div>
-            <div className="flex items-center gap-1">
-              {['0', '6', '8', '3', '9', '7'].map((digit, i) => (
-                <div key={i} className="w-6 h-8 bg-white border border-gray-300 rounded shadow-sm flex items-center justify-center text-lg font-bold font-mono text-gray-800" style={{boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'}}>
-                  {digit}
-                </div>
-              ))}
-            </div>
-          </div>
+
           {/* Library Staff auto-scroll table */}
           <div className="bg-[#014d4e] rounded-t-xl rounded-b-sm p-4 flex items-center gap-3 text-white shadow-md mt-4">
             <Users size={20} className="opacity-90" />

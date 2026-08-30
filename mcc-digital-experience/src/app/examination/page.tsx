@@ -19,14 +19,6 @@ export default function ExaminationPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-12 -mt-8 pb-16 space-y-10">
-        {/* Alert */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
-          <AlertCircle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-amber-800 text-sm">Notices (Direct it to the relevant Section)</p>
-            <p className="text-amber-700 text-sm">Please refer to the relevant examination notices and updates below.</p>
-          </div>
-        </div>
 
         {/* Board of Examination Section */}
         <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden p-6 md:p-8">

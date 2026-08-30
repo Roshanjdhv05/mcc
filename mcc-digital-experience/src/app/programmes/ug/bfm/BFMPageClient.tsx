@@ -5,9 +5,10 @@ import { Users, Clock, FileText, CheckCircle2 } from 'lucide-react';
 import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bfmFaculty = [
-  { srNo: 1, name: 'Ms.Siddhi Kambli', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'M.Com., SET', email: 'Siddhi.kambli@mccmulumd.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Siddhi Kambli.png' },
-  { srNo: 2, name: 'Dr.Sipra Routaray', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'Ph.D.,M.com., MBA., NET., SET.', email: 'sipra.routray@mccmulund.ac.in', teachingExp: '14 yrs', image: '/Degree College Teachers/Sipra Routray.png' },
-  { srNo: 3, name: 'Ms. Archana Patre', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'MFM, M.Com', email: 'arch.dalvi@gmail.com', teachingExp: '9 yrs', image: '/Degree College Teachers/Archana Patre.png' },
+  { srNo: 1, name: 'Ms. Shilpa Thakur', additionalRole: 'Coordinator', designation: 'Vice-Principal (SFC) & Coordinator', department: 'BFM', education: 'MCom,Mphil', email: 'shilpa.thakur@mccmulund.ac.in', teachingExp: '28 yrs', image: '/Degree College Teachers/Shilpa Thakur.png' },
+  { srNo: 2, name: 'Ms.Siddhi Kambli', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'M.Com., SET', email: 'Siddhi.kambli@mccmulumd.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Siddhi Kambli.png' },
+  { srNo: 3, name: 'Dr.Sipra Routaray', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'Ph.D.,M.com., MBA., NET., SET.', email: 'sipra.routray@mccmulund.ac.in', teachingExp: '14 yrs', image: '/Degree College Teachers/Sipra Routray.png' },
+  { srNo: 4, name: 'Ms. Archana Patre', additionalRole: '—', designation: 'Assistant Professor', department: 'BFM', education: 'MFM, M.Com', email: 'arch.dalvi@gmail.com', teachingExp: '9 yrs', image: '/Degree College Teachers/Archana Patre.png' },
 ];
 
 export default function BFMPageClient() {

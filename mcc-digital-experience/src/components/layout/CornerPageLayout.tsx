@@ -189,11 +189,15 @@ function CornerPageLayoutInner({
                   key={cat.id}
                   onClick={() => {
                     setActiveMobile(null);
+                    // Wait for the dropdown collapse animation to finish before calculating bounds
                     setTimeout(() => {
-                      const el = document.getElementById(`mob-${cat.id}`) || document.getElementById(cat.id);
+                      const el = document.getElementById(cat.id);
                       if (el) {
-                        const y = el.getBoundingClientRect().top + window.scrollY - 140;
+                        // Offset by 130px to perfectly clear the sticky mobile header
+                        const yOffset = -130; 
+                        const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
                         window.scrollTo({ top: y, behavior: 'smooth' });
+                        setActiveDesktop(cat.id);
                       }
                     }, 300);
                   }}
@@ -216,17 +220,17 @@ function CornerPageLayoutInner({
 
       {/* ── Compact header bar ─────────────────────────────── */}
       <div className="bg-white border-b border-[#E2E8F0]">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-10 py-8 md:py-10 flex flex-col items-center text-center gap-2">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-10 py-3 md:py-10 flex flex-col items-center text-center gap-1.5 md:gap-2">
           {HeroIcon && (
-            <div className="w-14 h-14 rounded-xl bg-[#EBF3FF] flex items-center justify-center mb-2">
-              <HeroIcon size={28} className="text-[#123B6D]" />
+            <div className="w-8 h-8 md:w-14 md:h-14 rounded-xl bg-[#EBF3FF] flex items-center justify-center mb-1 md:mb-2">
+              <HeroIcon className="text-[#123B6D] w-4 h-4 md:w-7 md:h-7" />
             </div>
           )}
-          <h1 className="text-3xl md:text-4xl font-black text-[#123B6D] tracking-tight">
+          <h1 className="text-xl md:text-4xl font-black text-[#123B6D] tracking-tight">
             {title}
           </h1>
-          <div className="w-12 h-1 bg-[#D4A017] rounded-full" />
-          <p className="text-gray-500 text-base md:text-lg max-w-2xl leading-relaxed mt-1">{subtitle}</p>
+          <div className="w-8 md:w-12 h-1 bg-[#D4A017] rounded-full" />
+          <p className="text-gray-500 text-xs md:text-lg max-w-2xl leading-relaxed mt-1">{subtitle}</p>
         </div>
       </div>
 

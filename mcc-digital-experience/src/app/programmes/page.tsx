@@ -17,29 +17,29 @@ const allProgrammes = [
     color: 'from-[#B45309] to-[#D97706]', href: '/programmes/ug/bcom',
   },
   {
-    code: 'BAF', name: 'Bachelor of Commerce (Accounting & Finance)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '7:15 AM – 11:40 AM',
+    code: 'B.Com(AF)', name: 'Bachelor of Commerce (Accounting & Finance)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '7:15 AM – 11:40 AM',
     highlights: ['Accounting', 'Taxation', 'Auditing', 'Finance'],
     color: 'from-[#D97706] to-[#F59E0B]', href: '/programmes/ug/baf',
   },
   {
-    code: 'BBI', name: 'Bachelor of Commerce (Banking & Insurance)', category: 'Undergraduate', duration: '3 Years', seats: 160, time: '7:15 AM – 11:40 AM',
+    code: 'B.Com(BI)', name: 'Bachelor of Commerce (Banking & Insurance)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '7:15 AM – 11:40 AM',
     highlights: ['Banking', 'Insurance', 'Finance', 'Risk Management'],
     color: 'from-[#F59E0B] to-[#FCD34D]', href: '/programmes/ug/bbi',
   },
   {
-    code: 'BFM', name: 'Bachelor of Commerce (Financial Markets)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
+    code: 'B.Com(FM)', name: 'Bachelor of Commerce (Financial Markets)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
     highlights: ['Stock Market', 'Investment', 'Securities', 'Capital Markets'],
     color: 'from-[#92400E] to-[#B45309]', href: '/programmes/ug/bfm',
   },
 
   // 2] Business & Management: Navy/Blue family
   {
-    code: 'BMS', name: 'Bachelor of Commerce (Management Studies)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '12:00 PM – 4:30 PM',
+    code: 'B.Com(MS)', name: 'Bachelor of Commerce (Management Studies)', category: 'Undergraduate', duration: '3 Years', seats: 120, time: '12:00 PM – 4:30 PM',
     highlights: ['Management', 'Commerce', 'Leadership', 'Business Strategy'],
     color: 'from-[#0D2A4F] to-[#123B6D]', href: '/programmes/ug/bcom-ms',
   },
   {
-    code: 'BBA', name: 'Bachelor of Commerce (Business Administration)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
+    code: 'B.Com(BA)', name: 'Bachelor of Commerce (Business Administration)', category: 'Undergraduate', duration: '3 Years', seats: 60, time: '12:00 PM – 4:30 PM',
     highlights: ['Business Admin', 'Commerce', 'Entrepreneurship'],
     color: 'from-[#123B6D] to-[#1D4E96]', href: '/programmes/ug/bba',
   },
@@ -176,7 +176,7 @@ export default function AcademicsPage() {
                       <h3 className="text-3xl font-bold font-[var(--font-heading)] mb-1 leading-none">{p.code}</h3>
                       <p className="text-white/90 text-sm font-medium leading-snug">{p.name}</p>
                     </div>
-                    
+
                     <div className="p-6 flex flex-col flex-1">
                       <div className="flex flex-wrap gap-2 mb-6 mt-auto">
                         {p.highlights.map((h) => (

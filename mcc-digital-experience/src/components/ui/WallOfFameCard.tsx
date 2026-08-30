@@ -74,7 +74,7 @@ export default function WallOfFameCard({ item, layout = 'grid' }: WallOfFameCard
             <h3 className="text-xl font-black text-[#1E293B] leading-tight mb-0.5">{item.student_name}</h3>
           )}
           {item.description && (
-            <p className="text-[#94A3B8] text-xs mb-2 line-clamp-2">{item.description}</p>
+            <p className="text-[#64748B] font-bold text-xs mb-2 line-clamp-2">{item.description}</p>
           )}
           <span className="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full text-[11px] font-bold text-white mb-3"
             style={{ background: 'linear-gradient(90deg, #0d2a4f, #123B6D)' }}>
@@ -159,7 +159,7 @@ export default function WallOfFameCard({ item, layout = 'grid' }: WallOfFameCard
 
         {/* Description */}
         {item.description && (
-          <p className="text-[#94A3B8] text-[11px] text-center line-clamp-1 mb-2 px-1">
+          <p className="text-[#64748B] text-[11px] font-bold text-center line-clamp-2 mb-2 px-1">
             {item.description}
           </p>
         )}

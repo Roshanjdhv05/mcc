@@ -287,10 +287,10 @@ export default function SearchPage() {
   return (
     <div className="bg-[#F8FAFC] min-h-screen">
       {/* Hero */}
-      <div className="bg-gradient-to-br from-[#123B6D] to-[#0d2d54] pt-24 pb-20">
+      <div className="bg-gradient-to-br from-[#123B6D] to-[#0d2d54] pt-12 pb-14">
         <div className="max-w-3xl mx-auto px-4 md:px-12 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white font-[var(--font-heading)] mb-2">Search MCC</h1>
-          <p className="text-white/60 mb-8 text-sm">Find programmes, NAAC documents, notices, forms, and more</p>
+          <p className="text-white/60 mb-6 text-sm">Find programmes, NAAC documents, notices, forms, and more</p>
           <form onSubmit={handleSearch}>
             <div className="flex items-center gap-3 bg-white rounded-2xl px-5 py-4 shadow-2xl">
               <Search size={20} className="text-[#94A3B8] flex-shrink-0" />

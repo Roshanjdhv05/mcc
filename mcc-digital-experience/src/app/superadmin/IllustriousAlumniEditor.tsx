@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { X, Save, AlertCircle, Image as ImageIcon, Crop, Trash2, Link2 } from 'lucide-react';
+import { X, Save, AlertCircle, Image as ImageIcon, Crop, Trash2, Link2, Plus } from 'lucide-react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '@/lib/cropImage';
 import { processFileForUpload } from '@/lib/fileUtils';
@@ -25,6 +25,8 @@ export interface AlumniItem {
   achieved: string | null;
   testimonial: string | null;
   show_on_home: boolean;
+  qualification?: string | null;
+  mcc_association?: string | null;
 }
 
 interface EditorProps {
@@ -37,12 +39,14 @@ interface EditorProps {
 const FIELD = 'px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm w-full focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] outline-none transition-all';
 const LABEL = 'block text-sm font-bold text-gray-700 mb-1.5';
 
-const HSC_COURSES = ['HSC – Science', 'HSC – Commerce', 'HSC – Arts'];
-
-const UG_COURSES = [
+// All programmes (programme name + slug for display)
+const ALL_PROGRAMMES = [
+  'HSC',
   'B.Com',
   'B.Com (Accounting & Finance)',
+  'B.Com (Banking & Insurance)',
   'B.Com (Financial Markets)',
+  'B.Com (Management Studies)',
   'B.Com (Business Administration)',
   'B.Com BFSI',
   'B.Sc (Computer Science)',
@@ -50,9 +54,6 @@ const UG_COURSES = [
   'B.Sc (Computer Applications)',
   'B.Sc (Data Science)',
   'BA (Multimedia & Mass Communication)',
-];
-
-const PG_COURSES = [
   'M.Com (Advanced Accountancy)',
   'M.Com (Business Management)',
   'M.Com (Banking & Finance)',
@@ -61,12 +62,43 @@ const PG_COURSES = [
   'Ph.D in Business Economics',
 ];
 
+interface MccEntry { programme: string; batch: string; }
+
+function parseMccAssociation(raw: string | null | undefined): MccEntry[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {}
+  // Legacy: plain string like "BCOM (2016), HSC (2015)"
+  return raw.split(',').map(s => {
+    const m = s.trim().match(/^(.+?)\s*\((\d{4})\)$/);
+    if (m) return { programme: m[1].trim(), batch: m[2] };
+    return { programme: s.trim(), batch: '' };
+  }).filter(e => e.programme);
+}
+
+function serializeMccAssociation(entries: MccEntry[]): string {
+  return JSON.stringify(entries.filter(e => e.programme));
+}
+
+// Format for display on front-end: "HSC (2015), B.Com (2018)"
+export function formatMccAssociation(raw: string | null | undefined): string {
+  const entries = parseMccAssociation(raw);
+  return entries.map(e => e.batch ? `${e.programme} (${e.batch})` : e.programme).join(', ');
+}
+
 export default function IllustriousAlumniEditor({ item, isNew, onClose, onSaved }: EditorProps) {
   const [form, setForm] = useState<AlumniItem>(item);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  // Association with MCC entries
+  const [mccEntries, setMccEntries] = useState<MccEntry[]>(() =>
+    parseMccAssociation(item.mcc_association || item.course)
+  );
 
   // Crop state
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
@@ -118,6 +150,11 @@ export default function IllustriousAlumniEditor({ item, isNew, onClose, onSaved 
     }
   };
 
+  const addMccEntry = () => setMccEntries(prev => [...prev, { programme: ALL_PROGRAMMES[0], batch: '' }]);
+  const removeMccEntry = (idx: number) => setMccEntries(prev => prev.filter((_, i) => i !== idx));
+  const updateMccEntry = (idx: number, field: keyof MccEntry, value: string) =>
+    setMccEntries(prev => prev.map((e, i) => i === idx ? { ...e, [field]: value } : e));
+
   const handleSave = async () => {
     setLoading(true);
     setError(null);
@@ -126,20 +163,18 @@ export default function IllustriousAlumniEditor({ item, isNew, onClose, onSaved 
       if (!imageFile && !form.image_url) throw new Error('Please upload an image.');
 
       const imageUrl = await uploadImage();
-      const selectedCourses = [];
-      if (typeof form.ug === 'string' && form.ug) selectedCourses.push(form.ug);
-      if (typeof form.pg === 'string' && form.pg) selectedCourses.push(form.pg);
 
       const payload = {
         name: form.name,
         image_url: imageUrl,
-        hsc: !!form.hsc,
-        ug: !!form.ug,
-        pg: !!form.pg,
-        hsc_passout_year: form.hsc_passout_year || null,
-        ug_passout_year: form.ug_passout_year || null,
-        pg_passout_year: form.pg_passout_year || null,
-        course: selectedCourses.length > 0 ? selectedCourses.join(', ') : (form.course || null),
+        // Keep legacy fields for backward compat but populate from mcc_association
+        hsc: mccEntries.some(e => e.programme === 'HSC'),
+        ug: mccEntries.some(e => !e.programme.startsWith('M.') && !e.programme.startsWith('Ph.') && e.programme !== 'HSC'),
+        pg: mccEntries.some(e => e.programme.startsWith('M.') || e.programme.startsWith('Ph.')),
+        hsc_passout_year: mccEntries.find(e => e.programme === 'HSC')?.batch || null,
+        ug_passout_year: mccEntries.find(e => !e.programme.startsWith('M.') && !e.programme.startsWith('Ph.') && e.programme !== 'HSC')?.batch || null,
+        pg_passout_year: mccEntries.find(e => e.programme.startsWith('M.') || e.programme.startsWith('Ph.'))?.batch || null,
+        course: mccEntries.map(e => e.programme).join(', ') || null,
         year_passout: form.year_passout || null,
         company_name: form.company_name || null,
         designation: form.designation || null,
@@ -147,6 +182,8 @@ export default function IllustriousAlumniEditor({ item, isNew, onClose, onSaved 
         achieved: form.achieved || null,
         testimonial: form.testimonial || null,
         show_on_home: form.show_on_home,
+        qualification: form.qualification || null,
+        mcc_association: serializeMccAssociation(mccEntries),
       };
 
       if (isNew) {
@@ -286,90 +323,71 @@ export default function IllustriousAlumniEditor({ item, isNew, onClose, onSaved 
                 <input className={FIELD} value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. Dr. Amit Sharma" />
               </div>
 
-              {/* Education checkboxes + course + year */}
+              {/* Qualification */}
               <div className="sm:col-span-2">
-                <label className={LABEL}>Education at MCC</label>
+                <label className={LABEL}>Qualification</label>
+                <textarea
+                  className={`${FIELD} resize-none`}
+                  rows={3}
+                  value={form.qualification || ''}
+                  onChange={e => set('qualification', e.target.value)}
+                  placeholder="e.g. B.Com (2016), CA, AIR 1 – CA Final, MBA (Harvard)..."
+                />
+              </div>
 
-                {/* HSC */}
-                <div className="mb-4 p-3 bg-orange-50/60 border border-orange-100 rounded-xl">
-                  <label className="flex items-center gap-2 cursor-pointer mb-2">
-                    <input type="checkbox" checked={!!form.hsc}
-                      onChange={e => set('hsc', e.target.checked)}
-                      className="w-4 h-4 rounded accent-[#123B6D]" />
-                    <span className="text-sm font-bold text-gray-700">HSC</span>
-                  </label>
-                  {!!form.hsc && (
-                    <div className="mt-2">
-                      <label className="block text-xs font-bold text-gray-500 mb-1">Passout Year</label>
-                      <input className={FIELD} value={form.hsc_passout_year || ''}
-                        onChange={e => set('hsc_passout_year', e.target.value)}
-                        placeholder="e.g. 2018" maxLength={4} />
-                    </div>
-                  )}
+              {/* Association with MCC */}
+              <div className="sm:col-span-2">
+                <div className="flex items-center justify-between mb-2">
+                  <label className={LABEL + ' mb-0'}>Association with MCC</label>
+                  <button
+                    type="button"
+                    onClick={addMccEntry}
+                    className="flex items-center gap-1 text-xs font-bold text-[#123B6D] hover:bg-[#123B6D]/10 px-2.5 py-1.5 rounded-lg transition-colors"
+                  >
+                    <Plus size={13} /> Add
+                  </button>
                 </div>
-
-                {/* UG */}
-                <div className="mb-4 p-3 bg-blue-50/60 border border-blue-100 rounded-xl">
-                  <label className="flex items-center gap-2 cursor-pointer mb-2">
-                    <input type="checkbox" checked={!!form.ug}
-                      onChange={e => set('ug', e.target.checked ? UG_COURSES[0] : '')}
-                      className="w-4 h-4 rounded accent-[#123B6D]" />
-                    <span className="text-sm font-bold text-gray-700">UG (Under Graduate)</span>
-                  </label>
-                  {!!form.ug && (
-                    <div className="grid grid-cols-2 gap-3 mt-2">
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1">UG Course</label>
-                        <select className={FIELD} value={form.ug as string}
-                          onChange={e => set('ug', e.target.value)}>
-                          {UG_COURSES.map(c => <option key={c} value={c}>{c}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1">Passout Year</label>
-                        <input className={FIELD} value={form.ug_passout_year || ''}
-                          onChange={e => set('ug_passout_year', e.target.value)}
-                          placeholder="e.g. 2021" maxLength={4} />
-                      </div>
-                    </div>
+                <div className="space-y-2">
+                  {mccEntries.length === 0 && (
+                    <p className="text-xs text-gray-400 italic py-2">No association added yet. Click "+ Add" to add education at MCC.</p>
                   )}
-                </div>
-
-                {/* PG */}
-                <div className="p-3 bg-purple-50/60 border border-purple-100 rounded-xl">
-                  <label className="flex items-center gap-2 cursor-pointer mb-2">
-                    <input type="checkbox" checked={!!form.pg}
-                      onChange={e => set('pg', e.target.checked ? PG_COURSES[0] : '')}
-                      className="w-4 h-4 rounded accent-[#123B6D]" />
-                    <span className="text-sm font-bold text-gray-700">PG (Post Graduate)</span>
-                  </label>
-                  {!!form.pg && (
-                    <div className="grid grid-cols-2 gap-3 mt-2">
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1">PG Course</label>
-                        <select className={FIELD} value={form.pg as string}
-                          onChange={e => set('pg', e.target.value)}>
-                          {PG_COURSES.map(c => <option key={c} value={c}>{c}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1">Passout Year</label>
-                        <input className={FIELD} value={form.pg_passout_year || ''}
-                          onChange={e => set('pg_passout_year', e.target.value)}
-                          placeholder="e.g. 2023" maxLength={4} />
-                      </div>
+                  {mccEntries.map((entry, idx) => (
+                    <div key={idx} className="flex items-center gap-2 bg-blue-50/50 border border-blue-100 rounded-xl p-2.5">
+                      <select
+                        className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#123B6D] transition-all"
+                        value={entry.programme}
+                        onChange={e => updateMccEntry(idx, 'programme', e.target.value)}
+                      >
+                        {ALL_PROGRAMMES.map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                      <input
+                        type="text"
+                        className="w-24 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:border-[#123B6D] transition-all"
+                        placeholder="Year"
+                        value={entry.batch}
+                        maxLength={4}
+                        onChange={e => updateMccEntry(idx, 'batch', e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeMccEntry(idx)}
+                        className="text-red-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded-lg transition-colors shrink-0"
+                      >
+                        <X size={14} />
+                      </button>
                     </div>
+                  ))}
+                  {mccEntries.length > 0 && (
+                    <p className="text-[11px] text-gray-400 mt-1">Preview: <span className="font-medium text-gray-600">{mccEntries.filter(e => e.programme).map(e => e.batch ? `${e.programme} (${e.batch})` : e.programme).join(', ')}</span></p>
                   )}
                 </div>
               </div>
 
-              {/* Year Passout — only show when at least one level is selected */}
-              {(!!form.hsc || !!form.ug || !!form.pg) && (
-                <div>
-                  <label className={LABEL}>Year of Passout <span className="text-gray-400 font-normal text-xs">(overall / general)</span></label>
-                  <input className={FIELD} value={form.year_passout || ''} onChange={e => set('year_passout', e.target.value)} placeholder="e.g. 2018" />
-                </div>
-              )}
+              {/* Designation */}
+              <div>
+                <label className={LABEL}>Designation</label>
+                <input className={FIELD} value={form.designation || ''} onChange={e => set('designation', e.target.value)} placeholder="e.g. Senior Analyst" />
+              </div>
 
               {/* Company */}
               <div>
@@ -377,15 +395,9 @@ export default function IllustriousAlumniEditor({ item, isNew, onClose, onSaved 
                 <input className={FIELD} value={form.company_name || ''} onChange={e => set('company_name', e.target.value)} placeholder="e.g. Deloitte India" />
               </div>
 
-              {/* Designation */}
-              <div>
-                <label className={LABEL}>Designation / Role</label>
-                <input className={FIELD} value={form.designation || ''} onChange={e => set('designation', e.target.value)} placeholder="e.g. Senior Analyst" />
-              </div>
-
-              {/* Achieved */}
+              {/* Achievements */}
               <div className="sm:col-span-2">
-                <label className={LABEL}>Achievement / Highlight</label>
+                <label className={LABEL}>Achievements</label>
                 <input className={FIELD} value={form.achieved || ''} onChange={e => set('achieved', e.target.value)} placeholder="e.g. AIR 1 – CA Final, AIR 3 – CS" />
               </div>
 

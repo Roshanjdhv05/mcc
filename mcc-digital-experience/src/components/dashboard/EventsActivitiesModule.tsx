@@ -4,13 +4,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, ExternalLink, Image as ImageIcon } from 'lucide-react';
 import { useCachedProgrammeEvents } from '@/hooks/useCachedSupabase';
 
-function getSlugFromCode(code: string) {
-  return code.toLowerCase().replace(/[^a-z0-9]/g, '');
+function getAdminCode(courseCode: string): string {
+  const k = (courseCode || '').toUpperCase();
+  if (k === 'BCOM' || k === 'B.COM') return 'B.COM';
+  if (k === 'BAF') return 'BAF';
+  if (k === 'BMS') return 'BMS';
+  if (k === 'BFM') return 'BFM';
+  if (k === 'BFSI') return 'BFSI';
+  if (k === 'BBI') return 'BBI';
+  if (k === 'BCOM-BA') return 'BCOM-BA';
+  if (k === 'BCOM-MS') return 'BCOM-MS';
+  if (k === 'BSC_IT' || k === 'BSC-IT') return 'BSC-IT';
+  if (k === 'BSC_CS' || k === 'BSC-CS') return 'BSC-CS';
+  if (k === 'BSC_DS' || k === 'BSC-DS' || k === 'DS' || k === 'BSC-DS') return 'BSC-DS';
+  if (k === 'BSC_CA' || k === 'BCA') return 'BCA';
+  if (k === 'BBA') return 'BBA';
+  if (k === 'BAMMC') return 'BAMMC';
+  // PG programmes
+  if (k === 'MCOM-AA') return 'MCom-AA';
+  if (k === 'MCOM-BM') return 'MCom-BM';
+  if (k === 'MCOM-BF') return 'MCom-BF';
+  if (k === 'MSC-IT') return 'MSc-IT';
+  if (k === 'MSC-FINANCE') return 'MSc-Finance';
+  return k;
 }
 
 export default function EventsActivitiesModule({ courseCode }: { courseCode: string }) {
-  const slug = getSlugFromCode(courseCode);
-  const { data: events = [], isLoading: loading } = useCachedProgrammeEvents(slug, 'Events & Activities');
+  const adminCode = getAdminCode(courseCode);
+  const { data: events = [], isLoading: loading } = useCachedProgrammeEvents(adminCode, 'Events & Activities');
 
   if (loading) {
     return (

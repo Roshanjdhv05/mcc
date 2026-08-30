@@ -7,9 +7,10 @@ import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 
 const bafFaculty = [
   { srNo: 1, name: 'Ms.Alpa Katira', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,B.Ed., SET', email: 'alpa.katira@mccmulund.ac.in', teachingExp: '20 yrs', image: '/Degree College Teachers/Alpa Katira.png' },
-  { srNo: 2, name: 'Mr.Nitin Pawar', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,M.Phil., MBA., SET', email: 'nitin.pawar@mccmulund.ac.in', teachingExp: '16 yrs', image: '/Degree College Teachers/Nitin Pawar.png' },
-  { srNo: 3, name: 'Ms.Swapna Acharya', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,LLB, SET', email: 'swapna.acharya@mccmulund.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Swapana Acharya.png' },
-  { srNo: 4, name: 'Dr.Sneha Prajapati', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,B.Ed., SET,NET', email: 'sneha.prajapati@mccmulund.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Sneha Prajapati.png' },
+  { srNo: 2, name: 'Ms. Shilpa Thakur', additionalRole: '—', designation: 'Vice-Principal (SFC)', department: 'BAF', education: 'MCom, MPhil', email: 'shilpa.thakur@mccmulund.ac.in', teachingExp: '28 yrs', image: '/Degree College Teachers/Shilpa Thakur.png' },
+  { srNo: 3, name: 'Mr.Nitin Pawar', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,M.Phil., MBA., SET', email: 'nitin.pawar@mccmulund.ac.in', teachingExp: '16 yrs', image: '/Degree College Teachers/Nitin Pawar.png' },
+  { srNo: 4, name: 'Ms.Swapna Acharya', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,LLB, SET', email: 'swapna.acharya@mccmulund.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Swapana Acharya.png' },
+  { srNo: 5, name: 'Dr.Sneha Prajapati', additionalRole: '—', designation: 'Assistant Professor', department: 'BAF', education: 'M.Com.,B.Ed., SET,NET', email: 'sneha.prajapati@mccmulund.ac.in', teachingExp: '8 yrs', image: '/Degree College Teachers/Sneha Prajapati.png' },
 ];
 
 export default function BAFPageClient() {

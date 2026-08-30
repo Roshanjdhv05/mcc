@@ -55,7 +55,7 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
     ],
     'Business Economics': [
       { id: 'bcom-buseco-1', name: 'Dr. Shivaji Pawar', image: '/Degree College Teachers/Shivaji Pawar.png', email: 'shivaji.pawar@mccmulund.ac.in', designation: 'VICE-PRINCIPAL & HEAD', qualification: 'M.A., B.Ed., M.Phil., Ph.D., NET', department: 'Business Economics' },
-      { id: 'bcom-buseco-2', name: 'Dr. Arjun Lakhe', image: '/Degree College Teachers/Arjun Lakhe.png', email: 'arjun.lakhe@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.A., M.Phil., Ph.D.', experience: '12 yrs.', department: 'Business Economics' }
+      { id: 'bcom-buseco-2', name: 'Dr. Arjun Lakhe', image: '/Degree College Teachers/Arjun Lakhe.png', email: 'arjun.lakhe@mccmulund.ac.in', designation: 'ASSOCIATE PROFESSOR', qualification: 'M.A., M.Phil., Ph.D.', experience: '12 yrs.', department: 'Business Economics' }
     ]
   },
   'BSC_CA': {
@@ -91,7 +91,8 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
   },
   'BAF': {
     'All': [
-      { id: 'baf-5', name: 'Mr. Nitin Pawar', image: '/Degree College Teachers/Nitin Pawar.png', email: 'nitin.pawar@mccmulund.ac.in', designation: 'COORDINATOR', role: 'Coordinator', qualification: 'M.Com, M.Phil, MBA (Finance), SET', experience: '16 years', researchInterest: 'Financial Analysis, Financial Planning, Banking', linkedin: 'https://www.linkedin.com/in/mr-nitin-pawar-3aa2863b3', department: 'BAF' },
+      { id: 'baf-5', name: 'Mr. Nitin Pawar', image: '/Degree College Teachers/Nitin Pawar.png', email: 'nitin.pawar@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', role: 'Coordinator', qualification: 'M.Com, M.Phil, MBA (Finance), SET', experience: '16 years', researchInterest: 'Financial Analysis, Financial Planning, Banking', linkedin: 'https://www.linkedin.com/in/mr-nitin-pawar-3aa2863b3', department: 'BAF' },
+      { id: 'baf-1', name: 'Ms. Shilpa Thakur', image: '/Degree College Teachers/Shilpa Thakur.png', email: 'shilpa.thakur@mccmulund.ac.in', designation: 'VICE-PRINCIPAL (SFC)', role: '', qualification: 'M.Com, M.Phil', experience: '33 years', corporateExp: '3 years', researchInterest: 'Commerce, Human Resource', department: 'BAF' },
       { id: 'baf-2', name: 'Ms. Alpa Katira', image: '/Degree College Teachers/Alpa Katira.png', email: 'alpa.katira@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M. Com, B.Ed., SET', experience: '20 years', linkedin: 'https://www.linkedin.com/in/alpa-katira-659400281', department: 'BAF' },
       { id: 'baf-6', name: 'Ms. Swapna Acharya', image: '/Degree College Teachers/Swapana Acharya.png', email: 'swapna.acharya@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com, LLB, SET', experience: '8 years', corporateExp: '2 years', researchInterest: 'Finance, Law, Corporate Governance', linkedin: 'https://www.linkedin.com/in/swapna-acharya-796386122', department: 'BAF' },
       { id: 'baf-7', name: 'Dr. Sneha Prajapati', image: '/Degree College Teachers/Sneha Prajapati.png', email: 'sneha.prajapati@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com, B.Ed., SET, NET, Ph.D', experience: '8 years', researchInterest: 'Consumer Behaviour, Retail Management', linkedin: 'https://www.linkedin.com/in/dr-sneha-prajapati-183658125', department: 'BAF' }
@@ -106,8 +107,8 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
   },
   'BBI': {
     'All': [
-      { id: 'bbi-1', name: 'Ms. Shilpa Thakur', image: '/Degree College Teachers/Shilpa Thakur.png', email: 'shilpa.thakur@mccmulund.ac.in', designation: 'VICE-PRINCIPAL (SFC), COORDINATOR', role: 'Coordinator', qualification: 'M.Com, M.Phil', experience: '33 years', corporateExp: '3 years', researchInterest: 'Commerce, Human Resource', department: 'BBI' },
-      { id: 'bbi-2', name: 'Dr. Rajashri Deshpande', image: '/Degree College Teachers/Rajashree Deshpande.png', email: 'rajashri.deshpande@mccmulund.ac.in', designation: 'COORDINATOR', role: 'Coordinator', qualification: 'M.Com, M.A (Eco), NET, Ph.D', experience: '19 years', researchInterest: 'Banking & Finance', department: 'BBI' },
+      { id: 'bbi-2', name: 'Dr. Rajashri Deshpande', image: '/Degree College Teachers/Rajashree Deshpande.png', email: 'rajashri.deshpande@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', role: 'Coordinator', qualification: 'M.Com, M.A (Eco), NET, Ph.D', experience: '19 years', researchInterest: 'Banking & Finance', department: 'BBI' },
+      { id: 'bbi-1', name: 'Ms. Shilpa Thakur', image: '/Degree College Teachers/Shilpa Thakur.png', email: 'shilpa.thakur@mccmulund.ac.in', designation: 'VICE-PRINCIPAL (SFC)', role: '', qualification: 'M.Com, M.Phil', experience: '33 years', corporateExp: '3 years', researchInterest: 'Commerce, Human Resource', department: 'BBI' },
       { id: 'bbi-4', name: 'Ms. Archana Ananda Kadam', image: '/Degree College Teachers/Archana Kadam.png', email: 'archana.kadam@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M. Com, B. Ed, NET, M. A., PGDFM', experience: '16 years', corporateExp: '11 years', researchInterest: 'Financial Inclusion, Behavioural Finance, Banking', linkedin: 'https://www.linkedin.com/in/archana-kadam-a0539850/', department: 'BBI' },
       { id: 'bbi-5', name: 'Ms. Seema Mahendra Attarde', image: '/Degree College Teachers/Seema Attarde.png', email: 'seema.attarde@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Sc. (Industrial Statistics)', experience: '28 years', researchInterest: 'Interested In research related to statistics and social sciences', department: 'BBI' }
     ]
@@ -130,6 +131,7 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
   },
   'BFM': {
     'All': [
+      { id: 'bfm-1', name: 'Ms. Shilpa Thakur', image: '/Degree College Teachers/Shilpa Thakur.png', email: 'shilpa.thakur@mccmulund.ac.in', designation: 'VICE-PRINCIPAL (SFC) & COORDINATOR', role: '', qualification: 'M.Com, M.Phil', experience: '33 years', corporateExp: '3 years', researchInterest: 'Commerce, Human Resource', department: 'BFM' },
       { id: 'bfm-3', name: 'Ms. Siddhi Kambli', image: '/Degree College Teachers/Siddhi Kambli.png', email: 'siddhi.kambli@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com., SET', experience: '8 years', corporateExp: '2 years', researchInterest: 'Finance, Insurance, Business Economics', department: 'BFM' },
       { id: 'bfm-4', name: 'Dr. Sipra Routaray', image: '/Degree College Teachers/Sipra Routray.png', email: 'sipra.routray@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com, NET, MBA, Ph.D.', experience: '13 years', corporateExp: '3 years', researchInterest: 'Financial Markets, Digital Payments, FinTech', linkedin: 'https://www.linkedin.com/in/dr-sipra-routaray-345a0162', department: 'BFM' },
       { id: 'bfm-5', name: 'Ms. Archana Patre', image: '/Degree College Teachers/Archana Patre.png', email: 'abf.records@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com, MFM', experience: '12 years', corporateExp: '8 years', researchInterest: 'Finance, Financial Literacy', department: 'BFM' }

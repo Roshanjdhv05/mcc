@@ -96,7 +96,7 @@ export default function AutonomyNav() {
   }, [isInteracting]);
 
   return (
-    <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[64px] md:top-[150px] lg:top-[185px] xl:top-[195px]' : 'top-0'}`}>
+    <div className={`bg-[#123B6D] w-full shadow-md z-40 sticky transition-all duration-300 ${navVisible ? 'top-[110px] md:top-[210px] lg:top-[240px] xl:top-[250px]' : 'top-0'}`}>
       
       {/* Desktop nav - normal */}
       <div className="hidden lg:flex justify-center max-w-[1600px] mx-auto px-8 overflow-visible items-center h-12">

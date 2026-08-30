@@ -454,6 +454,7 @@ export default function GalleryPage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [liveEvents, setLiveEvents] = useState<Event[]>([]);
+  const [openDropdown, setOpenDropdown] = useState<'year' | 'dept' | 'cat' | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const { data: cachedGallery = [], isLoading: galleryLoading } = useCachedGalleryEvents();
@@ -591,88 +592,126 @@ export default function GalleryPage() {
     }
   }, []);
 
-  const renderFilters = () => (
+  const renderDropdown = (
+    id: 'year' | 'dept' | 'cat',
+    label: string,
+    allItems: string[],
+    selected: string[],
+    onToggle: (val: string) => void,
+    onClear: () => void
+  ) => {
+    const isOpen = openDropdown === id;
+    const displayLabel = selected.length === 0 ? label : selected.length === 1 ? selected[0] : `${selected.length} selected`;
+    return (
+      <div className="relative" key={id} onClick={e => e.stopPropagation()}>
+        <button
+          onClick={() => setOpenDropdown(isOpen ? null : id)}
+          className={`flex items-center gap-2 border rounded-xl px-3 py-2 text-xs font-semibold transition-all whitespace-nowrap ${
+            selected.length > 0
+              ? 'border-[#123B6D] bg-[#EBF3FF] text-[#123B6D]'
+              : 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100'
+          }`}
+        >
+          <span className="max-w-[120px] truncate">{displayLabel}</span>
+          <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+            <ChevronDown size={13} />
+          </motion.span>
+        </button>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              key={`drop-${id}`}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+              className="absolute left-0 top-full mt-2 z-50 bg-white border border-[#E2E8F0] rounded-2xl shadow-xl min-w-[200px] max-h-[260px] overflow-hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#F1F5F9]">
+                <span className="text-xs font-bold text-[#1E293B] uppercase tracking-wider">{label}</span>
+                {selected.length > 0 && (
+                  <button onClick={onClear} className="text-[10px] text-[#123B6D] font-bold hover:underline">Clear</button>
+                )}
+              </div>
+              <div className="overflow-y-auto flex flex-col divide-y divide-[#F8FAFC]">
+                {allItems.map(item => (
+                  <label key={item} className="flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-[#F8FAFC] transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(item)}
+                      onChange={() => onToggle(item)}
+                      className="w-3.5 h-3.5 rounded border-gray-300 accent-[#123B6D]"
+                    />
+                    <span className="text-xs text-gray-700 font-medium truncate" title={item}>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
+  const renderMobileFilters = () => (
     <>
-      {/* Years */}
       <div className="mb-5">
-        <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Academic Year</h3>
-        <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
-          <span className="text-xs">All Years</span><ChevronDown size={14} />
-        </div>
-        <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1">
-          <label className="flex items-center gap-2.5 cursor-pointer">
+        <h3 className="text-xs font-bold text-gray-800 mb-3 uppercase tracking-wider">Academic Year</h3>
+        <div className="space-y-3 pl-1">
+          <label className="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" checked={selectedYears.length === 0} onChange={() => setSelectedYears([])}
-              className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-            <span className="text-xs text-gray-700 font-semibold">All Years</span>
+              className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+            <span className="text-sm text-gray-700 font-semibold">All Years</span>
           </label>
           {ALL_YEARS.map(year => (
-            <label key={year} className="flex items-center gap-2.5 cursor-pointer">
+            <label key={year} className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked={selectedYears.includes(year)} onChange={() => handleYearToggle(year)}
-                className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-              <span className="text-xs text-gray-600 truncate">{year}</span>
+                className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+              <span className="text-sm text-gray-600">{year}</span>
             </label>
           ))}
         </div>
       </div>
-
-      {/* Department */}
       <div className="mb-5">
-        <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Department / Club</h3>
-        <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
-          <span className="text-xs">All Departments</span><ChevronDown size={14} />
-        </div>
-        <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
-          <label className="flex items-center gap-2.5 cursor-pointer">
+        <h3 className="text-xs font-bold text-gray-800 mb-3 uppercase tracking-wider">Department / Club</h3>
+        <div className="space-y-3 pl-1 max-h-[250px] overflow-y-auto">
+          <label className="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" checked={selectedDepts.length === 0} onChange={() => setSelectedDepts([])}
-              className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-            <span className="text-xs text-gray-700 font-semibold">All Departments</span>
+              className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+            <span className="text-sm text-gray-700 font-semibold">All Departments</span>
           </label>
           {ALL_DEPARTMENTS.map(dept => (
-            <label key={dept} className="flex items-center gap-2.5 cursor-pointer">
+            <label key={dept} className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked={selectedDepts.includes(dept)} onChange={() => handleDeptToggle(dept)}
-                className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-              <span className="text-xs text-gray-600 truncate" title={dept}>{dept}</span>
+                className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+              <span className="text-sm text-gray-600">{dept}</span>
             </label>
           ))}
         </div>
       </div>
-
-      {/* Categories */}
       <div className="mb-5">
-        <h3 className="text-xs font-bold text-gray-800 mb-2 uppercase tracking-wider">Category</h3>
-        <div className="border border-gray-200 rounded-xl mb-2.5 flex items-center px-3 py-2 bg-gray-50 text-sm text-gray-500 justify-between">
-          <span className="text-xs">All Categories</span><ChevronDown size={14} />
-        </div>
-        <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
-          <label className="flex items-center gap-2.5 cursor-pointer">
+        <h3 className="text-xs font-bold text-gray-800 mb-3 uppercase tracking-wider">Category</h3>
+        <div className="space-y-3 pl-1 max-h-[250px] overflow-y-auto">
+          <label className="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" checked={selectedCats.length === 0} onChange={() => setSelectedCats([])}
-              className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-            <span className="text-xs text-gray-700 font-semibold">All Categories</span>
+              className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+            <span className="text-sm text-gray-700 font-semibold">All Categories</span>
           </label>
           {ALL_CATEGORIES.map(cat => (
-            <label key={cat} className="flex items-center gap-2.5 cursor-pointer">
+            <label key={cat} className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked={selectedCats.includes(cat)} onChange={() => handleCatToggle(cat)}
-                className="w-3.5 h-3.5 rounded border-gray-300 text-[#123B6D]" />
-              <span className="text-xs text-gray-600">{cat}</span>
+                className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+              <span className="text-sm text-gray-600">{cat}</span>
             </label>
           ))}
         </div>
       </div>
-
-      <div className="flex flex-col gap-2 pt-3 border-t border-gray-100 mt-auto">
-        <button onClick={() => setIsMobileFilterOpen(false)} className="w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-2.5 text-xs font-bold flex justify-center items-center gap-1.5 transition-colors lg:hidden">
-          Apply Filters <Filter size={14} />
+      <div className="flex flex-col gap-2 pt-4 border-t border-gray-100 mt-auto pb-6">
+        <button onClick={() => setIsMobileFilterOpen(false)} className="w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-3 text-sm font-bold flex justify-center items-center gap-2 transition-colors">
+          Show Results
         </button>
-        <button onClick={() => { resetFilters(); setIsMobileFilterOpen(false); }} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl py-2.5 text-xs font-bold flex justify-center items-center gap-1.5 transition-colors lg:hidden">
-          ↺ Reset Filters
-        </button>
-        
-        {/* Desktop buttons */}
-        <button onClick={() => setIsMobileFilterOpen(false)} className="hidden lg:flex w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-2.5 text-xs font-bold justify-center items-center gap-1.5 transition-colors">
-          Apply Filters <Filter size={14} />
-        </button>
-        <button onClick={resetFilters} className="hidden lg:flex w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl py-2.5 text-xs font-bold justify-center items-center gap-1.5 transition-colors">
-          ↺ Reset Filters
+        <button onClick={() => { resetFilters(); setIsMobileFilterOpen(false); }} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl py-3 text-sm font-bold flex justify-center items-center transition-colors">
+          Clear Filters
         </button>
       </div>
     </>
@@ -728,61 +767,62 @@ export default function GalleryPage() {
       </div>
 
       {/* ── MAIN ── */}
-      <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-10 flex flex-col lg:flex-row gap-8">
-
-        {/* SIDEBAR */}
-        <div className="w-full lg:w-[260px] shrink-0">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hidden lg:flex flex-col sticky top-24 max-h-[85vh] overflow-y-auto no-scrollbar">
-            <h2 className="text-lg font-black text-[#0D1B3E] mb-5 flex items-center gap-2 border-b border-gray-100 pb-3">
-              <Filter size={18} /> Filters
-            </h2>
-            {renderFilters()}
-          </div>
-        </div>
+      <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-10" onClick={() => setOpenDropdown(null)}>
 
         {/* GALLERY */}
         <div className="flex-1 flex flex-col">
           {/* Top Bar */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100">
-            <div className="relative w-full sm:w-[280px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-              <input
-                type="text" placeholder="Search events..."
-                value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#123B6D]"
-              />
-            </div>
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500 font-medium whitespace-nowrap">Sort by :</span>
-                <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}
-                  className="bg-white border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-gray-700 focus:outline-none">
-                  <option value="Latest">Latest</option>
-                  <option value="Oldest">Oldest</option>
-                </select>
+          <div className="flex flex-col gap-3 mb-6 bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100">
+            {/* Row 1: Search + Sort + View */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+              <div className="relative w-full sm:w-[280px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  type="text" placeholder="Search events..."
+                  value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#123B6D]"
+                />
               </div>
-              <div className="flex gap-2">
-                {/* Mobile Filter Button */}
-                <button 
-                  onClick={() => setIsMobileFilterOpen(true)}
-                  className="lg:hidden flex items-center gap-1.5 border border-gray-200 rounded-xl px-3 py-1.5 bg-gray-50 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <Filter size={16} />
-                  <span className="hidden sm:inline">Filters</span>
-                </button>
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 font-medium whitespace-nowrap">Sort by :</span>
+                  <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}
+                    className="bg-white border border-gray-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-gray-700 focus:outline-none">
+                    <option value="Latest">Latest</option>
+                    <option value="Oldest">Oldest</option>
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setIsMobileFilterOpen(true)}
+                    className="lg:hidden flex items-center gap-1.5 border border-gray-200 rounded-xl px-3 py-1.5 bg-gray-50 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <Filter size={16} />
+                    <span className="hidden sm:inline">Filters</span>
+                  </button>
 
-                {/* View Mode Toggle */}
-                <div className="flex gap-1 border border-gray-200 rounded-xl p-1 bg-gray-50">
-                  <button onClick={() => setViewMode("grid")}
-                    className={`p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
-                    <Grid size={16} />
-                  </button>
-                  <button onClick={() => setViewMode("list")}
-                    className={`p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
-                    <List size={16} />
-                  </button>
+                  <div className="flex gap-1 border border-gray-200 rounded-xl p-1 bg-gray-50">
+                    <button onClick={() => setViewMode("grid")}
+                      className={`p-1.5 rounded-lg transition-colors ${viewMode === "grid" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
+                      <Grid size={16} />
+                    </button>
+                    <button onClick={() => setViewMode("list")}
+                      className={`p-1.5 rounded-lg transition-colors ${viewMode === "list" ? "bg-[#0D1B3E] text-white" : "text-gray-400"}`}>
+                      <List size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
+            </div>
+            {/* Row 2: Filter Dropdowns (Desktop only) */}
+            <div className="hidden lg:flex flex-wrap items-center gap-2">
+              <Filter size={14} className="text-gray-400 shrink-0" />
+              {renderDropdown('year', 'Academic Year', ALL_YEARS, selectedYears, handleYearToggle, () => setSelectedYears([]))}
+              {renderDropdown('dept', 'Department / Club', ALL_DEPARTMENTS, selectedDepts, handleDeptToggle, () => setSelectedDepts([]))}
+              {renderDropdown('cat', 'Category', ALL_CATEGORIES, selectedCats, handleCatToggle, () => setSelectedCats([]))}
+              {(selectedYears.length > 0 || selectedDepts.length > 0 || selectedCats.length > 0) && (
+                <button onClick={resetFilters} className="text-xs text-red-500 font-semibold hover:underline ml-1">Clear all</button>
+              )}
             </div>
           </div>
 
@@ -941,12 +981,12 @@ export default function GalleryPage() {
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMobileFilterOpen(false)}
-              className="fixed inset-0 bg-black/50 z-[60] lg:hidden backdrop-blur-sm"
+              className="fixed inset-0 bg-black/50 z-[990] lg:hidden backdrop-blur-sm"
             />
             <motion.div
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-              transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-              className="fixed inset-y-0 right-0 w-[280px] sm:w-[320px] bg-white z-[70] shadow-2xl flex flex-col lg:hidden"
+              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+              className="fixed inset-y-0 right-0 w-[280px] sm:w-[320px] bg-white z-[999] shadow-2xl flex flex-col lg:hidden"
             >
               <div className="flex items-center justify-between p-5 border-b border-gray-100">
                 <h2 className="text-lg font-black text-[#0D1B3E] flex items-center gap-2">
@@ -960,7 +1000,7 @@ export default function GalleryPage() {
                 </button>
               </div>
               <div className="p-5 flex-1 overflow-y-auto flex flex-col no-scrollbar">
-                {renderFilters()}
+                {renderMobileFilters()}
               </div>
             </motion.div>
           </>

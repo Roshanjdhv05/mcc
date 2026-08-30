@@ -554,6 +554,7 @@ const navLinks = [
               { label: 'Pratibimb', href: '/students-corner/Students-Publications?publication=pratibimb' },
               { label: 'Finanza', href: '/students-corner/Students-Publications?publication=finanza' },
               { label: 'Techanugraha', href: '/students-corner/Students-Publications?publication=techanugraha' },
+              { label: 'College Magazine (Vision)', href: '/students-corner/Students-Publications?publication=vision' },
             ]
           }
         ]
@@ -603,6 +604,7 @@ const navLinks = [
           { label: 'Pratibimb', href: '/students-corner/Students-Publications?publication=pratibimb' },
           { label: 'Finanza', href: '/students-corner/Students-Publications?publication=finanza' },
           { label: 'Techanugraha', href: '/students-corner/Students-Publications?publication=techanugraha' },
+          { label: 'College Magazine (Vision)', href: '/students-corner/Students-Publications?publication=vision' },
         ]
       },
       {

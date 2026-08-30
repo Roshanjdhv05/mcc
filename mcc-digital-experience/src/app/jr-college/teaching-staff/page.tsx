@@ -1,23 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, BookOpen, Clock, Info, GraduationCap, Building2, UserCircle } from 'lucide-react';
-import Link from 'next/link';
+import { Mail, BookOpen, Clock, Info, Building2, UserCircle } from 'lucide-react';
 import JrCollegeNav from '@/components/layout/JrCollegeNav';
-
-const jrCollegeNav = [
-  { label: 'HOME', active: false, href: '/junior-college-corner' },
-  { label: "VICE PRINCIPAL'S DESK", href: '/jr-college/vice-principal' },
-  { label: 'TEACHING STAFF', active: true, href: '/jr-college/teaching-staff' },
-  { label: 'RESULT ANALYSIS', href: '/jr-college/result-analysis' },
-  { label: 'SMAF / SCHOLARSHIP', href: '/jr-college/scholarships' },
-  { label: 'NOTICE', href: '/jr-college/notice' },
-  { label: 'TIMETABLE', href: '/jr-college/timetable' },
-  { label: 'SPORTS', href: '/jr-college/sports' },
-  { label: 'CULTURAL', href: '/jr-college/cultural' },
-  { label: 'COMMITTEE', href: '/jr-college/committee' },
-  { label: 'SPECIAL DAYS', href: '/jr-college/special-days' },
-];
 
 const staffData = {
   "Mathematics and Statistics": [
@@ -285,17 +270,17 @@ function FlipCard({ teacher }: { teacher: any }) {
           
           {/* Text Details */}
           <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pb-6">
-            <h3 className="text-[18px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)]">
+            <h3 className="text-[22px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)]">
               {teacher.name}
             </h3>
-            <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
+            <p className="text-[#D4A017] text-[13px] font-bold uppercase tracking-widest mb-1.5 text-center">
               {teacher.designation}
             </p>
-            <div className="text-[12px] text-gray-800 font-semibold text-center leading-tight mb-4">
+            <div className="text-[15px] text-gray-800 font-semibold text-center leading-tight mb-4">
               {teacher.education}
             </div>
             <div className="mt-auto flex justify-center z-20 animate-bounce">
-              <span className="bg-[#123B6D]/10 text-[#123B6D] text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-sm border border-[#123B6D]/20 shadow-sm">
+              <span className="bg-[#123B6D]/10 text-[#123B6D] text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-sm border border-[#123B6D]/20 shadow-sm">
                 Click to flip
               </span>
             </div>
@@ -313,26 +298,26 @@ function FlipCard({ teacher }: { teacher: any }) {
            <div className="absolute top-2 w-12 h-2 bg-white/20 rounded-full shadow-inner"></div>
            
           <div className="flex flex-col items-center text-center mt-6 mb-3 pb-3 border-b border-white/20 w-full">
-            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mb-2 shrink-0">
-              <BookOpen size={18} className="text-[#D4A017]" />
+            <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-2 shrink-0">
+              <BookOpen size={22} className="text-[#D4A017]" />
             </div>
-            <h3 className="font-bold text-sm leading-tight text-white/95 mb-0.5">{teacher.name}</h3>
-            <p className="text-[9px] text-[#D4A017] tracking-wider uppercase font-bold">{teacher.designation}</p>
+            <h3 className="font-bold text-base leading-tight text-white/95 mb-0.5">{teacher.name}</h3>
+            <p className="text-[12px] text-[#D4A017] tracking-wider uppercase font-bold">{teacher.designation}</p>
           </div>
           
           <div className="space-y-3 flex-1 w-full px-1">
             <div className="flex gap-2">
-              <Mail size={12} className="text-white/60 shrink-0 mt-0.5" />
-              <p className="text-xs font-medium break-all leading-tight">{teacher.email}</p>
+              <Mail size={15} className="text-white/60 shrink-0 mt-0.5" />
+              <p className="text-sm font-medium break-all leading-tight">{teacher.email}</p>
             </div>
             <div className="flex gap-2">
-              <Clock size={12} className="text-white/60 shrink-0 mt-0.5" />
-              <p className="text-xs"><span className="text-white/60">Experience:</span> {teacher.experience}</p>
+              <Clock size={15} className="text-white/60 shrink-0 mt-0.5" />
+              <p className="text-sm"><span className="text-white/60">Experience:</span> {teacher.experience}</p>
             </div>
             {teacher.about && (
               <div className="flex gap-2">
-                <Info size={12} className="text-white/60 shrink-0 mt-0.5" />
-                <p className="text-[11px] leading-tight text-white/80 line-clamp-6">{teacher.about}</p>
+                <Info size={15} className="text-white/60 shrink-0 mt-0.5" />
+                <p className="text-[13px] leading-tight text-white/80 line-clamp-6">{teacher.about}</p>
               </div>
             )}
           </div>
@@ -345,7 +330,6 @@ function FlipCard({ teacher }: { teacher: any }) {
 export default function JrCollegeTeachingStaffPage() {
   const [activeSubject, setActiveSubject] = useState(subjects[0]);
 
-  const navScrollRef = useRef<HTMLDivElement>(null);
   const subjScrollRef = useRef<HTMLDivElement>(null);
   const interactTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isInteracting, setIsInteracting] = useState(false);
@@ -364,14 +348,6 @@ export default function JrCollegeTeachingStaffPage() {
     let animationFrameId: number;
 
     const scrollStep = () => {
-      if (window.innerWidth < 1024 && navScrollRef.current) {
-        const el = navScrollRef.current;
-        if (el.style.scrollBehavior !== 'auto') el.style.scrollBehavior = 'auto';
-        el.scrollLeft += 1;
-        if (el.scrollLeft >= (el.scrollWidth + 8) / 2) {
-          el.scrollLeft = 0;
-        }
-      }
       if (window.innerWidth < 768 && subjScrollRef.current) {
         const el = subjScrollRef.current;
         if (el.style.scrollBehavior !== 'auto') el.style.scrollBehavior = 'auto';
@@ -415,57 +391,7 @@ export default function JrCollegeTeachingStaffPage() {
       </div>
 
       <div className="w-full max-w-[1600px] mx-auto px-4 md:px-12 -mt-12 pb-24">
-        <div className="flex flex-col lg:flex-row gap-8">
-          
-          {/* NAVIGATION SIDEBAR */}
-          <div className="w-full lg:w-[280px] shrink-0">
-            <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] p-2 lg:p-4 overflow-hidden relative">
-              <h2 className="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
-                Quick Links
-              </h2>
-              
-              {/* Mobile Auto-Slider */}
-              <div 
-                ref={navScrollRef}
-                onTouchStart={handleInteraction}
-                onMouseDown={handleInteraction}
-                onWheel={handleInteraction}
-                className="lg:hidden flex overflow-x-auto no-scrollbar gap-2 items-center"
-                style={{ scrollBehavior: 'auto' }}
-              >
-                {[...jrCollegeNav, ...jrCollegeNav].map((link, idx) => (
-                  <Link
-                    key={`${link.label}-${idx}`}
-                    href={link.href}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-between group whitespace-nowrap shrink-0 ${
-                      link.active
-                        ? 'bg-[#123B6D] text-white shadow-md shadow-[#123B6D]/20'
-                        : 'text-[#64748B] bg-gray-50'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-              
-              {/* Desktop Vertical */}
-              <div className="hidden lg:flex flex-col gap-2">
-                {jrCollegeNav.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-between group whitespace-nowrap shrink-0 ${
-                      link.active
-                        ? 'bg-[#123B6D] text-white shadow-md shadow-[#123B6D]/20'
-                        : 'text-[#64748B] hover:bg-gray-50 hover:text-[#123B6D]'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col gap-8">
 
           {/* MAIN CONTENT AREA */}
           <div className="flex-1 bg-white rounded-3xl shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col md:flex-row">

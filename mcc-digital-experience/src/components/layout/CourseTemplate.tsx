@@ -77,18 +77,18 @@ function FacultyFlipCard({ member, programmeName }: { member: any, programmeName
           </div>
           
           {/* Profile Image */}
-          <div className="relative mt-8 mb-4 z-10 w-[120px] h-[150px] rounded-lg shadow-md bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 border-2 border-white">
+          <div className="relative mt-5 mb-2 z-10 w-[120px] h-[150px] rounded-lg shadow-md bg-slate-200 overflow-hidden flex items-center justify-center shrink-0 border-2 border-white">
              {/* Actual Image with fallback */}
              <img src={member.image || `/teaching staff/${member.name}.jpg`} alt={member.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
              <UserCircle size={64} className="text-slate-400 hidden absolute" />
           </div>
           
           {/* Text Details */}
-          <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pb-6">
-            <h3 className="text-[18px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)]">
+          <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pb-12">
+            <h3 className="text-[18px] font-bold text-[#123B6D] mb-1.5 leading-tight text-center font-[var(--font-heading)] line-clamp-2">
               {member.name}
             </h3>
-            <p className="text-[#D4A017] text-[10px] font-bold uppercase tracking-widest mb-1.5 text-center">
+            <p className="text-[#D4A017] text-[8px] font-bold uppercase tracking-wide mb-1.5 text-center leading-snug">
               {member.designation}
             </p>
             {member.additionalRole && member.additionalRole !== '—' && (
@@ -407,6 +407,17 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     window.history.replaceState(null, '', `#${slugify(tab)}`);
+    
+    // Auto-scroll to content on smaller screens when a tab is clicked
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        const el = document.getElementById('tab-content-container');
+        if (el) {
+          // Native scroll handles offset via the scroll-mt-32 class
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
+    }
   };
 
   let finalQuickActionsData = customQuickActionsData || [
@@ -417,7 +428,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     { title: 'Programme Design', icon: FileText, info: '3-year full-time undergraduate programme divided into 6 semesters.' }
   ];
 
-  if (progData?.snapshot || progData?.overview?.eligibility) {
+  if (!customQuickActionsData && (progData?.snapshot || progData?.overview?.eligibility)) {
     const sn = progData?.snapshot || {};
     const baseActions = [...finalQuickActionsData];
     
@@ -447,7 +458,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     }
     
     finalQuickActionsData = baseActions;
-  } else if (dbProgramme?.programme_snapshot && dbProgramme.programme_snapshot.length > 0) {
+  } else if (!customQuickActionsData && dbProgramme?.programme_snapshot && dbProgramme.programme_snapshot.length > 0) {
     finalQuickActionsData = dbProgramme.programme_snapshot;
   }
 
@@ -579,7 +590,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
 
                   {/* Satellite 3: Seats — dynamic from quickActionsData */}
                   {(() => {
-                    const intakeItem = customQuickActionsData?.find(a => a.title === 'Intake Capacity');
+                    const intakeItem = finalQuickActionsData?.find((a: any) => a.title === 'Intake Capacity' || a.title === 'Number of Seats');
                     const seatsNum = intakeItem?.info?.match(/(\d+)/)?.[1] ?? '60';
                     return (
                       <div className="absolute bottom-[2%] left-[2%] z-30 flex flex-col items-center [animation:spin_40s_linear_infinite_reverse]">
@@ -595,9 +606,9 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                     );
                   })()}
 
-                  {/* Satellite 4: Timings — dynamic from quickActionsData */}
+                  {/* Satellite 4: Timings — dynamic from finalQuickActionsData */}
                   {(() => {
-                    const timingItem = customQuickActionsData?.find(a => a.title === 'Timing');
+                    const timingItem = finalQuickActionsData?.find((a: any) => a.title === 'Timing');
                     const timingStr = timingItem?.info ?? '07:15 AM – 10:40 AM';
                     const parts = timingStr.split(/[–-]/).map((s: string) => s.trim());
                     const startRaw = parts[0] ?? '';
@@ -658,7 +669,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
         </div>
 
         {/* Tab Content */}
-        <div>
+        <div id="tab-content-container" className="scroll-mt-32">
           {activeTab === 'Overview' ? (
             <div className="bg-white rounded-3xl p-6 md:p-10 border border-[#E2E8F0] shadow-sm">
               <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] mb-6 flex items-center gap-3">

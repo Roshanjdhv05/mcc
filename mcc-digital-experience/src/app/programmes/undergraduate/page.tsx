@@ -121,7 +121,7 @@ const programmes = [
     full: 'Bachelor of Commerce (Banking & Insurance)',
     level: 'GRADUATE',
     duration: '3 Years',
-    seats: 160,
+    seats: 60,
     timing: '07:15 AM – 11:40 AM',
     color: 'from-[#0e7490] to-[#06b6d4]',
     description: 'An industry-aligned programme preparing students for careers in banking, insurance, and financial services sectors.',

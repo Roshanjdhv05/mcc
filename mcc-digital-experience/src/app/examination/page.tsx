@@ -3,7 +3,7 @@ import { Download, AlertCircle, FileText, Users, FileBarChart, BookOpen, ShieldA
 import DynamicTimetables from '@/components/examination/DynamicTimetables';
 
 export const metadata: Metadata = {
-  title: 'Examination Hub | MCC Digital Experience Platform',
+  title: 'Examination Hub | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Exam timetables, results, ATKT, revaluation and all examination-related information.',
 };
 
@@ -13,7 +13,7 @@ export default function ExaminationPage() {
     <div className="bg-[#F8FAFC] min-h-screen">
       <div className="bg-[#123B6D] pt-8 pb-16">
         <div className="max-w-7xl mx-auto px-4 md:px-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-white font-[var(--font-heading)] mb-2">Examination Hub</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white font-[var(--font-heading)] mb-2">Degree College Examination Hub</h1>
           <p className="text-white/70">Timetables, results, ATKT, revaluation and all examination services</p>
         </div>
       </div>
@@ -37,11 +37,11 @@ export default function ExaminationPage() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
+
             {/* Members */}
             <div className="bg-[#F8FAFC] p-5 rounded-xl border border-[#E2E8F0] md:col-span-2">
               <h3 className="font-bold text-[#1E293B] mb-3 flex items-center gap-2">
-                <Users size={18} className="text-[#123B6D]"/>
+                <Users size={18} className="text-[#123B6D]" />
                 Examination (Degree & SFC)
               </h3>
               <p className="text-sm text-gray-700 leading-relaxed font-medium">
@@ -74,7 +74,7 @@ export default function ExaminationPage() {
             {/* Unfair Means Enquiry */}
             <div className="bg-[#F8FAFC] p-5 rounded-xl border border-[#E2E8F0] md:col-span-2 lg:col-span-3">
               <h3 className="font-bold text-[#1E293B] mb-3 flex items-center gap-2">
-                <ShieldAlert size={18} className="text-red-600"/>
+                <ShieldAlert size={18} className="text-red-600" />
                 Unfair Means Enquiry
               </h3>
               <div className="flex flex-wrap gap-4">

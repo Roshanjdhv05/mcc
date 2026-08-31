@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { renderSyllabusTable } from '@/lib/syllabusData';
 
 export const metadata: Metadata = {
-  title: 'BSc IT | MCC Digital Experience Platform',
+  title: 'BSc IT | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Bachelor of Science in Information Technology (BSc IT) at Mulund College of Commerce.',
 };
 

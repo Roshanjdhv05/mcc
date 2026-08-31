@@ -144,11 +144,10 @@ export default function AIAssistant() {
       whileHover={{ scale: 1.02, x: 4 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all ${
-        highlight 
-          ? 'bg-[#123B6D] text-white border-[#123B6D] shadow-md' 
-          : 'bg-white border-[#E2E8F0] text-[#1E293B] hover:border-[#123B6D]/30 hover:shadow-sm'
-      }`}
+      className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all ${highlight
+        ? 'bg-[#123B6D] text-white border-[#123B6D] shadow-md'
+        : 'bg-white border-[#E2E8F0] text-[#1E293B] hover:border-[#123B6D]/30 hover:shadow-sm'
+        }`}
     >
       <div className="flex items-center gap-3 font-medium">
         {Icon && <Icon size={20} className={highlight ? 'text-[#D4A017]' : 'text-[#123B6D]'} />}
@@ -164,8 +163,8 @@ export default function AIAssistant() {
         onClick={() => { setOpen(true); }}
         className={`fixed bottom-20 right-5 md:bottom-8 md:right-8 z-50 w-14 h-14 rounded-full bg-[#123B6D] text-white shadow-xl flex items-center justify-center ${open ? 'hidden' : 'flex'}`}
         animate={
-          hasUnread 
-            ? { rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.05, 1] } 
+          hasUnread
+            ? { rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.05, 1] }
             : { scale: [1, 1.05, 1] }
         }
         transition={{ repeat: Infinity, duration: hasUnread ? 1.5 : 3, ease: 'easeInOut' }}
@@ -214,32 +213,31 @@ export default function AIAssistant() {
                   transition={{ duration: 0.2 }}
                   className="space-y-4"
                 >
-                  
+
                   {/* MAIN MENU */}
                   {view === 'main' && (
                     <>
                       <div className="bg-white border border-[#E2E8F0] p-4 rounded-2xl rounded-tl-sm shadow-sm mb-6">
                         <p className="text-sm text-[#1E293B] leading-relaxed">
-                          👋 <strong>Welcome to MCC Digital Assistant.</strong><br/><br/>
-                          Get the latest broadcasts, or view details for Admissions, Scholarships, Examinations, Courses, and Forms.<br/><br/>
+                          👋 <strong>Welcome to MCC Digital Assistant.</strong><br /><br />
+                          Get the latest broadcasts, or view details for Admissions, Scholarships, Examinations, Courses, and Forms.<br /><br />
                           Please choose an option below to continue.
                         </p>
                       </div>
                       <div className="space-y-2.5">
                         <ActionButton icon={GraduationCap} label="Admissions" onClick={() => navigate('admissions')} />
-                        <ActionButton icon={CreditCard} label="Scholarships" onClick={() => navigate('scholarships')} />
                         <ActionButton icon={BookOpen} label="Courses" onClick={() => navigate('courses')} />
                         <ActionButton icon={FileText} label="Forms" onClick={() => navigate('forms')} />
-                        <ActionButton 
-                          icon={Megaphone} 
+                        <ActionButton
+                          icon={Megaphone}
                           label={
                             <div className="flex items-center gap-2">
-                              College Broadcasts 
+                              College Broadcasts
                               {hasUnread && <span className="px-2 py-0.5 text-[10px] bg-red-500 text-white rounded-full animate-pulse">New</span>}
                             </div>
-                          } 
-                          highlight 
-                          onClick={() => { navigate('broadcast'); setHasUnread(false); fetchBroadcasts(); }} 
+                          }
+                          highlight
+                          onClick={() => { navigate('broadcast'); setHasUnread(false); fetchBroadcasts(); }}
                         />
                       </div>
                     </>
@@ -268,10 +266,10 @@ export default function AIAssistant() {
                       </div>
                       <div className="space-y-2.5">
                         {(view === 'ug_courses' ? ugCourses : pgCourses).map(c => (
-                          <ActionButton 
-                            key={c.name} 
-                            label={`${c.name} - ${c.desc}`} 
-                            onClick={() => navigate('course_details', c)} 
+                          <ActionButton
+                            key={c.name}
+                            label={`${c.name} - ${c.desc}`}
+                            onClick={() => navigate('course_details', c)}
                           />
                         ))}
                       </div>
@@ -285,7 +283,7 @@ export default function AIAssistant() {
                         <h3 className="font-bold text-lg text-[#123B6D] mb-1 font-[var(--font-heading)]">{data.name}</h3>
                         <p className="text-sm text-[#64748B] mb-4">{data.desc}</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => router.push('/admission/degree-college')}
                         className="block w-full py-3.5 bg-[#123B6D] text-white font-bold rounded-xl hover:bg-[#0d2d56] transition-all shadow-lg text-center text-sm">
                         Apply Now
@@ -293,36 +291,9 @@ export default function AIAssistant() {
                     </div>
                   )}
 
-                  {/* GENERIC DETAILS PAGE (Scholarships, Certs, etc) */}
-                  {view === 'generic_details' && data && (
-                    <div className="space-y-4">
-                      <div className="bg-white border border-[#E2E8F0] p-5 rounded-2xl shadow-sm">
-                        <h3 className="font-bold text-lg text-[#123B6D] mb-4 font-[var(--font-heading)]">{data.title}</h3>
-                        <div className="space-y-3 text-sm text-[#64748B]">
-                          <p><strong>Overview:</strong> General information and guidelines regarding {data.title}.</p>
-                          <p><strong>Eligibility / Required Docs:</strong> Valid ID, Previous Marksheets, Photographs.</p>
-                          <p><strong>Process:</strong> Submit online form, verify documents, pay fees.</p>
-                          <p><strong>Important Dates:</strong> Check the notice board for deadlines.</p>
-                        </div>
-                      </div>
-                      {data.apply && (
-                        <button className="w-full py-3.5 bg-[#123B6D] text-white font-bold rounded-xl hover:bg-[#0d2d54] transition-all shadow-lg">
-                          Apply / Download Form
-                        </button>
-                      )}
-                    </div>
-                  )}
 
-                  {/* SCHOLARSHIPS */}
-                  {view === 'scholarships' && (
-                    <>
-                      <div className="space-y-2.5 mt-2">
-                        {['Government Scholarships', 'Minority Scholarships', 'Merit Scholarships', 'Freeship', 'Financial Assistance'].map(lbl => (
-                          <ActionButton key={lbl} label={lbl} onClick={() => navigate('generic_details', { title: lbl, apply: true })} />
-                        ))}
-                      </div>
-                    </>
-                  )}
+
+
 
                   {/* EXAMINATIONS */}
                   {view === 'examinations' && (

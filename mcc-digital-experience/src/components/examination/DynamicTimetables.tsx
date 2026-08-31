@@ -29,23 +29,22 @@ interface ExamDocument {
 // -----------------------------------------------------------------------
 const COURSES = [
   { id: 'BCOM',         label: 'B.Com' },
-  { id: 'BCOM-BA',      label: 'B.Com BA' },
-  { id: 'BCOM-MS',      label: 'B.Com MS' },
-  { id: 'BAF',          label: 'BAF' },
-  { id: 'BBI',          label: 'BBI' },
-  { id: 'BFM',          label: 'BFM' },
-  { id: 'BMS',          label: 'BMS' },
-  { id: 'BFSI',         label: 'BFSI' },
-  { id: 'BBA',          label: 'BBA' },
+  { id: 'BCOM-BA',      label: 'B.Com (BA)' },
+  { id: 'BCOM-MS',      label: 'B.Com (MS)' },
+  { id: 'BAF',          label: 'B.Com (BAF)' },
+  { id: 'BBI',          label: 'B.Com (BBI)' },
+  { id: 'BFM',          label: 'B.Com (BFM)' },
+  { id: 'BFSI',         label: 'B.Com (BFSI)' },
   { id: 'BAMMC',        label: 'BAMMC' },
   { id: 'BSCCS',        label: 'B.Sc CS' },
   { id: 'BSCIT',        label: 'B.Sc IT' },
   { id: 'BSCDS',        label: 'B.Sc DS' },
-  { id: 'BCA',          label: 'BCA' },
-  { id: 'MCOM',         label: 'M.Com' },
-  { id: 'MSCIT',        label: 'M.Sc IT' },
-  { id: 'MSCFINANCE',   label: 'M.Sc Finance' },
-  { id: 'PhD Programme',label: 'Ph.D. Programme' },
+  { id: 'BCA',          label: 'B.Sc CA' },
+  { id: 'MCOM.AA',      label: 'M.COM.AA' },
+  { id: 'MCOM.BM',      label: 'M.COM.BA' },
+  { id: 'MCOM.BF',      label: 'M.COM. BF' },
+  { id: 'MSC.IT',       label: 'M.SC. IT' },
+  { id: 'MSC.FIN',      label: 'M.SC. F' },
 ];
 
 // -----------------------------------------------------------------------
@@ -111,6 +110,16 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
       if (courseId === 'B.COM') courseId = 'BCOM';
       if (courseId === 'BSC-IT') courseId = 'BSCIT';
       if (courseId === 'BSC-DS') courseId = 'BSCDS';
+      if (courseId === 'BMS') courseId = 'BCOM-MS';
+      if (courseId === 'BBA') courseId = 'BCOM-BA';
+      
+      // PG Normalizers
+      if (courseId === 'MCOM') courseId = 'MCOM.AA';
+      if (courseId === 'MCOM-AA') courseId = 'MCOM.AA';
+      if (courseId === 'MCOM-BM') courseId = 'MCOM.BM';
+      if (courseId === 'MCOM-BF') courseId = 'MCOM.BF';
+      if (courseId === 'MSCIT') courseId = 'MSC.IT';
+      if (courseId === 'MSCFINANCE') courseId = 'MSC.FIN';
 
       if (!courseIndex[courseId]) courseIndex[courseId] = {};
       if (!courseIndex[courseId][doc.category]) courseIndex[courseId][doc.category] = [];
@@ -120,8 +129,8 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
     }
   }
 
-  // Only show course boxes that actually have data
-  const activeCourses = COURSES.filter(c => courseIndex[c.id] && Object.keys(courseIndex[c.id]).length > 0);
+  // Show all courses, even if they don't have documents yet
+  const activeCourses = COURSES;
 
   // ---- STEP 1: Loading State ----
   if (loading) {
@@ -147,7 +156,7 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {activeCourses.map(course => {
-          const cats = courseIndex[course.id];
+          const cats = courseIndex[course.id] || {};
           const totalFiles = Object.values(cats).reduce((a, b) => a + b.length, 0);
           return (
             <button

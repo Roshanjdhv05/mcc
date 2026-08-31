@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Under Graduate Programmes | MCC Digital Experience Platform',
+  title: 'Under Graduate Programmes | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Undergraduate degree programmes offered at Mulund College of Commerce.',
 };
 

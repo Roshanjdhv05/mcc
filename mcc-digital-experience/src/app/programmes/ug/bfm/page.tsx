@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'BFM | MCC Digital Experience Platform',
+  title: 'BFM | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Bachelor of Commerce (Financial Markets) at Mulund College of Commerce.',
 };
 

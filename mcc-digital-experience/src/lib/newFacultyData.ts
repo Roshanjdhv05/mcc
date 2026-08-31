@@ -116,7 +116,7 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
   'BCOM_BA': {
     'All': [
       { id: 'bcomba-1', name: 'Dr. Viji Kannan', image: '/Degree College Teachers/Viji Kannan.png', email: 'viji.kannan@mccmulund.ac.in', linkedin: 'https://www.linkedin.com/in/dr-viji-kannan-6814a230?utm_source=share_via&utm_content=profile&utm_medium=member_ios', designation: 'COORDINATOR', role: 'Coordinator', qualification: 'BCS, MBA, NET, PhD', experience: '24 years', department: 'BCOM BA' },
-      { id: 'bcomba-2', name: 'Ms. Prajakta Khamkar', image: '/Degree College Teachers/Prajakta Khamkar.png', email: 'prajakta.khamkar@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'MBA', experience: '10 years', corporateExp: '5 years', researchInterest: 'FinTech', linkedin: 'https://www.linkedin.com/in/prajakta-khamkar-mcc-b49952386', department: 'BCOM BA' },
+      { id: 'bcomba-2', name: 'Ms. Prajakta Khamkar', image: '/Degree College Teachers/Prajakta Khamkar.png', email: 'prajakta.khamkar@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'NET, MBA', experience: '10 years', corporateExp: '5 years', researchInterest: 'FinTech', linkedin: 'https://www.linkedin.com/in/prajakta-khamkar-mcc-b49952386', department: 'BCOM BA' },
       { id: 'bcomba-4', name: 'Ms. Rutuja Birje', image: '/Degree College Teachers/Rutuja Birje.png', designation: 'ASSISTANT PROFESSOR', qualification: 'MCom (Accountancy) , NET, CS', experience: '9 years', department: 'BCOM BA' }
     ]
   },

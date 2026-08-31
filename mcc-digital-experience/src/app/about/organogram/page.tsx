@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Shield, Users, User, Building, Landmark, BookOpen, GraduationCap, Users2, Briefcase, FileCheck, CircleDollarSign, Shapes, ChevronDown, ArrowRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Organogram | MCC Digital Experience Platform',
+  title: 'Organogram | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Organizational structure and governance of Mulund College of Commerce.',
 };
 

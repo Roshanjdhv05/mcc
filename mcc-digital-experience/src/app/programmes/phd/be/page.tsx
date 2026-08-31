@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
 
 export const metadata: Metadata = {
-  title: 'PhD (BE) | MCC Digital Experience Platform',
+  title: 'PhD (BE) | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Ph.D. in Business Economics at Mulund College of Commerce.',
 };
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ShieldAlert, AlertTriangle, Ban, UserX, Clock, PhoneCall } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Anti-Ragging Cell | MCC Digital Experience Platform',
+  title: 'Anti-Ragging Cell | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Anti-Ragging warning and policy at Mulund College of Commerce as per The Maharashtra Prohibition of Ragging Act, 1999.',
 };
 

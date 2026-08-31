@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, Clock, Users, BookOpen, Award } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Degree programmes | MCC Digital Experience Platform',
+  title: 'Degree programmes | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Explore all academic programmes at Mulund College of Commerce.',
 };
 

@@ -14,12 +14,12 @@ export default function BBAPageClient() {
 
   const bbaFaculty = [
     { srNo: 1, name: 'Dr. Viji Kannan', additionalRole: 'Coordinator', designation: 'Assistant Professor', department: 'BCOM BA', education: 'BCS, MBA, NET, PhD', email: 'viji.kannan@mccmulund.ac.in', teachingExp: '24 yrs', image: '/Degree College Teachers/Viji Kannan.png', linkedin: 'https://www.linkedin.com/in/dr-viji-kannan-6814a230?utm_source=share_via&utm_content=profile&utm_medium=member_ios' },
-    { srNo: 2, name: 'Ms. Prajakta Khamkar', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MBA', email: 'prajakta@gmail.com', teachingExp: '8 yrs', image: '/Degree College Teachers/Prajakta Khamkar.png' },
+    { srNo: 2, name: 'Ms. Prajakta Khamkar', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'NET, MBA', email: 'prajakta@gmail.com', teachingExp: '8 yrs', image: '/Degree College Teachers/Prajakta Khamkar.png' },
     { srNo: 3, name: 'Ms. Rutuja Birje', additionalRole: '—', designation: 'Assistant Professor', department: 'BCOM BA', education: 'MCom (Accountancy) , NET, CS (Executive), Diploma in Tax Management', email: 'rutuja.birje@mccmulund.ac.in', teachingExp: '9 yrs', image: '/Degree College Teachers/Rutuja Birje.png' },
   ];
 
   return (
-    <CourseTemplate 
+    <CourseTemplate
       festivals="Festivals"
       publication="Publication"
       introductionContent={
@@ -33,7 +33,7 @@ export default function BBAPageClient() {
           <p className="mb-4">
             This program helps in nurturing every student and budding entrepreneur to understand their innate abilities, strengths and work on the needed skill areas. Each and every subject will be dealt with case studies, Role plays, Real life challenges and simulation models.
           </p>
-          
+
           <h4 className="font-bold text-[#1E293B] mt-6 mb-3 text-lg">Eligibility Criteria</h4>
           <ul className="space-y-3 mb-6">
             <li className="flex items-start gap-2 text-sm font-medium text-gray-700">

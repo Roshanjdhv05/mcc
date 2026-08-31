@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { renderSyllabusTable } from '@/lib/syllabusData';
 
 export const metadata: Metadata = {
-  title: 'BSc Data Science | MCC Digital Experience Platform',
+  title: 'BSc Data Science | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Bachelor of Science in Data Science at Mulund College of Commerce.',
 };
 

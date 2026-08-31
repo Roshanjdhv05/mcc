@@ -28,7 +28,7 @@ const hankenGrotesk = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "MCC Digital Experience Platform | Mulund College of Commerce",
+  title: "Mulund College of Commerce (AUTONOMOUS) | Mulund College of Commerce",
   description:
     "The official digital platform of Mulund College of Commerce (Autonomous) — offering seamless access to admissions, academics, notices, and student services.",
   keywords: "MCC, Mulund College of Commerce, Mumbai University, Admissions, BCom, MCom",

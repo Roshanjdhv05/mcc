@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { BookOpen, Users, Award, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'School of Computing and Technology | MCC Digital Experience Platform',
+  title: 'School of Computing and Technology | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Explore Computing and Technology programmes offered at Mulund College of Commerce.',
 };
 

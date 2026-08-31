@@ -4,7 +4,7 @@ import SyllabusRenderer from '@/components/ui/SyllabusRenderer';
 import { Users, Clock, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'B.Com (MS) | MCC Digital Experience Platform',
+  title: 'B.Com (MS) | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Bachelor of Commerce (Management Studies) at Mulund College of Commerce.',
 };
 

@@ -3,7 +3,7 @@ import { Download, Search, Filter } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Smart Forms Center | MCC Digital Experience Platform',
+  title: 'Smart Forms Center | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Download and submit all college forms — admission, examination, scholarship, certificates.',
 };
 

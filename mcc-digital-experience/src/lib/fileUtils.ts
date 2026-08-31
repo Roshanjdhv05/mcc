@@ -1,12 +1,12 @@
 import imageCompression from 'browser-image-compression';
 
-const MAX_PDF_SIZE_MB = 0.3; // 300KB
+const MAX_PDF_SIZE_MB = 10; // 10MB
 const MAX_PDF_SIZE_BYTES = MAX_PDF_SIZE_MB * 1024 * 1024;
 
 /**
  * Processes a file before upload.
  * - If it's an image, compresses it to ~300KB.
- * - If it's a PDF, validates that it is <= 300KB.
+ * - If it's a PDF, validates that it is <= 10MB.
  * - Otherwise, passes it through unchanged.
  * @param file The file to process
  * @returns A Promise that resolves to the processed File, or rejects with an Error if validation fails.
@@ -33,7 +33,7 @@ export async function processFileForUpload(file: File): Promise<File> {
   } else if (fileType === 'application/pdf') {
     // Validate PDF size
     if (file.size > MAX_PDF_SIZE_BYTES) {
-      throw new Error(`PDF is too large (${(file.size / 1024).toFixed(1)} KB). Please compress it to be under 300KB before uploading.`);
+      throw new Error(`PDF is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Please compress it to be under 10MB before uploading.`);
     }
     return file;
   }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CourseTemplate from '@/components/layout/CourseTemplate';
 
 export const metadata: Metadata = {
-  title: 'MCom | MCC Digital Experience Platform',
+  title: 'MCom | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Master of Commerce (MCom) at Mulund College of Commerce.',
 };
 

@@ -122,8 +122,11 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
   ];
 
   const EXAM_COURSES = [
-    'B.COM', 'BAF', 'BMS', 'BFM', 'BFSI', 'BBI', 'BCOM-BA', 'BCOM-MS',
-    'BSC-IT', 'BCA', 'BSC-DS', 'BBA', 'BAMMC'
+    // UG Programmes
+    'B.COM', 'BAF', 'BCOM-MS', 'BFM', 'BFSI', 'BBI', 'BCOM-BA',
+    'BSC-IT', 'BCA', 'BSC-DS', 'BAMMC',
+    // PG Programmes
+    'MCOM.AA', 'MCOM.BM', 'MCOM.BF', 'MSC.IT', 'MSC.FIN',
   ];
 
   const toggleExamCourse = (course: string) => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import CalendarHero from '@/components/calendar/CalendarHero';
-import CalendarStats from '@/components/calendar/CalendarStats';
 import MainCalendarGrid from '@/components/calendar/MainCalendarGrid';
 import UpcomingEventsSidebar from '@/components/calendar/UpcomingEventsSidebar';
 
@@ -16,11 +15,8 @@ export default function EventCalendarPage() {
       {/* Hero Section */}
       <CalendarHero />
 
-      {/* Stat Cards (overlap hero) */}
-      <CalendarStats />
-
       {/* Main Calendar + Sidebar */}
-      <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-10 mt-6">
+      <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-10">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Main Calendar Grid */}
           <MainCalendarGrid />

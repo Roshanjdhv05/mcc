@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Download, Award, Star, CheckCircle, FileText, TrendingUp } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'NAAC Accreditation | MCC Digital Experience Platform',
+  title: 'NAAC Accreditation | Mulund College of Commerce (AUTONOMOUS)',
   description: 'NAAC A+ accreditation details, criteria, and documents for Mulund College of Commerce.',
 };
 

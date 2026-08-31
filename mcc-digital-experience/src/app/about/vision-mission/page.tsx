@@ -1,7 +1,7 @@
 import { Target, Eye, Navigation } from 'lucide-react';
 
 export const metadata = {
-  title: 'Vision & Mission | MCC Digital Experience Platform',
+  title: 'Vision & Mission | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Learn about the vision, mission, and objectives of Mulund College of Commerce.',
 };
 

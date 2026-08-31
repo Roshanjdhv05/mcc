@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'M.Com (Business Management) | MCC Digital Experience Platform',
+  title: 'M.Com (Business Management) | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Master of Commerce (Business Management) at Mulund College of Commerce.',
 };
 

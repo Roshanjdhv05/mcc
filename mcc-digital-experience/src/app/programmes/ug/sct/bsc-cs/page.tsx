@@ -4,7 +4,7 @@ import { Users, Clock, FileText } from 'lucide-react';
 import { renderSyllabusTable } from '@/lib/syllabusData';
 
 export const metadata: Metadata = {
-  title: 'B.Sc (CS) | MCC Digital Experience Platform',
+  title: 'B.Sc (CS) | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Bachelor of Science (Computer Science) at Mulund College of Commerce.',
 };
 

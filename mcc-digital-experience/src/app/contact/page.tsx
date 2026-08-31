@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { MapPin, Phone, Mail, Clock, ChevronRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Contact Us | MCC Digital Experience Platform',
+  title: 'Contact Us | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Get in touch with Mulund College of Commerce. Contact details, inquiry form and department directory.',
 };
 

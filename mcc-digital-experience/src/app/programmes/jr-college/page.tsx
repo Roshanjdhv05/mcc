@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Jr College Programmes | MCC Digital Experience Platform',
+  title: 'Jr College Programmes | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Junior College (FYJC and SYJC) programmes offered at Mulund College of Commerce.',
 };
 

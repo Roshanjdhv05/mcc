@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import SearchPage from './SearchPage';
 
 export const metadata: Metadata = {
-  title: 'Search | MCC Digital Experience Platform',
+  title: 'Search | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Search across programmes, NAAC documents, notices, forms, faculty and more at Mulund College of Commerce.',
 };
 

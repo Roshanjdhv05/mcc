@@ -3,13 +3,13 @@ import Link from 'next/link';
 import { BookOpen, Users, Award, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Post Graduate Programmes | MCC Digital Experience Platform',
+  title: 'Post Graduate Programmes | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Postgraduate degree programmes offered at Mulund College of Commerce.',
 };
 
 const programmes = [
   {
-    code: 'M.Com (AA)',
+    code: 'M.COM.AA',
     full: 'Master of Commerce (Advanced Accountancy)',
     level: 'POST GRADUATE',
     duration: '2 Years',
@@ -21,7 +21,7 @@ const programmes = [
     href: '/programmes/pg/mcom-aa',
   },
   {
-    code: 'M.Com (BM)',
+    code: 'M.COM.BA',
     full: 'Master of Commerce (Business Management)',
     level: 'POST GRADUATE',
     duration: '2 Years',
@@ -33,7 +33,7 @@ const programmes = [
     href: '/programmes/pg/mcom-bm',
   },
   {
-    code: 'M.Com (BF)',
+    code: 'M.COM. BF',
     full: 'Master of Commerce (Banking & Finance)',
     level: 'POST GRADUATE',
     duration: '2 Years',
@@ -45,7 +45,7 @@ const programmes = [
     href: '/programmes/pg/mcom-bf',
   },
   {
-    code: 'MSF',
+    code: 'M.SC. F',
     full: 'Master of Science in Finance',
     level: 'POST GRADUATE',
     duration: '2 Years',
@@ -56,7 +56,7 @@ const programmes = [
     href: '/programmes/pg/msf',
   },
   {
-    code: 'M.Sc. (IT)',
+    code: 'M.SC. IT',
     full: 'Master of Science (Information Technology)',
     level: 'POST GRADUATE',
     duration: '2 Years',

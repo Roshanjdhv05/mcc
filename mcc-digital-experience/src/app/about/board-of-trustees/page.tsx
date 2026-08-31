@@ -3,7 +3,7 @@ import { Users, Landmark } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Board of Trustees | MCC Digital Experience Platform',
+  title: 'Board of Trustees | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Meet the esteemed Board of Trustees of the Parle Tilak Vidyalaya Association (PTVA).',
 };
 

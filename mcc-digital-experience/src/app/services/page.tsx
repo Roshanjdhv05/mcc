@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Search, ArrowRight, Clock, CheckCircle2 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Student Service Portal | MCC Digital Experience Platform',
+  title: 'Student Service Portal | Mulund College of Commerce (AUTONOMOUS)',
   description: 'Apply for Bonafide Certificate, Leaving Certificate, Railway Concession, and other student services.',
 };
 

@@ -15,7 +15,7 @@ export default function MComAAPageClient() {
   return (
     <PGCourseTemplate
       title="Master of Commerce (Advanced Accountancy)"
-      fundingType="Self Financing"
+      fundingType="Aided"
       courseKey="mcom-aa"
       syllabusContent={<SyllabusRenderer programKey="MCOM_AA" />}
       quickActionsData={quickActions}

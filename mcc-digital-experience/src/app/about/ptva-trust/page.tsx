@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'PTVA Trust | MCC Digital Experience Platform',
+  title: 'PTVA Trust | Mulund College of Commerce (AUTONOMOUS)',
   description: 'About Parle Tilak Vidyalaya Association (PTVA) Trust and its legacy of education.',
 };
 

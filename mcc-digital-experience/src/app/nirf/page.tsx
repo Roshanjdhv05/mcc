@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Download, TrendingUp, BarChart2, Users, BookOpen, DollarSign, Star, Globe } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'NIRF Ranking | MCC Digital Experience Platform',
+  title: 'NIRF Ranking | Mulund College of Commerce (AUTONOMOUS)',
   description: 'NIRF Ranking data and parameters for Mulund College of Commerce.',
 };
 

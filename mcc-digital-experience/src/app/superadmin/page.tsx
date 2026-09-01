@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Lock, User, ShieldAlert, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays, Home, FileText, GraduationCap, Image as ImageIcon } from 'lucide-react';
+import { Lock, User, ShieldAlert, Shield, ArrowRight, LayoutDashboard, Bell, LogOut, Plus, X, CalendarDays, Home, FileText, GraduationCap, Image as ImageIcon } from 'lucide-react';
 import { Notice } from '@/lib/noticeTypes';
 import NoticeForm from './NoticeForm';
 import NoticeList from './NoticeList';
@@ -20,8 +20,9 @@ import ResearchManager from './ResearchManager';
 import IllustriousAlumniManager from './IllustriousAlumniManager';
 import NewsAnnouncementsManager from './NewsAnnouncementsManager';
 import OverviewDashboard from '@/components/superadmin/OverviewDashboard';
+import AccessProviderManager from './AccessProviderManager';
 
-const MARGIN_FIX = '-mt-[64px] md:-mt-[150px] lg:-mt-[185px] xl:-mt-[195px]';
+// Removed MARGIN_FIX since SiteChrome handles the bare layout now
 
 function SuperAdminContent() {
   const router = useRouter();
@@ -93,12 +94,12 @@ function SuperAdminContent() {
   };
 
   if (isCheckingAuth) {
-    return <div className={`min-h-screen bg-slate-50 flex items-center justify-center ${MARGIN_FIX} relative z-50`}><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]"></div></div>;
+    return <div className={`min-h-screen bg-slate-50 flex items-center justify-center relative z-50`}><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#123B6D]"></div></div>;
   }
 
   if (isLoggedIn) {
     return (
-      <div className={`min-h-screen bg-slate-50 flex flex-col ${MARGIN_FIX} relative z-50`}>
+      <div className={`min-h-screen bg-slate-50 flex flex-col relative z-50`}>
 
         {/* ─── Header ─── */}
         <header className="bg-[#123B6D] text-white px-6 py-3.5 flex items-center justify-between shadow-md sticky top-0 z-40">
@@ -135,8 +136,9 @@ function SuperAdminContent() {
               { key: 'illustrious-alumni', label: 'Illustrious Alumni', icon: <GraduationCap size={18} /> },
               { key: 'statutory-bodies', label: 'Statutory Bodies', icon: <FileText size={18} /> },
               { key: 'degree-programmes', label: 'Degree Programmes', icon: <FileText size={18} /> },
-              { key: 'jr-college', label: 'Jr College', icon: <GraduationCap size={18} /> },
-              { key: 'news', label: 'News & Announcements', icon: <Bell size={18} /> },
+              { key: 'jr-college',           label: 'Jr College',              icon: <GraduationCap size={18} /> },
+              { key: 'news',                  label: 'News & Announcements',    icon: <Bell size={18} /> },
+              { key: 'access-provider',       label: 'Access Provider',         icon: <Shield size={18} /> },
             ] as const).map(item => (
               <button
                 key={item.key}
@@ -296,6 +298,11 @@ function SuperAdminContent() {
               <NewsAnnouncementsManager />
             )}
 
+            {/* ── Access Provider ── */}
+            {activeTab === 'access-provider' && (
+              <AccessProviderManager />
+            )}
+
           </main>
         </div>
       </div>
@@ -304,7 +311,7 @@ function SuperAdminContent() {
 
   // ─── Login Page ───
   return (
-    <div className={`min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 ${MARGIN_FIX} relative z-50`}>
+    <div className={`min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-50`}>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="w-16 h-16 bg-[#123B6D] rounded-2xl flex items-center justify-center shadow-lg">

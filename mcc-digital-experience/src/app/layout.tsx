@@ -1,16 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Source_Serif_4, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import AIAssistant from "@/components/layout/AIAssistant";
-import BottomNav from "@/components/layout/BottomNav";
-import SplashScreen from "@/components/layout/SplashScreen";
-
-import InstallPrompt from "@/components/pwa/InstallPrompt";
-import IOSInstallGuide from "@/components/pwa/IOSInstallGuide";
-import InstallFloatingButton from "@/components/pwa/InstallFloatingButton";
-import UpdateToast from "@/components/pwa/UpdateToast";
+import SiteChrome from "@/components/layout/SiteChrome";
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import PageTrackerProvider from "@/components/analytics/PageTrackerProvider";
 
@@ -69,18 +60,9 @@ export default function RootLayout({
         <a href="#main-content" className="skip-to-main font-bold focus:ring-2 focus:ring-white rounded-br-lg">Skip to Main Content</a>
         <ReactQueryProvider>
         <PageTrackerProvider />
-        <SplashScreen />
-        <Navbar />
-        <main id="main-content" className="flex-1 pt-[92px] md:pt-[178px] lg:pt-[213px] xl:pt-[223px]">{children}</main>
-        <Footer />
-        <AIAssistant />
-        <BottomNav />
-        
-        {/* PWA Components */}
-        <InstallPrompt />
-        <IOSInstallGuide />
-        <InstallFloatingButton />
-        <UpdateToast />
+        <SiteChrome>
+          {children}
+        </SiteChrome>
         </ReactQueryProvider>
       </body>
     </html>

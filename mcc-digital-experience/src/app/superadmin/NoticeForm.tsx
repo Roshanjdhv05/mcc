@@ -108,10 +108,11 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
   const [examCategory, setExamCategory] = useState('Time Table Regular Exam');
   const [examPublishMode, setExamPublishMode] = useState<'all' | 'separate'>('all');
   const [examCourses, setExamCourses] = useState<string[]>([]);
-  // Per-course upload state (only used in 'separate' mode)
-  const [examCourseUploads, setExamCourseUploads] = useState<Record<string, { file: File | null; displayName: string }>>({});
-  // Single file for 'all' mode
+  // Shared/default file uploaded at the top of the Exam Hub section
   const [examFile, setExamFile] = useState<File | null>(null);
+  // Per-course upload state (only used in 'separate' mode)
+  // fileMode: 'default' = use examFile, 'custom' = per-course override
+  const [examCourseUploads, setExamCourseUploads] = useState<Record<string, { file: File | null; displayName: string; fileMode: 'default' | 'custom' }>>({});
   const [examExpiryTime, setExamExpiryTime] = useState('');
 
   const EXAM_CATEGORIES = [
@@ -136,8 +137,8 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
         setExamCourseUploads(u => { const next = { ...u }; delete next[course]; return next; });
         return prev.filter(c => c !== course);
       } else {
-        // Add and initialise its upload slot
-        setExamCourseUploads(u => ({ ...u, [course]: { file: null, displayName: title.trim() || '' } }));
+        // Add and initialise its upload slot — default to using the shared file
+        setExamCourseUploads(u => ({ ...u, [course]: { file: null, displayName: title.trim() || '', fileMode: 'default' } }));
         return [...prev, course];
       }
     });
@@ -198,16 +199,13 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     if (publishCalendar && !calCategory) { setError('Calendar category is required when "Show in Calendar" is enabled'); return; }
 
     if (publishExam) {
-      if (examPublishMode === 'all' && !examFile) {
+      if (!examFile) {
         setError('Please upload a PDF file to publish to the Examination Hub.');
         return;
       }
-      if (examPublishMode === 'separate') {
-        const hasAtLeastOneFile = examCourses.some(c => examCourseUploads[c]?.file);
-        if (!hasAtLeastOneFile) {
-          setError('Please upload at least one PDF file for the selected course(s) to publish to the Examination Hub.');
-          return;
-        }
+      if (examPublishMode === 'separate' && examCourses.length === 0) {
+        setError('Please select at least one programme to publish to the Examination Hub.');
+        return;
       }
     }
 
@@ -242,12 +240,14 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       } else {
         for (const course of examCourses) {
           const upload = examCourseUploads[course];
-          if (upload?.file) {
-            const fileExt = upload.file.name.split('.').pop();
+          // Use custom file if provided, otherwise fall back to shared examFile
+          const fileToUse = (upload?.fileMode === 'custom' && upload?.file) ? upload.file : examFile;
+          if (fileToUse) {
+            const fileExt = fileToUse.name.split('.').pop();
             const fileName = `${Date.now()}_${course}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
             const { error: uploadErr } = await supabase.storage
               .from('notice-attachments')
-              .upload(`examination/${fileName}`, upload.file, { cacheControl: '31536000', upsert: false });
+              .upload(`examination/${fileName}`, fileToUse, { cacheControl: '31536000', upsert: false });
             if (uploadErr) {
               setError(`Failed to upload exam document for ${course}: ${uploadErr.message}`);
               setSaving(false);
@@ -257,7 +257,9 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
               .from('notice-attachments')
               .getPublicUrl(`examination/${fileName}`);
             uploadedSeparateFiles[course] = urlData.publicUrl;
-            finalAttachments.push({ name: upload.file.name, url: urlData.publicUrl, type: fileExt || 'pdf' });
+            if (!finalAttachments.some(a => a.url === urlData.publicUrl)) {
+              finalAttachments.push({ name: fileToUse.name, url: urlData.publicUrl, type: fileExt || 'pdf' });
+            }
           }
         }
       }
@@ -337,13 +339,14 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
           const fileUrl = uploadedSeparateFiles[course];
           if (!fileUrl) continue;
           const upload = examCourseUploads[course];
+          const fileToUse = (upload?.fileMode === 'custom' && upload?.file) ? upload.file : examFile;
           const displayTitle = upload?.displayName?.trim() || title.trim();
           await supabase.from('examination_documents').insert({
             title: displayTitle,
             category: examCategory,
             courses: [course],
             file_url: fileUrl,
-            file_type: upload?.file?.type || 'application/pdf',
+            file_type: fileToUse?.type || 'application/pdf',
             schedule_time: payload.schedule_time,
             publish_to_notice_board: false,
             notice_expiry_time: examExpiryTime ? new Date(examExpiryTime).toISOString() : null,
@@ -715,6 +718,52 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                   </div>
                 </div>
 
+                {/* ── Shared PDF Upload (shown first, always) ── */}
+                <div className="bg-white border-2 border-blue-200 rounded-2xl p-4 space-y-2">
+                  <label className="block text-xs font-bold text-gray-700">
+                    Upload PDF File <span className="text-red-500">*</span>
+                    <span className="font-normal text-gray-400 ml-1">(used for All Programmes or as the default for Specific)</span>
+                  </label>
+                  <label className="flex items-center gap-3 border-2 border-dashed border-blue-300 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-500 transition-colors bg-blue-50/40">
+                    <Upload size={16} className="text-blue-600 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      {examFile ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-blue-700 truncate">{examFile.name}</span>
+                          <button
+                            type="button"
+                            onClick={e => { e.preventDefault(); e.stopPropagation(); setExamFile(null); }}
+                            className="flex-shrink-0 text-red-400 hover:text-red-600 bg-red-50 rounded-full p-0.5"
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="text-sm font-medium text-blue-600">Click to upload PDF</span>
+                          <span className="text-xs text-gray-400 ml-2">PDF only</span>
+                        </>
+                      )}
+                    </div>
+                    <input type="file" accept="application/pdf" className="hidden"
+                      onChange={async e => {
+                        if (e.target.files?.[0]) {
+                          try {
+                            const file = await processFileForUpload(e.target.files[0]);
+                            setExamFile(file);
+                          } catch (err: any) {
+                            setError(err.message);
+                          }
+                        } else {
+                          setExamFile(null);
+                        }
+                      }} />
+                  </label>
+                  {examFile && (
+                    <p className="text-[11px] text-blue-600 font-medium">✓ This file will be used for all selected programmes unless overridden below.</p>
+                  )}
+                </div>
+
                 {/* Course Target */}
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-2">
@@ -730,6 +779,13 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                       <span className="text-xs font-medium">Select Specific</span>
                     </label>
                   </div>
+
+                  {examPublishMode === 'all' && examFile && (
+                    <p className="text-[11px] text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                      ✓ The uploaded file will be published to <strong>all programmes</strong>.
+                    </p>
+                  )}
+
                   {examPublishMode === 'separate' && (
                     <div className="space-y-3">
                       {/* Course selector grid */}
@@ -752,47 +808,78 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                         })}
                       </div>
 
-                      {/* Per-course upload cards — appear after selection */}
+                      {/* Per-course config cards */}
                       {examCourses.length > 0 && (
                         <div className="space-y-3 mt-2">
                           {examCourses.map(course => {
-                            const upload = examCourseUploads[course] || { file: null, displayName: title.trim() };
+                            const upload = examCourseUploads[course] || { file: null, displayName: title.trim(), fileMode: 'default' };
+                            const isCustom = upload.fileMode === 'custom';
                             return (
                               <div key={course} className="bg-white border border-blue-100 rounded-2xl p-4 space-y-3">
                                 {/* Course header */}
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center justify-between gap-2">
                                   <span className="inline-flex items-center gap-1.5 text-xs font-black text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
                                     {course}
                                   </span>
-                                  <span className="text-[11px] text-gray-400">Upload PDF &amp; set display name</span>
                                 </div>
 
-                                {/* File upload */}
-                                <label className="flex items-center gap-3 border-2 border-dashed border-blue-200 rounded-xl px-4 py-2.5 cursor-pointer hover:border-blue-400 transition-colors bg-blue-50/30">
-                                  <Upload size={15} className="text-blue-500 shrink-0" />
-                                  <span className="text-xs font-medium text-blue-600 truncate">
-                                    {upload.file ? upload.file.name : 'Click to upload PDF'}
-                                  </span>
-                                  <input
-                                    type="file"
-                                    accept="application/pdf"
-                                    className="hidden"
-                                    onChange={async e => {
-                                      if (e.target.files?.[0]) {
-                                        try {
-                                          const file = await processFileForUpload(e.target.files[0]);
-                                          updateCourseUpload(course, { file });
-                                        } catch (err: any) {
-                                          setError(err.message);
-                                        }
-                                      } else {
-                                        updateCourseUpload(course, { file: null });
-                                      }
-                                    }}
-                                  />
-                                </label>
+                                {/* File source toggle */}
+                                <div className="flex gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => updateCourseUpload(course, { fileMode: 'default', file: null })}
+                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border transition-all ${
+                                      !isCustom
+                                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                        : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300'
+                                    }`}
+                                  >
+                                    {!isCustom ? <CheckSquare size={13} /> : <Square size={13} />}
+                                    Use uploaded file above
+                                    {!isCustom && examFile && <span className="ml-1 truncate max-w-[80px] opacity-75">({examFile.name})</span>}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateCourseUpload(course, { fileMode: 'custom' })}
+                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border transition-all ${
+                                      isCustom
+                                        ? 'bg-orange-500 text-white border-orange-500 shadow-sm'
+                                        : 'bg-white text-gray-500 border-gray-200 hover:border-orange-300'
+                                    }`}
+                                  >
+                                    {isCustom ? <CheckSquare size={13} /> : <Square size={13} />}
+                                    Upload different file
+                                  </button>
+                                </div>
 
-                                {/* Display name rename */}
+                                {/* Custom file upload (only shown if custom selected) */}
+                                {isCustom && (
+                                  <label className="flex items-center gap-3 border-2 border-dashed border-orange-300 rounded-xl px-4 py-2.5 cursor-pointer hover:border-orange-400 transition-colors bg-orange-50/30">
+                                    <Upload size={15} className="text-orange-500 shrink-0" />
+                                    <span className="text-xs font-medium text-orange-600 truncate">
+                                      {upload.file ? upload.file.name : 'Click to upload a different PDF'}
+                                    </span>
+                                    <input
+                                      type="file"
+                                      accept="application/pdf"
+                                      className="hidden"
+                                      onChange={async e => {
+                                        if (e.target.files?.[0]) {
+                                          try {
+                                            const file = await processFileForUpload(e.target.files[0]);
+                                            updateCourseUpload(course, { file });
+                                          } catch (err: any) {
+                                            setError(err.message);
+                                          }
+                                        } else {
+                                          updateCourseUpload(course, { file: null });
+                                        }
+                                      }}
+                                    />
+                                  </label>
+                                )}
+
+                                {/* Display name */}
                                 <div>
                                   <label className="block text-[11px] font-bold text-gray-500 mb-1">Display name in Examination Hub</label>
                                   <input
@@ -812,34 +899,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                   )}
                 </div>
 
-                {/* PDF Upload — only shown in 'all' mode */}
-                {examPublishMode === 'all' && (
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-2">PDF File (optional)</label>
-                  <label className="flex items-center gap-3 border-2 border-dashed border-blue-200 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-400 transition-colors bg-white">
-                    <Upload size={16} className="text-blue-600" />
-                    <div>
-                      <span className="text-sm font-medium text-blue-600">
-                        {examFile ? examFile.name : 'Click to upload PDF'}
-                      </span>
-                      <span className="text-xs text-gray-400 ml-2">PDF only</span>
-                    </div>
-                    <input type="file" accept="application/pdf" className="hidden"
-                      onChange={async e => {
-                        if (e.target.files?.[0]) {
-                          try {
-                            const file = await processFileForUpload(e.target.files[0]);
-                            setExamFile(file);
-                          } catch (err: any) {
-                            setError(err.message);
-                          }
-                        } else {
-                          setExamFile(null);
-                        }
-                      }} />
-                  </label>
-                </div>
-                )}
+
 
                 {/* Exam Hub Expiry */}
                 <div>

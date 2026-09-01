@@ -41,6 +41,7 @@ export default function JrCollegeNoticePage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [selectedNoticeAttachments, setSelectedNoticeAttachments] = useState<{title: string, attachments: any[]} | null>(null);
 
   // Fetch only Jr. College notices
   const fetchNotices = useCallback(async (isRefresh = false) => {
@@ -305,9 +306,11 @@ export default function JrCollegeNoticePage() {
                   {/* Attachments */}
                   {n.attachments.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {n.attachments.map((a, i) => (
-                        <AttachmentLink key={i} {...a} />
-                      ))}
+                      {n.attachments
+                        .filter((a, i, arr) => arr.findIndex(x => x.url === a.url) === i)
+                        .map((a, i) => (
+                          <AttachmentLink key={i} {...a} />
+                        ))}
                     </div>
                   )}
 
@@ -322,16 +325,31 @@ export default function JrCollegeNoticePage() {
                         {isExpanded ? 'Show Less' : 'Read More'} <ChevronRight size={14} className={isExpanded ? 'rotate-90' : ''} />
                       </button>
                     )}
-                    {n.attachments.length > 0 && (
-                      <a
-                        href={n.attachments[0].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-1.5 text-sm font-semibold text-[#014d4e] hover:gap-2.5 transition-all"
-                      >
-                        <Download size={14} /> Download
-                      </a>
-                    )}
+                    {n.attachments.length > 0 && (() => {
+                      const unique = n.attachments.filter((a, i, arr) => arr.findIndex(x => x.url === a.url) === i);
+                      if (unique.length === 0) return null;
+                      if (unique.length === 1) {
+                        return (
+                          <a
+                            href={unique[0].url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-1.5 text-sm font-semibold text-[#014d4e] hover:gap-2.5 transition-all"
+                          >
+                            <Download size={14} /> Download
+                          </a>
+                        );
+                      } else {
+                        return (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setSelectedNoticeAttachments({ title: n.title, attachments: unique }); }}
+                            className="flex items-center gap-1.5 text-sm font-semibold text-[#014d4e] hover:gap-2.5 transition-all"
+                          >
+                            <FileText size={14} /> View {unique.length} Files
+                          </button>
+                        );
+                      }
+                    })()}
                   </div>
                 </div>
               );
@@ -412,6 +430,54 @@ export default function JrCollegeNoticePage() {
         </div>
       )}
 
+      {/* Attachments Modal */}
+      {selectedNoticeAttachments && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setSelectedNoticeAttachments(null)}
+          />
+          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-[#E2E8F0] bg-slate-50">
+              <h3 className="text-lg font-bold text-[#1E293B] truncate pr-4">
+                Attached Files
+              </h3>
+              <button 
+                onClick={() => setSelectedNoticeAttachments(null)}
+                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-500 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-5 max-h-[60vh] overflow-y-auto">
+              <p className="text-sm text-gray-500 mb-4 line-clamp-2">{selectedNoticeAttachments.title}</p>
+              <div className="space-y-3">
+                {selectedNoticeAttachments.attachments.map((a, i) => (
+                  <a
+                    key={i}
+                    href={a.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-[#014d4e]/30 hover:bg-[#014d4e]/5 group transition-all"
+                  >
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="w-10 h-10 rounded-full bg-[#014d4e]/10 flex items-center justify-center flex-shrink-0">
+                        {a.type === 'pdf' ? <FileText size={18} className="text-[#014d4e]" /> :
+                         ['png', 'jpg', 'jpeg'].includes(a.type) ? <ImageIcon size={18} className="text-[#014d4e]" /> :
+                         <FileIcon size={18} className="text-[#014d4e]" />}
+                      </div>
+                      <span className="text-sm font-semibold text-gray-800 truncate group-hover:text-[#014d4e] transition-colors">
+                        {a.name}
+                      </span>
+                    </div>
+                    <Download size={16} className="text-gray-400 group-hover:text-[#014d4e] flex-shrink-0 ml-3 transition-colors" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

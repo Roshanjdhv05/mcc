@@ -14,7 +14,9 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  turbopack: {}
+  turbopack: {
+    root: __dirname, // Fix: prevent Turbopack from picking the wrong workspace root (MCC parent dir)
+  }
 };
 
 export default withPWA(nextConfig);

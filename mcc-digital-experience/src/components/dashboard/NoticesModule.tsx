@@ -244,9 +244,11 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
                 {/* Attachments */}
                 {notice.attachments && notice.attachments.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-[#F1F5F9]">
-                    {notice.attachments.map((att, idx) => (
-                      <AttachmentLink key={idx} name={att.name} url={att.url} type={att.type} />
-                    ))}
+                    {notice.attachments
+                      .filter((att, i, arr) => arr.findIndex(x => x.url === att.url) === i)
+                      .map((att, idx) => (
+                        <AttachmentLink key={idx} name={att.name} url={att.url} type={att.type} />
+                      ))}
                   </div>
                 )}
               </motion.div>

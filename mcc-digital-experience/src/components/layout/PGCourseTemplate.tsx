@@ -189,6 +189,14 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
       const k = (courseKey || '').toUpperCase();
       
       if (k === 'BCOM') return 'B.COM';
+      // ── PG checks MUST come before UG checks to avoid title-string false matches ──
+      if (k === 'MCOM_AA' || k === 'MCOM-AA') return 'MCOM-AA';
+      if (k === 'MCOM_BF' || k === 'MCOM-BF') return 'MCOM-BF';
+      if (k === 'MCOM_BM' || k === 'MCOM-BM') return 'MCOM-BM';
+      // MSC-IT check before BSC-IT: "Master of Science (Information Technology)" contains "information technology"
+      if (k === 'MSC-IT' || k === 'MSC_IT' || k === 'MSCIT' || t.includes('m.sc. it') || t.startsWith('master of science')) return 'MSCIT';
+      if (k === 'MSF') return 'MSF';
+      // ── UG checks ──
       if (k === 'BAF' || t.includes('accounting')) return 'BAF';
       if (k === 'BMS' || t.includes('management studies')) return 'BMS';
       if (k === 'BFM' || t.includes('financial markets')) return 'BFM';
@@ -200,11 +208,6 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
       if (k === 'BCA' || k === 'BSC_CA' || t.includes('computer applications') || t.includes('bca')) return 'BCA';
       if (k === 'BBA' || t.includes('bba')) return 'BBA';
       if (k === 'BAMMC' || t.includes('mass media')) return 'BAMMC';
-      if (k === 'MCOM_AA' || k === 'MCOM-AA') return 'MCOM-AA';
-      if (k === 'MCOM_BF' || k === 'MCOM-BF') return 'MCOM-BF';
-      if (k === 'MCOM_BM' || k === 'MCOM-BM') return 'MCOM-BM';
-      if (k === 'MSC_IT' || k === 'MSCIT' || t.includes('m.sc. it')) return 'MSCIT';
-      if (k === 'MSF') return 'MSF';
       if (t.includes('commerce')) return 'B.COM';
       if (t.includes('sct')) return 'SCT';
       return title.split(' ')[0]; // fallback
@@ -276,8 +279,6 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
   const tabs = [
     'Overview',
     'Curriculum & Structure',
-    'Career & Prospects',
-    'Eligibility & Fees',
     'Events & Activities',
     ...(festivalTabName ? [festivalTabName] : []),
     ...(publicationTabName ? [publicationTabName] : []),

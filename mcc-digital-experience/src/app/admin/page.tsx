@@ -26,7 +26,7 @@ import IllustriousAlumniManager from '@/app/superadmin/IllustriousAlumniManager'
 import NewsAnnouncementsManager from '@/app/superadmin/NewsAnnouncementsManager';
 import { Notice } from '@/lib/noticeTypes';
 
-const ALL_TABS: { key: string; label: string; icon: JSX.Element; description: string }[] = [
+const ALL_TABS: { key: string; label: string; icon: React.ReactNode; description: string }[] = [
   { key: 'notice',               label: 'Notice System',          icon: <Bell size={22} />,           description: 'Create and manage notices' },
   { key: 'home-events',          label: 'Events Publication',      icon: <ImageIcon size={22} />,       description: 'Manage homepage events' },
   { key: 'home-banners',         label: 'Homepage Banners',        icon: <ImageIcon size={22} />,       description: 'Manage homepage banners' },

@@ -144,7 +144,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     });
   };
 
-  const updateCourseUpload = (course: string, patch: Partial<{ file: File | null; displayName: string }>) => {
+  const updateCourseUpload = (course: string, patch: Partial<{ file: File | null; displayName: string; fileMode: 'default' | 'custom' }>) => {
     setExamCourseUploads(prev => ({ ...prev, [course]: { ...prev[course], ...patch } }));
   };
 

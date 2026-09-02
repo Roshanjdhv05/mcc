@@ -13,6 +13,11 @@ import { useCachedImage } from "@/hooks/useCachedImage";
 const CachedImg = forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>((props, ref) => {
   const { src: cachedSrc, loading, error } = useCachedImage(props.src);
   const displaySrc = loading ? undefined : (error ? props.src : (cachedSrc || props.src));
+  
+  if (!displaySrc) {
+    return <div ref={ref as any} className={`${props.className} bg-gray-200 flex items-center justify-center text-gray-400 text-xs`}>No Image</div>;
+  }
+  
   return <img ref={ref} {...props} src={displaySrc as string} />;
 });
 CachedImg.displayName = 'CachedImg';
@@ -30,6 +35,7 @@ type Event = {
   images: string[];
   department: string;
   category: string;
+  programme?: string[]; // Added to store programme tags for filtering
 };
 
 const allEvents: Event[] = [
@@ -449,13 +455,15 @@ export default function GalleryPage() {
   const [selectedDepts, setSelectedDepts] = useState<string[]>([]);
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
+  const [selectedProgrammes, setSelectedProgrammes] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [liveEvents, setLiveEvents] = useState<Event[]>([]);
-  const [openDropdown, setOpenDropdown] = useState<'year' | 'dept' | 'cat' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<'year' | 'dept' | 'cat' | 'prog' | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [allProgrammes, setAllProgrammes] = useState<string[]>([]);
 
   const { data: cachedGallery = [], isLoading: galleryLoading } = useCachedGalleryEvents();
 
@@ -510,9 +518,73 @@ export default function GalleryPage() {
         }))];
       }
       
+      // 3. Fetch Programme events
+      const { data: progData, error: progError } = await supabase
+        .from('events')
+        .select('id, title, description, category, department, images, published_at, programme')
+        .eq('status', 'published')
+        .eq('publish_programme', true)
+        .not('programme', 'is', null)
+        .order('published_at', { ascending: false });
+
+      if (!progError && progData) {
+        // Filter out internal Intro events that shouldn't appear as gallery cards
+        const filteredProgData = progData.filter((e: any) => 
+          !(e.category === 'Festivals' && e.title === 'Festival Intro') &&
+          !(e.category === 'Publication' && e.title === 'Publication Intro') &&
+          !(e.category === 'Events & Activities' && e.title === 'Activities Intro')
+        );
+
+        const uniqueProgs = new Set<string>();
+        const parsedProgEvents = filteredProgData.map((e: any) => {
+          let progs: string[] = [];
+          if (Array.isArray(e.programme)) {
+            progs = e.programme;
+          } else if (typeof e.programme === 'string') {
+            try {
+              progs = JSON.parse(e.programme);
+            } catch {
+              progs = [e.programme];
+            }
+          }
+          progs.forEach(p => uniqueProgs.add(p));
+
+          return {
+            id: `live-prog-${e.id}`,
+            tag: e.published_at
+              ? new Date(e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
+              : 'LIVE',
+            dateObj: new Date(e.published_at || Date.now()),
+            title: e.title,
+            desc: e.description || '',
+            fullDescription: e.description || '',
+            img: e.images?.[0] || '',
+            images: e.images || [],
+            department: e.department || 'Programme Event',
+            category: e.category || 'Events & Activities',
+            academicYear: '2025-2026',
+            programme: progs
+          };
+        });
+        setAllProgrammes(Array.from(uniqueProgs).sort());
+        mapped = [...mapped, ...parsedProgEvents];
+      }
+
+      // Deduplicate by source event ID to prevent the same event appearing twice
+      // (e.g. an event with both publish_gallery=true AND publish_programme=true)
+      const seenSourceIds = new Set<string>();
+      const deduplicated = mapped.filter(e => {
+        // Extract the raw source ID from the prefixed ID (e.g. "live-deg-123" -> "123")
+        const sourceId = e.id.replace(/^live-(deg|jr|prog)-/, '');
+        const key = sourceId;
+        if (seenSourceIds.has(key)) return false;
+        seenSourceIds.add(key);
+        return true;
+      });
+
       // Sort all fetched events by date
-      mapped.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
-      setLiveEvents(mapped);
+      deduplicated.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+      setLiveEvents(deduplicated);
     };
     if (!galleryLoading) {
       fetchLiveEvents();
@@ -530,7 +602,20 @@ export default function GalleryPage() {
         return { ...e, academicYear: year };
       });
     const combined = [...liveEvents, ...staticEvents];
-    let filtered = combined;
+
+    // Final deduplication pass: remove any events with duplicate ID or duplicate title
+    const seenIds = new Set<string>();
+    const seenTitles = new Set<string>();
+    const deduped = combined.filter(e => {
+      const titleKey = e.title.toLowerCase().trim();
+      const idKey = e.id.replace(/^live-(deg|jr|prog)-/, '');
+      if (seenIds.has(idKey) || seenTitles.has(titleKey)) return false;
+      seenIds.add(idKey);
+      seenTitles.add(titleKey);
+      return true;
+    });
+
+    let filtered = deduped;
     if (searchQuery) {
       filtered = filtered.filter(e =>
         e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -545,10 +630,13 @@ export default function GalleryPage() {
     }
     if (selectedCats.length > 0) filtered = filtered.filter(e => selectedCats.includes(e.category));
     if (selectedYears.length > 0) filtered = filtered.filter(e => selectedYears.includes((e as any).academicYear));
+    if (selectedProgrammes.length > 0) {
+      filtered = filtered.filter(e => e.programme && e.programme.some((p: string) => selectedProgrammes.includes(p)));
+    }
     if (sortOption === "Latest") filtered.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
     else if (sortOption === "Oldest") filtered.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
     return filtered;
-  }, [searchQuery, selectedDepts, selectedCats, selectedYears, sortOption, liveEvents]);
+  }, [searchQuery, selectedDepts, selectedCats, selectedYears, selectedProgrammes, sortOption, liveEvents]);
 
   const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE) || 1;
   const currentEvents = useMemo(() => {
@@ -564,11 +652,14 @@ export default function GalleryPage() {
   const handleCatToggle = (cat: string) => {
     setSelectedCats(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
   };
+  const handleProgToggle = (prog: string) => {
+    setSelectedProgrammes(prev => prev.includes(prog) ? prev.filter(p => p !== prog) : [...prev, prog]);
+  };
   const handleYearToggle = (year: string) => {
     setSelectedYears(prev => prev.includes(year) ? prev.filter(y => y !== year) : [...prev, year]);
   };
   const resetFilters = () => {
-    setSelectedDepts([]); setSelectedCats([]); setSelectedYears([]); setSearchQuery(""); setSortOption("Latest"); setCurrentPage(1);
+    setSelectedDepts([]); setSelectedCats([]); setSelectedYears([]); setSelectedProgrammes([]); setSearchQuery(""); setSortOption("Latest"); setCurrentPage(1);
   };
   const openModal = (event: Event) => { setSelectedEvent(event); setCurrentImageIndex(0); };
 
@@ -593,7 +684,7 @@ export default function GalleryPage() {
   }, []);
 
   const renderDropdown = (
-    id: 'year' | 'dept' | 'cat',
+    id: 'year' | 'dept' | 'cat' | 'prog',
     label: string,
     allItems: string[],
     selected: string[],
@@ -706,6 +797,25 @@ export default function GalleryPage() {
           ))}
         </div>
       </div>
+      {allProgrammes.length > 0 && (
+        <div className="mb-5">
+          <h3 className="text-xs font-bold text-gray-800 mb-3 uppercase tracking-wider">Programmes</h3>
+          <div className="space-y-3 pl-1 max-h-[250px] overflow-y-auto">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={selectedProgrammes.length === 0} onChange={() => setSelectedProgrammes([])}
+                className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+              <span className="text-sm text-gray-700 font-semibold">All Programmes</span>
+            </label>
+            {allProgrammes.map(prog => (
+              <label key={prog} className="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" checked={selectedProgrammes.includes(prog)} onChange={() => handleProgToggle(prog)}
+                  className="w-4 h-4 rounded border-gray-300 accent-[#123B6D]" />
+                <span className="text-sm text-gray-600">{prog}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="flex flex-col gap-2 pt-4 border-t border-gray-100 mt-auto pb-6">
         <button onClick={() => setIsMobileFilterOpen(false)} className="w-full bg-[#0D1B3E] hover:bg-[#123B6D] text-white rounded-xl py-3 text-sm font-bold flex justify-center items-center gap-2 transition-colors">
           Show Results
@@ -818,9 +928,10 @@ export default function GalleryPage() {
             <div className="hidden lg:flex flex-wrap items-center gap-2">
               <Filter size={14} className="text-gray-400 shrink-0" />
               {renderDropdown('year', 'Academic Year', ALL_YEARS, selectedYears, handleYearToggle, () => setSelectedYears([]))}
-              {renderDropdown('dept', 'Department / Club', ALL_DEPARTMENTS, selectedDepts, handleDeptToggle, () => setSelectedDepts([]))}
+              {renderDropdown('dept', 'Department', ALL_DEPARTMENTS, selectedDepts, handleDeptToggle, () => setSelectedDepts([]))}
               {renderDropdown('cat', 'Category', ALL_CATEGORIES, selectedCats, handleCatToggle, () => setSelectedCats([]))}
-              {(selectedYears.length > 0 || selectedDepts.length > 0 || selectedCats.length > 0) && (
+              {allProgrammes.length > 0 && renderDropdown('prog', 'Programmes', allProgrammes, selectedProgrammes, handleProgToggle, () => setSelectedProgrammes([]))}
+              {(selectedYears.length > 0 || selectedDepts.length > 0 || selectedCats.length > 0 || selectedProgrammes.length > 0) && (
                 <button onClick={resetFilters} className="text-xs text-red-500 font-semibold hover:underline ml-1">Clear all</button>
               )}
             </div>

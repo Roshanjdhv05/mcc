@@ -5,15 +5,16 @@ import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import {
   Plus, Edit2, RefreshCw, AlertCircle, Users, CalendarHeart, BookOpen,
-  Search, LayoutGrid, List, Eye, EyeOff, LayoutDashboard
+  Search, LayoutGrid, List, Eye, EyeOff, LayoutDashboard, Award
 } from 'lucide-react';
 import StudentsCornerEditor from './StudentsCornerEditor';
+import EndowmentEditor from './EndowmentEditor';
 
 export interface StudentsCornerItem {
   id: string;
   slug: string;
   name: string;
-  category: 'Forums and Clubs' | 'Events & Festivals' | "Student's Publications";
+  category: 'Forums and Clubs' | 'Events & Festivals' | "Student's Publications" | 'Endowment and Scholarship';
   status: 'Active' | 'Inactive';
   display_order: number;
 }
@@ -22,12 +23,14 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   'Forums and Clubs': <Users size={16} />,
   'Events & Festivals': <CalendarHeart size={16} />,
   "Student's Publications": <BookOpen size={16} />,
+  'Endowment and Scholarship': <Award size={16} />,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
   'Forums and Clubs': 'bg-blue-50 text-blue-700 border-blue-200',
   'Events & Festivals': 'bg-purple-50 text-purple-700 border-purple-200',
   "Student's Publications": 'bg-amber-50 text-amber-700 border-amber-200',
+  'Endowment and Scholarship': 'bg-emerald-50 text-emerald-700 border-emerald-200',
 };
 
 export default function StudentsCornerManager() {
@@ -39,11 +42,11 @@ export default function StudentsCornerManager() {
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const searchParams = useSearchParams();
-  const [filterCategory, setFilterCategory] = useState<'ALL' | 'Forums and Clubs' | 'Events & Festivals' | "Student's Publications">('ALL');
+  const [filterCategory, setFilterCategory] = useState<'ALL' | 'Forums and Clubs' | 'Events & Festivals' | "Student's Publications" | 'Endowment and Scholarship'>('ALL');
 
   useEffect(() => {
     const filter = searchParams?.get('filter');
-    if (filter && ['Forums and Clubs', 'Events & Festivals', "Student's Publications"].includes(filter)) {
+    if (filter && ['Forums and Clubs', 'Events & Festivals', "Student's Publications", 'Endowment and Scholarship'].includes(filter)) {
       setFilterCategory(filter as any);
     }
     fetchItems();
@@ -84,7 +87,18 @@ export default function StudentsCornerManager() {
         .select('id, slug, name, category, status, display_order')
         .order('display_order', { ascending: true });
       if (err) throw err;
-      setItems(data || []);
+      
+      const { data: endData, error: endErr } = await supabase
+        .from('endowment_scholarships')
+        .select('*')
+        .order('display_order', { ascending: true });
+      
+      // Deduplicate to fix double boxes (by slug)
+      const uniqueItems = new Map();
+      (data || []).forEach((item: any) => uniqueItems.set(item.slug, item));
+      (endData || []).forEach((item: any) => uniqueItems.set(item.slug, { ...item, category: 'Endowment and Scholarship' }));
+      
+      setItems(Array.from(uniqueItems.values()));
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -113,6 +127,15 @@ export default function StudentsCornerManager() {
   };
 
   if (editingItem) {
+    if (editingItem.category === 'Endowment and Scholarship') {
+      return (
+        <EndowmentEditor
+          item={editingItem}
+          isNew={isCreatingNew}
+          onClose={handleEditorClose}
+        />
+      );
+    }
     return (
       <StudentsCornerEditor
         item={editingItem}
@@ -132,6 +155,7 @@ export default function StudentsCornerManager() {
     'Forums and Clubs': filtered.filter(p => p.category === 'Forums and Clubs'),
     'Events & Festivals': filtered.filter(p => p.category === 'Events & Festivals'),
     "Student's Publications": filtered.filter(p => p.category === "Student's Publications"),
+    'Endowment and Scholarship': filtered.filter(p => p.category === 'Endowment and Scholarship'),
   };
 
   return (
@@ -160,10 +184,10 @@ export default function StudentsCornerManager() {
             className="flex-1 text-sm outline-none bg-transparent"
           />
         </div>
-        <div className="flex gap-1.5 bg-white border border-gray-200 rounded-xl p-1">
-          {(['ALL', 'Forums and Clubs', 'Events & Festivals', 'Student\'s Publications'] as const).map(cat => (
+        <div className="flex gap-1.5 bg-white border border-gray-200 rounded-xl p-1 overflow-x-auto">
+          {(['ALL', 'Forums and Clubs', 'Events & Festivals', 'Student\'s Publications', 'Endowment and Scholarship'] as const).map(cat => (
             <button key={cat} onClick={() => updateFilter(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterCategory === cat ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
+              className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterCategory === cat ? 'bg-[#123B6D] text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
               {cat === 'ALL' ? 'All' : cat}
             </button>
           ))}
@@ -200,7 +224,7 @@ export default function StudentsCornerManager() {
         </div>
       ) : (
         <div className="space-y-8">
-          {(['Forums and Clubs', 'Events & Festivals', 'Student\'s Publications'] as const).map(cat => (
+          {(['Forums and Clubs', 'Events & Festivals', 'Student\'s Publications', 'Endowment and Scholarship'] as const).map(cat => (
             grouped[cat] && grouped[cat].length > 0 && (
               <div key={cat}>
                 <div className="flex items-center gap-2 mb-3">

@@ -124,10 +124,11 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
 
   const EXAM_COURSES = [
     // UG Programmes
-    'B.COM', 'BAF', 'BCOM-MS', 'BFM', 'BFSI', 'BBI', 'BCOM-BA',
-    'BSC-IT', 'BCA', 'BSC-DS', 'BAMMC',
+    { id: 'BCOM', label: 'B.Com' }, { id: 'BAF', label: 'B.Com (BAF)' }, { id: 'BCOM-MS', label: 'B.Com (MS)' }, 
+    { id: 'BFM', label: 'B.Com (BFM)' }, { id: 'BFSI', label: 'B.Com (BFSI)' }, { id: 'BBI', label: 'B.Com (BBI)' }, { id: 'BCOM-BA', label: 'B.Com (BA)' },
+    { id: 'BSCCS', label: 'B.Sc CS' }, { id: 'BSCIT', label: 'B.Sc IT' }, { id: 'BCA', label: 'B.Sc CA' }, { id: 'BSCDS', label: 'B.Sc DS' }, { id: 'BAMMC', label: 'BAMMC' },
     // PG Programmes
-    'MCOM.AA', 'MCOM.BM', 'MCOM.BF', 'MSC.IT', 'MSC.FIN',
+    { id: 'MCOM.AA', label: 'M.COM.AA' }, { id: 'MCOM.BM', label: 'M.COM.BA' }, { id: 'MCOM.BF', label: 'M.COM. BF' }, { id: 'MSC.IT', label: 'M.SC. IT' }, { id: 'MSC.FIN', label: 'M.SC. F' },
   ];
 
   const toggleExamCourse = (course: string) => {
@@ -791,18 +792,18 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                       {/* Course selector grid */}
                       <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 p-3 bg-white border border-gray-200 rounded-xl">
                         {EXAM_COURSES.map(course => {
-                          const isSelected = examCourses.includes(course);
+                          const isSelected = examCourses.includes(course.id);
                           return (
                             <button
-                              key={course}
+                              key={course.id}
                               type="button"
-                              onClick={() => toggleExamCourse(course)}
+                              onClick={() => toggleExamCourse(course.id)}
                               className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
                                 isSelected ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-600 border border-gray-100 hover:bg-gray-100'
                               }`}
                             >
                               {isSelected ? <CheckSquare size={12} /> : <Square size={12} />}
-                              {course}
+                              {course.label}
                             </button>
                           );
                         })}
@@ -819,7 +820,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
                                 {/* Course header */}
                                 <div className="flex items-center justify-between gap-2">
                                   <span className="inline-flex items-center gap-1.5 text-xs font-black text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
-                                    {course}
+                                    {EXAM_COURSES.find(c => c.id === course)?.label || course}
                                   </span>
                                 </div>
 

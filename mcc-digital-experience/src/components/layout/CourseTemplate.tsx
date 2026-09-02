@@ -420,24 +420,21 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     }
   };
 
-  let finalQuickActionsData = customQuickActionsData || [
-    { title: 'Eligibility', icon: Users, info: '10+2 from a recognized board with minimum 50% aggregate marks.' },
+  // Filter out any explicitly passed 'Eligibility' quick actions, since it's now in the Overview tab.
+  const filteredCustomActions = customQuickActionsData ? customQuickActionsData.filter(a => !a.title.toLowerCase().includes('eligibility')) : null;
+
+  let finalQuickActionsData = filteredCustomActions || [
     { title: 'Fee Structure', icon: Award, info: '₹35,000 - ₹50,000 per year depending on the specific programme.' },
     { title: 'Timing', icon: Clock, info: 'Morning Session: 7:00 AM to 12:00 PM. Practical slots may vary.' },
     { title: 'Number of Seats', icon: Users, info: '60 to 120 seats per division (subject to university approval).' },
     { title: 'Programme Design', icon: FileText, info: '3-year full-time undergraduate programme divided into 6 semesters.' }
   ];
 
-  if (!customQuickActionsData && (progData?.snapshot || progData?.overview?.eligibility)) {
+  if (!filteredCustomActions && (progData?.snapshot || progData?.overview?.eligibility)) {
     const sn = progData?.snapshot || {};
     const baseActions = [...finalQuickActionsData];
     
-    // Update or add Eligibility
-    if (progData?.overview?.eligibility) {
-      const idx = baseActions.findIndex(a => a.title.toLowerCase().includes('eligibility'));
-      if (idx !== -1) baseActions[idx].info = progData.overview.eligibility;
-      else baseActions.unshift({ title: 'Eligibility', icon: Users, info: progData.overview.eligibility });
-    }
+    // Eligibility has been moved to a dedicated box in the Overview tab.
 
     // Update or add snapshot items
     if (sn.duration || sn.semesters) {
@@ -691,7 +688,18 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                   <p>Programme details will be updated here shortly.</p>
                 )}
               </div>
-
+              
+              {progData?.overview?.eligibility && (
+                <div className="mt-8 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-[#123B6D] mb-4 flex items-center gap-2">
+                    <CheckCircle2 size={24} className="text-[#10B981]" />
+                    Eligibility Criteria
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    {progData.overview.eligibility}
+                  </p>
+                </div>
+              )}
             </div>
           ) : activeTab === 'Structure' ? (
             <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">

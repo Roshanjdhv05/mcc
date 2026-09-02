@@ -51,7 +51,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   PhD: 'bg-amber-50 text-amber-700 border-amber-200',
 };
 
-export default function ProgrammesManagerV2() {
+export default function ProgrammesManagerV2({ allowedSlugs }: { allowedSlugs?: string[] }) {
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +61,8 @@ export default function ProgrammesManagerV2() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filterCategory, setFilterCategory] = useState<'ALL' | 'UG' | 'PG' | 'PhD'>('ALL');
   const searchParams = useSearchParams();
+  // If allowedSlugs is provided, filter programmes to only those slugs
+  const isScopedAccess = allowedSlugs && allowedSlugs.length > 0;
 
   useEffect(() => { fetchProgrammes(); }, []);
 
@@ -135,7 +137,8 @@ export default function ProgrammesManagerV2() {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       (p.code || '').toLowerCase().includes(search.toLowerCase());
     const matchCat = filterCategory === 'ALL' || p.category === filterCategory;
-    return matchSearch && matchCat;
+    const matchAllowed = !isScopedAccess || allowedSlugs!.includes(p.slug);
+    return matchSearch && matchCat && matchAllowed;
   });
 
   const grouped = {
@@ -150,14 +153,19 @@ export default function ProgrammesManagerV2() {
       <div className="flex items-start justify-between mb-6">
         <div>
           <h2 className="text-xl font-bold text-gray-800">Programme Management</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Manage all programme content — overview, curriculum, eligibility, SEO and more.</p>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {isScopedAccess
+              ? `You have access to ${allowedSlugs!.length} programme(s). Manage their content below.`
+              : 'Manage all programme content — overview, curriculum, eligibility, SEO and more.'}
+          </p>
         </div>
         <div className="flex gap-2">
-
-          <button onClick={handleAddNew}
-            className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm">
-            <Plus size={16} /> Add Programme
-          </button>
+          {!isScopedAccess && (
+            <button onClick={handleAddNew}
+              className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm">
+              <Plus size={16} /> Add Programme
+            </button>
+          )}
         </div>
       </div>
 

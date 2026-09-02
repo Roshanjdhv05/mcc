@@ -621,7 +621,11 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
             return (
               <React.Fragment key={tab.key}>
                 {tab.key === 'festivals' && <div className="mx-3 my-1 border-t border-gray-100" />}
-                <button onClick={() => setActiveTab(tab.key)}
+                <button onClick={() => {
+                  setActiveTab(tab.key);
+                  setShowEventForm(false);
+                  setNewEvent({ title: '', description: '', category: tab.key === 'festivals' ? 'Festivals' : tab.key === 'publications' ? 'Publication' : 'Events & Activities', images: [] });
+                }}
                   className={`flex items-center gap-2.5 mx-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left ${
                     activeTab === tab.key
                       ? tab.key === 'festivals'
@@ -989,28 +993,41 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                     </div>
                     <div className="col-span-2"><Label>Description</Label><Textarea value={newEvent.description || ''} onChange={v => setNewEvent(p => ({ ...p, description: v }))} rows={3} placeholder="Describe the item..." /></div>
                   </div>
-                  {/* Multi Image Upload */}
                   <div>
-                    <Label>Images (Up to 5)</Label>
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {(newEvent.images || []).map((img, idx) => (
-                        <div key={idx} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200">
-                          <img src={img} alt={`img-${idx}`} className="w-full h-full object-cover" />
-                          <button
-                            onClick={() => setNewEvent(p => ({ ...p, images: (p.images || []).filter((_, i) => i !== idx) }))}
-                            className="absolute top-0.5 right-0.5 bg-black/50 text-white rounded-full p-0.5 hover:bg-red-500 transition-colors"
-                          ><X size={10} /></button>
+                    {activeTab === 'publications' ? (
+                      <>
+                        <Label>Publication Link (URL)</Label>
+                        <Input
+                          value={(newEvent.images && newEvent.images.length > 0) ? newEvent.images[0] : ''}
+                          onChange={v => setNewEvent(p => ({ ...p, images: v ? [v] : [] }))}
+                          placeholder="https://..."
+                        />
+                        <p className="text-xs text-gray-400 mt-1">Paste the URL to the publication document or website.</p>
+                      </>
+                    ) : (
+                      <>
+                        <Label>Images (Up to 5)</Label>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {(newEvent.images || []).map((img, idx) => (
+                            <div key={idx} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200">
+                              <img src={img} alt={`img-${idx}`} className="w-full h-full object-cover" />
+                              <button
+                                onClick={() => setNewEvent(p => ({ ...p, images: (p.images || []).filter((_, i) => i !== idx) }))}
+                                className="absolute top-0.5 right-0.5 bg-black/50 text-white rounded-full p-0.5 hover:bg-red-500 transition-colors"
+                              ><X size={10} /></button>
+                            </div>
+                          ))}
+                          {(newEvent.images || []).length < 5 && (
+                            <label className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-[#123B6D] hover:bg-[#123B6D]/5 transition-colors">
+                              <UploadCloud size={16} className="text-gray-400" />
+                              <span className="text-[10px] text-gray-400 mt-1">Add</span>
+                              <input type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files?.[0]) handleEventImageUpload(e.target.files[0]); }} />
+                            </label>
+                          )}
                         </div>
-                      ))}
-                      {(newEvent.images || []).length < 5 && (
-                        <label className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-[#123B6D] hover:bg-[#123B6D]/5 transition-colors">
-                          <UploadCloud size={16} className="text-gray-400" />
-                          <span className="text-[10px] text-gray-400 mt-1">Add</span>
-                          <input type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files?.[0]) handleEventImageUpload(e.target.files[0]); }} />
-                        </label>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-400">{(newEvent.images || []).length}/5 images added</p>
+                        <p className="text-xs text-gray-400">{(newEvent.images || []).length}/5 images added</p>
+                      </>
+                    )}
                   </div>
                   <div className="flex justify-end gap-3 pt-2 border-t">
                     <button onClick={() => setShowEventForm(false)} className="text-sm font-semibold text-gray-500 hover:text-gray-700 px-4 py-2">Cancel</button>
@@ -1037,16 +1054,24 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                 {events.filter(e => e.category === (activeTab === 'festivals' ? 'Festivals' : activeTab === 'publications' ? 'Publication' : 'Events & Activities')).map(ev => (
                   <div key={ev.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
                     <div className="flex gap-4 p-4">
-                      {/* Images strip */}
+                      {/* Images/Link strip */}
                       {ev.images && ev.images.length > 0 && (
                         <div className="flex gap-1.5 flex-shrink-0">
-                          {ev.images.slice(0, 3).map((img, idx) => (
-                            <div key={idx} className="w-16 h-16 rounded-lg overflow-hidden border border-gray-100">
-                              <img src={img} alt={`ev-img-${idx}`} className="w-full h-full object-cover" />
-                            </div>
-                          ))}
-                          {ev.images.length > 3 && (
-                            <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">+{ev.images.length - 3}</div>
+                          {activeTab === 'publications' ? (
+                            <a href={ev.images[0]} target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-colors" title={ev.images[0]}>
+                              <BookOpen size={20} />
+                            </a>
+                          ) : (
+                            <>
+                              {ev.images.slice(0, 3).map((img, idx) => (
+                                <div key={idx} className="w-16 h-16 rounded-lg overflow-hidden border border-gray-100">
+                                  <img src={img} alt={`ev-img-${idx}`} className="w-full h-full object-cover" />
+                                </div>
+                              ))}
+                              {ev.images.length > 3 && (
+                                <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">+{ev.images.length - 3}</div>
+                              )}
+                            </>
                           )}
                         </div>
                       )}

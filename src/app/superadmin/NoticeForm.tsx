@@ -180,11 +180,27 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     e.preventDefault();
     if (!title.trim()) { setError('Title is required'); return; }
     if (!expiryTime) { setError('Expiry date & time is required'); return; }
-    setSaving(true);
-    setError(null);
 
     if (publishCalendar && !calDate) { setError('Calendar date is required when "Show in Calendar" is enabled'); return; }
     if (publishCalendar && !calCategory) { setError('Calendar category is required when "Show in Calendar" is enabled'); return; }
+
+    // Validate: if publishing to Exam Hub, at least one file must be uploaded
+    if (publishExam) {
+      if (examPublishMode === 'all' && !examFile) {
+        setError('Please upload a PDF file to publish to the Examination Hub.');
+        return;
+      }
+      if (examPublishMode === 'separate') {
+        const hasAtLeastOneFile = examCourses.some(c => examCourseUploads[c]?.file);
+        if (!hasAtLeastOneFile) {
+          setError('Please upload at least one PDF file for the selected course(s) to publish to the Examination Hub.');
+          return;
+        }
+      }
+    }
+
+    setSaving(true);
+    setError(null);
 
     let finalAttachments = [...attachments];
 
@@ -287,7 +303,8 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
     }
 
     if (publishExam) {
-      if (examPublishMode === 'all') {
+      if (examPublishMode === 'all' && singleExamFileUrl) {
+        // Only insert if a file was actually uploaded
         await supabase.from('examination_documents').insert({
           title: title.trim(),
           category: examCategory,
@@ -298,16 +315,18 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
           publish_to_notice_board: false,
           notice_expiry_time: examExpiryTime ? new Date(examExpiryTime).toISOString() : null,
         });
-      } else {
-        // Separate document per selected course
+      } else if (examPublishMode === 'separate') {
+        // Separate document per selected course — only insert courses that have an uploaded file
         for (const course of examCourses) {
+          const fileUrl = uploadedSeparateFiles[course];
+          if (!fileUrl) continue; // Skip courses with no uploaded file
           const upload = examCourseUploads[course];
           const displayTitle = upload?.displayName?.trim() || title.trim();
           await supabase.from('examination_documents').insert({
             title: displayTitle,
             category: examCategory,
             courses: [course],
-            file_url: uploadedSeparateFiles[course] || '',
+            file_url: fileUrl,
             file_type: upload?.file?.type || 'application/pdf',
             schedule_time: payload.schedule_time,
             publish_to_notice_board: false,

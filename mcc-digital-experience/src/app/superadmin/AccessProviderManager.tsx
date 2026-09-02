@@ -21,6 +21,25 @@ const ALL_TABS = [
   { key: 'news',                 label: 'News & Announcements' },
 ];
 
+const PROGRAMMES = [
+  { slug: 'bcom',    label: 'B.Com' },
+  { slug: 'baf',     label: 'BAF' },
+  { slug: 'bbi',     label: 'BBI' },
+  { slug: 'bfm',     label: 'BFM' },
+  { slug: 'bcom-ms', label: 'B.Com (MS)' },
+  { slug: 'bcom-ba', label: 'B.Com (BA)' },
+  { slug: 'bammc',   label: 'BAMMC' },
+  { slug: 'bsc-it',  label: 'B.Sc IT' },
+  { slug: 'bca',     label: 'BCA' },
+  { slug: 'bsc-ds',  label: 'B.Sc DS' },
+  { slug: 'bsc-cs',  label: 'B.Sc CS' },
+  { slug: 'mcom-aa', label: 'M.Com (AA)' },
+  { slug: 'mcom-bm', label: 'M.Com (BM)' },
+  { slug: 'mcom-bf', label: 'M.Com (BF)' },
+  { slug: 'msf',     label: 'MSF' },
+  { slug: 'msc-it',  label: 'M.Sc IT' },
+];
+
 type Subadmin = {
   id: string;
   name: string;
@@ -46,6 +65,8 @@ export default function AccessProviderManager() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  // Track whether the programme sub-panel should be open (stays open even when 0 slugs selected)
+  const [progSubPanelOpen, setProgSubPanelOpen] = useState(false);
 
   const fetchSubadmins = async () => {
     setLoading(true);
@@ -59,7 +80,45 @@ export default function AccessProviderManager() {
 
   useEffect(() => { fetchSubadmins(); }, []);
 
+  const hasProgrammeAccess = form.allowed_tabs.includes('programme-management');
+  // Which specific slugs are selected (from 'programme-management:slug' entries)
+  const selectedProgSlugs = form.allowed_tabs
+    .filter(t => t.startsWith('programme-management:'))
+    .map(t => t.split(':')[1]);
+
   const toggleTab = (key: string) => {
+    if (key === 'programme-management') {
+      // Toggle full programme-management access — remove any specific slugs too
+      if (hasProgrammeAccess && !progSubPanelOpen) {
+        // Fully deactivate
+        setForm(f => ({
+          ...f,
+          allowed_tabs: f.allowed_tabs.filter(t => t !== 'programme-management' && !t.startsWith('programme-management:')),
+        }));
+        setProgSubPanelOpen(false);
+      } else if (!hasProgrammeAccess && !progSubPanelOpen && selectedProgSlugs.length === 0) {
+        // First click: grant full access and open panel
+        setForm(f => ({
+          ...f,
+          allowed_tabs: [...f.allowed_tabs.filter(t => !t.startsWith('programme-management:')), 'programme-management'],
+        }));
+        setProgSubPanelOpen(true);
+      } else if (progSubPanelOpen || hasProgrammeAccess || selectedProgSlugs.length > 0) {
+        // Already open: toggle off entirely
+        setForm(f => ({
+          ...f,
+          allowed_tabs: f.allowed_tabs.filter(t => t !== 'programme-management' && !t.startsWith('programme-management:')),
+        }));
+        setProgSubPanelOpen(false);
+      } else {
+        setForm(f => ({
+          ...f,
+          allowed_tabs: [...f.allowed_tabs.filter(t => !t.startsWith('programme-management:')), 'programme-management'],
+        }));
+        setProgSubPanelOpen(true);
+      }
+      return;
+    }
     setForm(f => ({
       ...f,
       allowed_tabs: f.allowed_tabs.includes(key)
@@ -68,11 +127,30 @@ export default function AccessProviderManager() {
     }));
   };
 
+  const toggleProgSlug = (slug: string) => {
+    const key = `programme-management:${slug}`;
+    // Remove full access if selecting specific
+    const baseWithoutFull = form.allowed_tabs.filter(t => t !== 'programme-management');
+    if (baseWithoutFull.includes(key)) {
+      setForm(f => ({ ...f, allowed_tabs: baseWithoutFull.filter(t => t !== key) }));
+    } else {
+      setForm(f => ({ ...f, allowed_tabs: [...baseWithoutFull, key] }));
+    }
+  };
+
+  const progAccessMode: 'none' | 'all' | 'specific' =
+    hasProgrammeAccess ? 'all'
+    : selectedProgSlugs.length > 0 ? 'specific'
+    : 'none';
+  // Panel is visible if explicitly opened, or if there are already selections
+  const showProgPanel = progSubPanelOpen || hasProgrammeAccess || selectedProgSlugs.length > 0;
+
   const openCreate = () => {
     setForm({ ...EMPTY_FORM });
     setEditingId(null);
     setError(null);
     setShowPassword(false);
+    setProgSubPanelOpen(false);
     setShowForm(true);
   };
 
@@ -81,6 +159,9 @@ export default function AccessProviderManager() {
     setEditingId(sub.id);
     setError(null);
     setShowPassword(false);
+    // Auto-open sub-panel if this sub-admin has any programme access
+    const hasProgAccess = sub.allowed_tabs.includes('programme-management') || sub.allowed_tabs.some(t => t.startsWith('programme-management:'));
+    setProgSubPanelOpen(hasProgAccess);
     setShowForm(true);
   };
 
@@ -247,22 +328,92 @@ export default function AccessProviderManager() {
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Module Access</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {ALL_TABS.map(tab => {
-                const selected = form.allowed_tabs.includes(tab.key);
+                const selected = tab.key === 'programme-management'
+                  ? showProgPanel
+                  : form.allowed_tabs.includes(tab.key);
                 return (
-                  <button
-                    key={tab.key}
-                    onClick={() => toggleTab(tab.key)}
-                    className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm font-medium transition-all ${
-                      selected
-                        ? 'bg-[#123B6D] border-[#123B6D] text-white'
-                        : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border ${selected ? 'bg-white border-white' : 'border-gray-300'}`}>
-                      {selected && <Check size={10} className="text-[#123B6D]" />}
-                    </div>
-                    {tab.label}
-                  </button>
+                  <div key={tab.key}>
+                    <button
+                      onClick={() => toggleTab(tab.key)}
+                      className={`w-full flex items-center gap-2 p-3 rounded-xl border text-left text-sm font-medium transition-all ${
+                        selected
+                          ? 'bg-[#123B6D] border-[#123B6D] text-white'
+                          : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border ${selected ? 'bg-white border-white' : 'border-gray-300'}`}>
+                        {selected && <Check size={10} className="text-[#123B6D]" />}
+                      </div>
+                      {tab.label}
+                      {tab.key === 'programme-management' && progAccessMode === 'specific' && (
+                        <span className="ml-auto text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">{selectedProgSlugs.length}</span>
+                      )}
+                    </button>
+
+                    {/* Programme sub-selector — shown when programme-management is activated */}
+                    {tab.key === 'programme-management' && showProgPanel && (
+                      <div className="mt-2 ml-1 p-3 bg-slate-50 border border-blue-100 rounded-xl">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Access Scope</p>
+                        <div className="flex gap-2 mb-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              // Set full access, clear specific slugs
+                              setForm(f => ({
+                                ...f,
+                                allowed_tabs: [...f.allowed_tabs.filter(t => !t.startsWith('programme-management')), 'programme-management'],
+                              }));
+                            }}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                              hasProgrammeAccess ? 'bg-[#123B6D] text-white border-[#123B6D]' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300'
+                            }`}
+                          >
+                            All Programmes
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              // Switch to specific mode (remove full, keep/init slugs)
+                              setForm(f => ({
+                                ...f,
+                                allowed_tabs: f.allowed_tabs.filter(t => t !== 'programme-management'),
+                              }));
+                            }}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                              !hasProgrammeAccess ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300'
+                            }`}
+                          >
+                            Specific Programmes
+                          </button>
+                        </div>
+
+                        {!hasProgrammeAccess && (
+                          <div className="grid grid-cols-2 gap-1">
+                            {PROGRAMMES.map(prog => {
+                              const isOn = selectedProgSlugs.includes(prog.slug);
+                              return (
+                                <button
+                                  key={prog.slug}
+                                  type="button"
+                                  onClick={() => toggleProgSlug(prog.slug)}
+                                  className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-semibold border transition-all ${
+                                    isOn ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-100 hover:bg-gray-50'
+                                  }`}
+                                >
+                                  <div className={`w-3 h-3 rounded flex items-center justify-center flex-shrink-0 border ${
+                                    isOn ? 'bg-blue-600 border-blue-600' : 'border-gray-300'
+                                  }`}>
+                                    {isOn && <Check size={8} className="text-white" />}
+                                  </div>
+                                  {prog.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
@@ -270,7 +421,7 @@ export default function AccessProviderManager() {
               onClick={() => setForm(f => ({ ...f, allowed_tabs: f.allowed_tabs.length === ALL_TABS.length ? [] : ALL_TABS.map(t => t.key) }))}
               className="mt-2 text-xs text-[#123B6D] font-semibold hover:underline"
             >
-              {form.allowed_tabs.length === ALL_TABS.length ? 'Deselect All' : 'Select All'}
+              {form.allowed_tabs.filter(t => ALL_TABS.some(at => at.key === t)).length === ALL_TABS.length ? 'Deselect All' : 'Select All'}
             </button>
           </div>
 
@@ -359,14 +510,28 @@ export default function AccessProviderManager() {
                     <div className="flex flex-wrap gap-1.5">
                       {sub.allowed_tabs.length === 0 ? (
                         <p className="text-xs text-gray-400 italic">No modules assigned.</p>
-                      ) : sub.allowed_tabs.map(tabKey => {
-                        const tabLabel = ALL_TABS.find(t => t.key === tabKey)?.label ?? tabKey;
+                      ) : (() => {
+                        // Group specific programme access under one badge
+                        const specificProgs = sub.allowed_tabs.filter(t => t.startsWith('programme-management:'));
+                        const otherTabs = sub.allowed_tabs.filter(t => !t.startsWith('programme-management:'));
                         return (
-                          <span key={tabKey} className="text-xs bg-[#123B6D]/10 text-[#123B6D] px-2.5 py-1 rounded-full font-medium">
-                            {tabLabel}
-                          </span>
+                          <>
+                            {otherTabs.map(tabKey => {
+                              const tabLabel = ALL_TABS.find(t => t.key === tabKey)?.label ?? tabKey;
+                              return (
+                                <span key={tabKey} className="text-xs bg-[#123B6D]/10 text-[#123B6D] px-2.5 py-1 rounded-full font-medium">
+                                  {tabLabel}
+                                </span>
+                              );
+                            })}
+                            {specificProgs.length > 0 && (
+                              <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full font-medium">
+                                Programmes: {specificProgs.map(t => PROGRAMMES.find(p => p.slug === t.split(':')[1])?.label ?? t.split(':')[1]).join(', ')}
+                              </span>
+                            )}
+                          </>
                         );
-                      })}
+                      })()}
                     </div>
                     <div className="mt-3 flex items-center gap-4">
                       <div>

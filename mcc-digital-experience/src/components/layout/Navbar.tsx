@@ -560,6 +560,18 @@ const navLinks = [
         ]
       },
       {
+        title: 'Endowment and Scholarship',
+        sections: [
+          {
+            links: [
+              { label: 'A.D Oak Scholarship', href: '/students-corner/Endowment-and-Scholarship?scholarship=ad-oak-scholarship' },
+              { label: 'Endowment Prizes', href: '/students-corner/Endowment-and-Scholarship?scholarship=endowment-prizes' },
+              { label: 'Government Scholarship', href: '/students-corner/Endowment-and-Scholarship?scholarship=government-scholarship' },
+            ]
+          }
+        ]
+      },
+      {
         title: 'Gallery',
         sections: [
           {
@@ -605,6 +617,13 @@ const navLinks = [
           { label: 'Finanza', href: '/students-corner/Students-Publications?publication=finanza' },
           { label: 'Techanugraha', href: '/students-corner/Students-Publications?publication=techanugraha' },
           { label: 'College Magazine (Vision)', href: '/students-corner/Students-Publications?publication=vision' },
+        ]
+      },
+      {
+        label: 'Endowment and Scholarship', href: '#', sub: [
+          { label: 'A.D Oak Scholarship', href: '/students-corner/Endowment-and-Scholarship?scholarship=ad-oak-scholarship' },
+          { label: 'Endowment Prizes', href: '/students-corner/Endowment-and-Scholarship?scholarship=endowment-prizes' },
+          { label: 'Government Scholarship', href: '/students-corner/Endowment-and-Scholarship?scholarship=government-scholarship' },
         ]
       },
       {

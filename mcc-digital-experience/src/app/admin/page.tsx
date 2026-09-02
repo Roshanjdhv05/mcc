@@ -51,9 +51,13 @@ type Subadmin = {
 };
 
 // ─── Content renderer ─────────────────────────────────────────────────────────
-function ModuleContent({ tabKey }: { tabKey: string }) {
+function ModuleContent({ tabKey, allowedTabs }: { tabKey: string; allowedTabs: string[] }) {
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
+  // Extract programme slugs: 'programme-management:bcom' → 'bcom'
+  const allowedProgSlugs = allowedTabs
+    .filter(t => t.startsWith('programme-management:'))
+    .map(t => t.split(':')[1]);
 
   if (tabKey === 'notice') {
     return (
@@ -87,7 +91,7 @@ function ModuleContent({ tabKey }: { tabKey: string }) {
   if (tabKey === 'home-banners')         return <HomeBannerManager />;
   if (tabKey === 'calendar-management')  return <CalendarManager />;
   if (tabKey === 'examination')          return <ExaminationManager />;
-  if (tabKey === 'programme-management') return <Suspense fallback={<Loading />}><ProgrammesManagerV2 /></Suspense>;
+  if (tabKey === 'programme-management') return <Suspense fallback={<Loading />}><ProgrammesManagerV2 allowedSlugs={allowedProgSlugs.length > 0 ? allowedProgSlugs : undefined} /></Suspense>;
   if (tabKey === 'students-corner')      return <Suspense fallback={<Loading />}><StudentsCornerManager /></Suspense>;
   if (tabKey === 'research')             return <ResearchManager />;
   if (tabKey === 'wall-of-fame')         return <Suspense fallback={<Loading />}><WallOfFameManager /></Suspense>;
@@ -185,7 +189,10 @@ function AdminContent() {
 
   // ─── Dashboard (module grid) ─────────────────────────────────────────────
   if (subadmin && !activeTab) {
-    const allowedModules = ALL_TABS.filter(t => subadmin.allowed_tabs.includes(t.key));
+    const allowedModules = ALL_TABS.filter(t => 
+      subadmin.allowed_tabs.includes(t.key) || 
+      (t.key === 'programme-management' && subadmin.allowed_tabs.some(a => a.startsWith('programme-management:')))
+    );
     return (
       <div className="min-h-screen bg-slate-50">
         {/* Header */}
@@ -243,7 +250,8 @@ function AdminContent() {
 
   // ─── Module view ──────────────────────────────────────────────────────────
   if (subadmin && activeTab) {
-    const isAllowed = subadmin.allowed_tabs.includes(activeTab);
+    const isAllowed = subadmin.allowed_tabs.includes(activeTab) || 
+      (activeTab === 'programme-management' && subadmin.allowed_tabs.some(a => a.startsWith('programme-management:')));
     const modInfo = ALL_TABS.find(t => t.key === activeTab);
 
     return (
@@ -278,7 +286,7 @@ function AdminContent() {
               </button>
             </div>
           ) : (
-            <ModuleContent tabKey={activeTab} />
+            <ModuleContent tabKey={activeTab} allowedTabs={subadmin.allowed_tabs} />
           )}
         </main>
       </div>

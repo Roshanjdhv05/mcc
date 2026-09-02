@@ -6,13 +6,14 @@ import type { CategoryItem, DataItem } from '@/components/layout/CornerPageLayou
 import {
   Users, BookOpen, UserPlus, Heart, Link as LinkIcon,
   ShieldAlert, Activity, Music, Leaf, Rocket,
-  Compass, Shield, UserCircle, MessageCircle, AlertTriangle, Image as ImageIcon, Calendar
+  Compass, Shield, UserCircle, MessageCircle, AlertTriangle, Image as ImageIcon, Calendar, Award
 } from 'lucide-react';
 
 const categories: CategoryItem[] = [
   { id: 'forums', label: 'Forums and Clubs', icon: Users },
   { id: 'events', label: 'Events & Festivals', icon: Music },
   { id: 'publications', label: 'Student\'s Publications', icon: BookOpen },
+  { id: 'endowment', label: 'Endowment and Scholarship', icon: Award },
   { id: 'gallery', label: 'Gallery', icon: ImageIcon },
   { id: 'wall-of-fame', label: 'Wall of Fame', icon: Activity },
 ];
@@ -44,6 +45,11 @@ const data: Record<string, DataItem[]> = {
     { title: 'Pratibimb', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Students-Publications?publication=pratibimb' }] },
     { title: 'Finanza', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Students-Publications?publication=finanza' }] },
     { title: 'Techanugraha', icon: BookOpen, links: [{ label: 'View Details', href: '/students-corner/Students-Publications?publication=techanugraha' }] },
+  ],
+  endowment: [
+    { title: 'A.D Oak Scholarship', icon: Award, links: [{ label: 'View Details', href: '/students-corner/Endowment-and-Scholarship?scholarship=ad-oak-scholarship' }] },
+    { title: 'Endowment Prizes', icon: Award, links: [{ label: 'View Details', href: '/students-corner/Endowment-and-Scholarship?scholarship=endowment-prizes' }] },
+    { title: 'Government Scholarship', icon: Award, links: [{ label: 'View Details', href: '/students-corner/Endowment-and-Scholarship?scholarship=government-scholarship' }] },
   ],
   gallery: [
     { title: 'Events Gallery', icon: ImageIcon, links: [{ label: 'View Gallery', href: '/students-corner/gallery' }] },

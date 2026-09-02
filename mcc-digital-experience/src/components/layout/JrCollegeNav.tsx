@@ -8,7 +8,6 @@ export const jrCollegeNavLinks = [
   { label: 'HOME', href: '/junior-college-corner' },
   { label: 'TEACHING STAFF', href: '/jr-college/teaching-staff' },
   { label: 'RESULT ANALYSIS', href: '/jr-college/result-analysis' },
-  { label: 'SMAF / SCHOLARSHIP', href: '/jr-college/scholarships' },
   { label: 'NOTICE', href: '/jr-college/notice' },
 ];
 

@@ -11,14 +11,6 @@ const aqarSidebar = [
     tag: 'Latest',
     items: [
       { id: '23-24-report', label: 'AQAR Report', pdf: '/accreditation/AQAR/AQAR 23-24.pdf' as string | null },
-      { id: '23-24-docs', label: 'AQAR Documentation', pdf: null as string | null },
-      { id: '23-24-c1', label: 'Criterion 1', pdf: null as string | null },
-      { id: '23-24-c2', label: 'Criterion 2', pdf: null as string | null },
-      { id: '23-24-c3', label: 'Criterion 3', pdf: null as string | null },
-      { id: '23-24-c4', label: 'Criterion 4', pdf: null as string | null },
-      { id: '23-24-c5', label: 'Criterion 5', pdf: null as string | null },
-      { id: '23-24-c6', label: 'Criterion 6', pdf: null as string | null },
-      { id: '23-24-c7', label: 'Criterion 7', pdf: null as string | null },
     ],
   },
   {
@@ -26,14 +18,6 @@ const aqarSidebar = [
     label: '2022-2023',
     items: [
       { id: '22-23-report', label: 'AQAR Report', pdf: '/accreditation/AQAR/AQAR 22-23.pdf' as string | null },
-      { id: '22-23-docs', label: 'AQAR Documentation', pdf: null as string | null },
-      { id: '22-23-c1', label: 'Criterion 1', pdf: null as string | null },
-      { id: '22-23-c2', label: 'Criterion 2', pdf: null as string | null },
-      { id: '22-23-c3', label: 'Criterion 3', pdf: null as string | null },
-      { id: '22-23-c4', label: 'Criterion 4', pdf: null as string | null },
-      { id: '22-23-c5', label: 'Criterion 5', pdf: null as string | null },
-      { id: '22-23-c6', label: 'Criterion 6', pdf: null as string | null },
-      { id: '22-23-c7', label: 'Criterion 7', pdf: null as string | null },
     ],
   },
   {
@@ -41,14 +25,6 @@ const aqarSidebar = [
     label: '2021-2022',
     items: [
       { id: '21-22-report', label: 'AQAR Report', pdf: '/accreditation/AQAR/AQAR 21-22.pdf' as string | null },
-      { id: '21-22-docs', label: 'AQAR Documentation', pdf: null as string | null },
-      { id: '21-22-c1', label: 'Criterion 1', pdf: null as string | null },
-      { id: '21-22-c2', label: 'Criterion 2', pdf: null as string | null },
-      { id: '21-22-c3', label: 'Criterion 3', pdf: null as string | null },
-      { id: '21-22-c4', label: 'Criterion 4', pdf: null as string | null },
-      { id: '21-22-c5', label: 'Criterion 5', pdf: null as string | null },
-      { id: '21-22-c6', label: 'Criterion 6', pdf: null as string | null },
-      { id: '21-22-c7', label: 'Criterion 7', pdf: null as string | null },
     ],
   },
 ];

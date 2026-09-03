@@ -22,7 +22,7 @@ interface HomeBanner {
   created_at: string;
 }
 
-export default function HomeBannerManager() {
+export default function HomeBannerManager({ canDelete }: { canDelete?: boolean }) {
   const [activeTab, setActiveTab] = useState<'upload' | 'manage'>('manage');
   const [banners, setBanners] = useState<HomeBanner[]>([]);
   const [loading, setLoading] = useState(true);
@@ -449,9 +449,11 @@ export default function HomeBannerManager() {
                       <button onClick={() => openEdit(banner)} className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all" title="Edit Banner">
                         <Pencil size={18} />
                       </button>
-                      <button onClick={() => handleDelete(banner.id, banner.image_url)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                        <Trash2 size={18} />
-                      </button>
+                      {canDelete !== false && (
+                        <button onClick={() => handleDelete(banner.id, banner.image_url)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                          <Trash2 size={18} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

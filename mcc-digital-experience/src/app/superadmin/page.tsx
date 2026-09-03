@@ -135,7 +135,7 @@ function SuperAdminContent() {
               { key: 'wall-of-fame', label: 'Wall of Fame', icon: <LayoutDashboard size={18} /> },
               { key: 'illustrious-alumni', label: 'Illustrious Alumni', icon: <GraduationCap size={18} /> },
               { key: 'statutory-bodies', label: 'Statutory Bodies', icon: <FileText size={18} /> },
-              { key: 'degree-programmes', label: 'Degree Programmes', icon: <FileText size={18} /> },
+
               { key: 'jr-college',           label: 'Jr College',              icon: <GraduationCap size={18} /> },
               { key: 'news',                  label: 'News & Announcements',    icon: <Bell size={18} /> },
               { key: 'access-provider',       label: 'Access Provider',         icon: <Shield size={18} /> },
@@ -203,6 +203,7 @@ function SuperAdminContent() {
                     <NoticeForm
                       onSuccess={() => { setShowNoticeForm(false); }}
                       onCancel={() => setShowNoticeForm(false)}
+                      currentUser="Superadmin"
                     />
                   </div>
                 )}
@@ -214,6 +215,7 @@ function SuperAdminContent() {
                       initialData={editingNotice}
                       onSuccess={() => { setEditingNotice(null); }}
                       onCancel={() => setEditingNotice(null)}
+                      currentUser="Superadmin"
                     />
                   </div>
                 )}
@@ -243,7 +245,7 @@ function SuperAdminContent() {
 
             {/* ── Event Publication ── */}
             {activeTab === 'home-events' && (
-              <HomeEventsManager />
+              <HomeEventsManager currentUser="Superadmin" />
             )}
 
             {/* ── Calendar Management ── */}
@@ -280,12 +282,7 @@ function SuperAdminContent() {
               </Suspense>
             )}
 
-            {/* ── Degree Programmes Manager (Legacy) ── */}
-            {activeTab === 'degree-programmes' && (
-              <Suspense fallback={<div>Loading...</div>}>
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-700 font-semibold">⚠️ This is the legacy programme manager. Use <strong>Programme Management</strong> for the new normalized system.</div>
-              </Suspense>
-            )}
+
 
             {/* ── News & Announcements Manager ── */}
             {activeTab === 'news' && (

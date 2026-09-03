@@ -25,7 +25,7 @@ const BLANK: AlumniItem = {
   show_on_home: true,
 };
 
-export default function IllustriousAlumniManager() {
+export default function IllustriousAlumniManager({ canDelete }: { canDelete?: boolean }) {
   const [items, setItems] = useState<AlumniItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<AlumniItem | null>(null);

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Bell, Calendar, Archive, RefreshCw, ExternalLink, Trash2, Globe,
-  Filter, ChevronDown, Search, Clock, Loader2, FileText, Image, FileIcon, Pencil
+  Filter, ChevronDown, Search, Clock, Loader2, FileText, Image, FileIcon, Pencil, User
 } from 'lucide-react';
 import { Notice, NOTICE_CATEGORIES, DEPARTMENTS } from '@/lib/noticeTypes';
 import { supabase } from '@/lib/supabase';
@@ -24,7 +24,7 @@ function AttachmentBadge({ type, name, url }: { type: string; name: string; url:
   );
 }
 
-function NoticeCard({ notice, onDelete, onEdit }: { notice: Notice; onDelete: (id: string) => void; onEdit: (n: Notice) => void }) {
+function NoticeCard({ notice, onDelete, onEdit, canDelete }: { notice: Notice; onDelete: (id: string) => void; onEdit: (n: Notice) => void; canDelete?: boolean }) {
   const isArchived = notice.expiry_time ? new Date(notice.expiry_time) < new Date() : false;
   const isScheduled = new Date(notice.schedule_time) > new Date();
 
@@ -65,6 +65,12 @@ function NoticeCard({ notice, onDelete, onEdit }: { notice: Notice; onDelete: (i
                 Expires: {new Date(notice.expiry_time).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
               </span>
             )}
+            {notice.created_by && (
+              <span className="flex items-center gap-1 text-[#123B6D] font-medium bg-blue-50 px-2 py-0.5 rounded-full">
+                <User size={10} />
+                {notice.created_by}
+              </span>
+            )}
           </div>
           {notice.courses.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-2">
@@ -90,20 +96,22 @@ function NoticeCard({ notice, onDelete, onEdit }: { notice: Notice; onDelete: (i
           >
             <Pencil size={15} />
           </button>
-          <button
-            onClick={() => notice.id && onDelete(notice.id)}
-            className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50"
-            title="Delete notice"
-          >
-            <Trash2 size={15} />
-          </button>
+          {canDelete !== false && (
+            <button
+              onClick={() => notice.id && onDelete(notice.id)}
+              className="text-gray-300 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50"
+              title="Delete notice"
+            >
+              <Trash2 size={15} />
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default function NoticeList({ onEdit }: { onEdit?: (notice: Notice) => void }) {
+export default function NoticeList({ onEdit, canDelete }: { onEdit?: (notice: Notice) => void; canDelete?: boolean }) {
   const qc = useQueryClient();
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -261,7 +269,7 @@ export default function NoticeList({ onEdit }: { onEdit?: (notice: Notice) => vo
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map(n => <NoticeCard key={n.id} notice={n} onDelete={handleDelete} onEdit={onEdit || (() => {})} />)}
+          {filtered.map(n => <NoticeCard key={n.id} notice={n} onDelete={handleDelete} onEdit={onEdit || (() => {})} canDelete={canDelete} />)}
         </div>
       )}
     </div>

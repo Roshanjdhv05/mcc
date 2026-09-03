@@ -15,6 +15,7 @@ interface NoticeFormProps {
   onSuccess?: (notice: Notice) => void;
   onCancel?: () => void;
   initialData?: Notice;
+  currentUser?: string;
 }
 
 function MultiSelectChips({
@@ -52,7 +53,7 @@ function MultiSelectChips({
   );
 }
 
-export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeFormProps) {
+export default function NoticeForm({ onSuccess, onCancel, initialData, currentUser }: NoticeFormProps) {
   const isEditMode = !!initialData?.id;
   const qc = useQueryClient();
   const [title, setTitle] = useState('');
@@ -283,6 +284,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
       calendar_date: publishCalendar ? calDate : null,
       calendar_venue: publishCalendar && calVenue.trim() ? calVenue.trim() : null,
       calendar_time: publishCalendar && calTime.trim() ? calTime.trim() : null,
+      created_by: currentUser || 'Superadmin',
     };
 
     // --- EDIT MODE: UPDATE ---

@@ -96,6 +96,7 @@ export interface Notice {
   expiry_time: string;
   attachments: { name: string; url: string; type: string }[];
   created_at?: string;
+  created_by?: string;
   // Calendar integration
   publish_calendar?: boolean;
   is_calendar_only?: boolean;

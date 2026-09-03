@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   Home, Archive, Image as ImageIcon, Trash2, RefreshCw,
-  CheckCircle, Clock, AlertTriangle, ChevronDown, ChevronUp, Eye, Plus, X, UploadCloud, Loader2, Filter, Edit2
+  CheckCircle, Clock, AlertTriangle, ChevronDown, ChevronUp, Eye, Plus, X, UploadCloud, Loader2, Filter, Edit2, User
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,6 +20,7 @@ type HomeEvent = {
   publish_home: boolean;
   publish_gallery: boolean;
   status: string;
+  created_by?: string;
 };
 
 const CATEGORIES = [
@@ -132,12 +133,14 @@ function EventCard({
   onRemoveFromHome,
   onRestoreToHome,
   onEdit,
+  canDelete,
 }: {
   event: HomeEvent;
   isArchived: boolean;
   onRemoveFromHome: (id: string) => void | Promise<void>;
   onRestoreToHome: (id: string) => void | Promise<void>;
   onEdit?: (event: HomeEvent) => void;
+  canDelete?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -196,6 +199,12 @@ function EventCard({
             Published: {new Date(event.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
             {' '}· {daysAgo} day{daysAgo !== 1 ? 's' : ''} ago
           </p>
+          {event.created_by && (
+            <p className="text-[11px] text-[#123B6D] font-semibold mt-1 flex items-center gap-1">
+              <User size={10} /> Uploaded by: {event.created_by}
+            </p>
+          )}
+
 
           {event.images && event.images.length > 0 && (
             <p className="text-[11px] text-gray-400 mt-0.5">
@@ -231,20 +240,22 @@ function EventCard({
 
       {/* Actions */}
       <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 border-t border-gray-100 flex-wrap">
-        {!isArchived ? (
-          <button
-            onClick={() => onRemoveFromHome(event.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition-colors"
-          >
-            <Archive size={13} /> Archive Event
-          </button>
-        ) : (
-          <button
-            onClick={() => onRestoreToHome(event.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors"
-          >
-            <CheckCircle size={13} /> Restore Event
-          </button>
+        {canDelete !== false && (
+          !isArchived ? (
+            <button
+              onClick={() => onRemoveFromHome(event.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition-colors"
+            >
+              <Archive size={13} /> Archive Event
+            </button>
+          ) : (
+            <button
+              onClick={() => onRestoreToHome(event.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors"
+            >
+              <CheckCircle size={13} /> Restore Event
+            </button>
+          )
         )}
         {onEdit && (
           <button
@@ -259,7 +270,8 @@ function EventCard({
   );
 }
 
-export default function HomeEventsManager() {
+export default function HomeEventsManager({ currentUser, canDelete }: { currentUser?: string; canDelete?: boolean }) {
+  const queryClient = useQueryClient();
   const [events, setEvents] = useState<HomeEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -279,11 +291,6 @@ export default function HomeEventsManager() {
   const [saving, setSaving] = useState(false);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
-  const queryClient = useQueryClient();
-
-
-
-
 
   const fetchEvents = useCallback(async () => {
     setLoading(true);
@@ -444,6 +451,7 @@ export default function HomeEventsManager() {
               publish_programme: true,
               status: 'published',
               published_at: eventDate ? new Date(eventDate).toISOString() : new Date().toISOString(),
+              created_by: currentUser || 'Superadmin',
             };
           })
         : [];
@@ -464,6 +472,7 @@ export default function HomeEventsManager() {
         publish_programme: false,
         status: 'published',
         published_at: eventDate ? new Date(eventDate).toISOString() : new Date().toISOString(),
+        created_by: currentUser || 'Superadmin',
       };
 
       // Always insert base record; also insert per-programme records
@@ -851,6 +860,7 @@ export default function HomeEventsManager() {
                     onRemoveFromHome={handleRemoveFromHome}
                     onRestoreToHome={handleRestoreToHome}
                     onEdit={handleEditEvent}
+                    canDelete={canDelete}
                   />
                 ))}
               </div>

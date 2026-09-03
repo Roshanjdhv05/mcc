@@ -38,7 +38,7 @@ const CATEGORY_COLORS: Record<ResearchCategory, string> = {
   'Research Journal': 'bg-emerald-50 text-emerald-700 border-emerald-200',
 };
 
-export default function ResearchManager() {
+export default function ResearchManager({ canDelete }: { canDelete?: boolean }) {
   const [items, setItems] = useState<ResearchItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

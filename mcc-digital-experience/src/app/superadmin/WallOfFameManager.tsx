@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { Plus, RefreshCw, AlertCircle, Search, LayoutDashboard, Eye, Edit2 } from 'lucide-react';
 import WallOfFameEditor, { WallOfFameItem } from './WallOfFameEditor';
 
-export default function WallOfFameManager() {
+export default function WallOfFameManager({ canDelete }: { canDelete?: boolean }) {
   const [items, setItems] = useState<WallOfFameItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

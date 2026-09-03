@@ -16,7 +16,6 @@ const ALL_TABS = [
   { key: 'wall-of-fame',         label: 'Wall of Fame' },
   { key: 'illustrious-alumni',   label: 'Illustrious Alumni' },
   { key: 'statutory-bodies',     label: 'Statutory Bodies' },
-  { key: 'degree-programmes',    label: 'Degree Programmes' },
   { key: 'jr-college',           label: 'Jr College' },
   { key: 'news',                 label: 'News & Announcements' },
 ];

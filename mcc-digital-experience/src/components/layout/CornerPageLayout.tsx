@@ -220,17 +220,19 @@ function CornerPageLayoutInner({
 
       {/* ── Compact header bar ─────────────────────────────── */}
       <div className="bg-white border-b border-[#E2E8F0]">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-10 py-3 md:py-10 flex flex-col items-center text-center gap-1.5 md:gap-2">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-10 py-2 md:py-5 flex flex-col items-center text-center gap-1 md:gap-1.5">
           {HeroIcon && (
-            <div className="w-8 h-8 md:w-14 md:h-14 rounded-xl bg-[#EBF3FF] flex items-center justify-center mb-1 md:mb-2">
-              <HeroIcon className="text-[#123B6D] w-4 h-4 md:w-7 md:h-7" />
+            <div className="w-7 h-7 md:w-10 md:h-10 rounded-xl bg-[#EBF3FF] flex items-center justify-center mb-0.5 md:mb-1">
+              <HeroIcon className="text-[#123B6D] w-3.5 h-3.5 md:w-5 md:h-5" />
             </div>
           )}
-          <h1 className="text-xl md:text-4xl font-black text-[#123B6D] tracking-tight">
+          <h1 className="text-xl md:text-3xl font-black text-[#123B6D] tracking-tight">
             {title}
           </h1>
-          <div className="w-8 md:w-12 h-1 bg-[#D4A017] rounded-full" />
-          <p className="text-gray-500 text-xs md:text-lg max-w-2xl leading-relaxed mt-1">{subtitle}</p>
+          <div className="w-6 md:w-10 h-1 bg-[#D4A017] rounded-full" />
+          {subtitle && (
+            <p className="text-gray-500 text-xs md:text-base max-w-2xl leading-relaxed mt-0.5">{subtitle}</p>
+          )}
         </div>
       </div>
 

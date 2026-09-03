@@ -67,7 +67,7 @@ function AttachmentBadge({ type, name, url }: { type: string; name: string; url:
 
 // ─── Notice Card ────────────────────────────────────────────────────────────
 
-function NoticeCard({ notice, onDelete }: { notice: JrNotice; onDelete: (id: string) => void }) {
+function NoticeCard({ notice, onDelete, canDelete }: { notice: JrNotice; onDelete: (id: string) => void; canDelete?: boolean }) {
   const now = new Date();
   const scheduled = new Date(notice.schedule_time);
   const expired = notice.expiry_time ? new Date(notice.expiry_time) < now : false;
@@ -127,19 +127,21 @@ function NoticeCard({ notice, onDelete }: { notice: JrNotice; onDelete: (id: str
         </div>
       )}
 
-      <button
-        onClick={() => onDelete(notice.id)}
-        className="mt-1 w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
-      >
-        <Trash2 size={13} /> Delete Notice
-      </button>
+      {canDelete !== false && (
+        <button
+          onClick={() => onDelete(notice.id)}
+          className="mt-1 w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
+        >
+          <Trash2 size={13} /> Delete Notice
+        </button>
+      )}
     </div>
   );
 }
 
 // ─── Gallery Card ───────────────────────────────────────────────────────────
 
-function GalleryCard({ event, onDelete }: { event: JrGalleryEvent; onDelete: (id: string) => void }) {
+function GalleryCard({ event, onDelete, canDelete }: { event: JrGalleryEvent; onDelete: (id: string) => void; canDelete?: boolean }) {
   const cover = event.images?.[0];
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden hover:border-[#123B6D]/30 hover:shadow-md transition-all flex flex-col">
@@ -169,12 +171,14 @@ function GalleryCard({ event, onDelete }: { event: JrGalleryEvent; onDelete: (id
           <Calendar size={11} />
           {new Date(event.event_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
         </div>
-        <button
-          onClick={() => onDelete(event.id)}
-          className="mt-1 w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
-        >
-          <Trash2 size={13} /> Delete Event
-        </button>
+        {canDelete !== false && (
+          <button
+            onClick={() => onDelete(event.id)}
+            className="mt-1 w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
+          >
+            <Trash2 size={13} /> Delete Event
+          </button>
+        )}
       </div>
     </div>
   );
@@ -182,7 +186,7 @@ function GalleryCard({ event, onDelete }: { event: JrGalleryEvent; onDelete: (id
 
 // ─── Notice List Section ────────────────────────────────────────────────────
 
-function NoticeListSection() {
+function NoticeListSection({ canDelete }: { canDelete?: boolean }) {
   const qc = useQueryClient();
   const [notices, setNotices] = useState<JrNotice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -287,7 +291,7 @@ function NoticeListSection() {
         </div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filtered.map(n => <NoticeCard key={n.id} notice={n} onDelete={handleDelete} />)}
+          {filtered.map(n => <NoticeCard key={n.id} notice={n} onDelete={handleDelete} canDelete={canDelete} />)}
         </div>
       ) : (
         <div className="space-y-3">
@@ -307,9 +311,11 @@ function NoticeListSection() {
               </div>
               <div className="flex items-center gap-2 ml-3">
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${CATEGORY_NOTICE_COLORS[n.category] || 'bg-gray-100 text-gray-500 border-gray-200'}`}>{n.category}</span>
-                <button onClick={() => handleDelete(n.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                  <Trash2 size={15} />
-                </button>
+                {canDelete !== false && (
+                  <button onClick={() => handleDelete(n.id)} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <Trash2 size={15} />
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -321,7 +327,7 @@ function NoticeListSection() {
 
 // ─── Gallery List Section ───────────────────────────────────────────────────
 
-function GalleryListSection() {
+function GalleryListSection({ canDelete }: { canDelete?: boolean }) {
   const qc = useQueryClient();
   const [events, setEvents] = useState<JrGalleryEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -410,7 +416,7 @@ function GalleryListSection() {
         </div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filtered.map(e => <GalleryCard key={e.id} event={e} onDelete={handleDelete} />)}
+          {filtered.map(e => <GalleryCard key={e.id} event={e} onDelete={handleDelete} canDelete={canDelete} />)}
         </div>
       ) : (
         <div className="space-y-3">
@@ -433,9 +439,11 @@ function GalleryListSection() {
                   </p>
                 </div>
               </div>
-              <button onClick={() => handleDelete(e.id)} className="ml-3 p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                <Trash2 size={15} />
-              </button>
+              {canDelete !== false && (
+                <button onClick={() => handleDelete(e.id)} className="ml-3 p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                  <Trash2 size={15} />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -874,7 +882,7 @@ function GalleryUploadForm() {
 
 // ─── Root Component ─────────────────────────────────────────────────────────
 
-export default function JrCollegeManager() {
+export default function JrCollegeManager({ canDelete }: { canDelete?: boolean }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
@@ -959,14 +967,14 @@ export default function JrCollegeManager() {
       {activeTab === 'notices' && (
         <div className="space-y-6">
           <NoticeUploadForm />
-          <NoticeListSection />
+          <NoticeListSection canDelete={canDelete} />
         </div>
       )}
 
       {activeTab === 'gallery' && (
         <div className="space-y-6">
           <GalleryUploadForm />
-          <GalleryListSection />
+          <GalleryListSection canDelete={canDelete} />
         </div>
       )}
     </div>

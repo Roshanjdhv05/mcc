@@ -29,7 +29,7 @@ export default function TilakLecturePage() {
     <div className="bg-[#F8FAFC] min-h-screen">
 
       {/* ── Hero ── */}
-      <div className="relative bg-[#123B6D] pt-14 pb-32">
+      <div className="relative bg-[#123B6D] pt-10 pb-20">
         <div className="absolute inset-0 opacity-10">
           <img src="/college_campus_hero.png" alt="" className="w-full h-full object-cover" />
         </div>
@@ -43,13 +43,9 @@ export default function TilakLecturePage() {
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-5 uppercase tracking-widest">
             <Star size={13} /> Special Lectures
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white font-[var(--font-heading)] mb-4 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-black text-white font-[var(--font-heading)] mb-2 leading-tight">
             Tilak Smruti<br className="hidden md:block" /> Vyakhyan
           </h1>
-          <p className="text-white/75 text-lg max-w-2xl">
-            An annual lecture series honouring the legacy of Lokmanya Bal Gangadhar Tilak — bringing
-            renowned scholars and experts to inspire our community and ignite public discourse.
-          </p>
         </div>
       </div>
 

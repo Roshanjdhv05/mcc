@@ -11,7 +11,7 @@ type NewsItem = {
   created_at: string;
 };
 
-export default function NewsAnnouncementsManager() {
+export default function NewsAnnouncementsManager({ canDelete }: { canDelete?: boolean }) {
   const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -185,14 +185,16 @@ export default function NewsAnnouncementsManager() {
                 </div>
               </div>
               <div className="flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
-                {activeTab === 'active' && (
+                {activeTab === 'active' && canDelete !== false && (
                   <button onClick={() => handleArchive(item.id)} className="p-2 text-orange-500 hover:bg-orange-50 rounded-lg transition-colors" title="Move to Archive">
                     <Archive size={16} />
                   </button>
                 )}
-                <button onClick={() => handleDelete(item.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                  <Trash2 size={16} />
-                </button>
+                {canDelete !== false && (
+                  <button onClick={() => handleDelete(item.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                    <Trash2 size={16} />
+                  </button>
+                )}
               </div>
             </div>
           ))

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk, cacheLog } from '@/lib/cache';
-import { FileText, Trash2, RefreshCw, Eye, GraduationCap, Bell } from 'lucide-react';
+import { FileText, Trash2, RefreshCw, Eye, GraduationCap, Bell, User } from 'lucide-react';
 
 const CATEGORIES = [
   'Time Table Regular Exam',
@@ -30,9 +30,10 @@ interface ExamDocument {
   notice_expiry_time: string | null;
   publish_to_notice_board: boolean;
   created_at: string;
+  created_by?: string;
 }
 
-export default function ExaminationManager() {
+export default function ExaminationManager({ canDelete }: { canDelete?: boolean }) {
   const qc = useQueryClient();
   const [documents, setDocuments] = useState<ExamDocument[]>([]);
   const [loading, setLoading] = useState(true);
@@ -205,6 +206,11 @@ export default function ExaminationManager() {
                             <GraduationCap size={12} />
                             {isAll ? 'All Programmes' : doc.courses.join(', ')}
                           </span>
+                          {doc.created_by && (
+                            <span className="text-[#123B6D] font-medium flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                              <User size={10} /> {doc.created_by}
+                            </span>
+                          )}
                         </div>
                         {doc.publish_to_notice_board && (
                           <div className="mt-2 flex items-center gap-1.5 text-[11px] text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md w-fit font-medium">
@@ -229,9 +235,11 @@ export default function ExaminationManager() {
                           <Eye size={18} />
                         </span>
                       )}
-                      <button onClick={() => handleDelete(doc.id, doc.file_url)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                        <Trash2 size={18} />
-                      </button>
+                      {canDelete !== false && (
+                        <button onClick={() => handleDelete(doc.id, doc.file_url)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                          <Trash2 size={18} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

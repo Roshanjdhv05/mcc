@@ -6,7 +6,7 @@ import { CalendarDays, Save, MapPin, Clock, FileText, Loader2, ListTree } from '
 import { CALENDAR_CATEGORIES } from '@/lib/noticeTypes';
 import MainCalendarGrid from '@/components/calendar/MainCalendarGrid';
 
-export default function CalendarManager() {
+export default function CalendarManager({ canDelete }: { canDelete?: boolean }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');

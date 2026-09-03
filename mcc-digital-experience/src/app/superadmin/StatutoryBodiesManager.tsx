@@ -49,7 +49,7 @@ const CELL_BG: Record<string, string> = {
   'remedial-coaching-cell':       'bg-emerald-100 text-emerald-700',
 };
 
-export default function StatutoryBodiesManager() {
+export default function StatutoryBodiesManager({ canDelete }: { canDelete?: boolean }) {
   const [items, setItems] = useState<StatutoryBodyItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

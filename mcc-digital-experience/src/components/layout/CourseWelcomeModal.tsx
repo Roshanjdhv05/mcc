@@ -31,19 +31,14 @@ const courses: Course[] = [
     accent: 'bg-blue-50', iconAccent: 'text-[#123B6D]',
   },
   {
-    code: 'BAF', name: 'BAF', fullName: 'B.Com. (Accounting and Finance)',
+    code: 'B.Com-AF', name: 'B.Com. BAF', fullName: 'B.Com. (Accounting & Finance)',
     level: 'Under Graduate', duration: '3 Years', seats: 120,
     tags: ['Commerce', 'Finance', 'Accounting'], href: '/programmes/ug/baf',
     accent: 'bg-emerald-50', iconAccent: 'text-emerald-700',
   },
+
   {
-    code: 'BMS', name: 'BMS', fullName: 'Bachelor of Management Studies',
-    level: 'Under Graduate', duration: '3 Years', seats: 120,
-    tags: ['Management', 'Strategy', 'Business'], href: '/programmes/ug/bms',
-    accent: 'bg-purple-50', iconAccent: 'text-purple-700',
-  },
-  {
-    code: 'BFM', name: 'BFM', fullName: 'B.Com. (Financial Markets)',
+    code: 'B.Com-FM', name: 'B.Com. BFM', fullName: 'B.Com. (Financial Markets)',
     level: 'Under Graduate', duration: '3 Years', seats: 60,
     tags: ['Finance', 'Markets', 'Commerce'], href: '/programmes/ug/bfm',
     accent: 'bg-amber-50', iconAccent: 'text-amber-700',
@@ -55,7 +50,7 @@ const courses: Course[] = [
     accent: 'bg-cyan-50', iconAccent: 'text-cyan-700',
   },
   {
-    code: 'BBI', name: 'BBI', fullName: 'B.Com. (Banking and Insurance)',
+    code: 'B.Com-BI', name: 'B.Com. BBI', fullName: 'B.Com. (Banking & Insurance)',
     level: 'Under Graduate', duration: '3 Years', seats: 60,
     tags: ['Banking', 'Insurance', 'Commerce'], href: '/programmes/ug/bbi',
     accent: 'bg-rose-50', iconAccent: 'text-rose-700',
@@ -79,7 +74,7 @@ const courses: Course[] = [
     accent: 'bg-sky-50', iconAccent: 'text-sky-700',
   },
   {
-    code: 'BCA', name: 'BCA', fullName: 'Bachelor of Computer Applications',
+    code: 'B.Sc-CA', name: 'B.Sc. CA', fullName: 'B.Sc. Computer Applications',
     level: 'Under Graduate', duration: '3 Years', seats: 60,
     tags: ['Technology', 'Programming', 'IT'], href: '/programmes/ug/bca',
     accent: 'bg-emerald-50', iconAccent: 'text-emerald-700',
@@ -90,12 +85,7 @@ const courses: Course[] = [
     tags: ['AI', 'Analytics', 'Machine Learning'], href: '/programmes/ug/ds',
     accent: 'bg-rose-50', iconAccent: 'text-rose-700',
   },
-  {
-    code: 'BBA', name: 'BBA', fullName: 'Bachelor of Business Administration',
-    level: 'Under Graduate', duration: '3 Years', seats: 120,
-    tags: ['Management', 'Leadership', 'Business'], href: '/programmes/ug/bba',
-    accent: 'bg-amber-50', iconAccent: 'text-amber-700',
-  },
+
   {
     code: 'BAMMC', name: 'BAMMC', fullName: 'Bachelor of Arts in Multimedia and Mass Communication',
     level: 'Under Graduate', duration: '3 Years', seats: 60,

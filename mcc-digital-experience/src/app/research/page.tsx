@@ -56,7 +56,7 @@ export default function ResearchPage() {
   return (
     <CornerPageLayout
       title="RESEARCH"
-      subtitle="Fostering a culture of innovation and inquiry. Explore our research centers, policies, ongoing projects, and major publications."
+      subtitle=""
       heroImage="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1200&auto=format&fit=crop"
       HeroIcon={FileSearch}
       heroLabel="MCC Research"

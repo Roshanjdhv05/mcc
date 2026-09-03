@@ -51,7 +51,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   PhD: 'bg-amber-50 text-amber-700 border-amber-200',
 };
 
-export default function ProgrammesManagerV2({ allowedSlugs }: { allowedSlugs?: string[] }) {
+export default function ProgrammesManagerV2({ allowedSlugs, canDelete }: { allowedSlugs?: string[]; canDelete?: boolean }) {
   const [programmes, setProgrammes] = useState<Programme[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -51,7 +51,7 @@ type Subadmin = {
 };
 
 // ─── Content renderer ─────────────────────────────────────────────────────────
-function ModuleContent({ tabKey, allowedTabs }: { tabKey: string; allowedTabs: string[] }) {
+function ModuleContent({ tabKey, allowedTabs, currentUser }: { tabKey: string; allowedTabs: string[]; currentUser: string }) {
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
   // Extract programme slugs: 'programme-management:bcom' → 'bcom'
@@ -78,27 +78,27 @@ function ModuleContent({ tabKey, allowedTabs }: { tabKey: string; allowedTabs: s
           )}
         </div>
         {showNoticeForm && !editingNotice && (
-          <div className="mb-6"><NoticeForm onSuccess={() => setShowNoticeForm(false)} onCancel={() => setShowNoticeForm(false)} /></div>
+          <div className="mb-6"><NoticeForm onSuccess={() => setShowNoticeForm(false)} onCancel={() => setShowNoticeForm(false)} currentUser={currentUser} /></div>
         )}
         {editingNotice && (
-          <div className="mb-6"><NoticeForm initialData={editingNotice} onSuccess={() => setEditingNotice(null)} onCancel={() => setEditingNotice(null)} /></div>
+          <div className="mb-6"><NoticeForm initialData={editingNotice} onSuccess={() => setEditingNotice(null)} onCancel={() => setEditingNotice(null)} currentUser={currentUser} /></div>
         )}
-        <NoticeList onEdit={(notice) => { setShowNoticeForm(false); setEditingNotice(notice); }} />
+        <NoticeList onEdit={(notice) => { setShowNoticeForm(false); setEditingNotice(notice); }} canDelete={false} />
       </div>
     );
   }
-  if (tabKey === 'home-events')         return <HomeEventsManager />;
-  if (tabKey === 'home-banners')         return <HomeBannerManager />;
-  if (tabKey === 'calendar-management')  return <CalendarManager />;
-  if (tabKey === 'examination')          return <ExaminationManager />;
-  if (tabKey === 'programme-management') return <Suspense fallback={<Loading />}><ProgrammesManagerV2 allowedSlugs={allowedProgSlugs.length > 0 ? allowedProgSlugs : undefined} /></Suspense>;
-  if (tabKey === 'students-corner')      return <Suspense fallback={<Loading />}><StudentsCornerManager /></Suspense>;
-  if (tabKey === 'research')             return <ResearchManager />;
-  if (tabKey === 'wall-of-fame')         return <Suspense fallback={<Loading />}><WallOfFameManager /></Suspense>;
-  if (tabKey === 'illustrious-alumni')   return <Suspense fallback={<Loading />}><IllustriousAlumniManager /></Suspense>;
-  if (tabKey === 'statutory-bodies')     return <Suspense fallback={<Loading />}><StatutoryBodiesManager /></Suspense>;
-  if (tabKey === 'jr-college')           return <JrCollegeManager />;
-  if (tabKey === 'news')                 return <NewsAnnouncementsManager />;
+  if (tabKey === 'home-events')          return <HomeEventsManager currentUser={currentUser} canDelete={false} />;
+  if (tabKey === 'home-banners')         return <HomeBannerManager canDelete={false} />;
+  if (tabKey === 'calendar-management')  return <CalendarManager canDelete={false} />;
+  if (tabKey === 'examination')          return <ExaminationManager canDelete={false} />;
+  if (tabKey === 'programme-management') return <Suspense fallback={<Loading />}><ProgrammesManagerV2 allowedSlugs={allowedProgSlugs.length > 0 ? allowedProgSlugs : undefined} canDelete={false} /></Suspense>;
+  if (tabKey === 'students-corner')      return <Suspense fallback={<Loading />}><StudentsCornerManager canDelete={false} /></Suspense>;
+  if (tabKey === 'research')             return <ResearchManager canDelete={false} />;
+  if (tabKey === 'wall-of-fame')         return <Suspense fallback={<Loading />}><WallOfFameManager canDelete={false} /></Suspense>;
+  if (tabKey === 'illustrious-alumni')   return <Suspense fallback={<Loading />}><IllustriousAlumniManager canDelete={false} /></Suspense>;
+  if (tabKey === 'statutory-bodies')     return <Suspense fallback={<Loading />}><StatutoryBodiesManager canDelete={false} /></Suspense>;
+  if (tabKey === 'jr-college')           return <JrCollegeManager canDelete={false} />;
+  if (tabKey === 'news')                 return <NewsAnnouncementsManager canDelete={false} />;
   return <div className="text-gray-400 py-20 text-center">Module not found.</div>;
 }
 
@@ -286,7 +286,7 @@ function AdminContent() {
               </button>
             </div>
           ) : (
-            <ModuleContent tabKey={activeTab} allowedTabs={subadmin.allowed_tabs} />
+            <ModuleContent tabKey={activeTab} allowedTabs={subadmin.allowed_tabs} currentUser={subadmin.name} />
           )}
         </main>
       </div>

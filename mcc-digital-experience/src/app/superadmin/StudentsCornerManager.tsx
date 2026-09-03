@@ -33,7 +33,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Endowment and Scholarship': 'bg-emerald-50 text-emerald-700 border-emerald-200',
 };
 
-export default function StudentsCornerManager() {
+export default function StudentsCornerManager({ canDelete }: { canDelete?: boolean }) {
   const [items, setItems] = useState<StudentsCornerItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

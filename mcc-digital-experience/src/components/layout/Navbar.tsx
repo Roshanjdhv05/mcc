@@ -852,6 +852,16 @@ export default function Navbar() {
     };
   }, []); // Only runs once on mount
 
+  // Close dropdowns on route navigation
+  useEffect(() => {
+    setOpenDrop(null);
+    setMobileOpenDrop(null);
+    setNestedMobileDrop(null);
+    setNestedMobileDrop3(null);
+    setMobileOpen(false);
+    setNoticesOpen(false);
+  }, [pathname]);
+
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;

@@ -85,6 +85,12 @@ const courses: Course[] = [
     tags: ['AI', 'Analytics', 'Machine Learning'], href: '/programmes/ug/ds',
     accent: 'bg-rose-50', iconAccent: 'text-rose-700',
   },
+  {
+    code: 'BSC-CS', name: 'B.Sc. CS', fullName: 'B.Sc. (Computer Science)',
+    level: 'Under Graduate', duration: '3 Years', seats: 60,
+    tags: ['Computer Science', 'Programming', 'Algorithms'], href: '/programmes/ug/bsccs',
+    accent: 'bg-violet-50', iconAccent: 'text-violet-700',
+  },
 
   {
     code: 'BAMMC', name: 'BAMMC', fullName: 'Bachelor of Arts in Multimedia and Mass Communication',

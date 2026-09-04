@@ -201,7 +201,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
     if (publishCalendar && !calCategory) { setError('Calendar category is required when "Show in Calendar" is enabled'); return; }
 
     if (publishExam) {
-      if (!examFile) {
+      if (examPublishMode === 'all' && !examFile) {
         setError('Please upload a PDF file to publish to the Examination Hub.');
         return;
       }
@@ -724,7 +724,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                 {/* ── Shared PDF Upload (shown first, always) ── */}
                 <div className="bg-white border-2 border-blue-200 rounded-2xl p-4 space-y-2">
                   <label className="block text-xs font-bold text-gray-700">
-                    Upload PDF File <span className="text-red-500">*</span>
+                    Upload PDF File {examPublishMode === 'all' ? <span className="text-red-500">*</span> : <span className="text-gray-400">(optional)</span>}
                     <span className="font-normal text-gray-400 ml-1">(used for All Programmes or as the default for Specific)</span>
                   </label>
                   <label className="flex items-center gap-3 border-2 border-dashed border-blue-300 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-500 transition-colors bg-blue-50/40">

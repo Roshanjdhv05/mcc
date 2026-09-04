@@ -10,42 +10,45 @@ import { useCachedNotices, useCachedExamDocs } from '@/hooks/useCachedSupabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk } from '@/lib/cache';
 
-// Map dashboard course codes → DB course IDs
-const COURSE_CODE_MAP: Record<string, string> = {
-  // Junior College
-  '11th':      'jr-college',
-  '12th':      'jr-college',
-  // UG
-  'bcom':      'BCOM',
-  'BCom':      'BCOM',
-  'B.Com':     'BCOM',
-  'BBA':       'BCOM.BA',
-  'BMS':       'BCOM.MS',
-  'BCA':       'BSC.CA',
-  'BSc IT':    'BSC.IT',
-  'BSc CS':    'BSC.CS',
-  'DS':        'BSC.DS',
-  'BAF':       'BCOM.AF',
-  'BFM':       'BCOM.FM',
-  'BBI':       'BCOM.BI',
-  'BAMMC':     'BAMMC',
+// Map dashboard course codes → { noticeId: noticeTypes.ts ID, examId: EXAM_COURSES ID }
+const COURSE_ID_MAP: Record<string, { noticeId: string; examId: string }> = {
+  // UG — B.Com
+  'B.COM':        { noticeId: 'B.COM',    examId: 'BCOM'    },
+  'B.Com-AF':     { noticeId: 'BAF',      examId: 'BAF'     },
+  'B.Com-FM':     { noticeId: 'BFM',      examId: 'BFM'     },
+  'BFSI':         { noticeId: 'BFSI',     examId: 'BFSI'    },
+  'B.Com-BI':     { noticeId: 'BBI',      examId: 'BBI'     },
+  'BCOM-BA':      { noticeId: 'BCOM-BA',  examId: 'BCOM-BA' },
+  'BCOM-MS':      { noticeId: 'BMS',      examId: 'BCOM-MS' },
+  // UG — Science & Tech
+  'BSC-IT':       { noticeId: 'BSC-IT',   examId: 'BSCIT'   },
+  'B.Sc-CA':      { noticeId: 'BCA',      examId: 'BCA'     },
+  'BSC-DS':       { noticeId: 'BSC-DS',   examId: 'BSCDS'   },
+  'BSC-CS':       { noticeId: 'BSC-CS',   examId: 'BSCCS'   },
+  // UG — Other
+  'BAMMC':        { noticeId: 'BAMMC',    examId: 'BAMMC'   },
   // PG
-  'MCom':      'MCOM.AA',
-  'M.Com':     'MCOM.AA',
-  'MSc IT':    'MSC.IT',
-  'MSc Finance':'MSC.FIN',
+  'MCom-AA':      { noticeId: 'MCOM.AA',  examId: 'MCOM.AA' },
+  'MCom-BM':      { noticeId: 'MCOM.BM',  examId: 'MCOM.BM' },
+  'MCom-BF':      { noticeId: 'MCOM.BF',  examId: 'MCOM.BF' },
+  'MSc-IT':       { noticeId: 'MSC.IT',   examId: 'MSC.IT'  },
+  'MSc-Finance':  { noticeId: 'MSC.FIN',  examId: 'MSC.FIN' },
+  // Jr College
+  '11th':         { noticeId: 'jr-college', examId: 'jr-college' },
+  '12th':         { noticeId: 'jr-college', examId: 'jr-college' },
 };
 
-function normaliseCourseCode(code: string): string {
-  // Direct map lookup first
-  if (COURSE_CODE_MAP[code]) return COURSE_CODE_MAP[code];
-  // Try case-insensitive lowercase
+function getCourseIds(code: string): { noticeId: string; examId: string } {
+  if (COURSE_ID_MAP[code]) return COURSE_ID_MAP[code];
+  // Try case-insensitive match
   const lower = code.toLowerCase().replace(/[\s.]/g, '');
-  const found = Object.entries(COURSE_CODE_MAP).find(
+  const found = Object.entries(COURSE_ID_MAP).find(
     ([k]) => k.toLowerCase().replace(/[\s.]/g, '') === lower
   );
-  return found ? found[1] : code.toLowerCase();
+  if (found) return found[1];
+  return { noticeId: code, examId: code };
 }
+
 
 function AttachmentLink({ name, url, type }: { name: string; url: string; type: string }) {
   const icon =
@@ -86,7 +89,7 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
   const [searchQuery,   setSearchQuery]   = useState('');
   const qc = useQueryClient();
 
-  const dbCourseId = normaliseCourseCode(courseCode);
+  const { noticeId: noticeDbId, examId: examDbId } = getCourseIds(courseCode);
 
   const { data: rawNotices = [], isLoading: noticesLoading, refetch: refetchNotices } = useCachedNotices();
   const { data: rawExamDocs = [], isLoading: examLoading, refetch: refetchExamDocs } = useCachedExamDocs();
@@ -119,11 +122,16 @@ export default function NoticesModule({ courseCode }: { courseCode: string }) {
   }));
 
   const now = new Date().toISOString();
+  // Regular notices: filter by noticeTypes.ts course ID
   const regular = (rawNotices as Notice[]).filter(n =>
-    n.is_general || (n.courses && n.courses.includes(dbCourseId))
+    n.is_general || (n.courses && n.courses.includes(noticeDbId))
   );
+  // Exam docs: filter by EXAM_COURSES ID (case-insensitive fallback)
   const examFiltered = examNotices.filter(n =>
-    n.is_general || (n.courses && (n.courses.includes(dbCourseId) || n.courses.some(c => c.toLowerCase() === dbCourseId.toLowerCase())))
+    n.is_general || (n.courses && (
+      n.courses.includes(examDbId) ||
+      n.courses.some(c => c.toLowerCase() === examDbId.toLowerCase())
+    ))
   );
   const notices = [...regular, ...examFiltered]
     .sort((a, b) => new Date(b.schedule_time).getTime() - new Date(a.schedule_time).getTime());

@@ -14,36 +14,38 @@ interface ExamDocument {
   created_at: string;
 }
 
-const COURSE_CODE_MAP: Record<string, string> = {
-  // Junior College
-  '11th':      'jr-college',
-  '12th':      'jr-college',
-  // UG
-  'bcom':      'BCOM',
-  'BCom':      'BCOM',
-  'B.Com':     'BCOM',
-  'BBA':       'BCOM.BA',
-  'BMS':       'BCOM.MS',
-  'BCA':       'BSC.CA',
-  'BSc IT':    'BSCIT',
-  'BSc CS':    'BSCCS',
-  'DS':        'BSCDS',
-  'BAF':       'BAF',
-  'BFM':       'BFM',
-  'BBI':       'BBI',
-  'BAMMC':     'BAMMC',
+// Map dashboard course codes → EXAM_COURSES ID (for examination_documents filtering)
+const COURSE_EXAM_MAP: Record<string, string> = {
+  // UG — B.Com
+  'B.COM':        'BCOM',
+  'B.Com-AF':     'BAF',
+  'B.Com-FM':     'BFM',
+  'BFSI':         'BFSI',
+  'B.Com-BI':     'BBI',
+  'BCOM-BA':      'BCOM-BA',
+  'BCOM-MS':      'BCOM-MS',
+  // UG — Science & Tech
+  'BSC-IT':       'BSCIT',
+  'B.Sc-CA':      'BCA',
+  'BSC-DS':       'BSCDS',
+  'BSC-CS':       'BSCCS',
+  // UG — Other
+  'BAMMC':        'BAMMC',
   // PG
-  'MCom':      'MCOM',
-  'M.Com':     'MCOM',
-  'MSc IT':    'MSCIT',
-  'MSc Finance':'MSCFINANCE',
-  'PhD Programme': 'PhD Programme',
+  'MCom-AA':      'MCOM.AA',
+  'MCom-BM':      'MCOM.BM',
+  'MCom-BF':      'MCOM.BF',
+  'MSc-IT':       'MSC.IT',
+  'MSc-Finance':  'MSC.FIN',
+  // Jr College
+  '11th':         'jr-college',
+  '12th':         'jr-college',
 };
 
-function normaliseCourseCode(code: string): string {
-  if (COURSE_CODE_MAP[code]) return COURSE_CODE_MAP[code];
+function getExamCourseId(code: string): string {
+  if (COURSE_EXAM_MAP[code]) return COURSE_EXAM_MAP[code];
   const lower = code.toLowerCase().replace(/[\s.]/g, '');
-  const found = Object.entries(COURSE_CODE_MAP).find(
+  const found = Object.entries(COURSE_EXAM_MAP).find(
     ([k]) => k.toLowerCase().replace(/[\s.]/g, '') === lower
   );
   return found ? found[1] : code.toUpperCase();
@@ -57,7 +59,7 @@ export default function TimetableModule({ courseCode }: { courseCode: string }) 
   useEffect(() => {
     const fetchExams = async () => {
       setLoading(true);
-      const dbCourseId = normaliseCourseCode(courseCode);
+      const dbCourseId = getExamCourseId(courseCode);
       const { data, error } = await supabase
         .from('examination_documents')
         .select('*')

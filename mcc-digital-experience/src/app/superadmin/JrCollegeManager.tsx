@@ -44,8 +44,11 @@ interface JrGalleryEvent {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const CATEGORY_NOTICE_COLORS: Record<string, string> = {
-  Sports:         'bg-green-50 text-green-700 border-green-200',
+  Admissions:     'bg-blue-50 text-blue-700 border-blue-200',
+  General:        'bg-slate-50 text-slate-700 border-slate-200',
+  Scholarships:   'bg-emerald-50 text-emerald-700 border-emerald-200',
   Examinations:   'bg-red-50 text-red-700 border-red-200',
+  Sports:         'bg-green-50 text-green-700 border-green-200',
   Cultural:       'bg-purple-50 text-purple-700 border-purple-200',
   'Special Days': 'bg-amber-50 text-amber-700 border-amber-200',
 };
@@ -458,7 +461,7 @@ function NoticeUploadForm() {
   const qc = useQueryClient();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Sports');
+  const [category, setCategory] = useState('Admissions');
   const [showHome, setShowHome] = useState(true);
   const [showNotice, setShowNotice] = useState(true);
   const [scheduleTime, setScheduleTime] = useState('');
@@ -469,7 +472,7 @@ function NoticeUploadForm() {
   const [msg, setMsg] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
   const [showForm, setShowForm] = useState(false);
 
-  const categories = ['Sports', 'Examinations', 'Cultural', 'Special Days'];
+  const categories = ['Admissions', 'General', 'Scholarships', 'Examinations', 'Sports', 'Cultural', 'Special Days'];
 
   const handleOpen = () => {
     if (!scheduleTime) {

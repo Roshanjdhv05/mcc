@@ -313,6 +313,7 @@ const navLinks = [
       { label: 'Teaching Staff', href: '/jr-college/teaching-staff' },
       { label: 'Result Analysis', href: '/jr-college/result-analysis' },
       { label: 'Notice', href: '/jr-college/notice' },
+      { label: 'Admission', href: 'https://www.mccmulund.ac.in/admission/jr-college' },
     ]
   },
   {

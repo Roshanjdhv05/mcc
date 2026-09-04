@@ -28,23 +28,23 @@ interface ExamDocument {
 // Known courses with display names
 // -----------------------------------------------------------------------
 const COURSES = [
-  { id: 'BCOM',         label: 'B.Com' },
-  { id: 'BCOM-BA',      label: 'B.Com (BA)' },
-  { id: 'BCOM-MS',      label: 'B.Com (MS)' },
-  { id: 'BAF',          label: 'B.Com (BAF)' },
-  { id: 'BBI',          label: 'B.Com (BBI)' },
-  { id: 'BFM',          label: 'B.Com (BFM)' },
-  { id: 'BFSI',         label: 'B.Com (BFSI)' },
-  { id: 'BAMMC',        label: 'BAMMC' },
-  { id: 'BSCCS',        label: 'B.Sc CS' },
-  { id: 'BSCIT',        label: 'B.Sc IT' },
-  { id: 'BSCDS',        label: 'B.Sc DS' },
-  { id: 'BCA',          label: 'B.Sc CA' },
-  { id: 'MCOM.AA',      label: 'M.COM.AA' },
-  { id: 'MCOM.BM',      label: 'M.COM.BA' },
-  { id: 'MCOM.BF',      label: 'M.COM. BF' },
-  { id: 'MSC.IT',       label: 'M.SC. IT' },
-  { id: 'MSC.FIN',      label: 'M.SC. F' },
+  { id: 'BCOM', label: 'B.Com' },
+  { id: 'BCOM-BA', label: 'B.Com (BA)' },
+  { id: 'BCOM-MS', label: 'B.Com (MS)' },
+  { id: 'BAF', label: 'B.Com (AF)' },
+  { id: 'BBI', label: 'B.Com (BI)' },
+  { id: 'BFM', label: 'B.Com (FM)' },
+  { id: 'BFSI', label: 'B.Com (FSI)' },
+  { id: 'BAMMC', label: 'BAMMC' },
+  { id: 'BSCCS', label: 'B.Sc (CS)' },
+  { id: 'BSCIT', label: 'B.Sc (IT)' },
+  { id: 'BSCDS', label: 'B.Sc (DS)' },
+  { id: 'BCA', label: 'B.Sc (CA)' },
+  { id: 'MCOM.AA', label: 'M.COM (AA)' },
+  { id: 'MCOM.BM', label: 'M.COM (BM)' },
+  { id: 'MCOM.BF', label: 'M.COM (BF)' },
+  { id: 'MSC.IT', label: 'M.SC (IT)' },
+  { id: 'MSC.FIN', label: 'M.SC (F)' },
 ];
 
 // -----------------------------------------------------------------------
@@ -52,9 +52,9 @@ const COURSES = [
 // -----------------------------------------------------------------------
 const CAT_COLORS: Record<string, string> = {
   'Time Table Regular Exam': 'bg-green-100  text-green-700  border-green-200',
-  'Time Table ATKT Exam':    'bg-orange-100 text-orange-700 border-orange-200',
-  'Examination Notice':      'bg-blue-100   text-blue-700   border-blue-200',
-  'Results':                 'bg-purple-100 text-purple-700 border-purple-200',
+  'Time Table ATKT Exam': 'bg-orange-100 text-orange-700 border-orange-200',
+  'Examination Notice': 'bg-blue-100   text-blue-700   border-blue-200',
+  'Results': 'bg-purple-100 text-purple-700 border-purple-200',
 };
 
 const TAB_CATEGORIES = [
@@ -69,8 +69,8 @@ const TAB_CATEGORIES = [
 // -----------------------------------------------------------------------
 export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-  const [selectedCat, setSelectedCat]       = useState<string | null>(null);
-  const [previewPdf, setPreviewPdf]         = useState<ExamFile | null>(null);
+  const [selectedCat, setSelectedCat] = useState<string | null>(null);
+  const [previewPdf, setPreviewPdf] = useState<ExamFile | null>(null);
   const mobilePreviewRef = useRef<HTMLDivElement>(null);
 
   // Cached data
@@ -98,7 +98,7 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
         const thirtyDays = 30 * 24 * 60 * 60 * 1000;
         if (nowTime > expiryTime + thirtyDays) {
           // Remove completely if older than 30 days past expiry
-          continue; 
+          continue;
         }
         isExpired = true;
       }
@@ -110,9 +110,10 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
       if (courseId === 'B.COM') courseId = 'BCOM';
       if (courseId === 'BSC-IT') courseId = 'BSCIT';
       if (courseId === 'BSC-DS') courseId = 'BSCDS';
+      if (courseId === 'BSC-CS') courseId = 'BSCCS';
       if (courseId === 'BMS') courseId = 'BCOM-MS';
       if (courseId === 'BBA') courseId = 'BCOM-BA';
-      
+
       // PG Normalizers
       if (courseId === 'MCOM') courseId = 'MCOM.AA';
       if (courseId === 'MCOM-AA') courseId = 'MCOM.AA';
@@ -179,11 +180,11 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
   }
 
   // ---- STEP 2: Split view for selected course ----
-  const courseInfo  = COURSES.find(c => c.id === selectedCourse)!;
-  const cats        = courseIndex[selectedCourse] || {};
-  const catNames    = TAB_CATEGORIES;
+  const courseInfo = COURSES.find(c => c.id === selectedCourse)!;
+  const cats = courseIndex[selectedCourse] || {};
+  const catNames = TAB_CATEGORIES;
 
-  const activeCat   = selectedCat || catNames[0];
+  const activeCat = selectedCat || catNames[0];
   const activeFiles = cats[activeCat] || [];
 
   return (
@@ -212,17 +213,15 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
               <button
                 key={cat}
                 onClick={() => { setSelectedCat(cat); setPreviewPdf(null); }}
-                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-left ${
-                  activeCat === cat
-                    ? 'bg-[#123B6D] text-white shadow-sm'
-                    : 'text-gray-600 hover:bg-white hover:text-[#123B6D]'
-                }`}
+                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all text-left ${activeCat === cat
+                  ? 'bg-[#123B6D] text-white shadow-sm'
+                  : 'text-gray-600 hover:bg-white hover:text-[#123B6D]'
+                  }`}
               >
                 <Folder size={16} />
                 {cat}
-                <span className={`ml-auto text-xs px-2 py-0.5 rounded-full border font-semibold ${
-                  activeCat === cat ? 'bg-white/20 text-white border-white/30' : (CAT_COLORS[cat] || 'bg-gray-100 text-gray-500 border-gray-200')
-                }`}>
+                <span className={`ml-auto text-xs px-2 py-0.5 rounded-full border font-semibold ${activeCat === cat ? 'bg-white/20 text-white border-white/30' : (CAT_COLORS[cat] || 'bg-gray-100 text-gray-500 border-gray-200')
+                  }`}>
                   {(cats[cat] || []).length}
                 </span>
               </button>
@@ -247,11 +246,10 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
                     }
                   }}
                   title={file.name}
-                  className={`w-full flex items-start gap-2.5 p-3 rounded-xl text-left transition-all group ${
-                    isSelected
-                      ? 'bg-blue-50 border border-blue-200 text-blue-700'
-                      : 'hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200 text-gray-700'
-                  }`}
+                  className={`w-full flex items-start gap-2.5 p-3 rounded-xl text-left transition-all group ${isSelected
+                    ? 'bg-blue-50 border border-blue-200 text-blue-700'
+                    : 'hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200 text-gray-700'
+                    }`}
                 >
                   <FileText size={16} className={`shrink-0 mt-0.5 ${isSelected ? 'text-blue-600' : 'text-gray-400 group-hover:text-[#123B6D]'}`} />
                   <span className={`text-xs leading-relaxed font-medium line-clamp-3 ${file.isExpired ? 'line-through text-gray-400' : ''}`}>

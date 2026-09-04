@@ -25,6 +25,7 @@ const PROGRAMMES = [
   { slug: 'baf',     label: 'BAF' },
   { slug: 'bbi',     label: 'BBI' },
   { slug: 'bfm',     label: 'BFM' },
+  { slug: 'bfsi',    label: 'BFSI' },
   { slug: 'bcom-ms', label: 'B.Com (MS)' },
   { slug: 'bcom-ba', label: 'B.Com (BA)' },
   { slug: 'bammc',   label: 'BAMMC' },

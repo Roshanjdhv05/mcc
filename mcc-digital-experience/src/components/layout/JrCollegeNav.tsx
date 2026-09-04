@@ -9,6 +9,7 @@ export const jrCollegeNavLinks = [
   { label: 'TEACHING STAFF', href: '/jr-college/teaching-staff' },
   { label: 'RESULT ANALYSIS', href: '/jr-college/result-analysis' },
   { label: 'NOTICE', href: '/jr-college/notice' },
+  { label: 'ADMISSION', href: 'https://www.mccmulund.ac.in/admission/jr-college' },
 ];
 
 export default function JrCollegeNav() {
@@ -74,6 +75,8 @@ export default function JrCollegeNav() {
           const isActive = pathname === item.href;
           return (
             <Link key={i} href={item.href || '#'}
+              target={item.href?.startsWith('http') ? '_blank' : undefined}
+              rel={item.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
               className={`flex-shrink-0 h-full flex items-center px-4 lg:px-5 text-[11px] lg:text-xs font-bold transition-colors uppercase whitespace-nowrap tracking-wider ${isActive ? 'bg-[#008e59] text-white' : 'text-white/90 hover:text-white hover:bg-white/10'}`}>
               {item.label}
             </Link>
@@ -88,6 +91,8 @@ export default function JrCollegeNav() {
             const isActive = pathname === item.href;
             return (
               <Link key={i} href={item.href || '#'}
+                target={item.href?.startsWith('http') ? '_blank' : undefined}
+                rel={item.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                 className={`flex-shrink-0 h-full flex items-center px-5 text-[11px] font-bold transition-colors uppercase whitespace-nowrap tracking-wider border-r border-white/10 ${isActive ? 'bg-[#008e59] text-white' : 'text-white/90 active:text-white active:bg-white/10'}`}
                 onClick={(e) => { if (isDragging.current) e.preventDefault(); }}>
                 {item.label}

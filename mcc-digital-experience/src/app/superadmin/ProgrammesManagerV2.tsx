@@ -25,18 +25,19 @@ const DEFAULT_PROGRAMMES: Omit<Programme, 'id'>[] = [
   { slug: 'baf', name: 'B.COM (Accounting & Finance)', code: 'BAF', category: 'UG', status: 'Active', is_featured: false, display_order: 2 },
   { slug: 'bbi', name: 'B.COM (Banking & Insurance)', code: 'BBI', category: 'UG', status: 'Active', is_featured: false, display_order: 3 },
   { slug: 'bfm', name: 'B.COM (Financial Markets)', code: 'BFM', category: 'UG', status: 'Active', is_featured: false, display_order: 4 },
-  { slug: 'bcom-ms', name: 'B.COM (Management Studies)', code: 'BMS', category: 'UG', status: 'Active', is_featured: false, display_order: 5 },
-  { slug: 'bcom-ba', name: 'B.COM (Business Administration)', code: 'BBA', category: 'UG', status: 'Active', is_featured: false, display_order: 6 },
-  { slug: 'bammc', name: 'BAMMC (Mass Media & Communication)', code: 'BAMMC', category: 'UG', status: 'Active', is_featured: false, display_order: 7 },
-  { slug: 'bsc-it', name: 'B.SC. (Information Technology)', code: 'BSC-IT', category: 'UG', status: 'Active', is_featured: false, display_order: 8 },
-  { slug: 'bca', name: 'Bachelor of Computer Applications', code: 'BCA', category: 'UG', status: 'Active', is_featured: false, display_order: 9 },
-  { slug: 'bsc-ds', name: 'B.SC. (Data Science)', code: 'BSC-DS', category: 'UG', status: 'Active', is_featured: false, display_order: 10 },
-  { slug: 'bsc-cs', name: 'B.SC. (Computer Science)', code: 'BSC-CS', category: 'UG', status: 'Active', is_featured: false, display_order: 11 },
-  { slug: 'mcom-aa', name: 'M.COM. (Advanced Accountancy)', code: 'MCOM-AA', category: 'PG', status: 'Active', is_featured: false, display_order: 12 },
-  { slug: 'mcom-bm', name: 'M.COM. (Business Management)', code: 'MCOM-BM', category: 'PG', status: 'Active', is_featured: false, display_order: 13 },
-  { slug: 'mcom-bf', name: 'M.COM. (Banking & Finance)', code: 'MCOM-BF', category: 'PG', status: 'Active', is_featured: false, display_order: 14 },
-  { slug: 'msf', name: 'Master of Science in Finance', code: 'MSF', category: 'PG', status: 'Active', is_featured: false, display_order: 15 },
-  { slug: 'msc-it', name: 'M.Sc. (Information Technology)', code: 'MSC-IT', category: 'PG', status: 'Active', is_featured: false, display_order: 16 },
+  { slug: 'bfsi', name: 'B.COM (Banking, Financial Services & Insurance)', code: 'BFSI', category: 'UG', status: 'Active', is_featured: false, display_order: 5 },
+  { slug: 'bcom-ms', name: 'B.COM (Management Studies)', code: 'BMS', category: 'UG', status: 'Active', is_featured: false, display_order: 6 },
+  { slug: 'bcom-ba', name: 'B.COM (Business Administration)', code: 'BBA', category: 'UG', status: 'Active', is_featured: false, display_order: 7 },
+  { slug: 'bammc', name: 'BAMMC (Mass Media & Communication)', code: 'BAMMC', category: 'UG', status: 'Active', is_featured: false, display_order: 8 },
+  { slug: 'bsc-it', name: 'B.SC. (Information Technology)', code: 'BSC-IT', category: 'UG', status: 'Active', is_featured: false, display_order: 9 },
+  { slug: 'bca', name: 'Bachelor of Computer Applications', code: 'BCA', category: 'UG', status: 'Active', is_featured: false, display_order: 10 },
+  { slug: 'bsc-ds', name: 'B.SC. (Data Science)', code: 'BSC-DS', category: 'UG', status: 'Active', is_featured: false, display_order: 11 },
+  { slug: 'bsc-cs', name: 'B.SC. (Computer Science)', code: 'BSC-CS', category: 'UG', status: 'Active', is_featured: false, display_order: 12 },
+  { slug: 'mcom-aa', name: 'M.COM. (Advanced Accountancy)', code: 'MCOM-AA', category: 'PG', status: 'Active', is_featured: false, display_order: 13 },
+  { slug: 'mcom-bm', name: 'M.COM. (Business Management)', code: 'MCOM-BM', category: 'PG', status: 'Active', is_featured: false, display_order: 14 },
+  { slug: 'mcom-bf', name: 'M.COM. (Banking & Finance)', code: 'MCOM-BF', category: 'PG', status: 'Active', is_featured: false, display_order: 15 },
+  { slug: 'msf', name: 'Master of Science in Finance', code: 'MSF', category: 'PG', status: 'Active', is_featured: false, display_order: 16 },
+  { slug: 'msc-it', name: 'M.Sc. (Information Technology)', code: 'MSC-IT', category: 'PG', status: 'Active', is_featured: false, display_order: 17 },
 ];
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
@@ -93,6 +94,21 @@ export default function ProgrammesManagerV2({ allowedSlugs, canDelete }: { allow
         .select('id, slug, name, code, category, status, is_featured, display_order')
         .order('display_order', { ascending: true });
       if (err) throw err;
+
+      // Auto-seed missing default programmes into DB
+      const existingSlugs = new Set((data || []).map(p => p.slug));
+      const missingDefaults = DEFAULT_PROGRAMMES.filter(p => !existingSlugs.has(p.slug));
+      if (missingDefaults.length > 0) {
+        const { data: inserted, error: insertErr } = await supabase
+          .from('mcc_programmes')
+          .insert(missingDefaults)
+          .select('id, slug, name, code, category, status, is_featured, display_order');
+        if (!insertErr && inserted) {
+          const combined = [...(data || []), ...inserted].sort((a, b) => a.display_order - b.display_order);
+          setProgrammes(combined);
+          return;
+        }
+      }
       setProgrammes(data || []);
     } catch (e: any) {
       setError(e.message);

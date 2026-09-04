@@ -892,22 +892,14 @@ export default function HomePage() {
   const [homeWallOfFame, setHomeWallOfFame] = useState<any[]>([]);
   const [homeAlumni, setHomeAlumni] = useState<any[]>([]);
   const [newsAnnouncements, setNewsAnnouncements] = useState<{ id: string; content: string }[]>([]);
-  const [isNewsMarqueePaused, setIsNewsMarqueePaused] = useState(false);
-  const newsMarqueeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const newsRef = useRef<HTMLDivElement>(null);
 
-  const handleNewsMarqueeInteraction = () => {
-    setIsNewsMarqueePaused(true);
-    if (newsMarqueeTimeoutRef.current) clearTimeout(newsMarqueeTimeoutRef.current);
-    newsMarqueeTimeoutRef.current = setTimeout(() => {
-      setIsNewsMarqueePaused(false);
-    }, 5000);
+  const scrollNews = (direction: 'left' | 'right') => {
+    if (newsRef.current) {
+      const scrollAmount = 350; // rough width of a news item
+      newsRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
   };
-
-  useEffect(() => {
-    return () => {
-      if (newsMarqueeTimeoutRef.current) clearTimeout(newsMarqueeTimeoutRef.current);
-    };
-  }, []);
   const alumniScrollRef = useRef<HTMLDivElement>(null);
   const illustriousScrollRef = useRef<HTMLDivElement>(null);
   const adminServicesAutoRef = useRef<HTMLDivElement>(null);
@@ -1485,39 +1477,51 @@ export default function HomePage() {
 
         {/* ── NEWS & ANNOUNCEMENTS MARQUEE ── */}
         {newsAnnouncements.length > 0 && (
-          <div className="w-full">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="flex items-center gap-1.5 bg-[#123B6D] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shrink-0">
-                <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full animate-pulse" />
-                News & Announcements
-              </span>
-              <div className="h-px flex-1 bg-gradient-to-r from-[#123B6D]/20 to-transparent" />
+          <div className="w-full relative group/news">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3 flex-1">
+                <span className="flex items-center gap-1.5 bg-[#123B6D] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shrink-0">
+                  <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full animate-pulse" />
+                  News & Announcements
+                </span>
+                <div className="h-px flex-1 bg-gradient-to-r from-[#123B6D]/20 to-transparent" />
+              </div>
+              
+              {/* Controls */}
+              {newsAnnouncements.length >= 3 && (
+                <div className="flex gap-2 opacity-0 group-hover/news:opacity-100 transition-opacity ml-4">
+                  <button
+                    onClick={() => scrollNews('left')}
+                    className="w-7 h-7 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center hover:bg-gray-50 text-[#123B6D] transition-colors"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={() => scrollNews('right')}
+                    className="w-7 h-7 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center hover:bg-gray-50 text-[#123B6D] transition-colors"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
             </div>
+            
             <div className="relative overflow-hidden bg-[#123B6D]/5 border border-[#123B6D]/10 rounded-2xl py-3">
               {/* Fade edges */}
               <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#EBF3FF] to-transparent z-10 pointer-events-none" />
               <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#EBF3FF] to-transparent z-10 pointer-events-none" />
-              {/* Outer band = 400% wide if animating, 100% if static */}
+              
               <div
-                className={`flex ${newsAnnouncements.length >= 3 ? 'animate-marquee-rtl cursor-pointer' : 'overflow-x-auto no-scrollbar'}`}
-                style={{ 
-                  width: newsAnnouncements.length >= 3 ? '400%' : '100%',
-                  animationPlayState: isNewsMarqueePaused ? 'paused' : 'running'
-                }}
-                onClick={newsAnnouncements.length >= 3 ? handleNewsMarqueeInteraction : undefined}
-                onTouchStart={newsAnnouncements.length >= 3 ? handleNewsMarqueeInteraction : undefined}
+                ref={newsRef}
+                className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-6 px-8"
               >
-                {(newsAnnouncements.length >= 3 ? [0, 1, 2, 3] : [0]).map((copyIdx) => (
-                  <div key={copyIdx} className="flex items-center gap-6 px-8" style={{ width: newsAnnouncements.length >= 3 ? '25%' : 'auto', minWidth: newsAnnouncements.length >= 3 ? '25%' : 'auto' }}>
-                    {newsAnnouncements.map((item) => (
-                      <div
-                        key={item.id + copyIdx}
-                        className="inline-flex items-start gap-2 bg-white border border-[#123B6D]/10 rounded-xl px-4 py-2 shadow-sm shrink-0 max-w-[350px]"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-1.5 shrink-0" />
-                        <p className="text-[13px] text-[#1E293B] font-medium leading-snug whitespace-normal">{item.content}</p>
-                      </div>
-                    ))}
+                {newsAnnouncements.map((item) => (
+                  <div
+                    key={item.id}
+                    className="inline-flex items-start gap-2 bg-white border border-[#123B6D]/10 rounded-xl px-4 py-2 shadow-sm shrink-0 max-w-[350px] min-w-[280px] snap-start cursor-pointer hover:-translate-y-0.5 transition-transform"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] mt-1.5 shrink-0" />
+                    <p className="text-[13px] text-[#1E293B] font-medium leading-snug whitespace-normal">{item.content}</p>
                   </div>
                 ))}
               </div>

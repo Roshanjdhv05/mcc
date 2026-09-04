@@ -135,14 +135,5 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
       { id: 'bfm-4', name: 'Dr. Sipra Routaray', image: '/Degree College Teachers/Sipra Routray.png', email: 'sipra.routray@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com, NET, MBA, Ph.D.', experience: '13 years', corporateExp: '3 years', researchInterest: 'Financial Markets, Digital Payments, FinTech', linkedin: 'https://www.linkedin.com/in/dr-sipra-routaray-345a0162', department: 'BFM' },
       { id: 'bfm-5', name: 'Ms. Archana Patre', image: '/Degree College Teachers/Archana Patre.png', email: 'abf.records@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Com, MFM', experience: '12 years', corporateExp: '8 years', researchInterest: 'Finance, Financial Literacy', department: 'BFM' }
     ]
-  },
-  'BSC_CS': {
-    'All': [
-      { id: 'cs-1', name: 'Dr. Jyotika Chheda', image: '/Degree College Teachers/Jyotika Chheda.png', email: 'jyotika.chheda@mccmulund.ac.in', designation: 'COORDINATOR', role: 'Coordinator', qualification: 'MCA, NET, Ph.D.', experience: '16 years', researchInterest: 'Computer Networks and Information Security', department: 'B.Sc. CS' },
-      { id: 'cs-2', name: 'Dr. Vishal Borude', image: '/Degree College Teachers/Vishal Borude.png', email: 'vishal.borude@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.Sc.(IT), Ph.D.', experience: '12 years', researchInterest: 'Data Structures, Algorithms, Web Technologies', department: 'B.Sc. CS' },
-      { id: 'cs-3', name: 'Dr. Priti Pathak', image: '/Degree College Teachers/Priti Pathak.png', email: 'priti.pathak@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'MSc(I.T), MTech(I.T), MBA(I.T), LLB, Diploma in Cyber Law, Ph.D.', experience: '15 years', researchInterest: 'Cyber Law, Cloud Computing, AI', department: 'B.Sc. CS' },
-      { id: 'cs-4', name: 'Dr. Sandhya Pandey', image: '/Degree College Teachers/Sandhya Pandey.png', email: 'sandhya.pandey@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.C.A., Ph.D., M.A.', experience: '18 years', corporateExp: '1 year', researchInterest: 'Web Technology, Artificial Intelligence', department: 'B.Sc. CS' },
-      { id: 'cs-5', name: 'Ms. Suvarna Ramesh Sawant', image: '/Degree College Teachers/Suvarna Sawant.png', email: 'suvarna.sawant@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'MCA', experience: '12 years', researchInterest: 'Computer Science', department: 'B.Sc. CS' }
-    ]
   }
 };

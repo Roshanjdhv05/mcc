@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 import { qk, cacheLog } from '@/lib/cache';
@@ -885,16 +885,18 @@ function GalleryUploadForm() {
 export default function JrCollegeManager({ canDelete }: { canDelete?: boolean }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const tabParam = searchParams.get('tab');
   
   const activeTab = tabParam === 'jr-college-notices' ? 'notices' : 
                     tabParam === 'jr-college-gallery' ? 'gallery' : 'home';
 
   const setActiveTab = (tab: 'home' | 'notices' | 'gallery') => {
+    const basePath = pathname || '/superadmin';
     if (tab === 'home') {
-      router.push('/superadmin?tab=jr-college');
+      router.push(`${basePath}?tab=jr-college`);
     } else {
-      router.push(`/superadmin?tab=jr-college-${tab}`);
+      router.push(`${basePath}?tab=jr-college-${tab}`);
     }
   };
 

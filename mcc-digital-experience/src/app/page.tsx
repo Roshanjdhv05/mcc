@@ -9,7 +9,7 @@ import type { Notice } from '@/lib/noticeTypes';
 import StatsStrip from '@/components/ui/StatsStrip';
 import WallOfFameCard from '@/components/ui/WallOfFameCard';
 import {
-  Bell, Search, Download, ChevronRight, Quote,
+  Bell, Search, Download, ChevronRight, ChevronLeft, Quote,
   Users, BookOpen, Briefcase, Megaphone, ClipboardCheck,
   PenLine, LibraryBig, HeadphonesIcon, FileText, ShieldCheck, Image,
   Bot, CalendarDays, ArrowRight, LayoutDashboard,
@@ -161,28 +161,28 @@ const testimonials = [
 const heroBanners = [
   {
     image: "/banner1.png",
-    fit: 'object-cover' as const,
+    fit: 'object-contain md:object-cover' as const,
     badge: "Welcome to MCC",
     title: <>Welcome to <span className="text-[#D4A017]">Mulund College of Commerce</span></>,
     desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1970."
   },
   {
     image: "https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80",
-    fit: 'object-cover' as const,
+    fit: 'object-contain md:object-cover' as const,
     badge: "Admissions 2024–25 Open Now",
     title: <>Admissions <span className="text-[#D4A017]">2024–25</span> Now Open</>,
     desc: "An autonomous institution dedicated to academic excellence, innovation, and holistic student development since 1970."
   },
   {
     image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80",
-    fit: 'object-cover' as const,
+    fit: 'object-contain md:object-cover' as const,
     badge: "A Legacy of Excellence",
     title: <>Empowering the <span className="text-[#D4A017]">Leaders</span> of Tomorrow</>,
     desc: "Discover a vibrant campus life, world-class faculty, and outstanding placement opportunities that shape your future."
   },
   {
     image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80",
-    fit: 'object-cover' as const,
+    fit: 'object-contain md:object-cover' as const,
     badge: "Join Our Community",
     title: <>Your Journey to <span className="text-[#D4A017]">Success</span> Starts Here</>,
     desc: "Join thousands of successful alumni who have made their mark across the globe. Experience the MCC difference."
@@ -1111,6 +1111,14 @@ export default function HomePage() {
   };
   const displayBanners = [defaultBanner, ...liveBanners];
 
+  const handleNextBanner = () => {
+    setCurrentBanner((prev) => (prev + 1) % displayBanners.length);
+  };
+
+  const handlePrevBanner = () => {
+    setCurrentBanner((prev) => (prev - 1 + displayBanners.length) % displayBanners.length);
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % displayBanners.length);
@@ -1135,8 +1143,69 @@ export default function HomePage() {
   return (
     <div className="bg-[#F8FAFC] min-h-screen pb-20 md:pb-0">
       {/* ── HERO ── */}
-      <section className="relative h-[80vh] min-h-[520px] flex items-center overflow-hidden bg-[#0a1a2e]">
-        <div className="absolute inset-0">
+      {/* Mobile Hero Banner: Clean full-width horizontal rectangle image container with touch swipe & manual controls */}
+      <section className="block md:hidden relative w-full overflow-hidden bg-black group">
+        <div className="w-full relative aspect-[16/9] overflow-hidden">
+          <AnimatePresence initial={false}>
+            <motion.img
+              key={currentBanner}
+              src={displayBanners[currentBanner % displayBanners.length]?.image || "/banner1.png"}
+              alt="MCC Hero Banner"
+              initial={{ x: '100%', opacity: 0.5 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '-100%', opacity: 0.5 }}
+              transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, { offset }) => {
+                if (offset.x < -40) {
+                  handleNextBanner();
+                } else if (offset.x > 40) {
+                  handlePrevBanner();
+                }
+              }}
+              className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
+            />
+          </AnimatePresence>
+
+          {/* Controls: Left & Right Arrows */}
+          <button
+            onClick={handlePrevBanner}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-sm active:scale-90 transition-all"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={handleNextBanner}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-sm active:scale-90 transition-all"
+            aria-label="Next Slide"
+          >
+            <ChevronRight size={18} />
+          </button>
+
+          {/* Controls: Slide Indicator Dots */}
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 bg-black/30 px-2 py-1 rounded-full backdrop-blur-xs">
+            {displayBanners.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentBanner(idx)}
+                className={`transition-all ${
+                  (currentBanner % displayBanners.length) === idx
+                    ? 'w-5 h-1.5 bg-[#D4A017] rounded-full'
+                    : 'w-1.5 h-1.5 bg-white/60 hover:bg-white rounded-full'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Desktop Hero Banner: Full Interactive Hero with Controls & Indicator Dots */}
+      <section className="hidden md:flex relative h-[80vh] min-h-[520px] items-center overflow-hidden bg-[#0a1a2e] group">
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
           <AnimatePresence>
             <motion.img
               key={currentBanner}
@@ -1146,7 +1215,7 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.5 }}
-              className={`absolute inset-0 w-full h-full ${displayBanners[currentBanner % displayBanners.length]?.fit}`}
+              className={`absolute inset-0 w-full h-full object-cover ${displayBanners[currentBanner % displayBanners.length]?.fit || ''}`}
             />
           </AnimatePresence>
           {displayBanners[currentBanner % displayBanners.length]?.keepOverlay !== false && (
@@ -1165,7 +1234,50 @@ export default function HomePage() {
           transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 2 }}
         />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-12">
+        {/* Desktop Slide Controls */}
+        <button
+          onClick={handlePrevBanner}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md hover:scale-110 transition-all shadow-lg"
+          aria-label="Previous Slide"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <button
+          onClick={handleNextBanner}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md hover:scale-110 transition-all shadow-lg"
+          aria-label="Next Slide"
+        >
+          <ChevronRight size={24} />
+        </button>
+
+        {/* Desktop Indicator Dots */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/30 px-3.5 py-1.5 rounded-full backdrop-blur-sm">
+          {displayBanners.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentBanner(idx)}
+              className={`transition-all ${
+                (currentBanner % displayBanners.length) === idx
+                  ? 'w-7 h-2 bg-[#D4A017] rounded-full'
+                  : 'w-2 h-2 bg-white/50 hover:bg-white rounded-full'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+        {/* Floating background shapes */}
+        <motion.div
+          className="absolute -top-20 -right-20 w-96 h-96 bg-[#D4A017]/20 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 15, 0] }}
+          transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#4DA8DA]/20 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.3, 1] }}
+          transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 2 }}
+        />
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentBanner}
@@ -1182,12 +1294,12 @@ export default function HomePage() {
                 </span>
               )}
               {displayBanners[currentBanner % displayBanners.length]?.title && (
-                <h1 className="text-4xl md:text-6xl font-bold text-white mb-5 leading-tight font-[var(--font-heading)]">
+                <h1 className="text-6xl font-bold text-white mb-5 leading-tight font-[var(--font-heading)]">
                   {displayBanners[currentBanner % displayBanners.length]?.title}
                 </h1>
               )}
               {displayBanners[currentBanner % displayBanners.length]?.desc && (
-                <p className="text-white/85 text-lg md:text-xl mb-8 leading-relaxed">
+                <p className="text-white/85 text-xl mb-8 leading-relaxed">
                   {displayBanners[currentBanner % displayBanners.length]?.desc}
                 </p>
               )}
@@ -1231,22 +1343,22 @@ export default function HomePage() {
       {/* ── STATISTICS STRIP ── */}
       <StatsStrip />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-12 space-y-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 py-8 md:py-12 space-y-12 md:space-y-16">
 
         {/* ── QUICK ACCESS ── */}
         <ScrollReveal>
-          <h2 className="text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-6">Quick Access</h2>
-          <div className="grid grid-cols-4 md:grid-cols-9 gap-3 md:gap-4">
+          <h2 className="text-lg md:text-2xl font-bold text-[#123B6D] font-[var(--font-heading)] mb-3 md:mb-6">Quick Access</h2>
+          <div className="grid grid-cols-4 md:grid-cols-9 gap-2 md:gap-4">
             {quickLinks.map(({ label, href, icon: Icon, bg, iconColor, hiddenMobile }, i) => (
               <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} className={hiddenMobile ? 'hidden md:block' : ''}>
                 <Link
                   href={href}
-                  className="group flex flex-col items-center gap-2 p-3 md:p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#123B6D]/20 hover:-translate-y-1 transition-all"
+                  className="group flex flex-col items-center gap-1.5 p-2 md:p-4 rounded-xl md:rounded-2xl bg-white border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#123B6D]/20 hover:-translate-y-1 transition-all"
                 >
-                  <div className={`w-11 h-11 md:w-12 md:h-12 rounded-xl ${bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <Icon size={22} className={iconColor} />
+                  <div className={`w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl ${bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <Icon size={18} className={`${iconColor} md:w-[22px] md:h-[22px]`} />
                   </div>
-                  <span className="text-[11px] md:text-xs font-semibold text-[#1E293B] text-center leading-tight">{label}</span>
+                  <span className="text-[10px] md:text-xs font-semibold text-[#1E293B] text-center leading-tight">{label}</span>
                 </Link>
               </motion.div>
             ))}

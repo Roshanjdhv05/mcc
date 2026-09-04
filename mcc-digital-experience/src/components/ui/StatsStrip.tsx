@@ -11,38 +11,62 @@ const stats = [
 
 export default function StatsStrip() {
   return (
-    <section className="bg-[#123B6D] py-3 md:py-5 overflow-hidden border-y border-[#1E4A84]">
+    <>
       <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
+        @keyframes statsMarquee {
+          0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
         }
-        .mobile-marquee {
-          animation: marquee 10s linear infinite;
+        .animate-stats-marquee {
+          display: flex;
+          width: max-content;
+          animation: statsMarquee 12s linear infinite;
         }
-        @media (min-width: 768px) {
-          .mobile-marquee {
-            animation: none !important;
-            transform: none !important;
-          }
+        .animate-stats-marquee:hover {
+          animation-play-state: paused;
         }
       `}</style>
-      <div className="max-w-7xl mx-auto px-0 md:px-12 relative">
-        <div className="flex w-max md:w-full md:grid md:grid-cols-4 md:gap-6 mobile-marquee">
+
+      {/* ── Mobile View: Small Compact Blue Strip with Right-to-Left Continuous Marquee ── */}
+      <section className="md:hidden bg-[#123B6D] py-2 overflow-hidden border-y border-[#1E4A84] shadow-sm">
+        <div className="animate-stats-marquee">
           {[...stats, ...stats].map(({ label, target, suffix, icon: Icon }, i) => (
             <div 
               key={`${label}-${i}`} 
-              className={`text-center flex-[0_0_50vw] md:flex-none md:w-auto px-2 md:px-0 py-2 md:py-0 ${i >= 4 ? 'md:hidden' : ''}`}
+              className="flex items-center gap-2 px-4 shrink-0 border-r border-white/15"
             >
-              <Icon className="text-[#D4A017] mx-auto mb-1 md:mb-2 w-6 h-6 md:w-7 md:h-7" />
-              <div className="text-2xl md:text-4xl font-bold text-white font-[var(--font-heading)]">
-                <Counter target={target} suffix={suffix} />
+              <Icon className="text-[#D4A017] w-4 h-4 shrink-0" />
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-xs font-bold text-white font-[var(--font-heading)] whitespace-nowrap">
+                  <Counter target={target} suffix={suffix} />
+                </span>
+                <span className="text-[10px] text-white/85 font-semibold uppercase tracking-wider whitespace-nowrap">
+                  {label}
+                </span>
               </div>
-              <div className="text-white/80 text-[11px] md:text-sm mt-0.5 md:mt-1 uppercase tracking-wider md:normal-case md:tracking-normal font-medium">{label}</div>
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ── Desktop View: Full 4-Column Strip ── */}
+      <section className="hidden md:block bg-[#123B6D] py-5 overflow-hidden border-y border-[#1E4A84]">
+        <div className="max-w-7xl mx-auto px-12 relative">
+          <div className="grid grid-cols-4 gap-6 text-center">
+            {stats.map(({ label, target, suffix, icon: Icon }) => (
+              <div key={label} className="text-center px-2 py-0">
+                <Icon className="text-[#D4A017] mx-auto mb-2 w-7 h-7" />
+                <div className="text-3xl md:text-4xl font-bold text-white font-[var(--font-heading)]">
+                  <Counter target={target} suffix={suffix} />
+                </div>
+                <div className="text-white/80 text-sm mt-1 font-medium">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
+
+

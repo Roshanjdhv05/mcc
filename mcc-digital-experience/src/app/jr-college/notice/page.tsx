@@ -9,10 +9,21 @@ import { supabase } from '@/lib/supabase';
 import type { Notice } from '@/lib/noticeTypes';
 import JrCollegeNav from '@/components/layout/JrCollegeNav';
 
-// Jr. College specific categories only
-const JR_CATEGORIES = ['Sports', 'Examinations', 'Cultural', 'Special Days'] as const;
+// Jr. College specific categories
+const JR_CATEGORIES = [
+  'Admissions',
+  'General',
+  'Scholarships',
+  'Examinations',
+  'Sports',
+  'Cultural',
+  'Special Days'
+] as const;
 
 const CATEGORY_COLORS: Record<string, string> = {
+  Admissions:   'bg-blue-100 text-blue-700',
+  General:      'bg-slate-100 text-slate-700',
+  Scholarships: 'bg-emerald-100 text-emerald-700',
   Examinations: 'bg-purple-100 text-purple-700',
   Sports:       'bg-orange-100 text-orange-700',
   Cultural:     'bg-pink-100 text-pink-700',
@@ -135,7 +146,13 @@ export default function JrCollegeNoticePage() {
       n.title.toLowerCase().includes(search.toLowerCase()) ||
       n.description?.toLowerCase().includes(search.toLowerCase());
     const matchCat = selectedCategories.length === 0 ||
-      n.categories.some(c => selectedCategories.includes(c));
+      n.categories.some(c =>
+        selectedCategories.some(sc =>
+          c.toLowerCase().trim() === sc.toLowerCase().trim() ||
+          c.toLowerCase().includes(sc.toLowerCase()) ||
+          sc.toLowerCase().includes(c.toLowerCase())
+        )
+      );
     return matchSearch && matchCat;
   });
 

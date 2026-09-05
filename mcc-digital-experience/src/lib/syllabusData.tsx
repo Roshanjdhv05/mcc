@@ -207,28 +207,6 @@ export const syllabusData: Record<string, SyllabusSubject[]> = {
     { semester: "VI", subjectCategory: "VSEC", subjectCode: "", subjectName: "Applied Business Analytics / Business Forecasting", credit: 2, subjectType: "BOTH", isElective: true, isMajor: false },
     { semester: "VI", subjectCategory: "RP / OJT", subjectCode: "", subjectName: "CAPSTONE Project", credit: 2, subjectType: "PRACTICAL", isElective: false, isMajor: false }
   ],
-  MSC_IT: [
-    { semester: "I", subjectCategory: "Major", subjectCode: "", subjectName: "Data Science (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "I", subjectCategory: "Major", subjectCode: "", subjectName: "Soft Computing Techniques (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "I", subjectCategory: "Major", subjectCode: "", subjectName: "Cloud Computing", credit: 4, subjectType: "THEORY", isElective: false, isMajor: true },
-    { semester: "I", subjectCategory: "Major", subjectCode: "", subjectName: "Security Breaches / Data Center / Image Processing", credit: 4, subjectType: "BOTH", isElective: true, isMajor: true },
-    { semester: "I", subjectCategory: "Research Methodology", subjectCode: "", subjectName: "Research Methodology", credit: 4, subjectType: "THEORY", isElective: false, isMajor: false },
-    { semester: "II", subjectCategory: "Major", subjectCode: "", subjectName: "Big Data Analytics (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "II", subjectCategory: "Major", subjectCode: "", subjectName: "Modern Networking (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "II", subjectCategory: "Major", subjectCode: "", subjectName: "Microservices Architecture", credit: 4, subjectType: "THEORY", isElective: false, isMajor: true },
-    { semester: "II", subjectCategory: "Major", subjectCode: "", subjectName: "Malware Analysis / Cloud Management / Computer Vision", credit: 4, subjectType: "BOTH", isElective: true, isMajor: true },
-    { semester: "II", subjectCategory: "OJT / RP", subjectCode: "", subjectName: "OJT / RP", credit: 4, subjectType: "PRACTICAL", isElective: false, isMajor: false },
-    { semester: "III", subjectCategory: "Major", subjectCode: "", subjectName: "Advanced Artificial Intelligence (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "III", subjectCategory: "Major", subjectCode: "", subjectName: "Machine Learning (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "III", subjectCategory: "Major", subjectCode: "", subjectName: "Storage as a Service", credit: 4, subjectType: "THEORY", isElective: false, isMajor: true },
-    { semester: "III", subjectCategory: "Major", subjectCode: "", subjectName: "NLP / Cloud App Dev / Server Virtualization", credit: 4, subjectType: "BOTH", isElective: true, isMajor: true },
-    { semester: "III", subjectCategory: "OJT / RP", subjectCode: "", subjectName: "OJT / RP", credit: 4, subjectType: "PRACTICAL", isElective: false, isMajor: false },
-    { semester: "IV", subjectCategory: "Major", subjectCode: "", subjectName: "Blockchain (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "IV", subjectCategory: "Major", subjectCode: "", subjectName: "Advanced Deep Learning (+ Practical)", credit: 4, subjectType: "BOTH", isElective: false, isMajor: true },
-    { semester: "IV", subjectCategory: "Major", subjectCode: "", subjectName: "Robotic Process Automation", credit: 4, subjectType: "THEORY", isElective: false, isMajor: true },
-    { semester: "IV", subjectCategory: "Major", subjectCode: "", subjectName: "RPA / Cyber Forensics / Advanced IoT Practical", credit: 4, subjectType: "PRACTICAL", isElective: true, isMajor: true },
-    { semester: "IV", subjectCategory: "RP", subjectCode: "", subjectName: "RP", credit: 4, subjectType: "PRACTICAL", isElective: false, isMajor: false }
-  ],
   BBA: [
     { semester: "I", subjectCategory: "Major", subjectCode: "MCCSB103", subjectName: "ORGANISATIONAL BEHAVIOUR", credit: 4, subjectType: "THEORY", isElective: false, isMajor: true },
     { semester: "I", subjectCategory: "Major", subjectCode: "MCCSB104", subjectName: "FINANCIAL ACCOUNTING FOR BUSINESS", credit: 4, subjectType: "THEORY", isElective: false, isMajor: true },

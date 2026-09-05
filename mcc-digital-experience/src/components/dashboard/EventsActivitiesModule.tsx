@@ -78,10 +78,10 @@ export default function EventsActivitiesModule({ courseCode }: { courseCode: str
                 )}
                 
                 <div className="flex flex-wrap gap-4 text-xs font-semibold text-[#1E293B]">
-                  {event.date && (
+                  {(event.event_date || event.date) && (
                     <div className="flex items-center gap-1.5 bg-[#F8FAFC] px-3 py-1.5 rounded-lg border border-[#E2E8F0]">
                       <Calendar size={14} className="text-[#123B6D]" />
-                      <span>{new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <span>{new Date(event.event_date || event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                     </div>
                   )}
                   {event.location && (

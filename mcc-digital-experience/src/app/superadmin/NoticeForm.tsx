@@ -38,11 +38,10 @@ function MultiSelectChips({
             key={opt.id}
             type="button"
             onClick={() => toggle(opt.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-              active
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${active
                 ? 'text-white border-transparent shadow-sm'
                 : 'text-gray-600 border-gray-200 bg-white hover:border-gray-400'
-            }`}
+              }`}
             style={active ? { backgroundColor: color } : {}}
           >
             {opt.label}
@@ -125,11 +124,11 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
 
   const EXAM_COURSES = [
     // UG Programmes
-    { id: 'BCOM', label: 'B.Com' }, { id: 'BAF', label: 'B.Com (BAF)' }, { id: 'BCOM-MS', label: 'B.Com (MS)' }, 
+    { id: 'BCOM', label: 'B.Com' }, { id: 'BAF', label: 'B.Com (BAF)' }, { id: 'BCOM-MS', label: 'B.Com (MS)' },
     { id: 'BFM', label: 'B.Com (BFM)' }, { id: 'BFSI', label: 'B.Com (BFSI)' }, { id: 'BBI', label: 'B.Com (BBI)' }, { id: 'BCOM-BA', label: 'B.Com (BA)' },
     { id: 'BSCCS', label: 'B.Sc CS' }, { id: 'BSCIT', label: 'B.Sc IT' }, { id: 'BCA', label: 'B.Sc CA' }, { id: 'BSCDS', label: 'B.Sc DS' }, { id: 'BAMMC', label: 'BAMMC' },
     // PG Programmes
-    { id: 'MCOM.AA', label: 'M.COM.AA' }, { id: 'MCOM.BM', label: 'M.COM.BA' }, { id: 'MCOM.BF', label: 'M.COM. BF' }, { id: 'MSC.IT', label: 'M.SC. IT' }, { id: 'MSC.FIN', label: 'M.SC. F' },
+    { id: 'MCOM.AA', label: 'M.COM.AA' }, { id: 'MCOM.BM', label: 'M.COM.BM' }, { id: 'MCOM.BF', label: 'M.COM. BF' }, { id: 'MSC.IT', label: 'M.SC. IT' }, { id: 'MSC.FIN', label: 'M.SC. F' },
   ];
 
   const toggleExamCourse = (course: string) => {
@@ -301,7 +300,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
         setSaving(false);
         return;
       }
-      
+
       cacheLog('INVALIDATED', 'notices', 'edit action');
       qc.invalidateQueries({ queryKey: qk.notices() });
       qc.invalidateQueries({ queryKey: qk.jrNotices() });
@@ -357,7 +356,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
         }
       }
     }
-    
+
     cacheLog('INVALIDATED', 'notices', 'create action');
     qc.invalidateQueries({ queryKey: qk.notices() });
     qc.invalidateQueries({ queryKey: qk.jrNotices() });
@@ -474,13 +473,13 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
             : <span className="text-gray-400 font-normal"> (select targeted programmes)</span>
           }
         </label>
-        
+
         <div className="space-y-4">
           {DEPARTMENTS.map(dept => {
             const deptCourseIds = dept.courses.map(c => c.id);
             const deptCoursesSelected = selectedCourses.filter(cid => deptCourseIds.includes(cid));
             const allSelected = deptCoursesSelected.length === dept.courses.length;
-            
+
             return (
               <div key={dept.id} className="space-y-2 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
                 <div className="flex items-center justify-between">
@@ -507,7 +506,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                     </button>
                   )}
                 </div>
-                
+
                 <MultiSelectChips
                   options={dept.courses.map(c => ({ id: c.id, label: c.label }))}
                   selected={selectedCourses}
@@ -559,9 +558,8 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
       </div>
 
       {/* ── Show in Calendar ── */}
-      <div className={`rounded-2xl border-2 transition-all ${
-        publishCalendar ? 'border-emerald-400 bg-emerald-50' : 'border-gray-100 bg-white'
-      }`}>
+      <div className={`rounded-2xl border-2 transition-all ${publishCalendar ? 'border-emerald-400 bg-emerald-50' : 'border-gray-100 bg-white'
+        }`}>
         <label className="flex items-start gap-3 p-4 cursor-pointer">
           <button type="button" onClick={() => setPublishCalendar(v => !v)} className="mt-0.5 flex-shrink-0">
             {publishCalendar
@@ -615,11 +613,10 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                         key={cat}
                         type="button"
                         onClick={() => setCalCategory(cat)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                          calCategory === cat
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${calCategory === cat
                             ? 'bg-emerald-600 text-white border-emerald-600'
                             : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-300'
-                        }`}
+                          }`}
                       >
                         {cat}
                       </button>
@@ -678,9 +675,8 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
       </div>
 
       {/* ── Publish to Examination Hub ── */}
-      <div className={`rounded-2xl border-2 transition-all ${
-        publishExam ? 'border-blue-400 bg-blue-50' : 'border-gray-100 bg-white'
-      }`}>
+      <div className={`rounded-2xl border-2 transition-all ${publishExam ? 'border-blue-400 bg-blue-50' : 'border-gray-100 bg-white'
+        }`}>
         <label className="flex items-start gap-3 p-4 cursor-pointer">
           <button type="button" onClick={() => setPublishExam(v => !v)} className="mt-0.5 flex-shrink-0">
             {publishExam
@@ -709,11 +705,10 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                         key={cat}
                         type="button"
                         onClick={() => setExamCategory(cat)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                          examCategory === cat
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${examCategory === cat
                             ? 'bg-blue-600 text-white border-blue-600'
                             : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
-                        }`}
+                          }`}
                       >
                         {cat}
                       </button>
@@ -800,9 +795,8 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                               key={course.id}
                               type="button"
                               onClick={() => toggleExamCourse(course.id)}
-                              className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
-                                isSelected ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-600 border border-gray-100 hover:bg-gray-100'
-                              }`}
+                              className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${isSelected ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-600 border border-gray-100 hover:bg-gray-100'
+                                }`}
                             >
                               {isSelected ? <CheckSquare size={12} /> : <Square size={12} />}
                               {course.label}
@@ -831,11 +825,10 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                                   <button
                                     type="button"
                                     onClick={() => updateCourseUpload(course, { fileMode: 'default', file: null })}
-                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border transition-all ${
-                                      !isCustom
+                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border transition-all ${!isCustom
                                         ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                                         : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300'
-                                    }`}
+                                      }`}
                                   >
                                     {!isCustom ? <CheckSquare size={13} /> : <Square size={13} />}
                                     Use uploaded file above
@@ -844,11 +837,10 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
                                   <button
                                     type="button"
                                     onClick={() => updateCourseUpload(course, { fileMode: 'custom' })}
-                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border transition-all ${
-                                      isCustom
+                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold border transition-all ${isCustom
                                         ? 'bg-orange-500 text-white border-orange-500 shadow-sm'
                                         : 'bg-white text-gray-500 border-gray-200 hover:border-orange-300'
-                                    }`}
+                                      }`}
                                   >
                                     {isCustom ? <CheckSquare size={13} /> : <Square size={13} />}
                                     Upload different file

@@ -568,9 +568,10 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
               </div>
 
             </div>
-          ) : activeTab === 'Structure' ? (
+          ) : (activeTab === 'Structure' || activeTab === 'Curriculum & Structure') ? (
             <div className="bg-white rounded-3xl p-6 md:p-12 border border-[#E2E8F0] shadow-sm">
               {(() => {
+                if (syllabusContent) return syllabusContent;
                 const sems = progData?.semesters;
                 if (sems && sems.length > 0) {
                   return (
@@ -755,7 +756,7 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                           <div className="absolute bottom-4 left-4">
                             <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
-                              {new Date(ev.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()}
+                              {new Date(ev.event_date || ev.published_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}
                             </span>
                           </div>
                         </div>

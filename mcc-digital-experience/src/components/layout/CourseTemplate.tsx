@@ -1009,7 +1009,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
                               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                               <div className="absolute bottom-4 left-4">
                                 <span className="bg-white px-3.5 py-1.5 rounded-full text-xs font-bold text-[#123B6D] tracking-wide shadow-sm">
-                                  {new Date(ev.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()}
+                                  {new Date(ev.event_date || ev.published_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}
                                 </span>
                               </div>
                             </div>

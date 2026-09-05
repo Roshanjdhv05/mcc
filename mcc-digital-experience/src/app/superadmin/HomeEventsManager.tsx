@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   Home, Archive, Image as ImageIcon, Trash2, RefreshCw,
-  CheckCircle, Clock, AlertTriangle, ChevronDown, ChevronUp, Eye, Plus, X, UploadCloud, Loader2, Filter, Edit2, User
+  CheckCircle, Clock, AlertTriangle, ChevronDown, ChevronUp, Eye, Plus, X, UploadCloud, Loader2, Filter, Edit2, User, Search
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
@@ -498,6 +498,7 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
 
   const [selectedYear, setSelectedYear] = useState<string>('all');
   const [selectedMonth, setSelectedMonth] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const years = useMemo(() => {
     const yrs = events.map(e => new Date(e.published_at).getFullYear().toString());
@@ -521,13 +522,21 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
   ];
 
   const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
     return events.filter(e => {
       const date = new Date(e.published_at);
       const matchesYear = selectedYear === 'all' || date.getFullYear().toString() === selectedYear;
       const matchesMonth = selectedMonth === 'all' || date.getMonth().toString() === selectedMonth;
-      return matchesYear && matchesMonth;
+      const matchesSearch = !q || (
+        (e.title && e.title.toLowerCase().includes(q)) ||
+        (e.description && e.description.toLowerCase().includes(q)) ||
+        (e.category && e.category.toLowerCase().includes(q)) ||
+        (e.department && e.department.toLowerCase().includes(q)) ||
+        (e.created_by && e.created_by.toLowerCase().includes(q))
+      );
+      return matchesYear && matchesMonth && matchesSearch;
     });
-  }, [events, selectedYear, selectedMonth]);
+  }, [events, selectedYear, selectedMonth, searchQuery]);
 
   return (
     <div>
@@ -799,10 +808,30 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
           <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-6 flex flex-wrap gap-4 items-center justify-between">
             <div className="flex items-center gap-4 flex-wrap flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-500">Filter By:</span>
+                <span className="text-sm font-semibold text-gray-500">Search & Filter:</span>
+              </div>
+
+              {/* Search Box */}
+              <div className="relative flex-1 min-w-[220px] max-w-sm">
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by title, category, department, uploader..."
+                  className="w-full pl-9 pr-8 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] bg-white font-medium text-gray-700"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
               </div>
               
-              <div className="w-40">
+              <div className="w-36">
                 <select
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(e.target.value)}
@@ -815,7 +844,7 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
                 </select>
               </div>
 
-              <div className="w-44">
+              <div className="w-40">
                 <select
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
@@ -827,9 +856,9 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
                 </select>
               </div>
 
-              {(selectedYear !== 'all' || selectedMonth !== 'all') && (
+              {(selectedYear !== 'all' || selectedMonth !== 'all' || searchQuery) && (
                 <button
-                  onClick={() => { setSelectedYear('all'); setSelectedMonth('all'); }}
+                  onClick={() => { setSelectedYear('all'); setSelectedMonth('all'); setSearchQuery(''); }}
                   className="px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-colors"
                 >
                   Clear Filters

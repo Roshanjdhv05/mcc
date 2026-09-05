@@ -53,7 +53,7 @@ interface ProgrammeEvent {
   id: string; title: string; description: string; category: string;
   department: string; images: string[]; published_at: string;
   programme: string; programme_section: string; publish_programme: boolean;
-  status: string;
+  status: string; event_date?: string;
 }
 
 // ─── Static faculty fallback for programmes whose faculty is not yet in DB ───
@@ -550,6 +550,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         publish_calendar: false,
         status: 'published',
         published_at: new Date().toISOString(),
+        event_date: newEvent.event_date || null,
       }]);
       if (error) throw error;
       // Refresh events list
@@ -559,7 +560,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         const filtered = refreshed.filter((ev: any) => ev.programme && ev.programme.includes(adminCode));
         setEvents(filtered);
       }
-      setNewEvent({ title: '', description: '', category: 'Festivals', images: [] });
+      setNewEvent({ title: '', description: '', category: 'Festivals', images: [], event_date: '' });
       setShowEventForm(false);
     } catch (e: any) {
       alert('Failed to save event: ' + e.message);
@@ -991,6 +992,14 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         )}
                       </select>
                     </div>
+                    <div>
+                      <Label>Event Date (When it happened)</Label>
+                      <Input
+                        type="date"
+                        value={newEvent.event_date || ''}
+                        onChange={v => setNewEvent(p => ({ ...p, event_date: v }))}
+                      />
+                    </div>
                     <div className="col-span-2"><Label>Description</Label><Textarea value={newEvent.description || ''} onChange={v => setNewEvent(p => ({ ...p, description: v }))} rows={3} placeholder="Describe the item..." /></div>
                   </div>
                   <div>
@@ -1080,9 +1089,16 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <h5 className="font-bold text-gray-800 text-sm truncate">{ev.title}</h5>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#123B6D]/10 text-[#123B6D] mt-1">
-                              {ev.programme_section || ev.category}
-                            </span>
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#123B6D]/10 text-[#123B6D]">
+                                {ev.programme_section || ev.category}
+                              </span>
+                              {ev.event_date && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  📅 Date: {new Date(ev.event_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <button
                             onClick={() => handleDeleteEvent(ev.id)}

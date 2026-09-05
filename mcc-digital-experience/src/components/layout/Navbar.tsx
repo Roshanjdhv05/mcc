@@ -812,6 +812,18 @@ export default function Navbar() {
 
   const [menuDirection, setMenuDirection] = useState<Record<string, 'left' | 'right'>>({});
 
+  const closeAllMenus = () => {
+    setOpenDrop(null);
+    setMobileOpenDrop(null);
+    setNestedMobileDrop(null);
+    setNestedMobileDrop3(null);
+    setMobileOpen(false);
+    setNoticesOpen(false);
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
+
   const handleMenuEnter = (e: React.MouseEvent, id: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     if (rect.right + 220 > window.innerWidth) {
@@ -924,15 +936,15 @@ export default function Navbar() {
           {/* Quick Links — desktop only */}
           <div className="hidden md:flex items-center gap-4">
             <span className="text-[13px] font-bold text-[#1E293B] mr-1">Quick Links:</span>
-            <Link href="/notices" className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Notice</Link>
+            <Link href="/notices" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Notice</Link>
             <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
-            <Link href="/placement-portal" className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Placement</Link>
+            <Link href="/placement-portal" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Placement</Link>
             <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
-            <Link href="/administrative-service" className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Admin Services</Link>
+            <Link href="/administrative-service" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Admin Services</Link>
             <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
-            <Link href="/alumni" className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Alumni</Link>
+            <Link href="/alumni" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Alumni</Link>
             <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
-            <Link href="/rti" className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">RTI</Link>
+            <Link href="/rti" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">RTI</Link>
           </div>
           <span className="text-[10px] font-bold text-[#123B6D] block md:hidden uppercase tracking-wider">
             Tools for Accessibility and Translator
@@ -1199,16 +1211,23 @@ export default function Navbar() {
           <div className="flex w-full max-w-[1600px] mx-auto items-center justify-center px-1 md:px-2 lg:px-8 relative z-[50]">
             <nav className="flex items-center justify-center flex-wrap gap-0 md:gap-0.5 xl:gap-1 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-[#E2E8F0] rounded-2xl px-0.5 md:px-1 xl:px-2 py-0.5 md:py-1 xl:py-1.5">
               {navLinks.map((link) => (
-                <div key={link.label} className="relative group shrink-0" onMouseEnter={(e) => handleMenuEnter(e, link.label)}>
+                <div
+                  key={link.label}
+                  className="relative group shrink-0"
+                  onMouseEnter={(e) => {
+                    handleMenuEnter(e, link.label);
+                    setOpenDrop(link.label);
+                  }}
+                  onMouseLeave={() => setOpenDrop(null)}
+                >
                   {link.sub ? (
                     <Link
                       href={link.href}
+                      onClick={closeAllMenus}
                       className={`flex items-center gap-0.5 xl:gap-1.5 px-1 md:px-1.5 lg:px-3 xl:px-4 py-1 md:py-1.5 lg:py-2.5 text-[9px] md:text-[10px] lg:text-[12px] xl:text-[13px] font-semibold rounded-xl transition-all whitespace-nowrap ${isLinkActive(link.href)
                         ? 'bg-[#123B6D] text-white shadow-md'
                         : 'text-[#1E293B] hover:text-[#123B6D] hover:bg-[#123B6D]/5'
                         }`}
-                      onMouseEnter={() => setOpenDrop(link.label)}
-                      onMouseLeave={() => setOpenDrop(null)}
                     >
                       {link.label}
                       <ChevronDown size={14} className={`${isLinkActive(link.href) ? 'text-white/80 group-hover:text-white' : 'text-[#94A3B8] group-hover:text-[#123B6D]'} ml-0.5 transition-colors`} />
@@ -1216,6 +1235,7 @@ export default function Navbar() {
                   ) : (
                     <Link
                       href={link.href}
+                      onClick={closeAllMenus}
                       className={`flex items-center gap-0.5 xl:gap-2 px-1 md:px-1.5 lg:px-4 xl:px-5 py-1 md:py-1.5 lg:py-2.5 text-[9px] md:text-[10px] lg:text-[12px] xl:text-[13px] font-semibold rounded-xl transition-all whitespace-nowrap ${isLinkActive(link.href)
                         ? 'bg-[#123B6D] text-white shadow-md'
                         : 'text-[#1E293B] hover:text-[#123B6D] hover:bg-[#123B6D]/5'
@@ -1226,7 +1246,7 @@ export default function Navbar() {
                   )}
                   {(link as any).isMegaMenu && (link as any).megaMenuColumns && !(link as any).megaMenuType && (
                     <div
-                      className={`absolute top-full pt-2 hidden group-hover:block z-[100] ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 4 ? 'w-[1200px]' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
+                      className={`absolute top-full pt-2 ${openDrop === link.label ? 'block' : 'hidden'} z-[100] ${((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 4 ? 'w-[1200px]' : ((link as any).megaMenuColumns.reduce((a: number, c: any) => a + (c.colSpan || 1), 0)) > 3 ? 'w-[1100px]' : 'w-[900px]'} ${(link as any).megaMenuAlign === 'right' ? 'right-0' : (link as any).megaMenuAlign === 'left' ? 'left-0' : 'left-1/2 -translate-x-1/2'}`}
                       onMouseEnter={() => setOpenDrop(link.label)}
                       onMouseLeave={() => setOpenDrop(null)}
                     >
@@ -1256,7 +1276,7 @@ export default function Navbar() {
                                     <ul className="space-y-2.5">
                                       {sec.links.map((clink: any) => (
                                         <li key={clink.label}>
-                                          <Link href={clink.href} className={`text-[15px] transition-colors flex items-start gap-2 leading-tight font-medium text-[#1E293B] hover:text-[#123B6D]`}>
+                                          <Link href={clink.href} onClick={closeAllMenus} className={`text-[15px] transition-colors flex items-start gap-2 leading-tight font-medium text-[#1E293B] hover:text-[#123B6D]`}>
                                             <span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full shrink-0 mt-1"></span>
                                             <span>{formatCourseLabel(clink.label)}</span>
                                           </Link>
@@ -1274,7 +1294,7 @@ export default function Navbar() {
                   )}
                   {(link as any).isMegaMenu && (link as any).megaMenuType === 'programmes' && (
                     <div
-                      className={`absolute top-full pt-2 hidden group-hover:block z-[100] w-[1100px] max-w-[95vw] left-1/2 -translate-x-1/2`}
+                      className={`absolute top-full pt-2 ${openDrop === link.label ? 'block' : 'hidden'} z-[100] w-[1100px] max-w-[95vw] left-1/2 -translate-x-1/2`}
                       onMouseEnter={() => setOpenDrop(link.label)}
                       onMouseLeave={() => setOpenDrop(null)}
                     >
@@ -1289,16 +1309,16 @@ export default function Navbar() {
                               <div>
                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Commerce</h4>
                                 <ul className="space-y-2.5 mb-6">
-                                  <li><Link href="/programmes/ug/bcom" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><strong>B.COM</strong></Link></li>
-                                  <li><Link href="/programmes/ug/baf" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Accounting &amp; Finance)</span></Link></li>
-                                  <li><Link href="/programmes/ug/bbi" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Banking &amp; Insurance)</span></Link></li>
-                                  <li><Link href="/programmes/ug/bfm" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Financial Markets)</span></Link></li>
+                                  <li><Link href="/programmes/ug/bcom" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><strong>B.COM</strong></Link></li>
+                                  <li><Link href="/programmes/ug/baf" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Accounting &amp; Finance)</span></Link></li>
+                                  <li><Link href="/programmes/ug/bbi" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Banking &amp; Insurance)</span></Link></li>
+                                  <li><Link href="/programmes/ug/bfm" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Financial Markets)</span></Link></li>
                                 </ul>
 
                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Business &amp; Management</h4>
                                 <ul className="space-y-2.5">
-                                  <li><Link href="/programmes/ug/bcom-ms" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Management Studies)</span></Link></li>
-                                  <li><Link href="/programmes/ug/bcom-ba" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Business Administration)</span></Link></li>
+                                  <li><Link href="/programmes/ug/bcom-ms" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Management Studies)</span></Link></li>
+                                  <li><Link href="/programmes/ug/bcom-ba" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM</strong> (Business Administration)</span></Link></li>
                                 </ul>
                               </div>
 
@@ -1306,20 +1326,20 @@ export default function Navbar() {
                               <div>
                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Science</h4>
                                 <ul className="space-y-2.5 mb-6">
-                                  <li><Link href="/programmes/ug/sct/bsc-cs" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Computer Science)</span></Link></li>
-                                  <li><Link href="/programmes/ug/sct/bsc-it" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Information Technology)</span></Link></li>
-                                  <li><Link href="/programmes/ug/sct/bsc-ds" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Data Science)</span></Link></li>
-                                  <li><Link href="/programmes/ug/sct/bsc-ca" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Computer Applications)</span></Link></li>
+                                  <li><Link href="/programmes/ug/sct/bsc-cs" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Computer Science)</span></Link></li>
+                                  <li><Link href="/programmes/ug/sct/bsc-it" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Information Technology)</span></Link></li>
+                                  <li><Link href="/programmes/ug/sct/bsc-ds" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Data Science)</span></Link></li>
+                                  <li><Link href="/programmes/ug/sct/bsc-ca" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.SC.</strong> (Computer Applications)</span></Link></li>
                                 </ul>
 
                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Arts</h4>
                                 <ul className="space-y-2.5 mb-6">
-                                  <li><Link href="/programmes/ug/bammc" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>BAMMC</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Mass Media &amp; Communication)</span></span></Link></li>
+                                  <li><Link href="/programmes/ug/bammc" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>BAMMC</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Mass Media &amp; Communication)</span></span></Link></li>
                                 </ul>
 
                                 <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Apprenticeship</h4>
                                 <ul className="space-y-2.5">
-                                  <li><Link href="/programmes/ug/bfsi" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM BFSI</strong> (Banking, Financial Services and Insurance)</span></Link></li>
+                                  <li><Link href="/programmes/ug/bfsi" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>B.COM BFSI</strong> (Banking, Financial Services and Insurance)</span></Link></li>
                                 </ul>
                               </div>
                             </div>
@@ -1332,16 +1352,16 @@ export default function Navbar() {
                             <div>
                               <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Commerce</h4>
                               <ul className="space-y-4 mb-6">
-                                <li><Link href="/programmes/pg/mcom-aa" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.COM.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Advanced Accountancy)</span></span></Link></li>
-                                <li><Link href="/programmes/pg/mcom-bm" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.COM.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Business Management)</span></span></Link></li>
-                                <li><Link href="/programmes/pg/mcom-bf" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>M.COM.</strong> (Banking &amp; Finance)</span></Link></li>
+                                <li><Link href="/programmes/pg/mcom-aa" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.COM.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Advanced Accountancy)</span></span></Link></li>
+                                <li><Link href="/programmes/pg/mcom-bm" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.COM.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Business Management)</span></span></Link></li>
+                                <li><Link href="/programmes/pg/mcom-bf" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>M.COM.</strong> (Banking &amp; Finance)</span></Link></li>
                               </ul>
                             </div>
                             <div>
                               <h4 className="font-bold text-[#3B6FAD] mb-3 text-[17px]">Science</h4>
                               <ul className="space-y-4">
-                                <li><Link href="/programmes/pg/msc-it" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.SC.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Information Technology)</span></span></Link></li>
-                                <li><Link href="/programmes/pg/msf" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>M.SC.</strong> (Finance)</span></Link></li>
+                                <li><Link href="/programmes/pg/msc-it" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span className="flex flex-col"><strong>M.SC.</strong> <span className="text-[13px] text-[#64748B] -mt-0.5 leading-snug">(Information Technology)</span></span></Link></li>
+                                <li><Link href="/programmes/pg/msf" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>M.SC.</strong> (Finance)</span></Link></li>
                               </ul>
                             </div>
                           </div>
@@ -1351,13 +1371,13 @@ export default function Navbar() {
                             <h3 className="font-bold text-[#123B6D] text-[20px] text-center mb-6">Ph.D.</h3>
                             <div>
                               <ul className="space-y-2.5">
-                                <li><Link href="/programmes/phd/be" className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>Commerce</strong> (Specialisation in Business Economics)</span></Link></li>
+                                <li><Link href="/programmes/phd/be" onClick={closeAllMenus} className="text-[15px] font-medium text-[#475569] hover:text-[#123B6D] flex items-start gap-2 leading-snug"><span className="w-1.5 h-1.5 bg-[#D4A017] rounded-full mt-1.5 shrink-0"></span><span><strong>Commerce</strong> (Specialisation in Business Economics)</span></Link></li>
                               </ul>
                             </div>
                           </div>
                         </div>
                         {/* Explore all bottom bar */}
-                        <Link href="/programmes" className="bg-[#E2E8F0]/30 px-6 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[16px] hover:bg-[#E2E8F0]/50 transition-colors border-t border-[#E2E8F0] group/btn">
+                        <Link href="/programmes" onClick={closeAllMenus} className="bg-[#E2E8F0]/30 px-6 py-4 flex justify-center items-center gap-2 text-[#123B6D] font-bold text-[16px] hover:bg-[#E2E8F0]/50 transition-colors border-t border-[#E2E8F0] group/btn">
                           Explore all Programmes <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
                       </div>
@@ -1365,7 +1385,7 @@ export default function Navbar() {
                   )}
                   {!(link as any).isMegaMenu && link.sub && (
                     <div
-                      className={`absolute top-full pt-2 hidden group-hover:block min-w-[200px] z-[100] ${menuDirection[link.label] === 'left' ? 'right-0' : 'left-0'}`}
+                      className={`absolute top-full pt-2 ${openDrop === link.label ? 'block' : 'hidden'} min-w-[200px] z-[100] ${menuDirection[link.label] === 'left' ? 'right-0' : 'left-0'}`}
                       onMouseEnter={() => setOpenDrop(link.label)}
                       onMouseLeave={() => setOpenDrop(null)}
                     >
@@ -1373,7 +1393,7 @@ export default function Navbar() {
                         {(link as any).sub.map((s: any) => (
                           s.sub ? (
                             <div key={s.label} className="relative w-full group/nested" onMouseEnter={(e) => handleMenuEnter(e, s.label)}>
-                              <Link href={s.href} className="w-full flex items-center justify-between px-4 py-3 text-sm text-[#1E293B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors cursor-pointer">
+                              <Link href={s.href} onClick={closeAllMenus} className="w-full flex items-center justify-between px-4 py-3 text-sm text-[#1E293B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors cursor-pointer">
                                 {s.label}
                                 <ChevronDown size={14} className={`text-[#94A3B8] transition-transform ${menuDirection[s.label] === 'left' ? 'rotate-90' : '-rotate-90'}`} />
                               </Link>
@@ -1382,14 +1402,14 @@ export default function Navbar() {
                                   {(s as any).sub.map((ss: any, idx: number) => (
                                     (ss.sub) ? (
                                       <div key={ss.label + idx} className="relative w-full group/nested-3" onMouseEnter={(e) => handleMenuEnter(e, ss.label)}>
-                                        <Link href={ss.href} className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors cursor-pointer">
+                                        <Link href={ss.href} onClick={closeAllMenus} className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors cursor-pointer">
                                           {ss.label}
                                           <ChevronDown size={14} className={`text-[#94A3B8] transition-transform ${menuDirection[ss.label] === 'left' ? 'rotate-90' : '-rotate-90'}`} />
                                         </Link>
                                         <div className={`absolute top-0 hidden group-hover/nested-3:block min-w-[200px] z-10 ${menuDirection[ss.label] === 'left' ? 'right-full pr-1' : 'left-full pl-1'}`}>
                                           <div className="bg-white/95 backdrop-blur-xl border border-[#E2E8F0] rounded-2xl shadow-xl overflow-hidden py-1">
                                             {(ss.sub as any[]).map((sss: any, sssIdx: number) => (
-                                              <Link key={sss.label + sssIdx} href={sss.href} className="block px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors">
+                                              <Link key={sss.label + sssIdx} href={sss.href} onClick={closeAllMenus} className="block px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors">
                                                 {sss.label}
                                               </Link>
                                             ))}
@@ -1397,7 +1417,7 @@ export default function Navbar() {
                                         </div>
                                       </div>
                                     ) : (
-                                      <Link key={ss.label + idx} href={ss.href} className="block px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors">
+                                      <Link key={ss.label + idx} href={ss.href} onClick={closeAllMenus} className="block px-4 py-2.5 text-sm text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors">
                                         {ss.label}
                                       </Link>
                                     )
@@ -1409,6 +1429,7 @@ export default function Navbar() {
                             <Link
                               key={s.label}
                               href={s.href}
+                              onClick={closeAllMenus}
                               className="flex items-center px-4 py-3 text-sm text-[#1E293B] hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors"
                             >
                               {s.label}
@@ -1563,11 +1584,11 @@ export default function Navbar() {
               <div className="flex-1 px-4 py-4 space-y-1">
                 {/* Mobile Quick Links */}
                 <div className="flex flex-wrap items-center gap-3 pb-4 mb-2 border-b border-[#E2E8F0]">
-                  <Link href="/notices" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Notice</Link>
-                  <Link href="/placement-portal" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Placement</Link>
-                  <Link href="/administrative-service" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Admin Services</Link>
-                  <Link href="/alumni" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>Alumni</Link>
-                  <Link href="/rti" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={() => setMobileOpen(false)}>RTI</Link>
+                  <Link href="/notices" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>Notice</Link>
+                  <Link href="/placement-portal" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>Placement</Link>
+                  <Link href="/administrative-service" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>Admin Services</Link>
+                  <Link href="/alumni" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>Alumni</Link>
+                  <Link href="/rti" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>RTI</Link>
                 </div>
                 {navLinks.map((link) => (
                   <div key={link.label}>
@@ -1577,7 +1598,7 @@ export default function Navbar() {
                           href={link.href || '#'}
                           className="flex-1 px-4 py-3 text-[#1E293B] font-medium hover:text-[#123B6D] transition-colors text-left"
                           onClick={() => {
-                            if (link.href && link.href !== '#') setMobileOpen(false);
+                            if (link.href && link.href !== '#') closeAllMenus();
                             else setMobileOpenDrop(mobileOpenDrop === link.label ? null : link.label);
                           }}
                         >
@@ -1597,7 +1618,7 @@ export default function Navbar() {
                       <Link
                         href={link.href}
                         className="block px-4 py-3 text-[#1E293B] font-medium rounded-xl hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors"
-                        onClick={() => setMobileOpen(false)}
+                        onClick={closeAllMenus}
                       >
                         {link.label}
                       </Link>
@@ -1654,7 +1675,7 @@ export default function Navbar() {
                                                             key={sss.label + sssIdx}
                                                             href={sss.href}
                                                             className={`block px-4 py-2 text-sm rounded-xl transition-colors text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D]`}
-                                                            onClick={() => { setMobileOpen(false); setMobileOpenDrop(null); setNestedMobileDrop(null); setNestedMobileDrop3(null); }}
+                                                            onClick={closeAllMenus}
                                                           >
                                                             {formatCourseLabel(sss.label)}
                                                           </Link>
@@ -1669,7 +1690,7 @@ export default function Navbar() {
                                                 key={ss.label + idx}
                                                 href={ss.href}
                                                 className={`block px-4 py-2 text-sm rounded-xl transition-colors text-[#64748B] hover:bg-[#123B6D]/5 hover:text-[#123B6D]`}
-                                                onClick={() => { setMobileOpen(false); setMobileOpenDrop(null); setNestedMobileDrop(null); setNestedMobileDrop3(null); }}
+                                                onClick={closeAllMenus}
                                               >
                                                 {formatCourseLabel(ss.label)}
                                               </Link>
@@ -1685,7 +1706,7 @@ export default function Navbar() {
                                   key={s.label}
                                   href={s.href}
                                   className="block px-4 py-2 text-sm text-[#64748B] rounded-xl hover:bg-[#123B6D]/5 hover:text-[#123B6D] transition-colors"
-                                  onClick={() => { setMobileOpen(false); setMobileOpenDrop(null); setNestedMobileDrop(null); setNestedMobileDrop3(null); }}
+                                  onClick={closeAllMenus}
                                 >
                                   {s.label}
                                 </Link>

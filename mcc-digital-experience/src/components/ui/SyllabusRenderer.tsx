@@ -7,7 +7,8 @@ interface Props {
 }
 
 export default function SyllabusRenderer({ programKey }: Props) {
-  const data = syllabusData[programKey] || [];
+  const normalizedKey = (programKey || '').toUpperCase().replace('-', '_');
+  const data = syllabusData[programKey] || syllabusData[normalizedKey] || syllabusData[normalizedKey.replace('_', '')] || [];
   console.log("Rendering SyllabusRenderer for", programKey, "data length:", data.length);
 
   if (data.length === 0) {

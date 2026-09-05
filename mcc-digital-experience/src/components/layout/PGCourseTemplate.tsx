@@ -217,7 +217,7 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
     async function fetchProgrammeEvents() {
       const { data } = await supabase
         .from('events')
-        .select('id, title, description, images, published_at, programme_section, programme, category, department')
+        .select('id, title, description, images, published_at, programme_section, programme, category, department, event_date')
         .eq('publish_programme', true)
         .eq('status', 'published')
         .order('published_at', { ascending: false });
@@ -739,7 +739,7 @@ export default function PGCourseTemplate({ title, shortInfo, fundingType, introd
                     </div>
                     {eventsActivities.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {eventsActivities.map(ev => (
+                    {eventsActivities.map((ev: any) => (
                       <div
                         key={ev.id}
                         onClick={() => { setSelectedEvent(ev); setCurrentImageIndex(0); }}

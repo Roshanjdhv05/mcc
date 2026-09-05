@@ -308,7 +308,7 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     async function fetchProgrammeEvents() {
       const { data } = await supabase
         .from('events')
-        .select('id, title, description, images, published_at, programme_section, programme, category, department')
+        .select('id, title, description, images, published_at, programme_section, programme, category, department, event_date')
         .eq('publish_programme', true)
         .eq('status', 'published')
         .order('published_at', { ascending: false });

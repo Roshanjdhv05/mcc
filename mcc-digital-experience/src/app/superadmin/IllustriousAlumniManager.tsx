@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Plus, RefreshCw, Users, Pencil, Eye, EyeOff, Globe, Building2 } from 'lucide-react';
+import { Plus, RefreshCw, Users, Pencil, Eye, EyeOff, Globe, Building2, Trash2 } from 'lucide-react';
 import IllustriousAlumniEditor, { AlumniItem } from './IllustriousAlumniEditor';
 
 const BLANK: AlumniItem = {
@@ -50,6 +50,17 @@ export default function IllustriousAlumniManager({ canDelete }: { canDelete?: bo
   const toggleHomeVisibility = async (item: AlumniItem) => {
     await supabase.from('mcc_illustrious_alumni').update({ show_on_home: !item.show_on_home }).eq('id', item.id);
     fetchItems();
+  };
+
+  const handleDelete = async (item: AlumniItem) => {
+    if (!window.confirm(`Are you sure you want to delete "${item.name}"? This cannot be undone.`)) return;
+    try {
+      const { error } = await supabase.from('mcc_illustrious_alumni').delete().eq('id', item.id);
+      if (error) throw error;
+      fetchItems();
+    } catch (e: any) {
+      alert('Failed to delete alumni: ' + e.message);
+    }
   };
 
   const educationBadges = (item: AlumniItem) => {
@@ -168,6 +179,11 @@ export default function IllustriousAlumniManager({ canDelete }: { canDelete?: bo
                       <Globe size={14} />
                     </a>
                   )}
+                  <button onClick={() => handleDelete(item)}
+                    title="Delete alumni entry"
+                    className="p-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               </div>
             </div>

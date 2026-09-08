@@ -722,22 +722,37 @@ export default function Navbar() {
   const [fetchingNotices, setFetchingNotices] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
   const [topNoticeId, setTopNoticeId] = useState<string | null>(null);
-  const [visitorCount, setVisitorCount] = useState(1147);
+  const [visitorCount, setVisitorCount] = useState<number>(0);
+  const [facultyLoginDrop, setFacultyLoginDrop] = useState(false);
+  const [studentLoginDrop, setStudentLoginDrop] = useState(false);
 
   useEffect(() => {
     const fetchTotalVisitors = async () => {
       try {
-        const { data, error } = await supabase.rpc('get_total_visitors');
-        if (!error && data !== null) {
-          setVisitorCount(Number(data));
-        } else {
-          setVisitorCount(3546); // fallback
+        // Use RPC which does a proper SUM server-side (avoids 1000-row Supabase limit)
+        const { data: rpcData, error: rpcError } = await supabase.rpc('get_total_visitors');
+        if (!rpcError && rpcData !== null && Number(rpcData) > 0) {
+          setVisitorCount(Number(rpcData));
+          return;
+        }
+        // Fallback: manual sum with high range header to bypass default row cap
+        const { data, error } = await supabase
+          .from('page_analytics')
+          .select('count')
+          .limit(100000);
+        if (!error && data && data.length > 0) {
+          const total = data.reduce((sum: number, row: any) => sum + (row.count || 0), 0);
+          setVisitorCount(total);
         }
       } catch {
-        setVisitorCount(3546); // fallback
+        // Fail gracefully
       }
     };
+
     fetchTotalVisitors();
+    // Refresh every 30 seconds so count stays live while user browses
+    const interval = setInterval(fetchTotalVisitors, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchLiveNotices = async () => {
@@ -945,6 +960,48 @@ export default function Navbar() {
             <Link href="/alumni" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">Alumni</Link>
             <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
             <Link href="/rti" onClick={closeAllMenus} className="text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">RTI</Link>
+            <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
+            {/* Faculty Log In Dropdown */}
+            <div className="relative" onMouseLeave={() => setFacultyLoginDrop(false)} onMouseEnter={() => setFacultyLoginDrop(true)}>
+              <button className="flex items-center gap-1 text-[13px] font-semibold text-[#123B6D] hover:text-[#D4A017] transition-colors">
+                <span>Faculty Log In</span>
+                <ChevronDown size={12} className={`transition-transform ${facultyLoginDrop ? 'rotate-180' : ''}`} />
+              </button>
+              <div className={`absolute right-0 top-full pt-2 z-[200] w-40 pointer-events-auto transition-all duration-200 ${facultyLoginDrop ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible'}`}>
+                <div className="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden">
+                  <a href="https://cims.mastersofterp.in/" target="_blank" rel="noopener noreferrer"
+                    className="block px-4 py-2.5 text-[12px] font-medium text-[#475569] hover:bg-[#F0F5FF] hover:text-[#123B6D] transition-colors">
+                    Mastersoft App
+                  </a>
+                  <div className="mx-3 border-t border-slate-100" />
+                  <a href="https://academics.teachusapp.com/" target="_blank" rel="noopener noreferrer"
+                    className="block px-4 py-2.5 text-[12px] font-medium text-[#475569] hover:bg-[#F0F5FF] hover:text-[#123B6D] transition-colors">
+                    TeachUs App
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="w-[1px] h-3.5 bg-[#E2E8F0]"></div>
+            {/* Student Log In Dropdown */}
+            <div className="relative" onMouseLeave={() => setStudentLoginDrop(false)} onMouseEnter={() => setStudentLoginDrop(true)}>
+              <button className="flex items-center gap-1 text-[13px] font-semibold text-[#123B6D] hover:text-[#D4A017] transition-colors">
+                <span>Student Log In</span>
+                <ChevronDown size={12} className={`transition-transform ${studentLoginDrop ? 'rotate-180' : ''}`} />
+              </button>
+              <div className={`absolute right-0 top-full pt-2 z-[200] w-40 pointer-events-auto transition-all duration-200 ${studentLoginDrop ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible'}`}>
+                <div className="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden">
+                  <a href="https://cimsstudentnewui.mastersofterp.in/StudentLogin/Index" target="_blank" rel="noopener noreferrer"
+                    className="block px-4 py-2.5 text-[12px] font-medium text-[#475569] hover:bg-[#F0F5FF] hover:text-[#123B6D] transition-colors">
+                    Mastersoft App
+                  </a>
+                  <div className="mx-3 border-t border-slate-100" />
+                  <a href="https://web.teachusapp.com/" target="_blank" rel="noopener noreferrer"
+                    className="block px-4 py-2.5 text-[12px] font-medium text-[#475569] hover:bg-[#F0F5FF] hover:text-[#123B6D] transition-colors">
+                    TeachUs App
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
           <span className="text-[10px] font-bold text-[#123B6D] block md:hidden uppercase tracking-wider">
             Tools for Accessibility and Translator
@@ -1589,6 +1646,33 @@ export default function Navbar() {
                   <Link href="/administrative-service" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>Admin Services</Link>
                   <Link href="/alumni" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>Alumni</Link>
                   <Link href="/rti" className="text-[11px] font-semibold text-[#475569] hover:text-[#123B6D] transition-colors" onClick={closeAllMenus}>RTI</Link>
+                </div>
+                {/* Mobile Log In Section */}
+                <div className="pb-3 mb-2 border-b border-[#E2E8F0] space-y-4">
+                  {/* Faculty */}
+                  <div>
+                    <div className="flex items-center gap-1 mb-2">
+                      <p className="text-[11px] font-bold text-[#123B6D]">Faculty Log In</p>
+                    </div>
+                    <div className="flex gap-3 pl-2">
+                      <a href="https://cims.mastersofterp.in/" target="_blank" rel="noopener noreferrer"
+                        className="text-[11px] font-semibold text-[#475569] hover:text-[#D4A017] transition-colors" onClick={closeAllMenus}>Mastersoft App</a>
+                      <a href="https://academics.teachusapp.com/" target="_blank" rel="noopener noreferrer"
+                        className="text-[11px] font-semibold text-[#475569] hover:text-[#D4A017] transition-colors" onClick={closeAllMenus}>TeachUs App</a>
+                    </div>
+                  </div>
+                  {/* Student */}
+                  <div>
+                    <div className="flex items-center gap-1 mb-2">
+                      <p className="text-[11px] font-bold text-[#123B6D]">Student Log In</p>
+                    </div>
+                    <div className="flex gap-3 pl-2">
+                      <a href="https://cimsstudentnewui.mastersofterp.in/StudentLogin/Index" target="_blank" rel="noopener noreferrer"
+                        className="text-[11px] font-semibold text-[#475569] hover:text-[#D4A017] transition-colors" onClick={closeAllMenus}>Mastersoft App</a>
+                      <a href="https://web.teachusapp.com/" target="_blank" rel="noopener noreferrer"
+                        className="text-[11px] font-semibold text-[#475569] hover:text-[#D4A017] transition-colors" onClick={closeAllMenus}>TeachUs App</a>
+                    </div>
+                  </div>
                 </div>
                 {navLinks.map((link) => (
                   <div key={link.label}>

@@ -36,6 +36,7 @@ const FORUMS_CLUBS = [
   'Women Development Cell',
   'Entrepreneurship Development Cell',
   "Students' Research",
+  'Artelier',
   'Spectrum',
   'Inspira',
   'Hack-A-Thon',
@@ -106,11 +107,13 @@ function EventCard({
   isArchived,
   onRemoveFromHome,
   onRestoreToHome,
+  onDelete,
 }: {
   event: HomeEvent;
   isArchived: boolean;
   onRemoveFromHome: (id: string) => void | Promise<void>;
   onRestoreToHome: (id: string) => void | Promise<void>;
+  onDelete?: (id: string) => void | Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -219,7 +222,32 @@ function EventCard({
             <CheckCircle size={13} /> Restore Event
           </button>
         )}
-
+        {onDelete && (
+          confirmDelete ? (
+            <div className="flex items-center gap-1.5 ml-auto">
+              <span className="text-xs text-red-600 font-semibold">Delete?</span>
+              <button
+                onClick={() => onDelete(event.id)}
+                className="px-2.5 py-1 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="px-2.5 py-1 text-xs font-semibold text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors ml-auto"
+            >
+              <Trash2 size={13} /> Delete Event
+            </button>
+          )
+        )}
       </div>
     </div>
   );
@@ -282,6 +310,16 @@ export default function HomeEventsManager() {
     const { error } = await supabase.from('events').update({ publish_gallery: true }).eq('id', id);
     if (error) showMsg('error', 'Failed to restore event.');
     else { showMsg('success', 'Event restored to gallery.'); fetchEvents(); }
+  };
+
+  const handleDeleteEvent = async (id: string) => {
+    const { error } = await supabase.from('events').delete().eq('id', id);
+    if (error) {
+      showMsg('error', 'Failed to delete event: ' + error.message);
+    } else {
+      showMsg('success', 'Event permanently deleted.');
+      fetchEvents();
+    }
   };
 
 
@@ -748,6 +786,7 @@ export default function HomeEventsManager() {
                     isArchived={!ev.publish_gallery}
                     onRemoveFromHome={handleRemoveFromHome}
                     onRestoreToHome={handleRestoreToHome}
+                    onDelete={handleDeleteEvent}
                   />
                 ))}
               </div>

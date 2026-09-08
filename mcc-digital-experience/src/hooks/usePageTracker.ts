@@ -1,6 +1,6 @@
-﻿'use client';
+'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
@@ -9,17 +9,23 @@ const EXCLUDED_PATHS = ['/superadmin', '/api'];
 
 export function usePageTracker() {
   const pathname = usePathname();
+  // useRef tracks the last fired path so React StrictMode double-mount doesn't double-count
+  const trackedRef = useRef<Record<string, boolean>>({});
 
   useEffect(() => {
     // Skip superadmin and API routes
     if (!pathname || EXCLUDED_PATHS.some((p) => pathname.startsWith(p))) return;
 
-    // Debounce: only fire once per pathname change
+    // Prevent double-counting due to React StrictMode / double-invoke in dev
+    if (trackedRef.current[pathname]) return;
+    trackedRef.current[pathname] = true;
+
+    // Debounce: fire database update after 800ms to avoid counting mid-navigation
     const timer = setTimeout(async () => {
       try {
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-        // Upsert: increment count if row exists for this path+date, else insert
+        // Try RPC first (most efficient — atomic increment in Postgres)
         const { error } = await supabase.rpc('increment_page_view', {
           p_path: pathname,
           p_date: today,
@@ -48,8 +54,9 @@ export function usePageTracker() {
       } catch {
         // Silently fail — analytics should never break the page
       }
-    }, 500);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, [pathname]);
 }
+

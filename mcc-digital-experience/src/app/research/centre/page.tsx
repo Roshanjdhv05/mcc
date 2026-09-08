@@ -32,7 +32,7 @@ const SLUG_MAP: Record<string, string> = {
 };
 
 const DEFAULT_SCHOLARS = [
-  { guide: 'Dr. Parvathi Venkatesh', name: 'Dr. Shivaji Pawar', topic: 'Towards a Sustainable Society: The Role of the Self-help Group as a Catalyst for Economic Stability with special reference to SHGs in Maharashtra.', status: 'Awarded' },
+  { guide: 'Dr. Parvathi Venkatesh', name: 'Dr. Shivaji Pawar', topic: 'Towards a Sustainable Society: The Role of the Self-help Group as a Catalyst for Economic Stability with special reference to SHGs in Maharashtra.', status: 'Thesis submitted' },
   { guide: 'Dr. Parvathi Venkatesh', name: 'Dr. Vijayalaxmi Kannan', topic: 'Mapping of Customer Experience and its impact on Customer Lifetime Value: A study of Agglomerated Retail Stores in Thane and Mulund Cities', status: 'Awarded' },
   { guide: 'Dr. Parvathi Venkatesh', name: 'Dr. Sulbha Dey', topic: 'Impact of Green Policies and Practices on Economic Performance of Green Organized Retailers in Mumbai in 2020', status: 'Awarded' },
   { guide: 'Dr. Parvathi Venkatesh', name: 'Mrs. Riya Dhamapurkar', topic: 'An Assessment of Revenue and Expenditure Pattern of Municipal Corporation in Maharashtra.', status: 'Thesis submitted' },
@@ -225,17 +225,17 @@ function CentreContent() {
                         <tbody className="divide-y divide-gray-100 text-[14px]">
                           {(c(activeTab).scholars || DEFAULT_SCHOLARS.filter(s => activeTab === "thesis" ? s.status !== "Work in Progress" : true))
                             .map((student: any, idx: number) => (
-                            <tr key={idx} className="hover:bg-[#F8FAFC]/50 transition-colors">
-                              <td className="px-6 py-4 font-semibold text-[#1E293B] whitespace-nowrap">{student.name}</td>
-                              <td className="px-6 py-4 text-gray-700 font-medium whitespace-nowrap">{student.guide}</td>
-                              <td className="px-6 py-4 text-gray-600 leading-relaxed">{student.topic}</td>
-                              <td className="px-6 py-4">
-                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase ${statusColor(student.status)}`}>
-                                  {student.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
+                              <tr key={idx} className="hover:bg-[#F8FAFC]/50 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-[#1E293B] whitespace-nowrap">{student.name}</td>
+                                <td className="px-6 py-4 text-gray-700 font-medium whitespace-nowrap">{student.guide}</td>
+                                <td className="px-6 py-4 text-gray-600 leading-relaxed">{student.topic}</td>
+                                <td className="px-6 py-4">
+                                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase ${statusColor(student.status)}`}>
+                                    {student.status}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>

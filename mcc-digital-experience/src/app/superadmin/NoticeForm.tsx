@@ -18,6 +18,11 @@ interface NoticeFormProps {
   currentUser?: string;
 }
 
+function isValidUUID(val?: string | null): boolean {
+  if (!val) return false;
+  return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(val);
+}
+
 function MultiSelectChips({
   options, selected, onChange, color = '#123B6D'
 }: {
@@ -283,7 +288,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
       calendar_date: publishCalendar ? calDate : null,
       calendar_venue: publishCalendar && calVenue.trim() ? calVenue.trim() : null,
       calendar_time: publishCalendar && calTime.trim() ? calTime.trim() : null,
-      created_by: currentUser || 'Superadmin',
+      ...(isValidUUID(currentUser) ? { created_by: currentUser } : {}),
     };
 
     // --- EDIT MODE: UPDATE ---

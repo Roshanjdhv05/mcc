@@ -40,6 +40,7 @@ const FORUMS_CLUBS = [
   'Women Development Cell',
   'Entrepreneurship Development Cell',
   "Students' Research",
+  'Artelier',
   'Spectrum',
   'Inspira',
   'Hack-A-Thon',
@@ -87,6 +88,11 @@ const PUBLICATION_SECTIONS: Record<string, string> = {
   'BCOM-MS': 'Publication', 'SCT': 'Publication',
 };
 
+function isValidUUID(val?: string | null): boolean {
+  if (!val) return false;
+  return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(val);
+}
+
 function getProgrammeSectionOptions(code: string) {
   // PG programmes only have Events & Activities and Industrial Visits
   if (code.startsWith('M')) {
@@ -133,6 +139,7 @@ function EventCard({
   onRemoveFromHome,
   onRestoreToHome,
   onEdit,
+  onDelete,
   canDelete,
 }: {
   event: HomeEvent;
@@ -140,6 +147,7 @@ function EventCard({
   onRemoveFromHome: (id: string) => void | Promise<void>;
   onRestoreToHome: (id: string) => void | Promise<void>;
   onEdit?: (event: HomeEvent) => void;
+  onDelete?: (id: string) => void | Promise<void>;
   canDelete?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -205,7 +213,6 @@ function EventCard({
             </p>
           )}
 
-
           {event.images && event.images.length > 0 && (
             <p className="text-[11px] text-gray-400 mt-0.5">
               {event.images.length} image{event.images.length !== 1 ? 's' : ''}
@@ -260,10 +267,36 @@ function EventCard({
         {onEdit && (
           <button
             onClick={() => onEdit(event)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#123B6D] bg-[#123B6D]/10 hover:bg-[#123B6D]/20 border border-[#123B6D]/20 rounded-lg transition-colors ml-auto"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#123B6D] bg-[#123B6D]/10 hover:bg-[#123B6D]/20 border border-[#123B6D]/20 rounded-lg transition-colors"
           >
             <Edit2 size={13} /> Edit Event
           </button>
+        )}
+        {onDelete && (
+          confirmDelete ? (
+            <div className="flex items-center gap-1.5 ml-auto">
+              <span className="text-xs text-red-600 font-semibold">Delete?</span>
+              <button
+                onClick={() => onDelete(event.id)}
+                className="px-2.5 py-1 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="px-2.5 py-1 text-xs font-semibold text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors ml-auto"
+            >
+              <Trash2 size={13} /> Delete Event
+            </button>
+          )
         )}
       </div>
     </div>
@@ -333,6 +366,19 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
     else {
       showMsg('success', 'Event restored to gallery.');
       cacheLog('INVALIDATED', 'events', 'restore action');
+      queryClient.invalidateQueries({ queryKey: qk.gallery() });
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      fetchEvents();
+    }
+  };
+
+  const handleDeleteEvent = async (id: string) => {
+    const { error } = await supabase.from('events').delete().eq('id', id);
+    if (error) {
+      showMsg('error', 'Failed to delete event: ' + error.message);
+    } else {
+      showMsg('success', 'Event permanently deleted.');
+      cacheLog('INVALIDATED', 'events', 'delete action');
       queryClient.invalidateQueries({ queryKey: qk.gallery() });
       queryClient.invalidateQueries({ queryKey: ['events'] });
       fetchEvents();
@@ -435,7 +481,7 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
               dbCategory = 'Industrial Visits';
             }
             
-            return {
+            const itemPayload: any = {
               title: title.trim(),
               description: description.trim(),
               category: dbCategory,
@@ -451,8 +497,11 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
               publish_programme: true,
               status: 'published',
               published_at: eventDate ? new Date(eventDate).toISOString() : new Date().toISOString(),
-              created_by: currentUser || 'Superadmin',
             };
+            if (isValidUUID(currentUser)) {
+              itemPayload.created_by = currentUser;
+            }
+            return itemPayload;
           })
         : [];
 
@@ -472,8 +521,10 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
         publish_programme: false,
         status: 'published',
         published_at: eventDate ? new Date(eventDate).toISOString() : new Date().toISOString(),
-        created_by: currentUser || 'Superadmin',
       };
+      if (isValidUUID(currentUser)) {
+        basePayload.created_by = currentUser;
+      }
 
       // Always insert base record; also insert per-programme records
       const allPayloads = programmeInserts.length > 0 ? [...programmeInserts] : [basePayload];
@@ -889,6 +940,7 @@ export default function HomeEventsManager({ currentUser, canDelete }: { currentU
                     onRemoveFromHome={handleRemoveFromHome}
                     onRestoreToHome={handleRestoreToHome}
                     onEdit={handleEditEvent}
+                    onDelete={handleDeleteEvent}
                     canDelete={canDelete}
                   />
                 ))}

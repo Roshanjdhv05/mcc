@@ -415,6 +415,7 @@ const ALL_DEPARTMENTS = [
   "Sports and Gymkhana", "Natyakarmi (Theatre Group)", "Marathi Vangmay Mandal",
   "Aaroh (Music Club)", "Nature Club", "Women Development Cell",
   "Entrepreneurship Development Cell", "Students' Research",
+  "Artelier",
   "Spectrum", "Inspira", "Hack-A-Thon", "Emporio", "Quantomania", "Manthan",
   "Hindi", "Mathematics", "Marathi", "Commerce", "French", "Viksit Bharat Buildathon", "Tarang"
 ];

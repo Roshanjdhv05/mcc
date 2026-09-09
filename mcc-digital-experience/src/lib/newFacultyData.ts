@@ -54,8 +54,8 @@ export const newFacultyData: Record<string, Record<string, FacultyMember[]>> = {
       { id: 'bcom-law-1', name: "Dr. Pramila D'Souza", image: "/Degree College Teachers/Pramila D'Souza.png", email: 'pramiladsouza@mulund.ac.in', designation: 'HEAD & ASSISTANT PROFESSOR', qualification: 'B.A., L.L.M., NET, Ph.D.', experience: '20 years', researchInterest: 'Human Rights', department: 'Law' }
     ],
     'Business Economics': [
-      { id: 'bcom-buseco-1', name: 'Dr. Shivaji Pawar', image: '/Degree College Teachers/Shivaji Pawar.png', email: 'shivaji.pawar@mccmulund.ac.in', designation: 'VICE-PRINCIPAL & HEAD', qualification: 'M.A., B.Ed., M.Phil., Ph.D., NET', department: 'Business Economics' },
-      { id: 'bcom-buseco-2', name: 'Dr. Arjun Lakhe', image: '/Degree College Teachers/Arjun Lakhe.png', email: 'arjun.lakhe@mccmulund.ac.in', designation: 'ASSOCIATE PROFESSOR', qualification: 'M.A., M.Phil., Ph.D.', experience: '12 yrs.', department: 'Business Economics' },
+      { id: 'bcom-buseco-1', name: 'Dr. Shivaji Pawar', image: '/Degree College Teachers/Shivaji Pawar.png', email: 'shivaji.pawar@mccmulund.ac.in', designation: 'VICE-PRINCIPAL & HEAD', qualification: 'M.A., B.Ed., M.Phil., Ph.D., NET', experience: "29 years", researchInterest: 'Development Economics', department: 'Business Economics' },
+      { id: 'bcom-buseco-2', name: 'Dr. Arjun Lakhe', image: '/Degree College Teachers/Arjun Lakhe.png', email: 'arjun.lakhe@mccmulund.ac.in', designation: 'ASSOCIATE PROFESSOR', qualification: 'M.A., M.Phil., Ph.D.', experience: '12 yrs.', department: 'Business Economics', researchInterest: 'Labour Economics' },
       { id: 'bcom-buseco-3', name: 'Ms. Gopika M. Pal', image: '/Degree College Teachers/Gopika Pal.png', email: 'gopika.pal@mccmulund.ac.in', designation: 'ASSISTANT PROFESSOR', qualification: 'M.A. (Economics), SET', experience: '8 years', corporateExp: '2 years', researchInterest: 'Uorganised Sector and Informal Economy', department: 'Business Economics' },
 
     ]

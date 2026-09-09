@@ -7,11 +7,11 @@ export const metadata = {
 };
 
 const GovPill = ({ title, icon: Icon }: { title: string, icon: any }) => (
-  <div className="flex items-center gap-3 bg-white border border-gray-200 shadow-sm px-4 md:px-5 py-3 rounded-xl w-full md:w-auto">
-    <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-      <Icon size={16} />
+  <div className="flex flex-col items-center gap-2 bg-white border border-gray-200 shadow-md px-4 md:px-6 py-4 md:py-5 rounded-2xl w-full md:w-[200px]">
+    <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+      <Icon size={20} />
     </div>
-    <span className="font-bold text-gray-700 text-[13px] md:text-sm whitespace-nowrap">{title}</span>
+    <span className="font-bold text-gray-800 text-sm md:text-base text-center">{title}</span>
   </div>
 );
 
@@ -62,8 +62,7 @@ export default function OrganogramPage() {
         <div className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-6 md:p-12">
           
           <div className="text-center mb-10 md:mb-16">
-            <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold tracking-wider mb-3">ORGANOGRAM</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#123B6D] font-[var(--font-heading)]">How We Operate</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#123B6D] font-[var(--font-heading)] tracking-wider uppercase">Organogram</h2>
           </div>
 
           <div className="flex flex-col items-center">
@@ -85,11 +84,11 @@ export default function OrganogramPage() {
             <div className="flex flex-col items-center mt-6 md:mt-10 mb-10 w-full">
                <div className="w-0.5 h-10 bg-gray-300 mb-6"></div>
                
-               <div className="bg-[#123B6D] text-white px-8 md:px-12 py-4 md:py-5 rounded-2xl shadow-lg border-2 border-[#D4A017] flex items-center gap-4 relative z-10">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                    <User className="text-[#D4A017]" size={20} />
+               <div className="bg-[#123B6D] text-white px-6 md:px-8 py-2 md:py-3 rounded-xl shadow border-2 border-[#D4A017] flex items-center gap-3 relative z-10">
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                    <User className="text-[#D4A017]" size={16} />
                   </div>
-                  <h3 className="font-bold text-lg md:text-xl tracking-wide">PRINCIPAL</h3>
+                  <h3 className="font-bold text-sm md:text-base tracking-wide">PRINCIPAL</h3>
                </div>
                
                <div className="w-0.5 h-10 bg-gray-300 mt-6 relative z-0"></div>
@@ -119,6 +118,7 @@ export default function OrganogramPage() {
                   <div className="space-y-5 pl-4 border-l-2 border-blue-200 relative ml-3">
                     <TimelineNode title="Academic Council" color="blue" />
                     <TimelineNode title="Head of Departments" color="blue" />
+                    <TimelineNode title="Teachers" color="blue" />
                     <TimelineNode title="Activity Groups" color="blue" type="dashed" />
                   </div>
                </div>

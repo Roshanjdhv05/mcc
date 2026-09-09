@@ -56,12 +56,19 @@ export default function OverviewDashboard() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      // ── All-time totals ──────────────────────────────────────────────────
-      const { data: all } = await supabase
-        .from('page_analytics')
-        .select('count');
+      // ── All-time totals (matches Navbar logic) ──────────────────────────────────
+      let total = 0;
+      const { data: rpcData, error: rpcError } = await supabase.rpc('get_total_visitors');
+      if (!rpcError && rpcData !== null && Number(rpcData) > 0) {
+        total = Number(rpcData);
+      } else {
+        const { data: all } = await supabase
+          .from('page_analytics')
+          .select('count')
+          .limit(100000);
+        total = (all ?? []).reduce((s: number, r: any) => s + (r.count || 0), 0);
+      }
 
-      const total = (all ?? []).reduce((s: number, r: any) => s + (r.count || 0), 0);
       setTotalVisits(total);
       setTotalViews(Math.round(total * 2.8)); // rough page-views estimate
 

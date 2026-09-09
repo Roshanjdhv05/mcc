@@ -9,19 +9,21 @@ const EXCLUDED_PATHS = ['/superadmin', '/api'];
 
 export function usePageTracker() {
   const pathname = usePathname();
-  // useRef tracks the last fired path so React StrictMode double-mount doesn't double-count
-  const trackedRef = useRef<Record<string, boolean>>({});
-
   useEffect(() => {
     // Skip superadmin and API routes
     if (!pathname || EXCLUDED_PATHS.some((p) => pathname.startsWith(p))) return;
+    if (typeof window === 'undefined') return;
 
-    // Prevent double-counting due to React StrictMode / double-invoke in dev
-    if (trackedRef.current[pathname]) return;
-    trackedRef.current[pathname] = true;
+    // Use sessionStorage to prevent double-counting from React StrictMode
+    // and to avoid counting multiple times if the user refreshes the page
+    const sessionKey = `visited_${pathname}`;
+    if (sessionStorage.getItem(sessionKey)) return;
 
     // Debounce: fire database update after 800ms to avoid counting mid-navigation
     const timer = setTimeout(async () => {
+      // Mark as visited right before recording to allow StrictMode to cancel cleanly
+      sessionStorage.setItem(sessionKey, 'true');
+
       try {
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 

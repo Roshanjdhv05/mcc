@@ -3,7 +3,9 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Users, FileStack, Link as LinkIcon, ChevronRight, Loader2, Info, ExternalLink, Download } from "lucide-react";
+import {
+  BookOpen, Users, UserCheck, FileText, Mail, ChevronRight, Loader2, Info, MapPin, Phone
+} from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
@@ -11,16 +13,20 @@ interface SectionData { id: string; title: string; icon: React.ElementType; }
 
 const sections: SectionData[] = [
   { id: "journal-about", title: "About the Journal", icon: BookOpen },
+  { id: "journal-advisory", title: "Advisory Board", icon: Users },
   { id: "journal-board", title: "Board of Editors", icon: Users },
-  { id: "journal-issues", title: "Volume and Issues", icon: FileStack },
-  { id: "resources", title: "Resources", icon: LinkIcon },
+  { id: "journal-review", title: "Review Committee", icon: UserCheck },
+  { id: "journal-guidelines", title: "Guidelines for Paper Submission", icon: FileText },
+  { id: "journal-contact", title: "Contact", icon: Mail },
 ];
 
 const SLUG_MAP: Record<string, string> = {
   "journal-about": "about-journal",
+  "journal-advisory": "advisory-board",
   "journal-board": "board-of-editors",
-  "journal-issues": "volume-and-issues",
-  "resources": "resources",
+  "journal-review": "review-committee",
+  "journal-guidelines": "guidelines-submission",
+  "journal-contact": "journal-contact",
 };
 
 type ContentMap = Record<string, any>;
@@ -60,7 +66,7 @@ function PublicationsContent() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 text-xs font-semibold text-blue-200 mb-4 uppercase tracking-wider">Research</div>
-              <h1 className="text-3xl md:text-5xl font-black text-white">Publications & Resources</h1>
+              <h1 className="text-3xl md:text-5xl font-black text-white">Research Journal</h1>
             </div>
             <Link href="/research" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-sm font-bold transition-colors backdrop-blur-md shrink-0">Back to Research</Link>
           </div>
@@ -95,7 +101,7 @@ function PublicationsContent() {
         {/* Desktop Sidebar */}
         <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 shrink-0">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
-            <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm uppercase tracking-wide">Publications</div>
+            <div className="p-4 bg-gray-50 border-b border-gray-100 font-bold text-gray-700 text-sm uppercase tracking-wide">Research Journal</div>
             <div className="flex flex-col p-2">
               {sections.map((section) => { const SectionIcon = section.icon; return (
                 <button key={section.id} onClick={() => handleSelect(section.id)} className={`text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center gap-3 font-semibold text-sm ${activeTab === section.id ? "bg-[#123B6D] text-white shadow-md" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"}`}>
@@ -117,7 +123,8 @@ function PublicationsContent() {
               </div>
 
               <div className="p-6 md:p-10 space-y-10">
-                {/* Journal About */}
+
+                {/* 1. About the Journal */}
                 {activeTab === "journal-about" && (
                   <section>
                     <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><Info size={20} /> About the Journal</div>
@@ -131,7 +138,7 @@ function PublicationsContent() {
                           { content: "Frequency: Bi-annual" },
                           { content: "Format: Print & Online" },
                           { content: "Peer Review: Double-blind" },
-                          { content: "ISSN: XXXX-XXXX" },
+                          { content: "ISSN: 2349-8250" },
                         ]).map((item: any, i: number) => {
                           const parts = item.content.split(':');
                           return (
@@ -150,85 +157,136 @@ function PublicationsContent() {
                   </section>
                 )}
 
-                {/* Journal Board */}
+                {/* 2. Advisory Board */}
+                {activeTab === "journal-advisory" && (
+                  <section>
+                    <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><Users size={20} /> Advisory Board</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {(c('journal-advisory').members || [
+                        { name: "Prof D T Shirke", role: "Vice Chancellor, Warna University (Former VC, Shivaji University, Kolhapur)" },
+                        { name: "Dr Apoorva Palkar", role: "VC, Ratan Tata Maharashtra State Skill University" },
+                        { name: "Prof Varadraj Bapat", role: "Director, Shailendra Mehta Institute of Management, IIT Bombay" },
+                        { name: "Shri. Satish Marathe", role: "Director, RBI" },
+                      ]).map((member: any, i: number) => (
+                        <div key={i} className="bg-[#F8FAFC] border border-gray-200 hover:border-blue-300 transition-all rounded-xl p-5 shadow-sm">
+                          <p className="font-bold text-[#1E293B] text-base">{member.name}</p>
+                          <p className="text-sm text-[#123B6D] font-medium mt-1">{member.role}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* 3. Board of Editors */}
                 {activeTab === "journal-board" && (
                   <section>
                     <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><Users size={20} /> Board of Editors</div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {(c('journal-board').committee || [
-                        { name: "Dr. Rajashri Deshpande", role: "Chief Editor" },
-                        { name: "Dr. Arjun Lakhe", role: "Co-Editor" },
-                        { name: "Dr. Shayeree Ghosh", role: "Associate Editor" },
-                        { name: "Dr. Jyotika Chheda", role: "Associate Editor" },
-                      ]).map((member: any, i: number) => (
-                        <div key={i} className="bg-[#F8FAFC] border border-gray-100 rounded-xl px-6 py-5">
-                          <p className="font-bold text-[#1E293B]">{member.name}</p>
-                          <p className="text-sm text-[#123B6D] font-semibold mt-1">{member.role}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {/* Journal Issues */}
-                {activeTab === "journal-issues" && (
-                  <section>
-                    <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-6"><FileStack size={20} /> Volume and Issues</div>
-                    <div className="space-y-4">
-                      {(c('journal-issues').volumes || [
-                        { title: "Volume 5, Issue 2", date: "December 2024" },
-                        { title: "Volume 5, Issue 1", date: "June 2024" },
-                        { title: "Volume 4, Issue 2", date: "December 2023" },
-                        { title: "Volume 4, Issue 1", date: "June 2023" },
-                      ]).map((issue: any, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between bg-white border border-gray-200 hover:border-[#123B6D] transition-colors rounded-xl p-5 cursor-pointer group">
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-lg bg-[#EBF3FF] text-[#123B6D] flex items-center justify-center group-hover:bg-[#123B6D] group-hover:text-white transition-colors"><BookOpen size={20} /></div>
-                            <div>
-                              <p className="font-bold text-gray-900 text-sm group-hover:text-[#123B6D]">{issue.title}</p>
-                              <p className="text-xs text-gray-500">{issue.date}</p>
-                            </div>
-                          </div>
-                          {issue.url ? (
-                            <a href={issue.url} target="_blank" rel="noreferrer" className="flex items-center gap-3">
-                              <span className="text-xs font-semibold text-[#123B6D] opacity-0 group-hover:opacity-100 transition-opacity">Read</span>
-                              <ChevronRight size={18} className="text-gray-300 group-hover:text-[#123B6D]" />
-                            </a>
-                          ) : (
-                            <div className="flex items-center gap-3">
-                              <span className="text-xs font-semibold text-[#123B6D] opacity-0 group-hover:opacity-100 transition-opacity">Read</span>
-                              <ChevronRight size={18} className="text-gray-300 group-hover:text-[#123B6D]" />
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {/* Resources */}
-                {activeTab === "resources" && (
-                  <section>
-                    <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><LinkIcon size={20} /> External Links & Templates</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {(c('resources').important_documents || [
-                        { title: "Paper Submission Template", url: "" },
-                        { title: "UGC CARE List", url: "https://ugccare.unipune.ac.in/" },
-                      ]).map((doc: any, i: number) => (
-                        <a key={i} href={doc.url || "#"} className="flex flex-col gap-2 bg-gray-50 hover:bg-[#F8FAFC] border border-gray-200 hover:border-[#123B6D] transition-colors rounded-xl p-5 group">
-                          <div className="flex items-center justify-between">
-                            <div className="w-8 h-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center">
-                              {i === 0 ? <Download size={16} /> : <LinkIcon size={16} />}
-                            </div>
-                            <ExternalLink size={16} className="text-gray-400 group-hover:text-[#123B6D]" />
-                          </div>
-                          <h4 className="font-bold text-[#1E293B] mt-2 group-hover:text-[#123B6D] transition-colors">{doc.title}</h4>
-                          <p className="text-xs text-gray-500">{doc.url || "Document link pending"}</p>
-                        </a>
+                      {(c('journal-board').committee || [
+                        { name: "Prof Dr Minal Mapuskar", role: "Editor in Chief – Principal, Mulund College of Commerce" },
+                        { name: "Dr Rajashri Deshpande", role: "Managing Editor" },
+                        { name: "Prof. Dr Kedar Marulkar", role: "Head of Dept – Commerce, Shivaji University Kolhapur" },
+                        { name: "CMA Dr Kinnerry Thakkar", role: "Head of Dept – Commerce, University of Mumbai" },
+                        { name: "Dr. Swapnali Mahadik", role: "Assistant Professor, MCA, DES's NMITD" },
+                        { name: "Dr Arjun Lakhe", role: "Member" },
+                        { name: "Dr Kanchana Sattur", role: "Member" },
+                        { name: "Dr Jyotika Chheda", role: "Member" },
+                        { name: "Dr Shayeree Ghosh", role: "Member" },
+                      ]).map((member: any, i: number) => (
+                        <div key={i} className="bg-[#F8FAFC] border border-gray-200 hover:border-blue-300 transition-all rounded-xl p-5 shadow-sm">
+                          <p className="font-bold text-[#1E293B] text-base">{member.name}</p>
+                          <p className="text-sm text-[#123B6D] font-medium mt-1">{member.role}</p>
+                        </div>
                       ))}
                     </div>
                   </section>
                 )}
+
+                {/* 4. Review Committee */}
+                {activeTab === "journal-review" && (
+                  <section>
+                    <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-4"><UserCheck size={20} /> Review Committee</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {(c('journal-review').members || [
+                        { name: "CMA Dr Kinnerry Thakkar", role: "Head of Dept – Commerce, University of Mumbai" },
+                        { name: "Prof. Dr Kedar Marulkar", role: "Head of Dept – Commerce, Shivaji University Kolhapur" },
+                        { name: "Dr. Swapnali Mahadik", role: "Assistant Professor, MCA, DES's NMITD" },
+                      ]).map((member: any, i: number) => (
+                        <div key={i} className="bg-[#F8FAFC] border border-gray-200 hover:border-blue-300 transition-all rounded-xl p-5 shadow-sm">
+                          <p className="font-bold text-[#1E293B] text-base">{member.name}</p>
+                          <p className="text-sm text-[#123B6D] font-medium mt-1">{member.role}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* 5. Guidelines for Paper Submission */}
+                {activeTab === "journal-guidelines" && (
+                  <section>
+                    <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-6"><FileText size={20} /> Guidelines for Paper Submission</div>
+                    <div className="space-y-4">
+                      {(c('journal-guidelines').guidelines || [
+                        { title: "Originality & Plagiarism", content: "Submitted papers must be original, unpublished work not currently under consideration by any other journal. Plagiarism should be strictly under 10%." },
+                        { title: "Manuscript Formatting", content: "Manuscripts should be typed in MS Word, Times New Roman font (12 pt size, 1.5 line spacing) with standard 1-inch margins on all sides." },
+                        { title: "Abstract & Keywords", content: "An abstract of 150–250 words summarizing the research objective, methodology, and key findings should be provided along with 4–6 relevant keywords." },
+                        { title: "Citation & Reference Style", content: "All citations and references must adhere strictly to the APA 7th Edition style format." },
+                        { title: "Submission Process", content: "Authors should email their full paper soft copy (in .doc / .docx format) to researchjournal@mccmulund.ac.in along with author details." },
+                      ]).map((item: any, idx: number) => (
+                        <div key={idx} className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+                          <h4 className="font-bold text-[#123B6D] text-base mb-2 flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs flex items-center justify-center font-bold shrink-0">{idx + 1}</span>
+                            {item.title}
+                          </h4>
+                          <p className="text-gray-600 text-sm leading-relaxed pl-8">{item.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* 6. Contact */}
+                {activeTab === "journal-contact" && (
+                  <section>
+                    <div className="flex items-center gap-2 text-[#123B6D] font-bold text-lg mb-6"><Mail size={20} /> Editorial Contact Information</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-4">
+                        <div className="flex items-start gap-3">
+                          <MapPin className="text-[#123B6D] shrink-0 mt-1" size={20} />
+                          <div>
+                            <h4 className="font-bold text-[#1E293B]">Editorial Office</h4>
+                            <p className="text-gray-600 text-sm mt-1 leading-relaxed">
+                              {c('journal-contact').address || "Research & Development Cell, Mulund College of Commerce (Autonomous), Sarojini Naidu Road, Mulund (West), Mumbai - 400080, Maharashtra, India"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-4">
+                        <div className="flex items-start gap-3">
+                          <Mail className="text-[#123B6D] shrink-0 mt-1" size={20} />
+                          <div>
+                            <h4 className="font-bold text-[#1E293B]">Email Addresses</h4>
+                            <p className="text-sm font-semibold text-blue-700 mt-1">{c('journal-contact').email || "researchjournal@mccmulund.ac.in"}</p>
+                            {c('journal-contact').secondary_email && (
+                              <p className="text-xs text-gray-500 mt-0.5">{c('journal-contact').secondary_email}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3 pt-2 border-t border-gray-200">
+                          <Phone className="text-[#123B6D] shrink-0 mt-1" size={20} />
+                          <div>
+                            <h4 className="font-bold text-[#1E293B]">Phone & Office Hours</h4>
+                            <p className="text-gray-600 text-sm mt-1">{c('journal-contact').phone || "+91 22 2560 0017 / +91 22 2565 0257"}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{c('journal-contact').timings || "Monday to Saturday: 10:00 AM – 5:00 PM"}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                )}
+
               </div>
             </motion.div>
           </AnimatePresence>

@@ -333,7 +333,7 @@ export default function NoticeForm({ onSuccess, onCancel, initialData, currentUs
         await supabase.from('examination_documents').insert({
           title: title.trim(),
           category: examCategory,
-          courses: EXAM_COURSES,
+          courses: EXAM_COURSES.map(c => c.id),
           file_url: singleExamFileUrl,
           file_type: examFile?.type || 'application/pdf',
           schedule_time: payload.schedule_time,

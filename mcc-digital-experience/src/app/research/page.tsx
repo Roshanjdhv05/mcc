@@ -45,10 +45,12 @@ const data: Record<string, DataItem[]> = {
   publications: [
     { title: 'Research Journal', icon: BookOpen, links: [
       { label: 'About the Journal', href: '/research/publications?tab=journal-about' },
+      { label: 'Advisory Board', href: '/research/publications?tab=journal-advisory' },
       { label: 'Board of Editors', href: '/research/publications?tab=journal-board' },
-      { label: 'Volume and Issues', href: '/research/publications?tab=journal-issues' },
+      { label: 'Review Committee', href: '/research/publications?tab=journal-review' },
+      { label: 'Guidelines for Paper Submission', href: '/research/publications?tab=journal-guidelines' },
+      { label: 'Contact', href: '/research/publications?tab=journal-contact' },
     ] },
-    { title: 'Resources', icon: LinkIcon, links: [{ label: 'View Details', href: '/research/publications?tab=resources' }] },
   ],
 };
 

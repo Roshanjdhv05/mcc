@@ -106,11 +106,17 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
 
     const file: ExamFile = { name: doc.title, url: doc.file_url, isExpired };
     for (let courseId of doc.courses) {
+      if (typeof courseId === 'string' && courseId.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(courseId);
+          if (parsed && parsed.id) courseId = parsed.id;
+        } catch (e) {}
+      }
       // Normalize newer NoticeForm course IDs to match the component's legacy IDs
       if (courseId === 'B.COM') courseId = 'BCOM';
       if (courseId === 'BSC-IT') courseId = 'BSCIT';
       if (courseId === 'BSC-DS') courseId = 'BSCDS';
-      if (courseId === 'BSC-CS') courseId = 'BSCCS';
+      if (courseId === 'BSC-CS' || courseId === 'CS' || courseId === 'B.Sc CS' || courseId === 'B.SC (CS)' || courseId === 'BSc CS' || courseId === 'B.Sc (CS)') courseId = 'BSCCS';
       if (courseId === 'BMS') courseId = 'BCOM-MS';
       if (courseId === 'BBA') courseId = 'BCOM-BA';
 
@@ -184,7 +190,8 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
   const cats = courseIndex[selectedCourse] || {};
   const catNames = TAB_CATEGORIES;
 
-  const activeCat = selectedCat || catNames[0];
+  const defaultCat = catNames.find(c => (cats[c] || []).length > 0) || catNames[0];
+  const activeCat = selectedCat || defaultCat;
   const activeFiles = cats[activeCat] || [];
 
   return (

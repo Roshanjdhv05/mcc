@@ -117,7 +117,20 @@ export default function DynamicTimetables({ data }: { data?: ExamProgramme[] }) 
     }
 
     const file: ExamFile = { name: doc.title, url: doc.file_url, isExpired };
-    for (const courseId of doc.courses) {
+    for (let courseId of doc.courses) {
+      if (typeof courseId === 'string' && courseId.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(courseId);
+          if (parsed && parsed.id) courseId = parsed.id;
+        } catch (e) {}
+      }
+      if (courseId === 'B.COM') courseId = 'BCOM';
+      if (courseId === 'BSC-IT') courseId = 'BSCIT';
+      if (courseId === 'BSC-DS') courseId = 'BSCDS';
+      if (courseId === 'BSC-CS' || courseId === 'CS' || courseId === 'B.Sc CS' || courseId === 'B.SC (CS)' || courseId === 'BSc CS' || courseId === 'B.Sc (CS)') courseId = 'BSCCS';
+      if (courseId === 'BMS') courseId = 'BCOM-MS';
+      if (courseId === 'BBA') courseId = 'BCOM-BA';
+
       if (!courseIndex[courseId]) courseIndex[courseId] = {};
       if (!courseIndex[courseId][doc.category]) courseIndex[courseId][doc.category] = [];
       if (!courseIndex[courseId][doc.category].find(f => f.url === file.url)) {

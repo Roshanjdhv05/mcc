@@ -478,14 +478,12 @@ const navLinks = [
           {
             subTitle: 'Research Journal',
             links: [
-              { label: 'About the Journal', href: '/research' },
-              { label: 'Board of Editors', href: '/research' },
-              { label: 'Volume and Issues', href: '/research' },
-            ]
-          },
-          {
-            links: [
-              { label: 'Resources', href: '/research' },
+              { label: 'About the Journal', href: '/research/publications?tab=journal-about' },
+              { label: 'Advisory Board', href: '/research/publications?tab=journal-advisory' },
+              { label: 'Board of Editors', href: '/research/publications?tab=journal-board' },
+              { label: 'Review Committee', href: '/research/publications?tab=journal-review' },
+              { label: 'Guidelines for Paper Submission', href: '/research/publications?tab=journal-guidelines' },
+              { label: 'Contact', href: '/research/publications?tab=journal-contact' },
             ]
           }
         ]
@@ -524,12 +522,14 @@ const navLinks = [
       },
       {
         label: 'Research Journal', href: '#', sub: [
-          { label: 'About the Journal', href: '/research' },
-          { label: 'Board of Editors', href: '/research' },
-          { label: 'Volume and Issues', href: '/research' },
+          { label: 'About the Journal', href: '/research/publications?tab=journal-about' },
+          { label: 'Advisory Board', href: '/research/publications?tab=journal-advisory' },
+          { label: 'Board of Editors', href: '/research/publications?tab=journal-board' },
+          { label: 'Review Committee', href: '/research/publications?tab=journal-review' },
+          { label: 'Guidelines for Paper Submission', href: '/research/publications?tab=journal-guidelines' },
+          { label: 'Contact', href: '/research/publications?tab=journal-contact' },
         ]
       },
-      { label: 'Resources', href: '/research' },
     ]
   },
   {

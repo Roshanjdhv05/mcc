@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight, FileText, Image as ImageIcon, Paperclip } from 'lucide-react';
+import { Bell, Search, Menu, X, ChevronDown, ChevronUp, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight, FileText, Image as ImageIcon, Paperclip } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import LanguageTranslator from '@/components/layout/LanguageTranslator';
 import AccessibilityWidget from '@/components/layout/AccessibilityWidget';
@@ -709,8 +709,9 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isPeekMode, setIsPeekMode] = useState(false);
+  const [isManuallyExpanded, setIsManuallyExpanded] = useState(false);
+  const lastScrollYRef = useRef(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDrop, setOpenDrop] = useState<string | null>(null);
   const [mobileOpenDrop, setMobileOpenDrop] = useState<string | null>(null);
@@ -893,21 +894,30 @@ export default function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
+      const isDown = currentScrollY > lastScrollYRef.current;
       setScrolled(currentScrollY > 20);
 
-      // Hide when scrolling down (past 100px), show when scrolling up
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        setVisible(true);
+      if (currentScrollY <= 40) {
+        // Back at top — return to full default header
+        setIsPeekMode(false);
+        setIsManuallyExpanded(false);
+      } else {
+        if (!isPeekMode && currentScrollY > 80) {
+          // Scrolling DOWN past threshold — enter peek mode
+          setIsPeekMode(true);
+          setIsManuallyExpanded(false);
+        } else if (isPeekMode && isManuallyExpanded && isDown && (currentScrollY - lastScrollYRef.current > 6)) {
+          // User was manually expanded and scrolled DOWN again — collapse back!
+          setIsManuallyExpanded(false);
+        }
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [lastScrollY]);
+  }, [isPeekMode, isManuallyExpanded]);
 
   const isLinkActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -928,6 +938,8 @@ export default function Navbar() {
 
   if (pathname?.startsWith('/superadmin')) return null;
 
+  const isHeaderExpanded = !isPeekMode || isManuallyExpanded;
+
   return (
     <>
       {/* Suppress Google Translate's injected top banner */}
@@ -937,15 +949,77 @@ export default function Navbar() {
         .goog-te-combo { display: none !important; }
       `}</style>
 
-      <motion.header
-        initial={{ y: -80 }}
-        animate={{ y: visible ? 0 : -250 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-          ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-white/30'
-          : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]'
+      <header
+        className={`fixed top-0 w-full z-[100] transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'
           }`}
       >
+        {/* ── Collapsible "Peek" Header Strip: visible when scrolled down ── */}
+        <div
+          className={`w-full bg-gradient-to-r from-[#0B2545] via-[#123B6D] to-[#0B2545] text-white border-b-2 border-[#D4A017]/70 px-3 md:px-6 lg:px-12 flex items-center justify-between transition-all duration-300 overflow-hidden ${
+            isPeekMode
+              ? 'h-[52px] py-1.5 opacity-100 pointer-events-auto'
+              : 'h-0 py-0 opacity-0 pointer-events-none border-b-0'
+          } ${isManuallyExpanded ? 'rounded-b-none shadow-md' : 'rounded-b-2xl shadow-xl shadow-slate-900/15'}`}
+          aria-hidden={!isPeekMode}
+        >
+          {/* Left: Mini College Brand */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+              <img src="/mcclogo.png" alt="MCC Logo" className="w-7 h-7 md:w-8 md:h-8 object-contain drop-shadow" />
+              <span className="font-extrabold text-xs md:text-sm tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1.5">
+                <span className="font-bold">MULUND COLLEGE OF COMMERCE</span>
+                <span className="text-amber-300/90 text-xs font-medium">(AUTONOMOUS)</span>
+              </span>
+            </Link>
+          </div>
+
+          {/* Center/Right: Interactive Expand / Collapse Toggle Pill Button */}
+          <div className="flex items-center gap-2 md:gap-4">
+            <button
+              onClick={() => setIsManuallyExpanded(!isManuallyExpanded)}
+              className={`font-extrabold text-xs px-3.5 md:px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg border transition-all transform hover:scale-105 active:scale-95 cursor-pointer ${
+                isManuallyExpanded
+                  ? 'bg-amber-400 text-[#0B2545] border-amber-300 hover:bg-amber-300'
+                  : 'bg-[#D4A017] text-[#0B2545] border-amber-300 hover:bg-amber-400'
+              }`}
+              title={isManuallyExpanded ? "Collapse full header" : "Expand full header & navigation"}
+            >
+              <span className="text-[11px] md:text-xs">
+                {isManuallyExpanded ? "Collapse Header" : "Header & Links"}
+              </span>
+              {isManuallyExpanded ? (
+                <ChevronUp size={16} className="stroke-[3] text-[#0B2545] transition-transform duration-300" />
+              ) : (
+                <ChevronDown size={16} className="stroke-[3] text-[#0B2545] transition-transform duration-300 animate-bounce" />
+              )}
+            </button>
+
+            {/* Right: Quick Action Items */}
+            <div className="flex items-center gap-2 md:gap-2.5">
+              <Link
+                href="/admission"
+                className="hidden sm:inline-flex items-center justify-center h-7 px-3.5 rounded-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-[11px] shadow-sm hover:scale-105 transition-all"
+              >
+                Admission
+              </Link>
+
+              <Link
+                href="/search"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all hover:scale-105"
+                title="Search"
+              >
+                <Search size={14} />
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Full Header: collapses via max-height when in peek mode ── */}
+        <div
+          className={`w-full transition-all duration-500 ease-in-out ${
+            isHeaderExpanded ? 'max-h-[1200px] opacity-100 overflow-visible' : 'max-h-0 opacity-0 overflow-hidden'
+          }`}
+        >
         {/* ── Top Utility Bar: Quick Links + Language Translator ── */}
         <div className="w-full bg-white border-b border-slate-200 px-4 md:px-8 lg:px-12 py-1.5 flex items-center justify-between gap-4">
           {/* Quick Links — desktop only */}
@@ -1606,7 +1680,8 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </motion.header>
+        </div>
+      </header>
 
       {/* Mobile Menu */}
       <AnimatePresence>

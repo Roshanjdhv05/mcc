@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Search, Menu, X, ChevronDown, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight, FileText, Image as ImageIcon, Paperclip } from 'lucide-react';
+import { Bell, Search, Menu, X, ChevronDown, ChevronUp, Globe, Accessibility, Home, Award, Users, GraduationCap, BookOpen, Palette, Medal, Library as LibraryIcon, LayoutGrid, Star, ShieldCheck, Landmark, Building2, ArrowRight, FileText, Image as ImageIcon, Paperclip } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 const formatCourseLabel = (label: string) => {
@@ -711,8 +711,19 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
+  const [isPeekMode, setIsPeekMode] = useState(false);
+  const [isManuallyExpanded, setIsManuallyExpanded] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  
+  // Top Layer 1 Quick Links Dropdowns & Utility states
+  const [facultyDropOpen, setFacultyDropOpen] = useState(false);
+  const [studentDropOpen, setStudentDropOpen] = useState(false);
+  const [translateDropOpen, setTranslateDropOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState('English');
+  const [accessibilityOpen, setAccessibilityOpen] = useState(false);
+  const [textSize, setTextSize] = useState<'normal' | 'large' | 'xlarge'>('normal');
+  const [highContrast, setHighContrast] = useState(false);
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDrop, setOpenDrop] = useState<string | null>(null);
   const [mobileOpenDrop, setMobileOpenDrop] = useState<string | null>(null);
@@ -758,14 +769,12 @@ export default function Navbar() {
       const lastReadId = localStorage.getItem('lastReadNoticeId');
       
       setTopNoticeId((prev) => {
-        // If it's a new notice that just arrived while page is open
         if (prev !== null && prev !== latestId) {
           setHasUnread(true);
           setIsShaking(true);
           setNoticesOpen(true);
           setTimeout(() => setIsShaking(false), 5000);
         } else if (lastReadId !== latestId) {
-          // If the last read notice is different from the current latest notice
           setHasUnread(true);
         }
         return latestId;
@@ -796,10 +805,8 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    // 1. Fetch initial notices immediately on page load
     fetchLiveNotices();
 
-    // 2. Subscribe to real-time changes
     const channel = supabase
       .channel('public:notices:navbar')
       .on(
@@ -807,7 +814,7 @@ export default function Navbar() {
         { event: 'INSERT', schema: 'public', table: 'notices' },
         (payload) => {
           console.log('Realtime event received! New notice:', payload);
-          fetchLiveNotices(); // This handles the pop-open logic now
+          fetchLiveNotices();
         }
       )
       .subscribe((status) => {
@@ -817,26 +824,37 @@ export default function Navbar() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []); // Only runs once on mount
+  }, []);
+
+  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
+      const isDown = currentScrollY > lastScrollYRef.current;
       setScrolled(currentScrollY > 20);
 
-      // Hide when scrolling down (past 100px), show when scrolling up
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        setVisible(true);
+      if (currentScrollY <= 40) {
+        // Back at top — return to full default header
+        setIsPeekMode(false);
+        setIsManuallyExpanded(false);
+      } else {
+        if (!isPeekMode && currentScrollY > 80) {
+          // Scrolling DOWN past threshold — enter peek mode
+          setIsPeekMode(true);
+          setIsManuallyExpanded(false);
+        } else if (isPeekMode && isManuallyExpanded && isDown && (currentScrollY - lastScrollYRef.current > 6)) {
+          // User was manually expanded and scrolled DOWN again — collapse back!
+          setIsManuallyExpanded(false);
+        }
       }
-      
-      setLastScrollY(currentScrollY);
+
+      lastScrollYRef.current = currentScrollY;
     };
     
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [lastScrollY]);
+  }, [isPeekMode, isManuallyExpanded]);
 
   const isLinkActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -857,284 +875,489 @@ export default function Navbar() {
 
   if (pathname?.startsWith('/superadmin')) return null;
 
+  const isHeaderExpanded = !isPeekMode || isManuallyExpanded;
+
   return (
     <>
-      <motion.header
-        initial={{ y: -80 }}
-        animate={{ y: visible ? 0 : -250 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
-          scrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-white/30'
-            : 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]'
+      <header
+        className={`fixed top-0 w-full z-[100] transition-shadow duration-300 ${
+          scrolled ? 'shadow-md' : 'shadow-sm'
         }`}
       >
-        {/* ── Desktop Header Wrapper (Row 1 & 2) ── */}
-        <div className="hidden md:flex flex-col w-full relative bg-gradient-to-r from-[#F0F5FF] to-white pb-0">
-          
-          {/* Background Elements Wrapper (isolated overflow) */}
-          <div className="absolute inset-0 overflow-hidden z-0">
+        {/* ── Collapsible "Peek" Header Strip: visible when scrolled down ── */}
+        <div
+          className={`w-full bg-gradient-to-r from-[#0B2545] via-[#123B6D] to-[#0B2545] text-white border-b-2 border-[#D4A017]/70 px-3 md:px-6 lg:px-12 flex items-center justify-between transition-all duration-300 overflow-hidden ${
+            isPeekMode
+              ? 'h-[52px] py-1.5 opacity-100 pointer-events-auto'
+              : 'h-0 py-0 opacity-0 pointer-events-none border-b-0'
+          } ${isManuallyExpanded ? 'rounded-b-none shadow-md' : 'rounded-b-2xl shadow-xl shadow-slate-900/15'}`}
+          aria-hidden={!isPeekMode}
+        >
+          {/* Left: Mini College Brand */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+              <img src="/mcclogo.png" alt="MCC Logo" className="w-7 h-7 md:w-8 md:h-8 object-contain drop-shadow" />
+              <span className="font-extrabold text-xs md:text-sm tracking-wide text-white whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-1.5">
+                <span className="font-bold">MULUND COLLEGE OF COMMERCE</span>
+                <span className="text-amber-300/90 text-xs font-medium">(AUTONOMOUS)</span>
+              </span>
+            </Link>
+          </div>
 
+          {/* Center/Right: Interactive Expand / Collapse Toggle Pill Button */}
+          <div className="flex items-center gap-2 md:gap-4">
+            <button
+              onClick={() => setIsManuallyExpanded(!isManuallyExpanded)}
+              className={`font-extrabold text-xs px-3.5 md:px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg border transition-all transform hover:scale-105 active:scale-95 cursor-pointer ${
+                isManuallyExpanded
+                  ? 'bg-amber-400 text-[#0B2545] border-amber-300 hover:bg-amber-300'
+                  : 'bg-[#D4A017] text-[#0B2545] border-amber-300 hover:bg-amber-400'
+              }`}
+              title={isManuallyExpanded ? "Collapse full header" : "Expand full header & navigation"}
+            >
+              <span className="text-[11px] md:text-xs">
+                {isManuallyExpanded ? "Collapse Header" : "Header & Links"}
+              </span>
+              {isManuallyExpanded ? (
+                <ChevronUp size={16} className="stroke-[3] text-[#0B2545] transition-transform duration-300" />
+              ) : (
+                <ChevronDown size={16} className="stroke-[3] text-[#0B2545] transition-transform duration-300 animate-bounce" />
+              )}
+            </button>
 
+            {/* Right: Quick Action Items */}
+            <div className="flex items-center gap-2 md:gap-2.5">
+              <Link
+                href="/admission"
+                className="hidden sm:inline-flex items-center justify-center h-7 px-3.5 rounded-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-[11px] shadow-sm hover:scale-105 transition-all"
+              >
+                Admission
+              </Link>
 
+              <Link
+                href="/search"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all hover:scale-105"
+                title="Search"
+              >
+                <Search size={14} />
+              </Link>
+            </div>
+          </div>
         </div>
 
-          {/* Row 1 Content Area */}
-          <div className="w-full relative h-auto min-h-[80px] md:min-h-[90px] lg:min-h-[110px] pt-1 pb-0 bg-transparent">
-            <div className="w-full max-w-[1600px] mx-auto h-full flex items-center justify-between px-3 md:px-4 lg:px-12 relative z-[150]">
-            
-            {/* Logo + College Name */}
-            <div className="flex items-center gap-2 md:gap-3 lg:gap-5 shrink min-w-0 bg-transparent pr-2 md:pr-4 lg:pr-6">
-              <Link href="/" className="shrink-0 transition-transform hover:scale-[1.02] flex flex-col items-center justify-center gap-0.5">
-                <img src="/mcclogo.png" alt="MCC Logo" className="w-14 h-14 md:w-16 md:h-16 lg:w-[120px] lg:h-[120px] object-contain drop-shadow-sm" />
-                <span className="text-[#123B6D] font-bold text-[9px] md:text-[10px] lg:text-[14px] leading-tight whitespace-nowrap">
-                  Since 1970
-                </span>
-              </Link>
-              <div className="flex flex-col items-start justify-center text-left">
-                <Link href="/" className="group block mb-1 md:mb-2 lg:mb-3 transition-transform hover:scale-[1.01]">
-                  <span className="block text-[#123B6D] font-semibold text-[9px] md:text-[10px] lg:text-[15px] leading-tight font-[var(--font-heading)] whitespace-nowrap mb-0.5">
-                    Parle Tilak Vidyalaya Association's
-                  </span>
-                  <span className="block text-[#123B6D] font-bold text-[13px] md:text-[15px] lg:text-[26px] leading-tight font-[var(--font-heading)] whitespace-nowrap tracking-wide mb-0.5 group-hover:text-blue-900 transition-colors flex items-baseline gap-2">
-                    MULUND COLLEGE OF COMMERCE <span className="text-[#D4A017]">(AUTONOMOUS)</span>
-                  </span>
-                  <span className="block text-[#64748B] font-medium text-[9px] md:text-[10px] lg:text-[14px] leading-tight whitespace-nowrap">
-                    || आ नो भद्राः क्रतवो यन्तु विश्वतः ||
-                  </span>
-                </Link>
+        {/* ── Full 3-Layer Header: collapses via max-height when in peek mode ── */}
+        <div
+          className={`w-full transition-all duration-500 ease-in-out ${
+            isHeaderExpanded ? 'max-h-[1200px] opacity-100 overflow-visible' : 'max-h-0 opacity-0 overflow-hidden'
+          }`}
+        >
+          <div className="w-full flex flex-col bg-white/95 backdrop-blur-xl">
+              {/* ── Layer 1: Top Quick Links Bar ── */}
+              <div className="hidden md:flex w-full bg-[#0B2545] text-white/90 border-b border-[#D4A017]/20 text-[11px] xl:text-[12px] py-1 px-4 lg:px-12 items-center justify-between relative z-[160]">
+                <div className="flex items-center gap-2 lg:gap-3 flex-wrap">
+                  <span className="font-bold text-[#D4A017] tracking-wider uppercase text-[10px] xl:text-[11px]">Quick Links:</span>
+                  <Link href="/notices" className="hover:text-amber-300 transition-colors font-medium">Notice</Link>
+                  <span className="text-white/30">|</span>
+                  <Link href="/placement-portal" className="hover:text-amber-300 transition-colors font-medium">Placement</Link>
+                  <span className="text-white/30">|</span>
+                  <Link href="/administrative-service" className="hover:text-amber-300 transition-colors font-medium">Admin Services</Link>
+                  <span className="text-white/30">|</span>
+                  <Link href="/alumni" className="hover:text-amber-300 transition-colors font-medium">Alumni</Link>
+                  <span className="text-white/30">|</span>
+                  <Link href="/rti" className="hover:text-amber-300 transition-colors font-medium">RTI</Link>
+                  <span className="text-white/30">|</span>
 
-                {/* Information Badges Bar - Single Line Responsive */}
-                <div className="relative mt-0.5 lg:mt-1 py-0.5 pl-2 -ml-2 z-30">
+                  {/* Faculty Log In Dropdown */}
+                  <div className="relative">
+                    <button 
+                      onClick={() => { setFacultyDropOpen(!facultyDropOpen); setStudentDropOpen(false); setTranslateDropOpen(false); setAccessibilityOpen(false); }}
+                      className="flex items-center gap-1 font-semibold text-amber-200 hover:text-white transition-colors"
+                    >
+                      Faculty Log In
+                      <ChevronDown size={13} className={`transition-transform duration-200 ${facultyDropOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {facultyDropOpen && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="absolute left-0 mt-1 w-44 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 z-[210]"
+                        >
+                          <Link href="/faculty-login" onClick={() => setFacultyDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Faculty Portal</Link>
+                          <Link href="/faculty" onClick={() => setFacultyDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Faculty Directory</Link>
+                          <a href="#" onClick={() => setFacultyDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Academic Attendance</a>
+                          <a href="#" onClick={() => setFacultyDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">LMS Portal</a>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                   
-                  <div className="hidden md:flex flex-nowrap items-center gap-1 xl:gap-2 w-max">
-                    <div className="flex items-center gap-1 xl:gap-1.5">
-                      <Building2 className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
-                      <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
-                        <span>Aided</span>
-                        <span>PG College</span>
-                      </span>
-                    </div>
-                    <div className="w-[1px] h-4 lg:h-7 bg-[#D4A017]/40"></div>
-                    
-                    <div className="flex items-center gap-1 xl:gap-1.5">
-                      <ShieldCheck className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
-                      <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
-                        <span>UGC 2(f) and</span>
-                        <span>12 (B) certified</span>
-                      </span>
-                    </div>
-                    <div className="w-[1px] h-4 lg:h-7 bg-[#D4A017]/40"></div>
-                    
-                    <div className="flex items-center gap-1 xl:gap-1.5">
-                      <Landmark className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
-                      <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
-                        <span>Affiliated to</span>
-                        <span>University of Mumbai</span>
-                      </span>
-                    </div>
-                    <div className="w-[1px] h-4 lg:h-7 bg-[#D4A017]/40"></div>
-                    
-                    <div className="flex items-center gap-1 xl:gap-1.5">
-                      <Award className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
-                      <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
-                        <span>NAAC Accredited</span>
-                        <span>A Grade - III Cycle (2016-2026)</span>
-                      </span>
-                    </div>
-                    <div className="w-[1px] h-4 lg:h-7 bg-[#D4A017]/40"></div>
+                  <span className="text-white/30">|</span>
 
-                    <div className="flex items-center gap-1 xl:gap-1.5 pr-2 lg:pr-12">
-                      <Star className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-5 lg:h-5" />
-                      <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
-                        <span>SQAAF Accreditation</span>
-                        <span>A+ Grade</span>
-                      </span>
-                    </div>
+                  {/* Student Log In Dropdown */}
+                  <div className="relative">
+                    <button 
+                      onClick={() => { setStudentDropOpen(!studentDropOpen); setFacultyDropOpen(false); setTranslateDropOpen(false); setAccessibilityOpen(false); }}
+                      className="flex items-center gap-1 font-semibold text-amber-200 hover:text-white transition-colors"
+                    >
+                      Student Log In
+                      <ChevronDown size={13} className={`transition-transform duration-200 ${studentDropOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {studentDropOpen && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="absolute left-0 mt-1 w-48 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 z-[210]"
+                        >
+                          <Link href="/student-login" onClick={() => setStudentDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Student ERP Portal</Link>
+                          <Link href="/examination" onClick={() => setStudentDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Examination & Results</Link>
+                          <Link href="/library" onClick={() => setStudentDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Digital Library</Link>
+                          <a href="#" onClick={() => setStudentDropOpen(false)} className="block px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-50 hover:text-[#123B6D]">Fee Payment & Receipts</a>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
 
-              </div>
-            </div>
-
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-1.5 md:gap-2 lg:gap-5 shrink-0 ml-auto">
-              
-              {/* Quick Links & Visitor Count */}
-              <div className="hidden xl:flex flex-col items-end gap-0 w-max">
-                <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full mb-1">
-                  <Users size={12} className="text-[#123B6D]" />
-                  <span className="text-[11px] font-bold text-[#123B6D]">Visitors: {visitorCount.toLocaleString()}</span>
-                </div>
-                <span className="text-[11px] xl:text-[12px] font-semibold text-[#1E293B]">Quick Links</span>
-                <div className="flex items-center gap-1.5 xl:gap-2 flex-wrap justify-end">
-                  <Link href="/notices" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Notice
-                  </Link>
-                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/placement-portal" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Placement
-                  </Link>
-                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/administrative-service" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Admin Services
-                  </Link>
-                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/alumni" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    Alumni
-                  </Link>
-                  <div className="w-[1px] h-2.5 bg-[#E2E8F0]"></div>
-                  <Link href="/rti" className="text-[12px] xl:text-[13px] font-medium text-[#475569] hover:text-[#D4A017] transition-colors">
-                    RTI
-                  </Link>
-                </div>
-              </div>
-
-              {/* Trust Logo */}
-              <a
-                href="https://www.parletilakvidyalayaassociation.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden xl:flex shrink-0 transition-transform hover:scale-105"
-                title="Parle Tilak Vidyalaya Association"
-              >
-                <img
-                  src="/trustlogo.png"
-                  alt="Parle Tilak Vidyalaya Association Logo"
-                  className="h-12 xl:h-16 2xl:h-20 w-auto object-contain drop-shadow-sm"
-                />
-              </a>
-
-              {/* Search & Notification Buttons */}
-              <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 shrink-0">
-
-                <Link
-                  href="/search"
-                  className="w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center text-[#123B6D] hover:bg-slate-50 hover:scale-105 transition-all"
-                >
-                  <Search size={16} strokeWidth={1.5} className="md:w-4 md:h-4 lg:w-5 lg:h-5" />
-                </Link>
-                <div className="relative">
-                  <button
-                    className={`w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center hover:bg-slate-50 hover:scale-105 transition-all relative ${hasUnread ? '' : 'text-[#123B6D]'}`}
-                    onClick={() => {
-                      const opening = !noticesOpen;
-                      setNoticesOpen(opening);
-                      if (opening) fetchLiveNotices();
-                    }}
-                  >
-                    <motion.div
-                      animate={(hasUnread || isShaking) ? {
-                        rotate: [0, -30, 30, -20, 20, -10, 10, 0],
-                        scale: [1, 1.2, 1.2, 1],
-                        color: ['#ef4444', '#ef4444', '#123B6D'],
-                      } : { color: 'currentColor', rotate: 0, scale: 1 }}
-                      transition={{ 
-                        repeat: (hasUnread || isShaking) ? Infinity : 0, 
-                        repeatDelay: 1.5,
-                        duration: 1, 
-                        ease: 'easeInOut' 
-                      }}
-                      style={{ transformOrigin: 'top center' }}
+                {/* Right Utilities: Accessibility & Translate + Collapse Toggle */}
+                <div className="flex items-center gap-3 lg:gap-5">
+                  {/* Accessibility Widget */}
+                  <div className="relative">
+                    <button 
+                      onClick={() => { setAccessibilityOpen(!accessibilityOpen); setFacultyDropOpen(false); setStudentDropOpen(false); setTranslateDropOpen(false); }}
+                      className="flex items-center gap-1.5 font-medium hover:text-amber-300 transition-colors bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 text-[11px]"
                     >
-                      <Bell size={16} strokeWidth={1.5} className="md:w-4 md:h-4 lg:w-5 lg:h-5" />
-                    </motion.div>
-                    {(hasUnread || isShaking) && (
-                      <span className="absolute top-[10px] right-[10px] w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white animate-pulse shadow-sm" />
-                    )}
-                  </button>
+                      <Accessibility size={13} className="text-amber-300" />
+                      <span>Accessibility</span>
+                    </button>
+                    <AnimatePresence>
+                      {accessibilityOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="absolute right-0 mt-1.5 w-60 bg-white text-slate-800 rounded-2xl shadow-xl border border-slate-200 p-3.5 z-[210]"
+                        >
+                          <h4 className="font-bold text-xs text-[#123B6D] mb-2 border-b pb-1">Accessibility Options</h4>
+                          <div className="space-y-2 text-xs">
+                            <div>
+                              <p className="text-slate-500 font-medium mb-1">Text Size</p>
+                              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+                                <button onClick={() => setTextSize('normal')} className={`flex-1 py-1 rounded text-[11px] font-bold ${textSize === 'normal' ? 'bg-[#123B6D] text-white' : 'text-slate-700'}`}>Standard</button>
+                                <button onClick={() => setTextSize('large')} className={`flex-1 py-1 rounded text-[11px] font-bold ${textSize === 'large' ? 'bg-[#123B6D] text-white' : 'text-slate-700'}`}>Large (+1)</button>
+                                <button onClick={() => setTextSize('xlarge')} className={`flex-1 py-1 rounded text-[11px] font-bold ${textSize === 'xlarge' ? 'bg-[#123B6D] text-white' : 'text-slate-700'}`}>XL (+2)</button>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between pt-1 border-t">
+                              <span className="font-medium">High Contrast</span>
+                              <button 
+                                onClick={() => setHighContrast(!highContrast)} 
+                                className={`w-9 h-5 rounded-full p-0.5 transition-colors ${highContrast ? 'bg-[#123B6D]' : 'bg-slate-300'}`}
+                              >
+                                <div className={`w-4 h-4 rounded-full bg-white transition-transform ${highContrast ? 'translate-x-4' : ''}`} />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                   {/* Notifications dropdown */}
-                  <AnimatePresence>
-                    {noticesOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-[200] origin-top-right"
-                      >
-                        <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-slate-50">
-                          <h3 className="font-bold text-[#1E293B] text-sm">Notifications</h3>
-                          <div className="flex items-center gap-3">
-                            <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
-                              View All
-                            </Link>
-                            <button onClick={() => setNoticesOpen(false)} className="text-gray-400 hover:text-[#123B6D] transition-colors p-1 -mr-1">
-                              <X size={16} />
+                  {/* Translate Page Selector */}
+                  <div className="relative">
+                    <button 
+                      onClick={() => { setTranslateDropOpen(!translateDropOpen); setFacultyDropOpen(false); setStudentDropOpen(false); setAccessibilityOpen(false); }}
+                      className="flex items-center gap-1.5 font-medium hover:text-amber-300 transition-colors text-[11px]"
+                    >
+                      <Globe size={13} className="text-sky-300" />
+                      <span>Translate page:</span>
+                      <span className="font-bold text-amber-300 flex items-center gap-0.5">
+                        {selectedLang} <ChevronDown size={12} className={`transition-transform duration-200 ${translateDropOpen ? 'rotate-180' : ''}`} />
+                      </span>
+                    </button>
+                    <AnimatePresence>
+                      {translateDropOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="absolute right-0 mt-1.5 w-36 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1 z-[210]"
+                        >
+                          {['English', 'मराठी (Marathi)', 'हिंदी (Hindi)'].map((lang) => (
+                            <button
+                              key={lang}
+                              onClick={() => { setSelectedLang(lang.split(' ')[0]); setTranslateDropOpen(false); }}
+                              className={`w-full text-left px-3 py-1.5 text-xs font-semibold transition-colors flex items-center justify-between ${selectedLang === lang.split(' ')[0] ? 'bg-blue-50 text-[#123B6D]' : 'hover:bg-slate-50'}`}
+                            >
+                              <span>{lang}</span>
+                              {selectedLang === lang.split(' ')[0] && <span className="w-1.5 h-1.5 rounded-full bg-[#123B6D]" />}
                             </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Manual Collapse ↑ Button if expanded while scrolled down */}
+                  {isPeekMode && isManuallyExpanded && (
+                    <button
+                      onClick={() => setIsManuallyExpanded(false)}
+                      className="bg-amber-400 hover:bg-amber-300 text-[#0B2545] font-bold text-[11px] px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm transition-all transform hover:scale-105"
+                      title="Collapse header back to peek strip"
+                    >
+                      <span>Collapse</span>
+                      <ChevronUp size={13} />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* ── Layer 2: College Identity & Accreditation Header ── */}
+              <div className="hidden md:flex flex-col w-full relative bg-gradient-to-r from-[#F0F5FF] via-white to-[#F0F5FF] pb-0">
+                <div className="w-full relative h-auto min-h-[80px] md:min-h-[90px] lg:min-h-[105px] pt-1 pb-0 bg-transparent">
+                  <div className="w-full max-w-[1600px] mx-auto h-full flex items-center justify-between px-3 md:px-4 lg:px-12 relative z-[150]">
+                    
+                    {/* Logo + College Name */}
+                    <div className="flex items-center gap-2 md:gap-3 lg:gap-5 shrink min-w-0 bg-transparent pr-2 md:pr-4 lg:pr-6">
+                      <Link href="/" className="shrink-0 transition-transform hover:scale-[1.02] flex flex-col items-center justify-center gap-0.5">
+                        <img src="/mcclogo.png" alt="MCC Logo" className="w-14 h-14 md:w-16 md:h-16 lg:w-[110px] lg:h-[110px] object-contain drop-shadow-sm" />
+                        <span className="text-[#123B6D] font-bold text-[9px] md:text-[10px] lg:text-[13px] leading-tight whitespace-nowrap">
+                          Since 1970
+                        </span>
+                      </Link>
+                      <div className="flex flex-col items-start justify-center text-left">
+                        <Link href="/" className="group block mb-1 md:mb-1.5 lg:mb-2 transition-transform hover:scale-[1.01]">
+                          <span className="block text-[#123B6D] font-semibold text-[9px] md:text-[10px] lg:text-[14px] leading-tight font-[var(--font-heading)] whitespace-nowrap mb-0.5">
+                            Parle Tilak Vidyalaya Association's
+                          </span>
+                          <span className="block text-[#123B6D] font-bold text-[13px] md:text-[15px] lg:text-[24px] leading-tight font-[var(--font-heading)] whitespace-nowrap tracking-wide mb-0.5 group-hover:text-blue-900 transition-colors flex items-baseline gap-2">
+                            MULUND COLLEGE OF COMMERCE <span className="text-[#D4A017]">(AUTONOMOUS)</span>
+                          </span>
+                          <span className="block text-[#64748B] font-medium text-[9px] md:text-[10px] lg:text-[13px] leading-tight whitespace-nowrap">
+                            || आ नो भद्राः क्रतवो यन्तु विश्वतः ||
+                          </span>
+                        </Link>
+
+                        {/* Badges Bar */}
+                        <div className="relative mt-0.5 lg:mt-1 py-0.5 pl-2 -ml-2 z-30">
+                          <div className="hidden md:flex flex-nowrap items-center gap-1 xl:gap-2 w-max">
+                            <div className="flex items-center gap-1 xl:gap-1.5">
+                              <Building2 className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4.5 lg:h-4.5" />
+                              <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
+                                <span>Aided</span>
+                                <span>PG College</span>
+                              </span>
+                            </div>
+                            <div className="w-[1px] h-4 lg:h-6 bg-[#D4A017]/40"></div>
+                            
+                            <div className="flex items-center gap-1 xl:gap-1.5">
+                              <ShieldCheck className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4.5 lg:h-4.5" />
+                              <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
+                                <span>UGC 2(f) and</span>
+                                <span>12 (B) certified</span>
+                              </span>
+                            </div>
+                            <div className="w-[1px] h-4 lg:h-6 bg-[#D4A017]/40"></div>
+                            
+                            <div className="flex items-center gap-1 xl:gap-1.5">
+                              <Landmark className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4.5 lg:h-4.5" />
+                              <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
+                                <span>Affiliated to</span>
+                                <span>University of Mumbai</span>
+                              </span>
+                            </div>
+                            <div className="w-[1px] h-4 lg:h-6 bg-[#D4A017]/40"></div>
+                            
+                            <div className="flex items-center gap-1 xl:gap-1.5">
+                              <Award className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4.5 lg:h-4.5" />
+                              <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
+                                <span>NAAC Accredited</span>
+                                <span>A Grade - III Cycle (2016-2026)</span>
+                              </span>
+                            </div>
+                            <div className="w-[1px] h-4 lg:h-6 bg-[#D4A017]/40"></div>
+
+                            <div className="flex items-center gap-1 xl:gap-1.5 pr-2 lg:pr-12">
+                              <Star className="text-[#D4A017] w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4.5 lg:h-4.5" />
+                              <span className="text-[7px] md:text-[8px] lg:text-[10px] xl:text-[11px] font-bold text-[#123B6D] leading-tight flex flex-col">
+                                <span>SQAAF Accreditation</span>
+                                <span>A+ Grade</span>
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
-                          {fetchingNotices ? (
-                            <div className="p-6 text-center text-sm text-gray-400">Loading...</div>
-                          ) : liveNotices.length === 0 ? (
-                            <div className="p-6 text-center text-sm text-gray-400">No active notices</div>
-                          ) : (
-                            liveNotices.map((n) => {
-                              const timeAgo = (() => {
-                                const diff = Date.now() - new Date(n.schedule_time).getTime();
-                                const h = Math.floor(diff / 3600000);
-                                const d = Math.floor(diff / 86400000);
-                                return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h} hour${h > 1 ? 's' : ''} ago` : 'Just now';
-                              })();
-                              const isExam = n.categories?.includes('Examinations');
-                              const href = isExam ? '/examination#timetables' : '/notices';
-                              return (
-                                <Link
-                                  href={href}
-                                  key={n.id}
-                                  onClick={() => setNoticesOpen(false)}
-                                  className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
-                                >
-                                  <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
-                                  
-                                  {/* Course, Category & Timing Row */}
-                                  <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                                    <p className="text-xs text-[#64748B]">{timeAgo}</p>
-                                    
-                                    {n.categories && n.categories.length > 0 && (
-                                      <span className="text-[10px] font-medium bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
-                                        {n.categories[0]}{n.categories.length > 1 ? ` +${n.categories.length - 1}` : ''}
-                                      </span>
-                                    )}
-                                    {n.courses && n.courses.length > 0 && (
-                                      <span className="text-[10px] font-medium bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100">
-                                        {n.courses[0].toUpperCase().replace('-', '')}{n.courses.length > 1 ? ` +${n.courses.length - 1}` : ''}
-                                      </span>
-                                    )}
-                                    {/* Attachment icons */}
-                                    {n.attachments && n.attachments.length > 0 && (() => {
-                                      const hasPdf = n.attachments.some(a => a.type === 'pdf' || a.type === 'doc' || a.type === 'docx');
-                                      const hasImage = n.attachments.some(a => ['png', 'jpg', 'jpeg', 'webp'].includes(a.type));
-                                      return (
-                                        <span className="flex items-center gap-1">
-                                          {hasPdf && (
-                                            <span className="flex items-center gap-0.5 text-[10px] font-medium bg-red-50 text-red-600 px-1.5 py-0.5 rounded border border-red-100">
-                                              <FileText size={10} /> PDF
-                                            </span>
-                                          )}
-                                          {hasImage && (
-                                            <span className="flex items-center gap-0.5 text-[10px] font-medium bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-100">
-                                              <ImageIcon size={10} /> Image
-                                            </span>
-                                          )}
-                                        </span>
-                                      );
-                                    })()}
-                                  </div>
-                                </Link>
-                              );
-                            })
-                          )}
+
+                      </div>
+                    </div>
+
+                    {/* Right Side Actions */}
+                    <div className="flex items-center gap-1.5 md:gap-2 lg:gap-5 shrink-0 ml-auto">
+                      
+                      {/* Visitors Count Badge */}
+                      <div className="hidden xl:flex flex-col items-end gap-1 w-max">
+                        <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
+                          <Users size={13} className="text-[#123B6D]" />
+                          <span className="text-[11px] font-bold text-[#123B6D]">Visitors: {visitorCount.toLocaleString()}</span>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                      </div>
+
+                      {/* Trust Logo */}
+                      <a
+                        href="https://www.parletilakvidyalayaassociation.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hidden xl:flex shrink-0 transition-transform hover:scale-105"
+                        title="Parle Tilak Vidyalaya Association"
+                      >
+                        <img
+                          src="/trustlogo.png"
+                          alt="Parle Tilak Vidyalaya Association Logo"
+                          className="h-12 xl:h-15 2xl:h-18 w-auto object-contain drop-shadow-sm"
+                        />
+                      </a>
+
+                      {/* Admission Button, Search & Notification Bell */}
+                      <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 shrink-0">
+                        <Link
+                          href="/admission"
+                          className="hidden md:flex items-center justify-center h-8 md:h-9 lg:h-10 px-4 lg:px-6 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-[10px] md:text-xs lg:text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all"
+                        >
+                          Admission
+                        </Link>
+
+                        <Link
+                          href="/search"
+                          className="w-8 h-8 md:w-9 md:h-9 lg:w-11 lg:h-11 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center text-[#123B6D] hover:bg-slate-50 hover:scale-105 transition-all"
+                          title="Search Website"
+                        >
+                          <Search size={16} strokeWidth={1.5} className="md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                        </Link>
+
+                        <div className="relative">
+                          <button
+                            className={`w-8 h-8 md:w-9 md:h-9 lg:w-11 lg:h-11 rounded-full bg-white border border-[#E2E8F0] shadow-sm flex items-center justify-center hover:bg-slate-50 hover:scale-105 transition-all relative ${hasUnread ? '' : 'text-[#123B6D]'}`}
+                            onClick={() => {
+                              const opening = !noticesOpen;
+                              setNoticesOpen(opening);
+                              if (opening) fetchLiveNotices();
+                            }}
+                            title="Notifications"
+                          >
+                            <motion.div
+                              animate={(hasUnread || isShaking) ? {
+                                rotate: [0, -30, 30, -20, 20, -10, 10, 0],
+                                scale: [1, 1.2, 1.2, 1],
+                                color: ['#ef4444', '#ef4444', '#123B6D'],
+                              } : { color: 'currentColor', rotate: 0, scale: 1 }}
+                              transition={{ 
+                                repeat: (hasUnread || isShaking) ? Infinity : 0, 
+                                repeatDelay: 1.5,
+                                duration: 1, 
+                                ease: 'easeInOut' 
+                              }}
+                              style={{ transformOrigin: 'top center' }}
+                            >
+                              <Bell size={16} strokeWidth={1.5} className="md:w-4 md:h-4 lg:w-5 lg:h-5" />
+                            </motion.div>
+                            {(hasUnread || isShaking) && (
+                              <span className="absolute top-[8px] right-[8px] w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white animate-pulse shadow-sm" />
+                            )}
+                          </button>
+
+                          {/* Notifications dropdown */}
+                          <AnimatePresence>
+                            {noticesOpen && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="absolute top-full right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-[200] origin-top-right"
+                              >
+                                <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-slate-50">
+                                  <h3 className="font-bold text-[#1E293B] text-sm">Notifications</h3>
+                                  <div className="flex items-center gap-3">
+                                    <Link href="/notices" onClick={() => setNoticesOpen(false)} className="text-xs text-[#123B6D] font-semibold hover:underline">
+                                      View All
+                                    </Link>
+                                    <button onClick={() => setNoticesOpen(false)} className="text-gray-400 hover:text-[#123B6D] transition-colors p-1 -mr-1">
+                                      <X size={16} />
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className="max-h-[60vh] overflow-y-auto no-scrollbar">
+                                  {fetchingNotices ? (
+                                    <div className="p-6 text-center text-sm text-gray-400">Loading...</div>
+                                  ) : liveNotices.length === 0 ? (
+                                    <div className="p-6 text-center text-sm text-gray-400">No active notices</div>
+                                  ) : (
+                                    liveNotices.map((n) => {
+                                      const timeAgo = (() => {
+                                        const diff = Date.now() - new Date(n.schedule_time).getTime();
+                                        const h = Math.floor(diff / 3600000);
+                                        const d = Math.floor(diff / 86400000);
+                                        return d > 0 ? `${d} day${d > 1 ? 's' : ''} ago` : h > 0 ? `${h} hour${h > 1 ? 's' : ''} ago` : 'Just now';
+                                      })();
+                                      const isExam = n.categories?.includes('Examinations');
+                                      const href = isExam ? '/examination#timetables' : '/notices';
+                                      return (
+                                        <Link
+                                          href={href}
+                                          key={n.id}
+                                          onClick={() => setNoticesOpen(false)}
+                                          className="block p-4 border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors"
+                                        >
+                                          <p className="text-sm font-semibold text-[#1E293B] mb-1 leading-tight">{n.title}</p>
+                                          
+                                          <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                                            <p className="text-xs text-[#64748B]">{timeAgo}</p>
+                                            
+                                            {n.categories && n.categories.length > 0 && (
+                                              <span className="text-[10px] font-medium bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
+                                                {n.categories[0]}{n.categories.length > 1 ? ` +${n.categories.length - 1}` : ''}
+                                              </span>
+                                            )}
+                                            {n.courses && n.courses.length > 0 && (
+                                              <span className="text-[10px] font-medium bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100">
+                                                {n.courses[0].toUpperCase().replace('-', '')}{n.courses.length > 1 ? ` +${n.courses.length - 1}` : ''}
+                                              </span>
+                                            )}
+                                            {n.attachments && n.attachments.length > 0 && (() => {
+                                              const hasPdf = n.attachments.some(a => a.type === 'pdf' || a.type === 'doc' || a.type === 'docx');
+                                              const hasImage = n.attachments.some(a => ['png', 'jpg', 'jpeg', 'webp'].includes(a.type));
+                                              return (
+                                                <span className="flex items-center gap-1">
+                                                  {hasPdf && (
+                                                    <span className="flex items-center gap-0.5 text-[10px] font-medium bg-red-50 text-red-600 px-1.5 py-0.5 rounded border border-red-100">
+                                                      <FileText size={10} /> PDF
+                                                    </span>
+                                                  )}
+                                                  {hasImage && (
+                                                    <span className="flex items-center gap-0.5 text-[10px] font-medium bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-100">
+                                                      <ImageIcon size={10} /> Image
+                                                    </span>
+                                                  )}
+                                                </span>
+                                              );
+                                            })()}
+                                          </div>
+                                        </Link>
+                                      );
+                                    })
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
                 </div>
               </div>
-              </div>
-            </div>
-          </div>
 
 
         {/* ── Row 2 (desktop): Nav Links ── */}
@@ -1373,9 +1596,6 @@ export default function Navbar() {
           </nav>
         </div>
 
-
-      </div>
-
       {/* ── Mobile Top Bar (logo + hamburger) ── */}
       <div className="md:hidden flex w-full items-center justify-between px-4 h-16">
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -1473,9 +1693,11 @@ export default function Navbar() {
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-          </div>
-        </div>
-      </motion.header>
+          </div>{/* end right flex div */}
+        </div>{/* end mobile top bar div */}
+      </div>{/* end inner bg-white div */}
+    </div>{/* end overflow-hidden wrapper */}
+  </header>
 
       {/* Mobile Menu */}
       <AnimatePresence>

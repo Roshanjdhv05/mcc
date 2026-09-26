@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS jr_college_notices (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title               TEXT NOT NULL,
   description         TEXT,
-  category            TEXT NOT NULL DEFAULT 'Sports',
+  category            TEXT NOT NULL DEFAULT 'Admissions',
   show_on_home        BOOLEAN NOT NULL DEFAULT TRUE,
   show_on_notice_page BOOLEAN NOT NULL DEFAULT TRUE,
   attachments         JSONB NOT NULL DEFAULT '[]',
@@ -30,3 +30,20 @@ ALTER TABLE jr_college_notices DISABLE ROW LEVEL SECURITY;
 
 -- 4. Also ensure jr_college_events has RLS disabled (for gallery uploads)
 ALTER TABLE jr_college_events DISABLE ROW LEVEL SECURITY;
+
+-- 5. Fix category check constraint — drop old constraint and recreate with all valid values.
+--    The app uses 7 categories; the old constraint was mismatched, causing insert errors.
+ALTER TABLE jr_college_notices
+  DROP CONSTRAINT IF EXISTS jr_college_notices_category_check;
+
+ALTER TABLE jr_college_notices
+  ADD CONSTRAINT jr_college_notices_category_check
+  CHECK (category IN (
+    'Admissions',
+    'General',
+    'Scholarships',
+    'Examinations',
+    'Sports',
+    'Cultural',
+    'Special Days'
+  ));

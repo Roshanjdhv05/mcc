@@ -468,8 +468,8 @@ export default function GalleryPage() {
       if (!degreeError && degreeData) {
         mapped = [...mapped, ...degreeData.map((e: any) => ({
           id: `live-deg-${e.id}`,
-          tag: e.published_at
-            ? new Date(e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
+          tag: (e.calendar_date || e.published_at)
+            ? new Date(e.calendar_date || e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
             : 'LIVE',
           dateObj: new Date(e.calendar_date || e.published_at || Date.now()),
           title: e.title,

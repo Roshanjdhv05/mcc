@@ -54,9 +54,12 @@ const PROGRAMMES = [
   { code: 'BBI',   slug: 'bbi',  label: 'BBI' },
   { code: 'BCOM-BA', slug: 'bcom-ba', label: 'BCOM-BA' },
   { code: 'BCOM-MS', slug: 'bcom-ms', label: 'BCOM-MS' },
+  { code: 'BSC-CS',  slug: 'bsc-cs',  label: 'BSC-CS (CS)' },
   { code: 'BSC-IT',  slug: 'bsc-it',  label: 'BSC-IT' },
   { code: 'BCA',     slug: 'bca',     label: 'BCA' },
   { code: 'BSC-DS',  slug: 'bsc-ds',  label: 'BSC-DS' },
+  { code: 'MSC-CS',  slug: 'msc-cs',  label: 'MSC-CS' },
+  { code: 'MSC-IT',  slug: 'msc-it',  label: 'MSC-IT' },
   { code: 'SCT',     slug: 'sct',     label: 'SCT' },
   { code: 'BBA',     slug: 'bba',     label: 'BBA' },
   { code: 'BAMMC',   slug: 'bammc',   label: 'BAMMC' },
@@ -64,16 +67,18 @@ const PROGRAMMES = [
 
 const FESTIVAL_SECTIONS: Record<string, string> = {
   'BAF': 'Manthan', 'BBI': 'Manthan + Shodh', 'BFM': 'Manthan',
-  'BMS': 'Inspira', 'BSC-IT': 'Hack-A-Thon', 'BCA': 'Hack-A-Thon',
-  'BSC-DS': 'Hack-A-Thon', 'B.COM': 'Festivals', 'BBA': 'Festivals',
+  'BMS': 'Inspira', 'BSC-CS': 'Hack-A-Thon', 'BSC-IT': 'Hack-A-Thon',
+  'BCA': 'Hack-A-Thon', 'BSC-DS': 'Hack-A-Thon', 'MSC-CS': 'Hack-A-Thon',
+  'B.COM': 'Festivals', 'BBA': 'Festivals',
   'BAMMC': 'Festivals', 'BFSI': 'Festivals', 'BCOM-BA': 'Quantomania',
   'BCOM-MS': 'Spectrum', 'SCT': 'Festivals',
 };
 
 const PUBLICATION_SECTIONS: Record<string, string> = {
   'BAF': 'Pratibimb', 'BBI': 'Pratibimb', 'BFM': 'Finanza',
-  'BMS': 'Inspira', 'BSC-IT': 'Tech Anugraha', 'BCA': 'Tech Anugraha',
-  'BSC-DS': 'Tech Anugraha', 'B.COM': 'Publication', 'BBA': 'Publication',
+  'BMS': 'Inspira', 'BSC-CS': 'Tech Anugraha', 'BSC-IT': 'Tech Anugraha',
+  'BCA': 'Tech Anugraha', 'BSC-DS': 'Tech Anugraha', 'MSC-CS': 'Tech Anugraha',
+  'B.COM': 'Publication', 'BBA': 'Publication',
   'BAMMC': 'Shutter Speed', 'BFSI': 'Publication', 'BCOM-BA': 'Publication',
   'BCOM-MS': 'Publication', 'SCT': 'Publication',
 };
@@ -403,11 +408,7 @@ export default function HomeEventsManager() {
       published_at: eventDate ? new Date(eventDate).toISOString() : new Date().toISOString(),
     };
 
-    // Always insert base record; also insert per-programme records
-    const allPayloads = programmeInserts.length > 0 ? [...programmeInserts] : [basePayload];
-    if (programmeInserts.length > 0 && publishGallery) {
-      allPayloads.push(basePayload);
-    }
+    const allPayloads = programmeInserts.length > 0 ? programmeInserts : [basePayload];
 
     const { error } = await supabase.from('events').insert(allPayloads);
     if (error) {

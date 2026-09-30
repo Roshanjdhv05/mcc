@@ -15,7 +15,7 @@ function getAdminCode(courseCode: string): string {
   if (k === 'BCOM-BA') return 'BCOM-BA';
   if (k === 'BCOM-MS') return 'BCOM-MS';
   if (k === 'BSC_IT' || k === 'BSC-IT') return 'BSC-IT';
-  if (k === 'BSC_CS' || k === 'BSC-CS') return 'BSC-CS';
+  if (k === 'BSC_CS' || k === 'BSC-CS' || k === 'CS') return 'BSC-CS';
   if (k === 'BSC_DS' || k === 'BSC-DS' || k === 'DS' || k === 'BSC-DS') return 'BSC-DS';
   if (k === 'BSC_CA' || k === 'BCA') return 'BCA';
   if (k === 'BBA') return 'BBA';

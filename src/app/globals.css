@@ -127,6 +127,9 @@
   html {
     @apply font-sans;
   }
+  p {
+    text-align: justify;
+  }
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -202,3 +205,13 @@
 .custom-scrollbar-white::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
+
+/* Global Justify Alignment for Paragraphs and Messages */
+p,
+blockquote,
+.principal-message,
+.vice-principal-message,
+.testimonial-text,
+.message-text {
+  text-align: justify !important;
+}

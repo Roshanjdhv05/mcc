@@ -310,7 +310,14 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
         
       if (data) {
         const filtered = data
-          .filter(ev => ev.programme && ev.programme.includes(adminCode))
+          .filter(ev => {
+            if (!ev.programme) return false;
+            const p = ev.programme.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            const a = adminCode.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (p.includes(a) || a.includes(p)) return true;
+            if ((a === 'BSCCS' || a === 'CS') && (p.includes('CS') || p.includes('COMPUTERSCIENCE'))) return true;
+            return false;
+          })
           .map(ev => {
             let section = ev.programme_section;
             try {
@@ -1043,7 +1050,9 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
               {(() => {
                 const festivalEvents = programmeEvents.filter(
                   ev => ev.programme_section === activeFestivalsTab ||
-                        (ev.programme_section || '').includes(activeFestivalsTab || '')
+                        (ev.programme_section || '').includes(activeFestivalsTab || '') ||
+                        ev.category === 'Festivals' ||
+                        ev.programme_section === 'Festivals'
                 );
                 
                 const introEvent = festivalEvents.find(ev => ev.category === 'Festivals' && ev.title === 'Festival Intro');
@@ -1165,7 +1174,20 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
               </div>
               <div className="w-16 h-1 bg-gradient-to-r from-[#123B6D] to-[#D4A017] rounded-full mb-8" />
               {(() => {
-                const visitList = progData?.industrial_visits && progData.industrial_visits.length > 0 ? progData.industrial_visits : [];
+                const ivEvents = programmeEvents.filter(
+                  ev => ev.category === 'Industrial Visits' ||
+                        ev.programme_section === 'Industrial Visits'
+                );
+                const dbVisits = progData?.industrial_visits && progData.industrial_visits.length > 0 ? progData.industrial_visits : [];
+                const eventVisits = ivEvents.map(ev => ({
+                  company_name: ev.title,
+                  visit_date: ev.published_at ? new Date(ev.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+                  description: ev.description,
+                  image: ev.images?.[0] || '',
+                  images: ev.images || []
+                }));
+                const visitList = [...eventVisits, ...dbVisits];
+
                 if (visitList.length === 0) return (
                   <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                     <Building2 size={48} className="text-gray-300 mx-auto mb-3" />
@@ -1241,7 +1263,9 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
               {(() => {
                 const publicationEvents = programmeEvents.filter(
                   ev => ev.programme_section === activePublicationTab ||
-                        (ev.programme_section || '').includes(activePublicationTab || '')
+                        (ev.programme_section || '').includes(activePublicationTab || '') ||
+                        ev.category === 'Publication' ||
+                        ev.programme_section === 'Publication'
                 );
                 
                 const introEvent = publicationEvents.find(ev => ev.category === 'Publication' && ev.title === 'Publication Intro');

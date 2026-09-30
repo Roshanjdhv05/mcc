@@ -221,7 +221,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
   // Events
   const [events, setEvents] = useState<ProgrammeEvent[]>([]);
   const [showEventForm, setShowEventForm] = useState(false);
-  const [newEvent, setNewEvent] = useState<Partial<ProgrammeEvent>>({ title: '', description: '', category: 'Festivals', images: [] });
+  const [newEvent, setNewEvent] = useState<Partial<ProgrammeEvent> & { publish_gallery?: boolean; event_date?: string }>({ title: '', description: '', category: 'Festivals', images: [], publish_gallery: true });
   const [savingEvent, setSavingEvent] = useState(false);
   const [festivalIntro, setFestivalIntro] = useState('');
   const [festivalIntroId, setFestivalIntroId] = useState('');
@@ -304,8 +304,24 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         if (al) setAlumni(al);
         if (iv) setVisits(iv);
         if (evData) {
-          const adminCode = programme.code || programme.slug.toUpperCase();
-          const filtered = evData.filter((ev: any) => ev.programme && ev.programme.includes(adminCode));
+          const isProgrammeMatch = (evProg: string | null) => {
+            if (!evProg) return false;
+            const prog = evProg.toUpperCase();
+            const code = (programme.code || '').toUpperCase();
+            const slug = (programme.slug || '').toUpperCase();
+            if (prog === code || prog === slug || prog.includes(code) || code.includes(prog)) return true;
+            const csAliases = ['CS', 'BSC-CS', 'BSC_CS', 'SCT'];
+            if (csAliases.includes(prog) && (csAliases.includes(code) || csAliases.includes(slug.toUpperCase()) || slug.includes('CS') || slug.includes('SCT'))) return true;
+            const itAliases = ['BSC-IT', 'BSC_IT', 'MSCIT', 'MSC-IT'];
+            if (itAliases.includes(prog) && (itAliases.includes(code) || slug.includes('IT'))) return true;
+            const dsAliases = ['BSC-DS', 'BSC_DS', 'DS'];
+            if (dsAliases.includes(prog) && (dsAliases.includes(code) || slug.includes('DS'))) return true;
+            const bcomAliases = ['B.COM', 'BCOM'];
+            if (bcomAliases.includes(prog) && (bcomAliases.includes(code) || slug.includes('BCOM'))) return true;
+            return false;
+          };
+
+          const filtered = evData.filter((ev: any) => isProgrammeMatch(ev.programme));
           const fIntro = filtered.find((e: any) => e.category === 'Festivals' && e.title === 'Festival Intro');
           if (fIntro) { setFestivalIntro(fIntro.description); setFestivalIntroId(fIntro.id); }
           const pIntro = filtered.find((e: any) => e.category === 'Publication' && e.title === 'Publication Intro');
@@ -513,22 +529,58 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
 
   const festivalSections: Record<string, string> = {
     'BAF': 'Manthan', 'BBI': 'Manthan + Shodh', 'BFM': 'Manthan',
-    'BMS': 'Inspira', 'BSC-CS': 'Hack-A-Thon', 'BSC-IT': 'Hack-A-Thon',
+    'BMS': 'Inspira', 'BSC-CS': 'Hack-A-Thon', 'CS': 'Hack-A-Thon', 'SCT': 'Hack-A-Thon', 'BSC-IT': 'Hack-A-Thon',
     'BSC-DS': 'Hack-A-Thon', 'BSC-CA': 'Hack-A-Thon', 'BCA': 'Hack-A-Thon',
     'B.COM': 'Festivals', 'BCOM': 'Festivals', 'BBA': 'Festivals', 'BAMMC': 'Festivals',
   };
   const publicationSections: Record<string, string> = {
     'BAF': 'Pratibimb', 'BBI': 'Pratibimb', 'BFM': 'Finanza',
-    'BMS': 'Inspira', 'BSC-CS': 'Tech Anugraha', 'BSC-IT': 'Tech Anugraha',
+    'BMS': 'Inspira', 'BSC-CS': 'Tech Anugraha', 'CS': 'Tech Anugraha', 'SCT': 'Tech Anugraha', 'BSC-IT': 'Tech Anugraha',
     'BSC-DS': 'Tech Anugraha', 'BSC-CA': 'Tech Anugraha', 'BCA': 'Tech Anugraha',
     'B.COM': 'Publication', 'BCOM': 'Publication', 'BBA': 'Publication', 'BAMMC': 'Shutter Speed',
   };
 
+  const isProgrammeMatch = (evProg: string | null) => {
+    if (!evProg) return false;
+    const prog = evProg.toUpperCase();
+    const code = (programme.code || '').toUpperCase();
+    const slug = (programme.slug || '').toUpperCase();
+    if (prog === code || prog === slug || prog.includes(code) || code.includes(prog)) return true;
+    const csAliases = ['CS', 'BSC-CS', 'BSC_CS', 'SCT'];
+    if (csAliases.includes(prog) && (csAliases.includes(code) || csAliases.includes(slug.toUpperCase()) || slug.includes('CS') || slug.includes('SCT'))) return true;
+    const itAliases = ['BSC-IT', 'BSC_IT', 'MSCIT', 'MSC-IT'];
+    if (itAliases.includes(prog) && (itAliases.includes(code) || slug.includes('IT'))) return true;
+    const dsAliases = ['BSC-DS', 'BSC_DS', 'DS'];
+    if (dsAliases.includes(prog) && (dsAliases.includes(code) || slug.includes('DS'))) return true;
+    const bcomAliases = ['B.COM', 'BCOM'];
+    if (bcomAliases.includes(prog) && (bcomAliases.includes(code) || slug.includes('BCOM'))) return true;
+    return false;
+  };
+
   const getSectionLabel = (cat: string) => {
     const code = adminCode?.toUpperCase();
-    if (cat === 'Festivals') return festivalSections[code] || 'Festivals';
-    if (cat === 'Publication') return publicationSections[code] || 'Publication';
+    if (cat === 'Festivals') return festivalSections[code] || festivalSections['CS'] || 'Festivals';
+    if (cat === 'Publication') return publicationSections[code] || publicationSections['CS'] || 'Publication';
     return cat;
+  };
+
+  const getTabEvents = (tabKey: string) => {
+    const festLabel = getSectionLabel('Festivals').toLowerCase();
+    const pubLabel = getSectionLabel('Publication').toLowerCase();
+
+    return events.filter(e => {
+      const cat = (e.category || '').toLowerCase();
+      const sec = (e.programme_section || '').toLowerCase();
+
+      if (tabKey === 'festivals') {
+        return cat === 'festivals' || sec === festLabel || (festLabel !== 'festivals' && sec.includes(festLabel));
+      }
+      if (tabKey === 'publications') {
+        return cat === 'publication' || cat === 'publications' || sec === pubLabel || (pubLabel !== 'publication' && sec.includes(pubLabel));
+      }
+      // Default: 'activities' (Events & Activities)
+      return cat === 'events & activities' || sec === 'events & activities' || (!sec && cat !== 'festivals' && cat !== 'publication');
+    });
   };
 
   const handleSaveEvent = async () => {
@@ -536,6 +588,9 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
     setSavingEvent(true);
     try {
       const sectionLabel = getSectionLabel(newEvent.category || 'Festivals');
+      const eventDateIso = newEvent.event_date ? new Date(newEvent.event_date).toISOString() : new Date().toISOString();
+      const shouldPublishGallery = newEvent.publish_gallery !== false;
+
       const { error } = await supabase.from('events').insert([{
         title: newEvent.title,
         description: newEvent.description,
@@ -546,21 +601,25 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         programme_section: sectionLabel,
         publish_programme: true,
         publish_home: false,
-        publish_gallery: false,
+        publish_gallery: shouldPublishGallery,
         publish_calendar: false,
         status: 'published',
-        published_at: new Date().toISOString(),
-        event_date: newEvent.event_date || null,
+        published_at: eventDateIso,
+        calendar_date: newEvent.event_date || null,
       }]);
       if (error) throw error;
       // Refresh events list
       const { data: refreshed } = await supabase.from('events').select('*')
         .eq('publish_programme', true).eq('status', 'published').order('published_at', { ascending: false });
       if (refreshed) {
-        const filtered = refreshed.filter((ev: any) => ev.programme && ev.programme.includes(adminCode));
-        setEvents(filtered);
+        const filtered = refreshed.filter((ev: any) => isProgrammeMatch(ev.programme));
+        setEvents(filtered.filter((e: any) =>
+          !(e.category === 'Festivals' && e.title === 'Festival Intro') &&
+          !(e.category === 'Publication' && e.title === 'Publication Intro') &&
+          !(e.category === 'Events & Activities' && e.title === 'Activities Intro')
+        ));
       }
-      setNewEvent({ title: '', description: '', category: 'Festivals', images: [], event_date: '' });
+      setNewEvent({ title: '', description: '', category: 'Festivals', images: [], event_date: '', publish_gallery: true });
       setShowEventForm(false);
     } catch (e: any) {
       alert('Failed to save event: ' + e.message);
@@ -1000,6 +1059,18 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         onChange={v => setNewEvent(p => ({ ...p, event_date: v }))}
                       />
                     </div>
+                    <div className="col-span-2 flex items-center gap-2 pt-1">
+                      <input
+                        type="checkbox"
+                        id="publish_gallery_check"
+                        checked={newEvent.publish_gallery !== false}
+                        onChange={e => setNewEvent(p => ({ ...p, publish_gallery: e.target.checked }))}
+                        className="w-4 h-4 text-[#123B6D] border-gray-300 rounded focus:ring-[#123B6D]"
+                      />
+                      <label htmlFor="publish_gallery_check" className="text-xs font-semibold text-gray-700 cursor-pointer">
+                        Show in Gallery Page (Events Gallery)
+                      </label>
+                    </div>
                     <div className="col-span-2"><Label>Description</Label><Textarea value={newEvent.description || ''} onChange={v => setNewEvent(p => ({ ...p, description: v }))} rows={3} placeholder="Describe the item..." /></div>
                   </div>
                   <div>
@@ -1053,14 +1124,14 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
               )}
 
               {/* Existing Events */}
-              {events.filter(e => e.category === (activeTab === 'festivals' ? 'Festivals' : activeTab === 'publications' ? 'Publication' : 'Events & Activities')).length === 0 && !showEventForm && (
+              {getTabEvents(activeTab).length === 0 && !showEventForm && (
                 <div className="text-center py-16 text-gray-400">
                   <Image size={48} className="mx-auto mb-3 opacity-30" />
                   <p className="font-medium">No items yet. Click "Add" to create one.</p>
                 </div>
               )}
               <div className="space-y-4">
-                {events.filter(e => e.category === (activeTab === 'festivals' ? 'Festivals' : activeTab === 'publications' ? 'Publication' : 'Events & Activities')).map(ev => (
+                {getTabEvents(activeTab).map(ev => (
                   <div key={ev.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
                     <div className="flex gap-4 p-4">
                       {/* Images/Link strip */}
@@ -1093,9 +1164,9 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#123B6D]/10 text-[#123B6D]">
                                 {ev.programme_section || ev.category}
                               </span>
-                              {ev.event_date && (
+                              {(ev.calendar_date || ev.event_date || ev.published_at) && (
                                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                  📅 Date: {new Date(ev.event_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                  📅 Date: {new Date(ev.calendar_date || ev.event_date || ev.published_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                                 </span>
                               )}
                             </div>
@@ -1107,7 +1178,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         </div>
                         <p className="text-xs text-gray-500 mt-1.5 line-clamp-2">{ev.description}</p>
                         <p className="text-[10px] text-gray-400 mt-2">
-                          {new Date(ev.published_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          Published: {new Date(ev.calendar_date || ev.published_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </p>
                       </div>
                     </div>

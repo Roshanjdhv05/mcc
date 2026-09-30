@@ -458,6 +458,31 @@ const TestimonialBox = ({ text }: { text: string }) => {
   );
 };
 
+const AchievementField = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 80;
+  const displayText = expanded ? text : (isLong ? text.slice(0, 80) + '...' : text);
+  return (
+    <div className="flex items-start gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
+      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+        <Trophy className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
+      </div>
+      <div className="flex flex-col min-w-0">
+        <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Achievement</span>
+        <span className="text-[10px] sm:text-[12px] text-gray-600 leading-snug">{displayText}</span>
+        {isLong && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-blue-600 font-semibold text-[11px] mt-1 hover:underline focus:outline-none text-left"
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
 function HomepageCalendar() {
 
   const today = new Date();
@@ -1778,15 +1803,7 @@ export default function HomePage() {
                     )}
 
                     {student.achieved && (
-                      <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 border-b border-gray-100/80 last:border-0">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                          <Trophy className="w-3.5 h-3.5 sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} />
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1b3f] leading-none mb-0.5">Achievement</span>
-                          <span className="text-[10px] sm:text-[12px] text-gray-600 line-clamp-2 leading-snug">{student.achieved}</span>
-                        </div>
-                      </div>
+                      <AchievementField text={student.achieved} />
                     )}
                   </div>
                 </div>

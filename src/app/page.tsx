@@ -817,6 +817,25 @@ const TestimonialCard = ({ t }: { t: any }) => {
   );
 };
 
+const AlumniDescriptionBox = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 120;
+  const displayText = expanded ? text : (isLong ? text.slice(0, 120) + '...' : text);
+  return (
+    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1 overflow-y-auto no-scrollbar">
+      <p className="text-sm text-gray-600 leading-relaxed">{displayText}</p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-[#123B6D] font-semibold text-[12px] mt-2 hover:underline focus:outline-none"
+        >
+          {expanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+};
+
 export default function HomePage() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [liveBanners, setLiveBanners] = useState<{
@@ -1406,11 +1425,7 @@ export default function HomePage() {
                 </a>
 
                 {/* Description Box */}
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1 overflow-y-auto no-scrollbar">
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {student.description}
-                  </p>
-                </div>
+                <AlumniDescriptionBox text={student.description || student.testimonial || ''} />
               </div>
             ))}
           </div>

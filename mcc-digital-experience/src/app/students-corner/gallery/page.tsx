@@ -486,8 +486,8 @@ export default function GalleryPage() {
       if (degreeData) {
         mapped = [...mapped, ...degreeData.map((e: any) => ({
           id: `live-deg-${e.id}`,
-          tag: e.published_at
-            ? new Date(e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
+          tag: (e.calendar_date || e.published_at)
+            ? new Date(e.calendar_date || e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
             : 'LIVE',
           dateObj: new Date(e.calendar_date || e.published_at || Date.now()),
           title: e.title,
@@ -522,15 +522,16 @@ export default function GalleryPage() {
       // 3. Fetch Programme events
       const { data: progData, error: progError } = await supabase
         .from('events')
-        .select('id, title, description, category, department, images, published_at, programme')
+        .select('id, title, description, category, department, images, published_at, calendar_date, programme, publish_gallery')
         .eq('status', 'published')
         .eq('publish_programme', true)
         .not('programme', 'is', null)
         .order('published_at', { ascending: false });
 
       if (!progError && progData) {
-        // Filter out internal Intro events that shouldn't appear as gallery cards
+        // Filter out internal Intro events and events with publish_gallery === false
         const filteredProgData = progData.filter((e: any) => 
+          e.publish_gallery !== false &&
           !(e.category === 'Festivals' && e.title === 'Festival Intro') &&
           !(e.category === 'Publication' && e.title === 'Publication Intro') &&
           !(e.category === 'Events & Activities' && e.title === 'Activities Intro')
@@ -550,12 +551,14 @@ export default function GalleryPage() {
           }
           progs.forEach(p => uniqueProgs.add(p));
 
+          const dateVal = e.calendar_date || e.published_at;
+
           return {
             id: `live-prog-${e.id}`,
-            tag: e.published_at
-              ? new Date(e.published_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
+            tag: dateVal
+              ? new Date(dateVal).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }).toUpperCase()
               : 'LIVE',
-            dateObj: new Date(e.published_at || Date.now()),
+            dateObj: new Date(dateVal || Date.now()),
             title: e.title,
             desc: e.description || '',
             fullDescription: e.description || '',

@@ -425,7 +425,7 @@ export default function JuniorCollegeCornerPage() {
             <h2 className="text-2xl lg:text-3xl font-black text-[#123B6D] mb-6 flex items-center gap-3">
               <BookOpen size={28} className="text-[#3B82F6]" /> About Junior College
             </h2>
-            <div className="space-y-4 text-gray-600 text-sm lg:text-base leading-relaxed text-justify">
+            <div className="space-y-4 text-gray-600 text-sm lg:text-base leading-relaxed text-center">
               <p>The Junior College of Parle Tilak Vidyalaya Association's Mulund College of Commerce is one of the well-known institutions for Higher Secondary Education (Std. XI &amp; XII) in Mumbai. Established in 1976, the Junior College has built a strong reputation for academic excellence, discipline and holistic student development.</p>
               <p><strong className="text-[#123B6D]">Junior college of MCC is A+ accredited by SQAAF (school quality assessment and assurance framework)</strong></p>
               <p>The Junior College offers education in the Commerce stream under the Maharashtra State Board of Secondary and Higher Secondary Education (MSBSHSE). Experienced and dedicated teachers guide students through their academic journey while encouraging critical thinking, leadership and ethical values.</p>
@@ -509,7 +509,7 @@ export default function JuniorCollegeCornerPage() {
               <p className="text-[#3B82F6] font-semibold mb-6">Vice Principal, Junior College</p>
               <div className="relative">
                 <span className="absolute -left-4 -top-4 text-4xl text-gray-200 font-serif">"</span>
-                <p className="text-gray-600 text-sm lg:text-base leading-relaxed italic relative z-10 text-justify">
+                <p className="text-gray-600 text-sm lg:text-base leading-relaxed italic relative z-10 text-center">
                   "Education is not just about imparting knowledge; it is about building character and fostering values that create responsible global citizens. At the Junior College of Mulund College of Commerce, we strive to provide an environment that encourages intellectual curiosity, personal growth, and a strong sense of community. Our dedicated faculty ensures that every student receives the guidance they need to succeed academically and in their future endeavors."
                 </p>
               </div>

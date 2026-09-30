@@ -16,6 +16,25 @@ const linkedInIcon = (
   </svg>
 );
 
+const AlumniDescriptionBox = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 120;
+  const displayText = expanded ? text : (isLong ? text.slice(0, 120) + '...' : text);
+  return (
+    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1">
+      <p className="text-sm text-gray-600 leading-relaxed">{displayText}</p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-[#123B6D] font-semibold text-[12px] mt-2 hover:underline focus:outline-none"
+        >
+          {expanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+};
+
 const illustriousAlumni = [
   {
     name: 'Mandar Pramod Dixit',
@@ -337,11 +356,7 @@ export default function AlumniPage() {
                       </a>
 
                       {/* Description Box */}
-                      <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex-1">
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                          {student.testimonial || student.highlights}
-                        </p>
-                      </div>
+                      <AlumniDescriptionBox text={student.testimonial || student.highlights || ''} />
                     </div>
                   ))}
                 </div>

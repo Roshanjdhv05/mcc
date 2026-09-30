@@ -233,7 +233,7 @@ function InfoPoliciesContent() {
 
                 {activeTab === "about" && (
                   <div className="space-y-10">
-                    <p className="text-gray-700 leading-relaxed text-justify text-[15px]">
+                    <p className="text-gray-700 leading-relaxed text-center text-[15px]">
                       Internal Quality Assurance Cell (IQAC) is a significant administrative body that is responsible for quality matters. It is the prime responsibility of IQAC to initiate, plan and supervise various necessary activities to increase the quality of the education imparted in a higher education institution. IQAC facilitates the creation of a learner-centric environment conducive for quality education, and it arranges for feedback responses from students, parents and other stakeholders on quality-related institutional processes.
                     </p>
 

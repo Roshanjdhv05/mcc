@@ -127,6 +127,9 @@
   html {
     @apply font-sans;
   }
+  p {
+    text-align: justify;
+  }
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -327,4 +330,14 @@ html.a11y-keyboard-nav *:focus-visible {
 }
 .skip-to-main:focus {
   top: 0;
+}
+
+/* Global Justify Alignment for Paragraphs and Messages */
+p,
+blockquote,
+.principal-message,
+.vice-principal-message,
+.testimonial-text,
+.message-text {
+  text-align: justify !important;
 }

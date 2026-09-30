@@ -18,7 +18,7 @@ export default function EventsModule({ courseCode, sectionName, title, icon: Ico
     if (k === 'BFSI') return 'BFSI';
     if (k === 'BBI') return 'BBI';
     if (k === 'BSC_IT' || k === 'BSC-IT') return 'BSC-IT';
-    if (k === 'BSC_CS' || k === 'BSC-CS') return 'BSC-CS';
+    if (k === 'BSC_CS' || k === 'BSC-CS' || k === 'CS') return 'BSC-CS';
     if (k === 'BSC_DS' || k === 'BSC-DS' || k === 'DS') return 'BSC-DS';
     if (k === 'BSC_CA' || k === 'BCA') return 'BCA';
     if (k === 'BBA') return 'BBA';

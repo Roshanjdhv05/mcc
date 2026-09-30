@@ -19,7 +19,7 @@ export default function VicePrincipalPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* ── Aided Section (Dr. Shivaji Pawar) ── */}
-          <div className="text-gray-700 leading-relaxed text-[13.5px] xl:text-sm space-y-4 text-justify">
+          <div className="text-gray-700 leading-relaxed text-[13.5px] xl:text-sm space-y-4 text-center">
             
             {/* Image - Aided (Dr. Shivaji Pawar) */}
             <div className="w-[140px] xl:w-[180px] rounded-xl shadow-md border border-gray-200 float-left mr-5 mb-3 mt-1 overflow-hidden relative bg-white pb-10">
@@ -63,7 +63,7 @@ export default function VicePrincipalPage() {
           </div>
 
           {/* ── Self Financing Section (Ms. Shilpa Thakur) ── */}
-          <div className="text-gray-700 leading-relaxed text-[13.5px] xl:text-sm space-y-4 text-justify">
+          <div className="text-gray-700 leading-relaxed text-[13.5px] xl:text-sm space-y-4 text-center">
             
             {/* Image - Self Financing */}
             <div className="w-[140px] xl:w-[180px] rounded-xl shadow-md border border-gray-200 float-left mr-5 mb-3 mt-1 overflow-hidden relative bg-white pb-10">

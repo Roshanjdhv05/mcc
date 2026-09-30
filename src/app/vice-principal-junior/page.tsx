@@ -10,7 +10,7 @@ export default function VicePrincipalDeskPage() {
           </h2>
         </div>
 
-        <div className="text-gray-700 leading-relaxed text-[17px] space-y-6 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-100 text-justify">
+        <div className="text-gray-700 leading-relaxed text-[17px] space-y-6 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-100 text-center">
           <img 
             src="/Jr. teaching staff/Mr. Milind W. Patil.jpg" 
             alt="Mr. Milind W. Patil - Vice Principal of Junior College" 

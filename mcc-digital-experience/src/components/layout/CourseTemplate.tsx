@@ -305,6 +305,17 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
     };
     const adminCode = getAdminCode();
 
+    const isProgrammeMatch = (evProgramme: string | null, targetCode: string) => {
+      if (!evProgramme) return false;
+      const prog = evProgramme.toUpperCase();
+      const target = targetCode.toUpperCase();
+      if (prog === target || prog.includes(target) || target.includes(prog)) return true;
+      // Alias handling for CS / BSC-CS / BSC_CS / SCT
+      const csAliases = ['CS', 'BSC-CS', 'BSC_CS', 'SCT'];
+      if (csAliases.includes(target) && csAliases.includes(prog)) return true;
+      return false;
+    };
+
     async function fetchProgrammeEvents() {
       const { data } = await supabase
         .from('events')
@@ -315,13 +326,13 @@ export default function CourseTemplate({ title, shortInfo, fundingType, introduc
         
       if (data) {
         const filtered = data
-          .filter(ev => ev.programme && ev.programme.includes(adminCode))
+          .filter(ev => isProgrammeMatch(ev.programme, adminCode))
           .map(ev => {
             let section = ev.programme_section;
             try {
               const parsed = JSON.parse(ev.programme_section);
-              if (parsed && parsed[adminCode]) {
-                section = parsed[adminCode];
+              if (parsed) {
+                section = parsed[adminCode] || parsed['CS'] || parsed['BSC-CS'] || section;
               }
             } catch (e) {
               // Legacy string

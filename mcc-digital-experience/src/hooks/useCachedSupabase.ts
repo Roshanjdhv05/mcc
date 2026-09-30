@@ -172,10 +172,9 @@ export function useCachedGalleryEvents() {
         async () => {
           const { data, error } = await supabase
             .from('events')
-            .select('id, title, description, category, department, images, published_at, publish_home, publish_gallery, status')
+            .select('id, title, description, category, department, images, published_at, calendar_date, publish_home, publish_gallery, status')
             .or('publish_gallery.eq.true,publish_home.eq.true')
             .eq('status', 'published')
-            .is('programme', null)
             .order('published_at', { ascending: false });
           if (error) throw error;
           cacheLog('MISS', 'events[gallery]', 'Full fetch complete');
@@ -209,13 +208,23 @@ export function useCachedProgrammeEvents(adminCode: string, sectionName: string)
             .order('published_at', { ascending: false });
           if (error) throw error;
 
+          const isProgrammeMatch = (evProg: string | null, targetCode: string) => {
+            if (!evProg) return false;
+            const prog = evProg.toUpperCase();
+            const target = targetCode.toUpperCase();
+            if (prog === target || prog.includes(target) || target.includes(prog)) return true;
+            const csAliases = ['CS', 'BSC-CS', 'BSC_CS', 'SCT'];
+            if (csAliases.includes(target) && csAliases.includes(prog)) return true;
+            return false;
+          };
+
           const filtered = (data ?? [])
-            .filter((ev: any) => ev.programme && ev.programme.includes(adminCode))
+            .filter((ev: any) => isProgrammeMatch(ev.programme, adminCode))
             .map((ev: any) => {
               let section = ev.programme_section;
               try {
                 const parsed = JSON.parse(ev.programme_section);
-                if (parsed && parsed[adminCode]) section = parsed[adminCode];
+                if (parsed) section = parsed[adminCode] || parsed['CS'] || parsed['BSC-CS'] || section;
               } catch {}
               return { ...ev, programme_section: section };
             })

@@ -112,7 +112,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-white/50 relative overflow-hidden">
-          <p className="text-center md:text-left">
+          <p className="text-center">
             © 2026 Mulund College of Commerce (Autonomous). All rights reserved.
           </p>
 

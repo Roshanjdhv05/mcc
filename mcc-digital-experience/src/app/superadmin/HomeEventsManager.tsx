@@ -75,7 +75,7 @@ const PROGRAMMES = [
 const FESTIVAL_SECTIONS: Record<string, string> = {
   'BAF': 'Manthan', 'BBI': 'Manthan + Shodh', 'BFM': 'Manthan',
   'BMS': 'Inspira', 'BSC-IT': 'Hack-A-Thon', 'BCA': 'Hack-A-Thon',
-  'BSC-DS': 'Hack-A-Thon', 'B.COM': 'Festivals', 'BBA': 'Festivals',
+  'BSC-DS': 'Hack-A-Thon', 'CS': 'Hack-A-Thon', 'BSC-CS': 'Hack-A-Thon', 'B.COM': 'Festivals', 'BBA': 'Festivals',
   'BAMMC': 'Festivals', 'BFSI': 'Festivals', 'BCOM-BA': 'Quantomania',
   'BCOM-MS': 'Spectrum', 'SCT': 'Festivals',
 };
@@ -83,7 +83,7 @@ const FESTIVAL_SECTIONS: Record<string, string> = {
 const PUBLICATION_SECTIONS: Record<string, string> = {
   'BAF': 'Pratibimb', 'BBI': 'Pratibimb', 'BFM': 'Finanza',
   'BMS': 'Inspira', 'BSC-IT': 'Tech Anugraha', 'BCA': 'Tech Anugraha',
-  'BSC-DS': 'Tech Anugraha', 'B.COM': 'Publication', 'BBA': 'Publication',
+  'BSC-DS': 'Tech Anugraha', 'CS': 'Tech Anugraha', 'BSC-CS': 'Tech Anugraha', 'B.COM': 'Publication', 'BBA': 'Publication',
   'BAMMC': 'Shutter Speed', 'BFSI': 'Publication', 'BCOM-BA': 'Publication',
   'BCOM-MS': 'Publication', 'SCT': 'Publication',
 };

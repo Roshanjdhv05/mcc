@@ -50,6 +50,7 @@ interface ProgrammeEvent {
   id: string; title: string; description: string; category: string;
   department: string; images: string[]; published_at: string;
   programme: string; programme_section: string; publish_programme: boolean;
+  publish_gallery?: boolean; calendar_date?: string;
   status: string;
 }
 
@@ -216,7 +217,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
   // Events
   const [events, setEvents] = useState<ProgrammeEvent[]>([]);
   const [showEventForm, setShowEventForm] = useState(false);
-  const [newEvent, setNewEvent] = useState<Partial<ProgrammeEvent>>({ title: '', description: '', category: 'Festivals', images: [] });
+  const [newEvent, setNewEvent] = useState<Partial<ProgrammeEvent> & { eventDate?: string }>({ title: '', description: '', category: 'Festivals', images: [], publish_gallery: true, eventDate: '' });
   const [savingEvent, setSavingEvent] = useState(false);
   const [festivalIntro, setFestivalIntro] = useState('');
   const [festivalIntroId, setFestivalIntroId] = useState('');
@@ -527,6 +528,9 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
     setSavingEvent(true);
     try {
       const sectionLabel = getSectionLabel(newEvent.category || 'Festivals');
+      const eventDateIso = newEvent.eventDate ? new Date(newEvent.eventDate).toISOString() : new Date().toISOString();
+      const shouldPublishGallery = newEvent.publish_gallery !== false;
+
       const { error } = await supabase.from('events').insert([{
         title: newEvent.title,
         description: newEvent.description,
@@ -537,10 +541,11 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         programme_section: sectionLabel,
         publish_programme: true,
         publish_home: false,
-        publish_gallery: false,
+        publish_gallery: shouldPublishGallery,
         publish_calendar: false,
         status: 'published',
-        published_at: new Date().toISOString(),
+        published_at: eventDateIso,
+        calendar_date: newEvent.eventDate || null,
       }]);
       if (error) throw error;
       // Refresh events list
@@ -550,7 +555,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
         const filtered = refreshed.filter((ev: any) => ev.programme && ev.programme.includes(adminCode));
         setEvents(filtered);
       }
-      setNewEvent({ title: '', description: '', category: 'Festivals', images: [] });
+      setNewEvent({ title: '', description: '', category: 'Festivals', images: [], publish_gallery: true, eventDate: '' });
       setShowEventForm(false);
     } catch (e: any) {
       alert('Failed to save event: ' + e.message);
@@ -948,6 +953,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         <option value="Festivals">Festivals — {getSectionLabel('Festivals')}</option>
                         <option value="Publication">Publication — {getSectionLabel('Publication')}</option>
                         <option value="Events & Activities">Events &amp; Activities</option>
+                        <option value="Industrial Visits">Industrial Visits</option>
                         <option value="Cultural">Cultural</option>
                         <option value="Sports">Sports</option>
                         <option value="Workshop">Workshop</option>
@@ -955,7 +961,29 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         <option value="NSS">NSS</option>
                       </select>
                     </div>
+                    <div>
+                      <Label>Event Date (When it happened)</Label>
+                      <input
+                        type="date"
+                        value={newEvent.eventDate || ''}
+                        onChange={e => setNewEvent(p => ({ ...p, eventDate: e.target.value }))}
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#123B6D]/20 focus:border-[#123B6D] transition-all"
+                      />
+                    </div>
                     <div className="col-span-2"><Label>Description</Label><Textarea value={newEvent.description || ''} onChange={v => setNewEvent(p => ({ ...p, description: v }))} rows={3} placeholder="Describe the item..." /></div>
+                  </div>
+                  {/* Publish to Gallery Checkbox (Default Ticked) */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between">
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={newEvent.publish_gallery !== false}
+                        onChange={e => setNewEvent(p => ({ ...p, publish_gallery: e.target.checked }))}
+                        className="w-4 h-4 rounded border-gray-300 text-[#123B6D] focus:ring-[#123B6D]"
+                      />
+                      <span className="text-xs font-bold text-gray-800">Show in Gallery Page</span>
+                    </label>
+                    <span className="text-[11px] text-gray-500">Event will appear in the public Event Gallery sorted by Event Date</span>
                   </div>
                   {/* Multi Image Upload */}
                   <div>
@@ -1034,7 +1062,7 @@ export default function ProgrammeEditor({ programme, isNew, onClose }: Props) {
                         </div>
                         <p className="text-xs text-gray-500 mt-1.5 line-clamp-2">{ev.description}</p>
                         <p className="text-[10px] text-gray-400 mt-2">
-                          {new Date(ev.published_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          {new Date((ev as any).calendar_date || ev.published_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </p>
                       </div>
                     </div>

@@ -50,7 +50,7 @@ interface ProgrammeEvent {
   id: string; title: string; description: string; category: string;
   department: string; images: string[]; published_at: string;
   programme: string; programme_section: string; publish_programme: boolean;
-  publish_gallery?: boolean; calendar_date?: string;
+  publish_gallery?: boolean; calendar_date?: string; event_date?: string;
   status: string;
 }
 

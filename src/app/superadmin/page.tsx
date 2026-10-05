@@ -119,7 +119,7 @@ function SuperAdminContent() {
           <aside className="w-56 bg-white border-r border-[#E2E8F0] flex flex-col py-4 gap-1 shadow-sm flex-shrink-0">
             {([
               { key: 'overview',            label: 'Overview',             icon: <LayoutDashboard size={18} /> },
-              { key: 'notice',              label: 'Notice System',        icon: <Bell size={18} /> },
+              { key: 'notice',              label: 'News & Announcements', icon: <Bell size={18} /> },
 
               { key: 'home-banners',        label: 'Homepage Banners',     icon: <ImageIcon size={18} /> },
               { key: 'home-events',         label: 'Events Publication',   icon: <ImageIcon size={18} /> },
@@ -137,7 +137,7 @@ function SuperAdminContent() {
                 key={item.key}
                 onClick={() => handleTabChange(item.key)}
                 className={`flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left ${
-                  activeTab === item.key
+                  activeTab === item.key || (item.key === 'notice' && (activeTab === 'news' || activeTab === 'notices'))
                     ? 'bg-[#123B6D]/10 text-[#123B6D]'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
@@ -155,24 +155,24 @@ function SuperAdminContent() {
             {activeTab === 'overview' && (
               <div>
                 <h2 className="text-xl font-bold text-gray-800 mb-1">Dashboard Overview</h2>
-                <p className="text-sm text-gray-500 mb-6">Welcome back! Here's a quick summary of the Notice System.</p>
+                <p className="text-sm text-gray-500 mb-6">Welcome back! Here's a quick summary of the News & Announcements System.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
-                    <p className="text-gray-500 text-sm mb-1">Total Notices</p>
+                    <p className="text-gray-500 text-sm mb-1">Total Announcements</p>
                     <p className="text-4xl font-bold text-[#123B6D]">–</p>
                   </div>
                   <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
-                    <p className="text-gray-500 text-sm mb-1">Active Notices</p>
+                    <p className="text-gray-500 text-sm mb-1">Active Announcements</p>
                     <p className="text-4xl font-bold text-emerald-600">–</p>
                   </div>
                   <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-sm">
-                    <p className="text-gray-500 text-sm mb-1">Archived Notices</p>
+                    <p className="text-gray-500 text-sm mb-1">Archived Announcements</p>
                     <p className="text-4xl font-bold text-gray-400">–</p>
                   </div>
                 </div>
                 <div className="mt-6 bg-[#123B6D]/5 border border-[#123B6D]/10 rounded-2xl p-5">
                   <p className="text-sm text-[#123B6D] font-semibold mb-1">💡 Quick Tip</p>
-                  <p className="text-sm text-gray-600">Head to <strong>Notice System</strong> to create, schedule, and manage all college notices. Notices with expired dates are automatically moved to the Archive.</p>
+                  <p className="text-sm text-gray-600">Head to <strong>News & Announcements</strong> to create, edit, schedule, and manage all college announcements. Expired posts are automatically archived.</p>
                 </div>
               </div>
             )}
@@ -187,20 +187,20 @@ function SuperAdminContent() {
               <ExaminationManager />
             )}
 
-            {/* ── Notice System ── */}
-            {activeTab === 'notice' && (
+            {/* ── News & Announcements (Notice System) ── */}
+            {(activeTab === 'notice' || activeTab === 'news' || activeTab === 'notices') && (
               <div>
                 <div className="flex items-center justify-between mb-5">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-800">Notice Management</h2>
-                    <p className="text-sm text-gray-500">Create, schedule, and manage all notices</p>
+                    <h2 className="text-xl font-bold text-gray-800">News & Announcements Management</h2>
+                    <p className="text-sm text-gray-500">Create, edit, schedule, and manage all announcements and news</p>
                   </div>
                   {!showNoticeForm && !editingNotice ? (
                     <button
                       onClick={() => setShowNoticeForm(true)}
                       className="flex items-center gap-2 bg-[#123B6D] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0d2d54] transition-colors shadow-sm"
                     >
-                      <Plus size={16} /> New Notice
+                      <Plus size={16} /> New Announcement
                     </button>
                   ) : (
                     <button
@@ -216,7 +216,7 @@ function SuperAdminContent() {
                 {showNoticeForm && !editingNotice && (
                   <div className="mb-6">
                     <NoticeForm
-                      onSuccess={() => { setShowNoticeForm(false); }}
+                      onSuccess={() => { setShowNoticeForm(false); setEventsRefreshKey(k => k + 1); }}
                       onCancel={() => setShowNoticeForm(false)}
                     />
                   </div>
@@ -227,13 +227,13 @@ function SuperAdminContent() {
                   <div className="mb-6">
                     <NoticeForm
                       initialData={editingNotice}
-                      onSuccess={() => { setEditingNotice(null); }}
+                      onSuccess={() => { setEditingNotice(null); setEventsRefreshKey(k => k + 1); }}
                       onCancel={() => setEditingNotice(null)}
                     />
                   </div>
                 )}
 
-                <NoticeList onEdit={(notice) => { setShowNoticeForm(false); setEditingNotice(notice); }} />
+                <NoticeList key={eventsRefreshKey} onEdit={(notice) => { setShowNoticeForm(false); setEditingNotice(notice); }} />
               </div>
             )}
 

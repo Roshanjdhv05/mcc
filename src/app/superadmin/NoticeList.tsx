@@ -122,7 +122,18 @@ export default function NoticeList({ onEdit }: { onEdit?: (notice: Notice) => vo
     setLoading(false);
   };
 
-  useEffect(() => { fetchNotices(); }, []);
+  useEffect(() => {
+    fetchNotices();
+    const channel = supabase
+      .channel('admin-notices-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notices' }, () => {
+        fetchNotices();
+      })
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this notice?')) return;

@@ -954,8 +954,9 @@ export default function Navbar() {
           }`}
       >
         {/* ── Collapsible "Peek" Header Strip: visible when scrolled down ── */}
+        {/* Hidden on mobile — mobile has its own fixed top bar */}
         <div
-          className={`w-full bg-gradient-to-r from-[#0B2545] via-[#123B6D] to-[#0B2545] text-white border-b-2 border-[#D4A017]/70 px-3 md:px-6 lg:px-12 flex items-center justify-between transition-all duration-300 overflow-hidden ${
+          className={`hidden md:flex w-full bg-gradient-to-r from-[#0B2545] via-[#123B6D] to-[#0B2545] text-white border-b-2 border-[#D4A017]/70 px-3 md:px-6 lg:px-12 items-center justify-between transition-all duration-300 overflow-hidden ${
             isPeekMode
               ? 'h-[52px] py-1.5 opacity-100 pointer-events-auto'
               : 'h-0 py-0 opacity-0 pointer-events-none border-b-0'
@@ -1021,7 +1022,8 @@ export default function Navbar() {
           }`}
         >
         {/* ── Top Utility Bar: Quick Links + Language Translator ── */}
-        <div className="w-full bg-white border-b border-slate-200 px-4 md:px-8 lg:px-12 py-1.5 flex items-center justify-between gap-4">
+        {/* Shown on all screens — Quick links are hidden on mobile inside */}
+        <div className="flex w-full bg-white border-b border-slate-200 px-4 md:px-8 lg:px-12 py-1.5 items-center justify-between gap-4">
           {/* Quick Links — desktop only */}
           <div className="hidden md:flex items-center gap-4">
             <span className="text-[13px] font-bold text-[#1E293B] mr-1">Quick Links:</span>
@@ -1077,10 +1079,10 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <span className="text-[10px] font-bold text-[#123B6D] block md:hidden uppercase tracking-wider">
-            Tools for Accessibility and Translator
+          <span className="text-[10px] sm:text-[11px] font-bold text-[#123B6D] block md:hidden uppercase tracking-wider">
+            Tools for Accessibility & Translator
           </span>
-          <div className="flex items-center gap-3 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
             <AccessibilityWidget />
             <span className="text-sm text-black/70 font-medium hidden md:block">🌐 Translate page:</span>
             <LanguageTranslator />
@@ -1581,13 +1583,13 @@ export default function Navbar() {
         {/* ── Mobile Top Bar (logo + hamburger) ── */}
         <div className="md:hidden flex w-full items-center justify-between px-4 h-16">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <img src="/mcclogo.png" alt="MCC Logo" className="w-12 h-12 object-contain" />
-            <div className="flex flex-col items-start justify-center text-left">
-              <span className="text-[#123B6D] font-semibold text-[9px] sm:text-[10px] leading-snug font-[var(--font-heading)] whitespace-nowrap">Parle Tilak Vidyalaya Association's</span>
-              <span className="text-[#123B6D] font-bold text-[11px] sm:text-[12px] leading-snug font-[var(--font-heading)] uppercase">
+            <img src="/mcclogo.png" alt="MCC Logo" className="w-10 h-10 sm:w-11 sm:h-11 object-contain -mt-1" />
+            <div className="flex flex-col items-start justify-center text-left -mt-1">
+              <span className="text-[#123B6D] font-semibold text-[8.5px] sm:text-[9.5px] leading-tight font-[var(--font-heading)] whitespace-nowrap">Parle Tilak Vidyalaya Association's</span>
+              <span className="text-[#123B6D] font-bold text-[10px] sm:text-[11px] leading-tight font-[var(--font-heading)] uppercase">
                 Mulund College of Commerce
               </span>
-              <span className="text-[#D4A017] font-bold text-[10px] sm:text-[11px] leading-snug font-[var(--font-heading)] uppercase tracking-wide">
+              <span className="text-[#D4A017] font-bold text-[9px] sm:text-[10px] leading-tight font-[var(--font-heading)] uppercase tracking-wide">
                 (Autonomous)
               </span>
             </div>

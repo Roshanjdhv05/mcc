@@ -65,31 +65,6 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-fill form when editing
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title || '');
-      setDescription(initialData.description || '');
-      setIsGeneral(initialData.is_general ?? false);
-      setSelectedCategories(initialData.categories || []);
-      setSelectedDepts(initialData.departments || []);
-      setSelectedCourses(initialData.courses || []);
-      setSelectedSemesters(initialData.semesters || []);
-      // Convert ISO strings to datetime-local format
-      if (initialData.schedule_time) {
-        const d = new Date(initialData.schedule_time);
-        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-        setScheduleTime(d.toISOString().slice(0, 16));
-      }
-      if (initialData.expiry_time) {
-        const d = new Date(initialData.expiry_time);
-        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-        setExpiryTime(d.toISOString().slice(0, 16));
-      }
-      setAttachments(initialData.attachments || []);
-    }
-  }, [initialData]);
-
   // Calendar fields
   const [publishCalendar, setPublishCalendar] = useState(false);
   const [calTitleSameAsNotice, setCalTitleSameAsNotice] = useState(true);
@@ -109,6 +84,61 @@ export default function NoticeForm({ onSuccess, onCancel, initialData }: NoticeF
   // Single file for 'all' mode
   const [examFile, setExamFile] = useState<File | null>(null);
   const [examExpiryTime, setExamExpiryTime] = useState('');
+
+  // Pre-fill form when editing or reset when creating
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title || '');
+      setDescription(initialData.description || '');
+      setIsGeneral(initialData.is_general ?? false);
+      setSelectedCategories(initialData.categories || []);
+      setSelectedDepts(initialData.departments || []);
+      setSelectedCourses(initialData.courses || []);
+      setSelectedSemesters(initialData.semesters || []);
+      if (initialData.schedule_time) {
+        const d = new Date(initialData.schedule_time);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        setScheduleTime(d.toISOString().slice(0, 16));
+      } else {
+        setScheduleTime('');
+      }
+      if (initialData.expiry_time) {
+        const d = new Date(initialData.expiry_time);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        setExpiryTime(d.toISOString().slice(0, 16));
+      } else {
+        setExpiryTime('');
+      }
+      setAttachments(initialData.attachments || []);
+      setPublishCalendar(initialData.publish_calendar ?? false);
+      if (initialData.publish_calendar) {
+        setCalTitle(initialData.calendar_title || '');
+        setCalCategory(initialData.calendar_category || '');
+        setCalDate(initialData.calendar_date || '');
+        setCalVenue(initialData.calendar_venue || '');
+        setCalTime(initialData.calendar_time || '');
+        setCalTitleSameAsNotice(!initialData.calendar_title || initialData.calendar_title === initialData.title);
+      }
+    } else {
+      setTitle('');
+      setDescription('');
+      setIsGeneral(false);
+      setSelectedCategories([]);
+      setSelectedDepts([]);
+      setSelectedCourses([]);
+      setSelectedSemesters([]);
+      setScheduleTime('');
+      setExpiryTime('');
+      setAttachments([]);
+      setPublishCalendar(false);
+      setCalTitle('');
+      setCalCategory('');
+      setCalDate('');
+      setCalVenue('');
+      setCalTime('');
+      setCalTitleSameAsNotice(true);
+    }
+  }, [initialData]);
 
   const EXAM_CATEGORIES = [
     'Time Table Regular Exam',
